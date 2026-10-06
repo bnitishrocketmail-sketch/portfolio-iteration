@@ -1,0 +1,13 @@
+/* The /lab index: a plain list of iterations on the field. */
+.lab { max-width: 880px; margin: 0 auto; padding: 48px 0 80px; overflow: auto; height: 100%; }
+.lab-head { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+.lab-head h1 { font-size: clamp(34px, 5vw, 56px); letter-spacing: -.03em; line-height: 1; }
+.lab-list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--gap); }
+.lab-card { display: flex; flex-direction: column; gap: 8px; padding: 22px 24px; border-radius: var(--r); background: var(--sheet); box-shadow: var(--shadow); text-decoration: none; color: inherit; transition: transform .3s cubic-bezier(.3, 1.2, .4, 1); }
+.lab-card:hover { transform: translateY(-3px); }
+.lab-card h2 { font-size: 24px; letter-spacing: -.02em; }
+.lab-card p { color: var(--muted); font-size: 14.5px; }
+.lab-status { align-self: flex-start; font: 500 10.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 6px 9px; border-radius: 999px; border: 1px solid var(--line2); }
+.lab-status.adopted { background: var(--mint); color: var(--on-mint); border-color: transparent; }
+.lab-status.shortlisted { background: var(--lilac); color: var(--on-lilac); border-color: transparent; }
+.lab-status.parked { opacity: .55; }

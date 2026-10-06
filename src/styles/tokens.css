@@ -1,0 +1,54 @@
+/* Design tokens — iteration 01 "Sheet".
+   Light values on :root; dark values under prefers-color-scheme and [data-theme="dark"]
+   so the toggle wins in both directions. Every colour used anywhere comes from here. */
+:root {
+  --field: #e7e8ed; --sheet: #fbfbfd; --sheet2: #f0f0f5; --ink: #15161c; --muted: #6b6e7a;
+  --line: rgba(21, 22, 28, .09); --line2: rgba(21, 22, 28, .2);
+  --peri: #7b7ee4; --peri-deep: #5a5dd1; --on-peri: #ffffff;
+  --blush: #dfb3f3;
+  --mint: #bde6d9; --on-mint: #163a31;
+  --lilac: #ece9fa; --on-lilac: #15161c;
+  --amber: #f5bd56; --on-amber: #2b1b00;
+  --graphite: #4a4c56; --on-graphite: #ffffff;
+  --coal: #141419; --on-coal: #ffffff;
+  --island: #111216; --on-island: #f4f4f7;
+  --shadow: 0 40px 80px -40px rgba(24, 26, 48, .28);
+  --chip-shadow: 0 12px 28px -12px rgba(20, 22, 40, .45);
+  --r: 26px; --gap: 16px;
+  --display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --body: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --field: #0b0c10; --sheet: #15161c; --sheet2: #1d1e26; --ink: #f0f0f4; --muted: #9a9daa;
+    --line: rgba(240, 240, 244, .09); --line2: rgba(240, 240, 244, .22);
+    --peri: #5b5ecc; --peri-deep: #4548b4; --on-peri: #ffffff;
+    --blush: #b587d6;
+    --mint: #2c6658; --on-mint: #ddf4ec;
+    --lilac: #27233a; --on-lilac: #f0f0f4;
+    --amber: #d9a341; --on-amber: #1e1300;
+    --graphite: #2b2c35; --on-graphite: #f0f0f4;
+    --coal: #09090c; --on-coal: #f0f0f4;
+    --island: #24252d; --on-island: #f4f4f7;
+    --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7);
+    --chip-shadow: 0 12px 28px -12px rgba(0, 0, 0, .8);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --field: #0b0c10; --sheet: #15161c; --sheet2: #1d1e26; --ink: #f0f0f4; --muted: #9a9daa;
+  --line: rgba(240, 240, 244, .09); --line2: rgba(240, 240, 244, .22);
+  --peri: #5b5ecc; --peri-deep: #4548b4; --on-peri: #ffffff;
+  --blush: #b587d6;
+  --mint: #2c6658; --on-mint: #ddf4ec;
+  --lilac: #27233a; --on-lilac: #f0f0f4;
+  --amber: #d9a341; --on-amber: #1e1300;
+  --graphite: #2b2c35; --on-graphite: #f0f0f4;
+  --coal: #09090c; --on-coal: #f0f0f4;
+  --island: #24252d; --on-island: #f4f4f7;
+  --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7);
+  --chip-shadow: 0 12px 28px -12px rgba(0, 0, 0, .8);
+  color-scheme: dark;
+}

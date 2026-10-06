@@ -1,0 +1,59 @@
+/* Base: resets, type utilities, shared primitives (bracket glyph, buttons, tiles, view heads). */
+html { height: 100%; overflow: hidden; }
+* { box-sizing: border-box; }
+body {
+  height: calc(100% - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  margin: 0; overflow: hidden;
+  padding-inline: 16px; padding-left: 100px; padding-block: 0;
+  background: var(--field); color: var(--ink);
+  font: 15px/1.5 var(--body);
+  -webkit-font-smoothing: antialiased;
+  transition: background .4s, color .4s;
+}
+#root { height: 100%; }
+h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+button { font-family: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.eyebrow { font: 500 11px/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; opacity: .78; margin: 0; }
+.mono-s { font: 400 11.5px/1.3 var(--mono); letter-spacing: .03em; }
+.dim { opacity: .6; }
+.arr { font-family: var(--display); font-weight: 500; display: inline-block; transition: transform .3s cubic-bezier(.3, 1.3, .5, 1); }
+
+/* corner bracket glyph: the recurring hover / selected mark */
+.brk { position: absolute; top: 16px; right: 16px; width: 14px; height: 14px; border-top: 2.5px solid currentColor; border-right: 2.5px solid currentColor; border-radius: 0 3px 0 0; pointer-events: none; }
+.brk.h { opacity: 0; transform: translate(-8px, 8px); transition: opacity .3s, transform .4s cubic-bezier(.3, 1.3, .5, 1); }
+.hoverable:hover .brk.h, .hoverable:focus-visible .brk.h { opacity: 1; transform: none; }
+
+.tile { position: relative; border-radius: var(--r); padding: 20px; min-width: 0; overflow: hidden; }
+.tile-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.more { display: inline-flex; align-items: center; gap: 6px; font: 600 12.5px var(--body); text-decoration: none; opacity: .85; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; }
+.more:hover .arr { transform: translateX(4px); }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 17px; border-radius: 999px; background: var(--ink); color: var(--sheet); font: 600 13.5px var(--body); text-decoration: none; border: 0; cursor: pointer; transition: transform .25s cubic-bezier(.3, 1.3, .5, 1); }
+.btn:hover { transform: translateY(-2px); }
+.btn:hover .arr { transform: translate(2px, -2px); }
+.pill { display: inline-flex; align-items: center; padding: 10px 13px; border-radius: 999px; border: 1.5px solid var(--line2); font: 500 12.5px var(--body); text-decoration: none; background: none; color: inherit; cursor: pointer; transition: border-color .2s, transform .25s; }
+.pill:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+.view-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 18px; }
+.view-head h2 { font-size: clamp(28px, 3vw, 40px); line-height: 1; letter-spacing: -.03em; font-weight: 700; margin-top: 8px; }
+.view-note { color: var(--muted); max-width: 44ch; font-size: 14px; }
+
+.tags { display: flex; gap: 6px; flex-wrap: wrap; list-style: none; padding: 0; margin: 4px 0 0; }
+.tags li { font: 500 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 5px 8px; border-radius: 999px; border: 1px solid var(--line2); color: var(--muted); }
+.skills { display: flex; flex-wrap: wrap; gap: 7px; list-style: none; padding: 0; margin: auto 0 0; }
+.skills li { padding: 7px 10px; border-radius: 999px; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .22); font: 500 11px/1 var(--mono); letter-spacing: .03em; }
+
+.labtag { position: fixed; right: 18px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); z-index: 59; color: var(--muted); font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; }
+
+@media (max-width: 1040px) { .labtag { display: none; } }
+@media (max-width: 700px) {
+  html, body { overflow: auto; height: auto; }
+  body { padding-left: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+}

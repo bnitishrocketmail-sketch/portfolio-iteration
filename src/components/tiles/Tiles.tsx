@@ -1,0 +1,147 @@
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { CLIENTS, COPY, LIFE, LINKS, TOOLS, type ViewName } from '../../lib/data';
+import { item } from '../../lib/motion';
+
+type Go = (view: ViewName, pid?: string) => void;
+
+/* ---- statement: sits directly on the sheet, no box ---- */
+export function Statement({ onGo }: { onGo: Go }) {
+  return (
+    <motion.div className="stmt" variants={item}>
+      <p className="eyebrow">{COPY.eyebrow}</p>
+      <h1><span className="lt">Product designer.</span><br /><strong>I make UI move.</strong><i className="brk" aria-hidden="true" /></h1>
+      <p className="lede">{COPY.lede}</p>
+      <div className="cta">
+        <button className="btn" type="button" onClick={() => onGo('experience')}>View CV <span className="arr" aria-hidden="true">↗</span></button>
+        <a className="pill" href={LINKS.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+        <a className="pill" href={LINKS.lottiefiles}>LottieFiles</a>
+        <a className="pill" href="#">Email</a>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ---- live micro tile: a switch with overshoot and squash ---- */
+export function MicroTile({ onGo }: { onGo: Go }) {
+  const [on, setOn] = useState(false);
+  return (
+    <motion.div className={`tile micro${on ? ' on' : ''}`} variants={item}>
+      <div className="tile-head">
+        <p className="eyebrow">Micro-interactions</p>
+        <button className="more" type="button" onClick={() => onGo('micro')}>See all <span className="arr" aria-hidden="true">→</span></button>
+      </div>
+      <div className="sw-wrap">
+        <button className="switch" role="switch" aria-checked={on} aria-label="Demo switch" onClick={() => setOn(o => !o)}><span className="knob" /></button>
+        <p className="mono-s">state · {on ? 'on' : 'off'}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+export function Tools() {
+  return (
+    <motion.div className="tile tools" variants={item}>
+      <p className="eyebrow">Tools</p>
+      <ul className="chips">{TOOLS.map(t => <li key={t}>{t}</li>)}</ul>
+    </motion.div>
+  );
+}
+
+/* ---- photo stack: drag or tap through ---- */
+export function LifeStack() {
+  const [i, setI] = useState(0);
+  const [leaving, setLeaving] = useState<null | { idx: number; dir: number }>(null);
+  const reduce = useReducedMotion();
+  const n = LIFE.length;
+  const advance = (dir: number) => {
+    if (leaving) return;
+    if (reduce) { setI(v => (v + 1) % n); return; }
+    setLeaving({ idx: i, dir });
+    window.setTimeout(() => { setI(v => (v + 1) % n); setLeaving(null); }, 260);
+  };
+  return (
+    <motion.div className="tile life" variants={item}>
+      <div className="tile-head"><p className="eyebrow">Off duty</p><span className="mono-s dim">{i + 1} / {n}</span></div>
+      <div className="stack" aria-label="Photo stack">
+        {LIFE.map((c, k) => {
+          const pos = (k - i + n) % n;
+          const isTop = pos === 0;
+          const out = leaving && leaving.idx === k;
+          return (
+            <motion.figure key={c.caption} style={{ '--g1': c.g1, '--g2': c.g2, zIndex: n - pos } as React.CSSProperties}
+              animate={out ? { x: leaving.dir * 420, rotate: leaving.dir * 14, opacity: 0 }
+                : { x: 0, y: pos * -6, rotate: (pos % 2 ? -1 : 1) * pos * 2.4, scale: 1 - pos * .045, opacity: pos > 3 ? 0 : 1 }}
+              transition={{ type: 'spring', bounce: .18, duration: .5 }}
+              drag={isTop && !out ? 'x' : false} dragSnapToOrigin dragElastic={.9}
+              onDragEnd={(_, info) => { if (Math.abs(info.offset.x) > 56) advance(info.offset.x > 0 ? 1 : -1); }}
+              onTap={() => { if (isTop) advance(1); }}>
+              <figcaption>{c.caption}</figcaption>
+            </motion.figure>
+          );
+        })}
+      </div>
+      <p className="mono-s hint">drag or tap</p>
+    </motion.div>
+  );
+}
+
+/* ---- clients: a wordmark cycle ---- */
+export function Clients() {
+  const [ci, setCi] = useState(0);
+  useEffect(() => {
+    const id = window.setInterval(() => { if (!document.hidden) setCi(c => (c + 1) % CLIENTS.length); }, 2600);
+    return () => window.clearInterval(id);
+  }, []);
+  return (
+    <motion.div className="tile clients" variants={item}>
+      <p className="eyebrow">Worked with</p>
+      <div className="cycle" aria-live="polite">
+        <AnimatePresence initial={false}>
+          <motion.span key={CLIENTS[ci]} initial={{ y: '100%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '-100%', opacity: 0 }}
+            transition={{ duration: .42, ease: [.3, 1, .4, 1] }}>{CLIENTS[ci]}</motion.span>
+        </AnimatePresence>
+      </div>
+      <div className="dots">{CLIENTS.map((c, k) => <i key={c} className={k === ci ? 'on' : ''} />)}</div>
+    </motion.div>
+  );
+}
+
+/* ---- fused campaign tile: coal panel with a faux-3D coin on canvas + amber copy ---- */
+export function Fused({ onGo }: { onGo: Go }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const reduce = useReducedMotion();
+  useEffect(() => {
+    const cv = ref.current; if (!cv) return;
+    const ctx = cv.getContext('2d'); if (!ctx) return;
+    let t = 0, raf = 0;
+    const size = () => { const r = cv.getBoundingClientRect(); cv.width = Math.max(1, r.width * devicePixelRatio); cv.height = Math.max(1, r.height * devicePixelRatio); };
+    const draw = () => {
+      const w = cv.width, h = cv.height; ctx.clearRect(0, 0, w, h);
+      const R = Math.min(w, h) * .3, cx = w / 2, cy = h / 2, c = Math.cos(t), s = Math.sin(t);
+      const sx = Math.max(Math.abs(c), .06), thick = R * .22, N = 8;
+      const amber = getComputedStyle(document.documentElement).getPropertyValue('--amber').trim() || '#F5BD56';
+      for (let i = N; i >= 1; i--) { const o = (thick * s) * (i / N); ctx.beginPath(); ctx.ellipse(cx - o, cy, R * sx, R, 0, 0, Math.PI * 2); ctx.fillStyle = i % 2 ? '#8A5A12' : '#A66F1C'; ctx.fill(); }
+      const g = ctx.createLinearGradient(cx - R, cy - R, cx + R, cy + R); g.addColorStop(0, '#FFE39A'); g.addColorStop(.55, amber); g.addColorStop(1, '#B5801F');
+      ctx.beginPath(); ctx.ellipse(cx, cy, R * sx, R, 0, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx, cy, R * sx * .78, R * .78, 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(120,80,10,.45)'; ctx.lineWidth = Math.max(1, R * .03); ctx.stroke();
+      ctx.save(); ctx.translate(cx, cy); ctx.scale(c, 1); ctx.fillStyle = 'rgba(90,58,6,.9)'; ctx.font = `700 ${R * .95}px Outfit, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('₹', 0, R * .04); ctx.restore();
+      if (!reduce) { t += .022; raf = requestAnimationFrame(draw); }
+    };
+    size(); draw();
+    const onResize = () => { size(); if (reduce) draw(); };
+    addEventListener('resize', onResize);
+    return () => { cancelAnimationFrame(raf); removeEventListener('resize', onResize); };
+  }, [reduce]);
+  return (
+    <motion.button className="tile fused hoverable" type="button" variants={item} onClick={() => onGo('campaign')}>
+      <div className="fused-l"><canvas ref={ref} aria-hidden="true" /></div>
+      <div className="fused-r">
+        <p className="eyebrow">Campaign &amp; motion graphics</p>
+        <h3>Brand and promotional motion — reels, banner sets, launch films.</h3>
+        <span className="more">See the work <span className="arr" aria-hidden="true">→</span></span>
+      </div>
+      <i className="brk h" aria-hidden="true" />
+    </motion.button>
+  );
+}

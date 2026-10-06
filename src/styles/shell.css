@@ -1,0 +1,31 @@
+/* Shell: the sheet on the field, the two-column shell (hero | views), and the view containers. */
+.sheet { height: calc(100% - 24px - 24px); max-width: 1320px; margin: 24px auto 0; background: var(--sheet); border-radius: 34px; padding: 62px clamp(16px, 2.6vw, 34px) clamp(18px, 2.4vw, 28px); box-shadow: var(--shadow); overflow: auto; transition: background .4s; scrollbar-width: thin; }
+.shell { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 4fr); gap: var(--gap); height: 100%; min-height: 600px; }
+.views { position: relative; min-width: 0; min-height: 0; }
+.view { position: absolute; inset: 0; overflow: auto; min-width: 0; scrollbar-width: thin; padding-right: 2px; }
+
+/* home view: the right-hand bento */
+.view.home { display: grid; gap: var(--gap); grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: auto minmax(132px, 1fr) minmax(132px, 1fr) minmax(132px, 1fr);
+  grid-template-areas:
+    "stmt stmt stmt stmt"
+    "micro micro tools tools"
+    "micro micro life life"
+    "clients fused fused fused"; }
+
+/* project detail view: reading column + side column */
+.view.project { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1.1fr); gap: var(--gap); overflow: hidden; }
+
+@media (max-width: 1040px) {
+  .shell { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+  .view.home { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto minmax(150px, auto) minmax(150px, auto) minmax(150px, auto);
+    grid-template-areas: "stmt stmt" "micro micro" "tools life" "clients fused"; }
+  .view.project { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+}
+@media (max-width: 700px) {
+  .sheet { height: auto; margin: 18px auto 110px; border-radius: 26px; padding-top: 70px; overflow: visible; }
+  .shell { display: flex; flex-direction: column; height: auto; min-height: 0; }
+  .views { position: static; }
+  .view { position: static; overflow: visible; }
+  .view.home { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: "stmt" "micro" "tools" "life" "clients" "fused"; }
+  .view.project { display: flex; flex-direction: column; overflow: visible; }
+}

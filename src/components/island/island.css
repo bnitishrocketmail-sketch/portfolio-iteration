@@ -1,0 +1,30 @@
+/* Island: a notch hanging from the sheet's top edge (reference 2, the old iOS notch).
+   Two lines: a muted context line, a bold status line with a 3×3 pixel icon. */
+.island-wrap { position: fixed; top: 24px; left: 0; right: 0; display: flex; justify-content: center; padding-left: 84px; pointer-events: none; z-index: 60; }
+.island { pointer-events: auto; position: relative; max-width: calc(100vw - 150px); background: var(--island); color: var(--on-island); border-radius: 0 0 24px 24px; box-shadow: 0 26px 50px -22px rgba(0, 0, 0, .6); }
+.island::before, .island::after { content: ""; position: absolute; top: 0; width: 18px; height: 18px; background: radial-gradient(circle at 0 100%, transparent 17.4px, var(--island) 18px); }
+.island::before { left: -18px; }
+.island::after { right: -18px; transform: scaleX(-1); }
+.island.open { max-width: calc(100vw - 32px); }
+.island-top { display: flex; align-items: center; gap: 12px; padding: 9px 16px 11px 16px; }
+.island-pill { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; background: none; border: 0; color: inherit; cursor: pointer; text-align: left; padding: 0; }
+.ctx { font: 400 11.5px/1.2 var(--body); color: rgba(255, 255, 255, .55); white-space: nowrap; display: block; }
+.stat { display: flex; align-items: center; gap: 9px; font: 600 15px/1.25 var(--body); white-space: nowrap; }
+.px { width: 16px; height: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; flex: none; filter: drop-shadow(0 0 5px var(--pc, #7fe3c2)); }
+.px i { background: var(--pc, #7fe3c2); border-radius: 1px; opacity: .07; transition: opacity .14s, background .5s; }
+.px i.on { opacity: 1; }
+.island-x { display: none; width: 28px; height: 28px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .1); color: inherit; cursor: pointer; font-size: 14px; line-height: 1; flex: none; }
+.island.open .island-x { display: grid; place-items: center; }
+.island-panel { width: 368px; max-width: calc(100vw - 64px); padding: 2px 12px 12px; display: flex; flex-direction: column; gap: 10px; box-sizing: content-box; }
+.msgs { display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow: auto; padding: 2px 2px 4px; font-size: 13px; line-height: 1.4; }
+.msg { padding: 8px 11px; border-radius: 14px; background: rgba(255, 255, 255, .08); max-width: 88%; align-self: flex-start; }
+.msg.me { align-self: flex-end; background: var(--peri); color: #fff; }
+.island form { display: flex; gap: 8px; }
+.island input { flex: 1; min-width: 0; height: 38px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .06); color: inherit; padding: 0 14px; font: 14px var(--body); }
+.island input::placeholder { color: rgba(255, 255, 255, .45); }
+.island form button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--on-island); color: var(--island); cursor: pointer; font: 600 16px var(--display); }
+
+@media (max-width: 700px) {
+  .island-wrap { top: env(safe-area-inset-top, 0px); padding-left: 0; }
+  .island { max-width: calc(100vw - 100px); }
+}
