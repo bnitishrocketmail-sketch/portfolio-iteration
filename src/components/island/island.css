@@ -1,6 +1,6 @@
 /* Island: a notch hanging from the sheet's top edge (reference 2, the old iOS notch).
    Two lines: a muted context line, a bold status line with a 3×3 pixel icon. */
-.island-wrap { position: fixed; top: 24px; left: 0; right: 0; display: flex; justify-content: center; padding-left: 84px; pointer-events: none; z-index: 60; }
+.island-wrap { position: fixed; top: 24px; left: 0; right: 0; display: flex; justify-content: center; pointer-events: none; z-index: 60; }
 .island { pointer-events: auto; position: relative; max-width: calc(100vw - 150px); background: var(--island); color: var(--on-island); border-radius: 0 0 24px 24px; box-shadow: 0 26px 50px -22px rgba(0, 0, 0, .6); }
 .island::before, .island::after { content: ""; position: absolute; top: 0; width: 18px; height: 18px; background: radial-gradient(circle at 0 100%, transparent 17.4px, var(--island) 18px); }
 .island::before { left: -18px; }
@@ -25,6 +25,6 @@
 .island form button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--on-island); color: var(--island); cursor: pointer; font: 600 16px var(--display); }
 
 @media (max-width: 700px) {
-  .island-wrap { top: env(safe-area-inset-top, 0px); padding-left: 0; }
+  .island-wrap { top: env(safe-area-inset-top, 0px); }
   .island { max-width: calc(100vw - 100px); }
 }

@@ -12,10 +12,27 @@ const ICONS: Record<string, React.ReactNode> = {
 };
 
 type Props = { active: ViewName; onGo: (view: ViewName) => void };
+const keyOf = (v: ViewName) => (v === 'project' ? 'projects' : v);
 
-/* The selected pill is one shared-layout element, so it travels between items on either axis. */
+/* Desktop / tablet: the reference's side nav — rotated labels in the sheet's left margin,
+   reading bottom to top. The travelling highlight is the one thing added to it. */
+export function SideNav({ active, onGo }: Props) {
+  const key = keyOf(active);
+  return (
+    <nav className="sidenav" aria-label="Sections">
+      {NAV.map(item => (
+        <button key={item.id} type="button" className={item.id === key ? 'on' : ''} aria-current={item.id === key ? 'page' : undefined} onClick={() => onGo(item.id)}>
+          {item.id === key && <motion.span layoutId="nav-ind" className="nav-ind" transition={{ type: 'spring', bounce: .2, duration: .55 }} />}
+          <span>{item.label}</span>
+        </button>
+      ))}
+    </nav>
+  );
+}
+
+/* Phones: a bottom bar with icons; the active item shows its label. */
 export default function Dock({ active, onGo }: Props) {
-  const key = active === 'project' ? 'projects' : active;
+  const key = keyOf(active);
   return (
     <div className="dock-wrap">
       <nav className="dock" aria-label="Sections">

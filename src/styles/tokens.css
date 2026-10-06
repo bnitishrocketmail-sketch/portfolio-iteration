@@ -15,9 +15,12 @@
   --shadow: 0 40px 80px -40px rgba(24, 26, 48, .28);
   --chip-shadow: 0 12px 28px -12px rgba(20, 22, 40, .45);
   --r: 26px; --gap: 16px;
-  --display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
-  --body: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
-  --mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* ref 1 mixes three families: a wide geometric for display words and numbers,
+     a neo-grotesque for the name, a round geometric for labels and body */
+  --display: 'Unbounded', ui-sans-serif, system-ui, sans-serif;
+  --name: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --body: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {

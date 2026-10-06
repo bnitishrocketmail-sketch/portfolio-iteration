@@ -93,7 +93,7 @@ export default function Hero({ project, onBack, onCv }: Props) {
             <svg viewBox="0 0 80 80">
               <defs><path id="bp" d="M40,40 m-29,0 a29,29 0 1,1 58,0 a29,29 0 1,1 -58,0" /></defs>
               <circle cx="40" cy="40" r="40" style={{ fill: 'var(--coal)' }} />
-              <text fontSize="8" letterSpacing="1" style={{ fill: '#fff', fontFamily: 'var(--mono)' }}><textPath href="#bp">MOTION · INTERACTION · CODE · </textPath></text>
+              <text fontSize="8.4" letterSpacing="1.2" fontWeight="600" style={{ fill: '#fff', fontFamily: 'var(--body)' }}><textPath href="#bp">MOTION · INTERACTION · CODE · </textPath></text>
               <circle cx="40" cy="40" r="7" style={{ fill: 'var(--amber)' }} />
             </svg>
           </div>

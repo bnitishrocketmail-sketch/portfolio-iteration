@@ -14,7 +14,7 @@ The record of what each iteration tries, where its elements came from, and what 
 
 | # | What | File | Taken | Not taken |
 |---|------|------|-------|-----------|
-| 1 | Bento portfolio (Dribbble-style, "Jon Daniel") | `docs/refs/ref-1-bento-portfolio.jpg` | sheet-on-field frame; large uniform radius; equal gutters; one colour per tile; corner-bracket glyph (now the hover/selected mark); heavy-vs-light type contrast; mono portrait over colour; the chamfered notch label on the hero card (now the flip affordance); the fused two-colour tile | rotated side nav; giant "Portfolio" word; vanity stats; play-button media chrome |
+| 1 | Bento portfolio (Dribbble-style, "Jon Daniel") | `docs/refs/ref-1-bento-portfolio.jpg` | sheet-on-field frame; large uniform radius; equal gutters; one colour per tile; corner-bracket glyph (now the hover/selected mark); the three-family type mix — a wide geometric with rounded-square counters for display words and numbers (Unbounded), a neo-grotesque for the name (Inter, light lead-in over bold), a round geometric for labels, body and nav (Outfit); no monospace; mono portrait over colour; the chamfered notch label on the hero card (now the flip affordance); the fused two-colour tile; **the rotated side nav in the sheet's left margin, as-is (Nitish), plus a travelling highlight** | giant "Portfolio" word; vanity stats; play-button media chrome |
 | 2 | Old iOS notch, screen recording of an agent status (6 Oct) | `docs/refs/ref-2-notch-*.png` | shape hangs from the top edge with flared corners; two lines (muted context over bold status); 3×3 pixel icon that shuffles pattern and changes colour per state, with glow; blur-crossfade on text change; width follows content | the black top bar it hangs from (ours hangs from the sheet edge) |
 
 ## 01 Sheet — exploring
@@ -27,7 +27,7 @@ Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 - Build from scratch in code, not Framer. (6 Oct)
 - Bento grid for the home; project pages are not bento: persistent card + one big container + one or two side tiles. (6 Oct)
 - One view at a time on desktop; scrolling inside containers. (6 Oct)
-- Nav on the left, icons with titles beneath, titles always visible for now (icon-only-with-label-on-select kept as a cheap toggle to compare later). (6 Oct)
+- Nav: the reference's rotated-label side nav, exactly as designed, inside the centred layout (not pinned to the window edge); the only addition is the selected-state highlight. Phones keep a bottom bar. (6 Oct, supersedes the earlier icon rail)
 - Island follows ref 2: notch, not floating pill. (6 Oct)
 - About lives on the back of the intro card (hover flip with intent delay on desktop; tap on touch; mobile hint pending a feel test). (6 Oct)
 
@@ -49,4 +49,5 @@ Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 - v3 — nav moved to a left rail; sheet reclaimed the bottom space.
 - v4 — island rebuilt as a notch (ref 2).
 - v5 — ported from the single-file artifact into this repo as components; behaviour unchanged, transitions now on Motion (layout-animated rail pill, segmented pill and notch width).
+- v7 — (Nitish) fonts re-assessed against ref 1 and matched: Unbounded / Inter / Outfit, mono dropped, sizes retuned for the wide display face. Nav rebuilt as the reference's rotated side nav inside the sheet, with the travelling pill; island re-centred over the sheet.
 - v6 — (Nitish) title and short description moved into the intro card; the right column is tiles only. Re-laid as micro (wide) · photo stack (tall, suits phone photos) · clients · tools · campaign band full width. CV button and socials moved into the card with the text; the rotating badge moved to the card's top-right.

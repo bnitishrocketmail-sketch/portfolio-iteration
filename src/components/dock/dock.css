@@ -1,10 +1,20 @@
-/* Dock: a vertical rail on the left (desktop/tablet), a bottom bar on phones.
-   The selected pill is a shared-layout element that travels between items. */
-.dock-wrap { position: fixed; left: 0; top: 0; bottom: 0; display: flex; align-items: center; padding: 0 0 0 14px; pointer-events: none; z-index: 60; }
-.dock { pointer-events: auto; position: relative; display: flex; flex-direction: column; padding: 6px; border-radius: 999px; background: color-mix(in srgb, var(--sheet) 84%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .5); max-width: 100%; }
-.dock button { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 66px; padding: 11px 6px 9px; border-radius: 999px; border: 0; background: none; text-decoration: none; color: var(--ink); font: 600 10.5px/1 var(--body); letter-spacing: .01em; transition: color .35s; white-space: nowrap; cursor: pointer; }
+/* Navigation.
+   Desktop / tablet: the reference's side nav — rotated labels stacked in the sheet's left margin,
+   reading bottom to top, in the round sans. The selected label gets a travelling pill.
+   Phones: a fixed bottom bar with icons (rotated text has no room there). */
+.sidenav { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 22px; padding: 0 0 22px; width: 36px; }
+.sidenav button { position: relative; border: 0; background: none; padding: 12px 8px; border-radius: 999px; cursor: pointer; color: var(--ink); font: 500 12.5px/1 var(--body); letter-spacing: .01em; writing-mode: vertical-rl; transform: rotate(180deg); transition: color .35s, opacity .25s; }
+.sidenav button:hover { opacity: .7; }
+.sidenav button span:not(.nav-ind) { position: relative; z-index: 1; }
+.sidenav button.on { color: var(--sheet); opacity: 1; }
+.nav-ind { position: absolute; inset: 0; border-radius: 999px; background: var(--ink); z-index: 0; }
+
+.dock-wrap { display: none; position: fixed; left: 0; right: 0; bottom: 0; justify-content: center; padding: 0 12px calc(14px + env(safe-area-inset-bottom, 0px)); pointer-events: none; z-index: 60; }
+.dock { pointer-events: auto; position: relative; display: flex; flex-direction: row; padding: 6px; border-radius: 999px; background: color-mix(in srgb, var(--sheet) 84%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .5); max-width: 100%; }
+.dock button { position: relative; display: flex; flex-direction: row; align-items: center; gap: 7px; padding: 10px 11px; border-radius: 999px; border: 0; background: none; color: var(--ink); font: 600 12px/1 var(--body); transition: color .35s; white-space: nowrap; cursor: pointer; }
 .dock button svg { width: 18px; height: 18px; flex: none; position: relative; z-index: 1; }
-.dock button span:not(.dock-ind) { position: relative; z-index: 1; }
+.dock button span:not(.dock-ind) { position: relative; z-index: 1; display: none; }
+.dock button.on span:not(.dock-ind) { display: inline; }
 .dock button.on { color: var(--sheet); }
 .dock-ind { position: absolute; inset: 0; border-radius: 999px; background: var(--ink); z-index: 0; }
 
@@ -14,9 +24,6 @@
 .theme.is-dark .sun { opacity: 0; transform: rotate(90deg) scale(.6); } .theme.is-dark .moon { opacity: 1; transform: none; }
 
 @media (max-width: 700px) {
-  .dock-wrap { left: 0; right: 0; top: auto; bottom: 0; align-items: stretch; justify-content: center; padding: 0 12px calc(14px + env(safe-area-inset-bottom, 0px)); }
-  .dock { flex-direction: row; }
-  .dock button { flex-direction: row; width: auto; gap: 7px; padding: 10px 11px; font-size: 12px; }
-  .dock button span:not(.dock-ind) { display: none; }
-  .dock button.on span:not(.dock-ind) { display: inline; }
+  .sidenav { display: none; }
+  .dock-wrap { display: flex; }
 }

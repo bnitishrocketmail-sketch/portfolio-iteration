@@ -5,7 +5,7 @@ import { PROJECTS, VIEW_ORDER, contextFor, type ViewName } from '../../lib/data'
 import { useTheme } from '../../lib/theme';
 import Hero from '../../components/hero/Hero';
 import Island from '../../components/island/Island';
-import Dock, { ThemeToggle } from '../../components/dock/Dock';
+import Dock, { SideNav, ThemeToggle } from '../../components/dock/Dock';
 import { Campaign, Experience, Home, Micro, ProjectDetail, Projects, Writing } from '../../views/Views';
 import '../../styles/shell.css';
 
@@ -44,6 +44,7 @@ export default function Iteration01() {
 
       <main className="sheet">
         <div className="shell">
+          <SideNav active={view} onGo={go} />
           <Hero project={project} onBack={() => go('projects')} onCv={() => go('experience')} />
           <div className="views">
             <AnimatePresence mode="wait" custom={dir} initial={false}>

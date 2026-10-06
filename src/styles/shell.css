@@ -1,6 +1,7 @@
 /* Shell: the sheet on the field, the two-column shell (hero | views), and the view containers. */
-.sheet { height: calc(100% - 24px - 24px); max-width: 1320px; margin: 24px auto 0; background: var(--sheet); border-radius: 34px; padding: 62px clamp(16px, 2.6vw, 34px) clamp(18px, 2.4vw, 28px); box-shadow: var(--shadow); overflow: auto; transition: background .4s; scrollbar-width: thin; }
-.shell { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 4fr); gap: var(--gap); height: 100%; min-height: 600px; }
+.sheet { height: calc(100% - 24px - 24px); max-width: 1320px; margin: 24px auto 0; background: var(--sheet); border-radius: 34px; padding: 62px clamp(16px, 2.6vw, 34px) clamp(18px, 2.4vw, 28px) clamp(12px, 1.6vw, 20px); box-shadow: var(--shadow); overflow: auto; transition: background .4s; scrollbar-width: thin; }
+/* nav column | hero | views — the nav is part of the centred layout, not pinned to the window */
+.shell { display: grid; grid-template-columns: 36px minmax(0, 2fr) minmax(0, 4fr); gap: var(--gap); height: 100%; min-height: 600px; }
 .views { position: relative; min-width: 0; min-height: 0; }
 .view { position: absolute; inset: 0; overflow: auto; min-width: 0; scrollbar-width: thin; padding-right: 2px; }
 
@@ -15,7 +16,7 @@
 .view.project { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1.1fr); gap: var(--gap); overflow: hidden; }
 
 @media (max-width: 1040px) {
-  .shell { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+  .shell { grid-template-columns: 36px minmax(0, 2fr) minmax(0, 3fr); }
   .view.home { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(220px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto);
     grid-template-areas: "micro micro" "life tools" "clients clients" "fused fused"; }
   .view.project { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
