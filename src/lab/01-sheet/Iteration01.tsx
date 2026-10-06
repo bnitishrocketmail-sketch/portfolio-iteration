@@ -44,7 +44,7 @@ export default function Iteration01() {
 
       <main className="sheet">
         <div className="shell">
-          <Hero project={project} onBack={() => go('projects')} />
+          <Hero project={project} onBack={() => go('projects')} onCv={() => go('experience')} />
           <div className="views">
             <AnimatePresence mode="wait" custom={dir} initial={false}>
               {view === 'home' && <Home key="home" onGo={go} dir={dir} />}

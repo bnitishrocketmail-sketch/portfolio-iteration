@@ -1,14 +1,6 @@
 /* Views: home tiles, projects grid, project detail, micro bezels, campaign reels, writing/experience rows. */
 
 /* ----- home tiles ----- */
-.stmt { grid-area: stmt; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; padding: 2px 6px 4px; }
-.stmt h1 { font-size: clamp(32px, min(4vw, 6.2vh), 60px); line-height: .98; letter-spacing: -.03em; position: relative; padding-right: .5em; display: inline-block; }
-.stmt h1 .lt { font-weight: 300; }
-.stmt h1 strong { font-weight: 800; }
-.stmt h1 .brk { top: .08em; right: 0; width: .3em; height: .3em; border-width: .07em; }
-.lede { color: var(--muted); max-width: 60ch; font-size: 14.5px; line-height: 1.45; }
-.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 2px; }
-
 .micro { grid-area: micro; background: var(--lilac); color: var(--on-lilac); display: flex; flex-direction: column; transition: background .5s, color .5s; }
 .micro.on { background: var(--mint); color: var(--on-mint); }
 .sw-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 12px 0 4px; }
@@ -134,7 +126,6 @@
   .side .proj .pmedia { min-height: 90px; }
 }
 @media (max-width: 700px) {
-  .stmt { padding: 6px 2px 0; }
   .micro { min-height: 260px; }
   .life { min-height: 220px; }
   .fused-l { min-height: 160px; }

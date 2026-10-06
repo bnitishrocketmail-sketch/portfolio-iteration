@@ -1,26 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { CLIENTS, COPY, LIFE, LINKS, TOOLS, type ViewName } from '../../lib/data';
+import { CLIENTS, LIFE, TOOLS, type ViewName } from '../../lib/data';
 import { item } from '../../lib/motion';
 
 type Go = (view: ViewName, pid?: string) => void;
-
-/* ---- statement: sits directly on the sheet, no box ---- */
-export function Statement({ onGo }: { onGo: Go }) {
-  return (
-    <motion.div className="stmt" variants={item}>
-      <p className="eyebrow">{COPY.eyebrow}</p>
-      <h1><span className="lt">Product designer.</span><br /><strong>I make UI move.</strong><i className="brk" aria-hidden="true" /></h1>
-      <p className="lede">{COPY.lede}</p>
-      <div className="cta">
-        <button className="btn" type="button" onClick={() => onGo('experience')}>View CV <span className="arr" aria-hidden="true">↗</span></button>
-        <a className="pill" href={LINKS.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-        <a className="pill" href={LINKS.lottiefiles}>LottieFiles</a>
-        <a className="pill" href="#">Email</a>
-      </div>
-    </motion.div>
-  );
-}
 
 /* ---- live micro tile: a switch with overshoot and squash ---- */
 export function MicroTile({ onGo }: { onGo: Go }) {

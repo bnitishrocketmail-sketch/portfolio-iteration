@@ -32,7 +32,7 @@ Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 - About lives on the back of the intro card (hover flip with intent delay on desktop; tap on touch; mobile hint pending a feel test). (6 Oct)
 
 **Decisions so far (Claude, overridable):**
-- Hero spans all rows; statement sits on the sheet with no box; micro-interactions get the largest right-hand slot because interaction craft is the product; photo stack above the fold but small; phones: rail becomes a bottom bar; short viewports (~700px tall) scroll the home view ~60px inside the sheet rather than shrinking type further.
+- Hero spans all rows and carries the name, statement, one-liner and actions (v6); micro-interactions get the largest right-hand slot because interaction craft is the product; photo stack above the fold but small; phones: rail becomes a bottom bar; short viewports (~700px tall) scroll the home view ~60px inside the sheet rather than shrinking type further.
 - Project mode of the hero is a crossfade for now; the real shared-element morph (card geometry sliding, tiles making way) is a later iteration once layout settles.
 - Stack: Vite + React + TypeScript + Motion; plain CSS with tokens. Content as data files.
 
@@ -49,3 +49,4 @@ Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 - v3 — nav moved to a left rail; sheet reclaimed the bottom space.
 - v4 — island rebuilt as a notch (ref 2).
 - v5 — ported from the single-file artifact into this repo as components; behaviour unchanged, transitions now on Motion (layout-animated rail pill, segmented pill and notch width).
+- v6 — (Nitish) title and short description moved into the intro card; the right column is tiles only. Re-laid as micro (wide) · photo stack (tall, suits phone photos) · clients · tools · campaign band full width. CV button and socials moved into the card with the text; the rotating badge moved to the card's top-right.

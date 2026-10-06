@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { EXPERIENCE, LINKS, PROJECTS, REELS, WRITING, type Project, type ViewName } from '../lib/data';
 import { container, item } from '../lib/motion';
-import { Clients, Fused, LifeStack, MicroTile, Statement, Tools } from '../components/tiles/Tiles';
+import { Clients, Fused, LifeStack, MicroTile, Tools } from '../components/tiles/Tiles';
 import { Like, Segmented, Stepper } from '../components/micro/Widgets';
 import './views.css';
 
@@ -40,11 +40,10 @@ export function ProjectCard({ p, onGo, wide }: { p: Project; onGo: Go; wide?: bo
 export function Home({ onGo, dir }: ViewProps) {
   return (
     <View className="home" dir={dir}>
-      <Statement onGo={onGo} />
       <MicroTile onGo={onGo} />
-      <Tools />
       <LifeStack />
       <Clients />
+      <Tools />
       <Fused onGo={onGo} />
     </View>
   );

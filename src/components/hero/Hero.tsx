@@ -14,14 +14,14 @@ export function Notch() {
 }
 
 const CHIPS = [
-  { label: 'Lottie', color: '#2BC48A', depth: 1.3, style: { top: '6%', right: '7%', '--dur': '5.6s', '--dl': '-1s' } },
+  { label: 'Lottie', color: '#2BC48A', depth: 1.3, style: { top: '30%', right: '3%', '--dur': '5.6s', '--dl': '-1s' } },
   { label: 'Rive', color: '#F5BD56', depth: .6, behind: true, style: { top: '66%', left: '2%', '--dur': '6.4s', '--dl': '-2.5s' } },
-  { label: 'After Effects', color: '#9A82D6', depth: 1.1, style: { top: '70%', right: '3%', '--dur': '5.1s', '--dl': '-.6s' } },
+  { label: 'After Effects', color: '#9A82D6', depth: 1.1, style: { top: '72%', right: '6%', '--dur': '5.1s', '--dl': '-.6s' } },
 ] as const;
 
-type Props = { project?: Project | null; onBack?: () => void };
+type Props = { project?: Project | null; onBack?: () => void; onCv?: () => void };
 
-export default function Hero({ project, onBack }: Props) {
+export default function Hero({ project, onBack, onCv }: Props) {
   const ref = useRef<HTMLElement>(null);
   const [flipped, setFlipped] = useState(false);
   const timer = useRef<number | undefined>(undefined);
@@ -77,21 +77,25 @@ export default function Hero({ project, onBack }: Props) {
               <span className="chip-in"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>coin rig</span>
             </div>
           </div>
-          <div className="hero-name">
+          <div className="hero-text">
             <span className="lt">Hi, I'm</span>
             <div className="nm">Nitish<br />Bhardwaj</div>
-            <span className="role">Product designer · motion &amp; interaction</span>
-          </div>
-          <div className="hero-foot">
-            <span className="hero-mail">{LINKS.email}</span>
-            <div className="badge" aria-hidden="true">
-              <svg viewBox="0 0 80 80">
-                <defs><path id="bp" d="M40,40 m-29,0 a29,29 0 1,1 58,0 a29,29 0 1,1 -58,0" /></defs>
-                <circle cx="40" cy="40" r="40" style={{ fill: 'var(--coal)' }} />
-                <text fontSize="8" letterSpacing="1" style={{ fill: '#fff', fontFamily: 'var(--mono)' }}><textPath href="#bp">MOTION · INTERACTION · CODE · </textPath></text>
-                <circle cx="40" cy="40" r="7" style={{ fill: 'var(--amber)' }} />
-              </svg>
+            <p className="st"><span>Product designer.</span> <strong>I make UI move.</strong></p>
+            <p className="hero-lede">{COPY.lede}</p>
+            <div className="hero-cta">
+              <button className="btn" type="button" onClick={e => { e.stopPropagation(); onCv?.(); }}>View CV <span className="arr" aria-hidden="true">↗</span></button>
+              <a className="pill" href={LINKS.linkedin} target="_blank" rel="noopener" onClick={e => e.stopPropagation()}>LinkedIn</a>
+              <a className="pill" href={LINKS.lottiefiles} onClick={e => e.stopPropagation()}>LottieFiles</a>
+              <a className="pill" href="#" onClick={e => e.stopPropagation()}>Email</a>
             </div>
+          </div>
+          <div className="badge" aria-hidden="true">
+            <svg viewBox="0 0 80 80">
+              <defs><path id="bp" d="M40,40 m-29,0 a29,29 0 1,1 58,0 a29,29 0 1,1 -58,0" /></defs>
+              <circle cx="40" cy="40" r="40" style={{ fill: 'var(--coal)' }} />
+              <text fontSize="8" letterSpacing="1" style={{ fill: '#fff', fontFamily: 'var(--mono)' }}><textPath href="#bp">MOTION · INTERACTION · CODE · </textPath></text>
+              <circle cx="40" cy="40" r="7" style={{ fill: 'var(--amber)' }} />
+            </svg>
           </div>
         </div>
         {/* back */}
