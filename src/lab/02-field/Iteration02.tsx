@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { CLIENTS, LINKS, PROJECTS, type ViewName } from '../../lib/data';
+import { CLIENTS, LINKS, PROJECTS } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
-import Island from '../../components/island/Island';
 import { ThemeToggle } from '../../components/dock/Dock';
 import { Like, Switch } from '../../components/micro/Widgets';
 import cutout from '../../assets/nitish-cutout.png';
@@ -62,9 +61,6 @@ export default function Iteration02() {
   };
   const reset = () => heroRef.current?.querySelectorAll<HTMLElement>('.fc').forEach(c => { c.style.setProperty('--px', '0px'); c.style.setProperty('--py', '0px'); });
 
-  /* the island's navigation intents have nowhere to go yet on this one-grid home; they just answer */
-  const go = (_v: ViewName) => { /* 02 has no views yet; projects bento comes later */ };
-
   const ringPct = 75; // PLACEHOLDER
   const C = 2 * Math.PI * 45;
 
@@ -73,7 +69,6 @@ export default function Iteration02() {
       <ThemeToggle isDark={isDark} onToggle={toggle} />
       <Link className="labtag" to="/lab">Lab · 02 Field</Link>
       <div className="field">
-        <Island onGo={go} onToggleTheme={toggle} />
         <div className="bento02">
 
           {/* experience: ring + shipped count + CV */}

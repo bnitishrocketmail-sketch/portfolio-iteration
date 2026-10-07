@@ -72,7 +72,7 @@ Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky p
 - bottom centre → Stack with four animated swatches (the reference's "Font" tile)
 - bottom right wide → headline + the Lottie ticker
 
-**Decisions (Nitish, 7 Oct):** no navigation bar on this iteration; projects as a tile that opens a bento (later, not now); assets around the person are his own small animations, one on a glass background; palette ocean green + sky blue instead of pink; long horizontal tiles can carry a running ticker of Lotties.
+**Decisions (Nitish, 7 Oct):** no navigation bar on this iteration; no bezel or border around the bento, only the sheet's shadow on the grey page; no island / notch on this version (the assistant's form here is undecided, revisit later); projects as a tile that opens a bento (later, not now); assets around the person are his own small animations, one on a glass background; palette ocean green + sky blue instead of pink; long horizontal tiles can carry a running ticker of Lotties.
 
 **Placeholders:** all numbers (7+, 3, 32, 05/+2, 54/+40%, 26,807); the oval photos; the ticker thumbnails; links. Sk-Modernist to self-host (free licence) if Outfit isn't close enough.
 
@@ -80,4 +80,5 @@ Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky p
 
 **History**
 - v1 — first build of the home grid from ref 3.
-- v2 — (Nitish) background and shadows as in 01: near-white sheet on the grey page, 10px grey bezel, 01's shadow; the notch merges into the bezel. The real photo keyed off its green screen (despilled, edges softened) and placed at the reference's size, ~1.5× the hero tile, head over the row above; the frame's right cut fades out, the waist is clipped by the tile.
+- v2 — (Nitish) background and shadows as in 01: near-white sheet on the grey page, 01's shadow.
+- v3 — (Nitish) bezel and island removed from this iteration. The real photo keyed off its green screen (despilled, edges softened) and placed at the reference's size, ~1.5× the hero tile, head over the row above; the frame's right cut fades out, the waist is clipped by the tile.

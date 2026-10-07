@@ -4,8 +4,8 @@
 
 /* ---- palette, scoped to this iteration ---- */
 .it02 {
-  /* background and shadows as in 01: a near-white sheet on a grey page, thin grey bezel, the notch merged into it */
-  --page: #e7e8ed; --field: #fbfbfd; --bezel: 10px; --edge: 24px;
+  /* background and shadows as in 01: a near-white sheet on a grey page; no bezel, no island on this iteration (Nitish, 7 Oct) */
+  --page: #e7e8ed; --field: #fbfbfd; --edge: 24px;
   --shadow: 0 40px 80px -40px rgba(24, 26, 48, .28);
   --tileA: #e3f1f9;   /* sky tint */
   --tileB: #dcf4ee;   /* ocean tint */
@@ -29,8 +29,8 @@
 /* ---- field + grid: ref 3 is 1200 × 900 with 15px margins, ~17px gaps ---- */
 .it02 { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--body); }
 .field { position: relative; container-type: inline-size; container-name: field; aspect-ratio: 4 / 3;
-  width: min(100% - 2 * (var(--edge) + var(--bezel)), calc((100vh - 2 * (var(--edge) + var(--bezel))) * 4 / 3)); height: auto; max-height: calc(100% - 2 * (var(--edge) + var(--bezel)));
-  padding: 1.25cqw; background: var(--field); border-radius: 34px; box-shadow: 0 0 0 var(--bezel) var(--island), var(--shadow); transition: background .4s; }
+  width: min(100% - 2 * var(--edge), calc((100vh - 2 * var(--edge)) * 4 / 3)); height: auto; max-height: calc(100% - 2 * var(--edge));
+  padding: 1.25cqw; background: var(--field); border-radius: 34px; box-shadow: var(--shadow); transition: background .4s; }
 .bento02 { display: grid; height: 100%; gap: var(--gap);
   grid-template-columns: minmax(0, 27fr) minmax(0, 29fr) minmax(0, 29fr) minmax(0, 27fr); grid-template-rows: minmax(0, 24fr) minmax(0, 18.5fr) minmax(0, 19.5fr) minmax(0, 20.5fr);
   grid-template-areas:
@@ -146,8 +146,6 @@
 .ticker .card i::after { content: ""; position: absolute; left: 6px; top: 4px; border-left: 6px solid var(--ink); border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
 @keyframes slide { to { transform: translateX(-50%); } }
 
-/* the notch hangs from the sheet's top edge, merged into the bezel */
-.it02 .island-wrap { position: absolute; top: 0; }
 
 @media (prefers-reduced-motion: reduce) { .ticker .track, .sw, .fc .bars i, .fc-in { animation: none !important; } }
 
@@ -160,5 +158,4 @@
   .t.hero02 { min-height: 360px; margin-top: 60px; }
   .t.xp, .t.team { min-height: 300px; }
   .t.reel02 { min-height: 200px; }
-  .it02 .island-wrap { position: fixed; }
 }
