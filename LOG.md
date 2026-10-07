@@ -15,9 +15,10 @@ The record of what each iteration tries, where its elements came from, and what 
 | # | What | File | Taken | Not taken |
 |---|------|------|-------|-----------|
 | 1 | Bento portfolio (Dribbble-style, "Jon Daniel") | `docs/refs/ref-1-bento-portfolio.jpg` | sheet-on-field frame; large uniform radius; equal gutters; one colour per tile; corner-bracket glyph (now the hover/selected mark); the three-family type mix — a wide face with squared counters and cut terminals for display words and numbers (Krona One), a tight grotesque for the name (Instrument Sans, light lead-in over bold), a round geometric for labels, body and nav (Outfit); no monospace; the sheet's 1.69:1 aspect, the 35% hero, the 2.8% gaps and the type scale relative to the sheet; mono portrait over colour; the chamfered notch label on the hero card (now the flip affordance); the fused two-colour tile; **the rotated side nav in the sheet's left margin, as-is (Nitish), plus a travelling highlight** | giant "Portfolio" word; vanity stats; play-button media chrome |
+| 3 | Dense agency bento on a black field ("CUBO", pink) | `docs/refs/ref-3-field-bento.jpg` | the whole layout: 4 columns (27/29/29/27) × 4 rows (24/18.5/19.5/20.5), 1200×900 field, 15px margins, ~17px gaps, radius ~2%; the person cut out in the centre tile with their head rising over the row above; floating UI cards around the person (the Adobe-style placement Nitish described); black statement pills; oval photos; big-number tiles; type hierarchy (big numbers ~5.5% of width, mid ~3.8%, pills ~2.5%, titles ~1.85%, labels ~1.35%); its named face Sk-Modernist (Outfit stands in until self-hosted) | the pink palette (ours: ocean green + sky blue, for Nitish's photo); the agency copy and stats |
 | 2 | Old iOS notch, screen recording of an agent status (6 Oct) | `docs/refs/ref-2-notch-*.png` | shape hangs from the top edge with flared corners; two lines (muted context over bold status); 3×3 pixel icon that shuffles pattern and changes colour per state, with glow; blur-crossfade on text change; width follows content | the black top bar it hangs from (ours hangs from the sheet edge) |
 
-## 01 Sheet — exploring
+## 01 Sheet — parked (7 Oct)
 
 Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 
@@ -54,3 +55,28 @@ Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 - v8 — (Nitish) a thin device bezel around the sheet, in the island colour; the notch hangs from the bezel's inner edge so the two merge (the reference's black bar). Island cut to one line — the context line is gone; status still swaps in place.
 - v7 — (Nitish) fonts re-assessed against ref 1 and matched: Unbounded / Inter / Outfit, mono dropped, sizes retuned for the wide display face. Nav rebuilt as the reference's rotated side nav inside the sheet, with the travelling pill; island re-centred over the sheet.
 - v6 — (Nitish) title and short description moved into the intro card; the right column is tiles only. Re-laid as micro (wide) · photo stack (tall, suits phone photos) · clients · tools · campaign band full width. CV button and socials moved into the card with the text; the rotating badge moved to the card's top-right.
+
+## 02 Field — exploring
+
+Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky palette.
+
+**Tries:** everything on one grid, no sheet, no nav. Black field, 4:3, scaled to the viewport. The person cut out in the centre tile with live assets floating around them (coin on a glass card, a play card, an easing-bars card, the live switch); the head rises over the row above, as in the reference. Long tiles carry motion: the bottom-right tile runs a ticker of Lotties (placeholders now). The island hangs from the top of the field in the field's own black (ref 2, merged).
+
+**What goes where (Claude's call, overridable):**
+- top-left tall → Experience: a ring (years, placeholder) + "3 products shipped with…" + View CV
+- bottom-left → the statement in black pills + two oval photos (life)
+- top centre → Micro-interactions (count + live like) and Projects (count; opens its own bento later)
+- centre → hero
+- right tall → "Motion for products people use every day" + client avatars + a shipped count (placeholder)
+- right small → brand mark + wordmark + LinkedIn / LottieFiles / Notes
+- bottom centre → Stack with four animated swatches (the reference's "Font" tile)
+- bottom right wide → headline + the Lottie ticker
+
+**Decisions (Nitish, 7 Oct):** no navigation bar on this iteration; projects as a tile that opens a bento (later, not now); assets around the person are his own small animations, one on a glass background; palette ocean green + sky blue instead of pink; long horizontal tiles can carry a running ticker of Lotties.
+
+**Placeholders:** all numbers (7+, 3, 32, 05/+2, 54/+40%, 26,807); the silhouette; the oval photos; the ticker thumbnails; links. Sk-Modernist to self-host (free licence) if Outfit isn't close enough.
+
+**Open:** phone layout is a first pass (column, hero keeps its proportions); the projects bento and its transition; which real Lotties go in the ticker and around the person.
+
+**History**
+- v1 — first build of the home grid from ref 3.

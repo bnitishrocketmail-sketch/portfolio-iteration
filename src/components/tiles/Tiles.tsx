@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { CLIENTS, LIFE, TOOLS, type ViewName } from '../../lib/data';
 import { item } from '../../lib/motion';
+import { Switch } from '../micro/Widgets';
 
 type Go = (view: ViewName, pid?: string) => void;
 
@@ -15,7 +16,7 @@ export function MicroTile({ onGo }: { onGo: Go }) {
         <button className="more" type="button" onClick={() => onGo('micro')}>See all <span className="arr" aria-hidden="true">→</span></button>
       </div>
       <div className="sw-wrap">
-        <button className="switch" role="switch" aria-checked={on} aria-label="Demo switch" onClick={() => setOn(o => !o)}><span className="knob" /></button>
+        <Switch on={on} onChange={setOn} />
         <p className="mono-s">state · {on ? 'on' : 'off'}</p>
       </div>
     </motion.div>

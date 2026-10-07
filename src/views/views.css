@@ -4,13 +4,6 @@
 .micro { grid-area: micro; background: var(--lilac); color: var(--on-lilac); display: flex; flex-direction: column; transition: background .5s, color .5s; }
 .micro.on { background: var(--mint); color: var(--on-mint); }
 .sw-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 12px 0 4px; }
-.switch { position: relative; width: clamp(110px, 10cqw, 132px); height: clamp(58px, 5.3cqw, 70px); border-radius: 999px; border: 0; padding: 0; cursor: pointer; background: color-mix(in srgb, var(--ink) 14%, transparent); transition: background .4s; }
-.switch[aria-checked="true"] { background: var(--ink); }
-.knob { position: absolute; top: 7px; left: 7px; width: calc(100% * 56 / 132); aspect-ratio: 1; height: auto; border-radius: 999px; background: var(--sheet); box-shadow: 0 8px 16px -8px rgba(0, 0, 0, .5); transition: transform .55s cubic-bezier(.34, 1.56, .64, 1), width .18s cubic-bezier(.3, 1.3, .5, 1); }
-.switch[aria-checked="true"] .knob { transform: translateX(calc(100% * 62 / 56)); }
-.switch:active .knob { width: calc(100% * 68 / 132); }
-.switch[aria-checked="true"]:active .knob { transform: translateX(calc(100% * 50 / 68)); }
-
 .tools { grid-area: tools; background: var(--mint); color: var(--on-mint); }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 12px 0 0; }
 .chips li { position: relative; padding: .65em .95em; border-radius: 999px; background: color-mix(in srgb, var(--sheet) 55%, transparent); font: 500 clamp(11.5px, 1.05cqw, 14px)/1 var(--body); letter-spacing: .01em; cursor: default; transition: transform .25s cubic-bezier(.3, 1.3, .5, 1), background .25s; }
@@ -73,25 +66,6 @@
 .bezel::before { content: ""; position: absolute; top: 10px; left: 50%; width: 44px; height: 5px; border-radius: 999px; background: var(--line2); transform: translateX(-50%); }
 .mi h3 { font: 600 clamp(14px, 1.35cqw, 18px)/1.2 var(--body); padding: 0 8px; letter-spacing: -.01em; }
 .mi p { color: var(--muted); font-size: clamp(12.5px, 1.05cqw, 14px); padding: 0 8px; }
-.like-wrap { display: flex; align-items: center; gap: 14px; }
-.like { position: relative; width: 64px; height: 64px; border-radius: 50%; border: 1.5px solid var(--line2); background: var(--sheet); color: var(--muted); display: grid; place-items: center; cursor: pointer; transition: color .25s, border-color .25s, background .25s; }
-.like[aria-pressed="true"] { color: #e5484d; border-color: #e5484d; background: color-mix(in srgb, #e5484d 10%, var(--sheet)); }
-.like svg { width: 26px; height: 26px; display: block; }
-.burst { position: absolute; inset: 0; pointer-events: none; }
-.burst i { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px; border-radius: 50%; background: var(--amber); }
-.like-count { font: 400 clamp(18px, 2cqw, 26px)/1 var(--display); letter-spacing: 0; min-width: 2.4ch; font-variant-numeric: tabular-nums; overflow: hidden; height: 30px; display: flex; align-items: center; position: relative; }
-.roll { position: relative; width: 56px; height: 44px; overflow: hidden; font: 400 clamp(18px, 2cqw, 24px)/44px var(--display); text-align: center; font-variant-numeric: tabular-nums; }
-.roll span, .like-count span { position: absolute; inset: 0; display: block; }
-.like-count span { line-height: 30px; }
-.stepper { display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 999px; background: var(--sheet2); border: 1px solid var(--line); }
-.stepper button { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--sheet); color: var(--ink); font: 500 22px/1 var(--body); cursor: pointer; box-shadow: 0 2px 6px -2px rgba(0, 0, 0, .25); transition: transform .2s cubic-bezier(.3, 1.3, .5, 1); }
-.stepper button:active { transform: scale(.9); }
-.seg { position: relative; display: inline-flex; padding: 4px; border-radius: 999px; background: var(--sheet2); border: 1px solid var(--line); }
-.seg button { position: relative; border: 0; background: none; padding: 10px 16px; border-radius: 999px; font: 600 13px var(--body); color: var(--ink); cursor: pointer; transition: color .3s; }
-.seg button span:not(.seg-ind) { position: relative; z-index: 1; }
-.seg button.on { color: var(--sheet); }
-.seg-ind { position: absolute; inset: 0; border-radius: 999px; background: var(--ink); z-index: 0; }
-
 /* ----- campaign: cinema treatment ----- */
 .rgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
 .reel { aspect-ratio: 16/9; max-width: 100%; margin: 0; border-radius: var(--r); background: var(--coal); color: var(--on-coal); position: relative; overflow: hidden; min-width: 0; }

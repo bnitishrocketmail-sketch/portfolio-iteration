@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import './widgets.css';
 
 /* A number that rolls in the direction it changes */
 const rollVariants = {
@@ -77,4 +78,9 @@ export function Segmented() {
       ))}
     </div>
   );
+}
+
+/* A switch with overshoot and squash; the parent decides what "on" means */
+export function Switch({ on, onChange, label = 'Demo switch' }: { on: boolean; onChange: (v: boolean) => void; label?: string }) {
+  return <button className="switch" role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)}><span className="knob" /></button>;
 }
