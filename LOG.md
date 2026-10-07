@@ -74,9 +74,10 @@ Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky p
 
 **Decisions (Nitish, 7 Oct):** no navigation bar on this iteration; projects as a tile that opens a bento (later, not now); assets around the person are his own small animations, one on a glass background; palette ocean green + sky blue instead of pink; long horizontal tiles can carry a running ticker of Lotties.
 
-**Placeholders:** all numbers (7+, 3, 32, 05/+2, 54/+40%, 26,807); the silhouette; the oval photos; the ticker thumbnails; links. Sk-Modernist to self-host (free licence) if Outfit isn't close enough.
+**Placeholders:** all numbers (7+, 3, 32, 05/+2, 54/+40%, 26,807); the oval photos; the ticker thumbnails; links. Sk-Modernist to self-host (free licence) if Outfit isn't close enough.
 
 **Open:** phone layout is a first pass (column, hero keeps its proportions); the projects bento and its transition; which real Lotties go in the ticker and around the person.
 
 **History**
 - v1 — first build of the home grid from ref 3.
+- v2 — (Nitish) background and shadows as in 01: near-white sheet on the grey page, 10px grey bezel, 01's shadow; the notch merges into the bezel. The real photo keyed off its green screen (despilled, edges softened) and placed at the reference's size, ~1.5× the hero tile, head over the row above; the frame's right cut fades out, the waist is clipped by the tile.

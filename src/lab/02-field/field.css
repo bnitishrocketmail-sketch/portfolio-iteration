@@ -4,7 +4,9 @@
 
 /* ---- palette, scoped to this iteration ---- */
 .it02 {
-  --field: #0a0d0f;
+  /* background and shadows as in 01: a near-white sheet on a grey page, thin grey bezel, the notch merged into it */
+  --page: #e7e8ed; --field: #fbfbfd; --bezel: 10px; --edge: 24px;
+  --shadow: 0 40px 80px -40px rgba(24, 26, 48, .28);
   --tileA: #e3f1f9;   /* sky tint */
   --tileB: #dcf4ee;   /* ocean tint */
   --tileC: #eef7fb;   /* lighter sky, for the cards in the hero */
@@ -12,22 +14,23 @@
   --ocean: #159e8c; --sky: #2f9ee5; --pos: #1db27a;
   --pill: #0f1416; --on-pill: #f6fbfc;
   --card: #ffffff; --glass: rgba(255, 255, 255, .42);
-  --island: #0a0d0f; --on-island: #f4f4f7;
-  --sheet: #e3f1f9; --sheet2: #d2e8f2; /* for shared widgets (switch knob, like button) */
+  --island: #4a4c56; --on-island: #f4f4f7;
+  --sheet: #fbfbfd; --sheet2: #e3f1f9; /* for shared widgets (switch knob, like button) */
   --r: clamp(16px, 2cqw, 26px); --gap: clamp(10px, 1.45cqw, 18px);
-  background: var(--field); color: var(--ink);
+  background: var(--page); color: var(--ink);
   --display: 'Outfit', ui-sans-serif, system-ui, sans-serif; /* ref 3 names Sk-Modernist; Outfit stands in */
   --body: 'Outfit', ui-sans-serif, system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .it02 { --field: #050607; --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass: rgba(22, 52, 63, .55); --island: #050607; --sheet: #0f2230; --sheet2: #163440; }
+  :root:not([data-theme="light"]) .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass: rgba(22, 52, 63, .55); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; }
 }
-:root[data-theme="dark"] .it02 { --field: #050607; --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass: rgba(22, 52, 63, .55); --island: #050607; --sheet: #0f2230; --sheet2: #163440; }
+:root[data-theme="dark"] .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass: rgba(22, 52, 63, .55); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; }
 
 /* ---- field + grid: ref 3 is 1200 × 900 with 15px margins, ~17px gaps ---- */
 .it02 { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--body); }
 .field { position: relative; container-type: inline-size; container-name: field; aspect-ratio: 4 / 3;
-  width: min(100%, calc(100vh * 4 / 3)); height: auto; max-height: 100%; padding: 1.25cqw; }
+  width: min(100% - 2 * (var(--edge) + var(--bezel)), calc((100vh - 2 * (var(--edge) + var(--bezel))) * 4 / 3)); height: auto; max-height: calc(100% - 2 * (var(--edge) + var(--bezel)));
+  padding: 1.25cqw; background: var(--field); border-radius: 34px; box-shadow: 0 0 0 var(--bezel) var(--island), var(--shadow); transition: background .4s; }
 .bento02 { display: grid; height: 100%; gap: var(--gap);
   grid-template-columns: minmax(0, 27fr) minmax(0, 29fr) minmax(0, 29fr) minmax(0, 27fr); grid-template-rows: minmax(0, 24fr) minmax(0, 18.5fr) minmax(0, 19.5fr) minmax(0, 20.5fr);
   grid-template-areas:
@@ -80,8 +83,10 @@
 
 /* ---- hero: the person, with live assets floating around ---- */
 .hero02 { background: radial-gradient(70% 70% at 50% 60%, color-mix(in srgb, var(--tileB) 70%, var(--sky) 30%), var(--tileB) 72%); }
-.hero02 .person { position: absolute; left: 50%; bottom: 0; width: 64%; height: 118%; transform: translateX(-50%); z-index: 2; pointer-events: none; }
-.hero02 .person svg { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
+/* the person: clipped by the tile's sides and bottom, free to rise above it (ref 3: ~1.5× the tile's height) */
+.t.hero02 { z-index: 2; }
+.person-clip { position: absolute; left: 0; right: 0; bottom: 0; top: -62%; overflow: hidden; border-radius: 0 0 var(--r) var(--r); z-index: 2; pointer-events: none; }
+.person { position: absolute; bottom: -1.5%; right: 3%; height: 93.8%; width: auto; -webkit-mask-image: linear-gradient(to right, #000 84%, transparent 100%); mask-image: linear-gradient(to right, #000 84%, transparent 100%); filter: drop-shadow(0 22px 28px rgba(0, 0, 0, .16)); }
 .fc { position: absolute; z-index: 3; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .fc.behind { z-index: 1; }
 .fc-in { background: var(--card); color: var(--ink); border-radius: clamp(10px, 1.3cqw, 18px); box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .45); padding: clamp(8px, 1cqw, 14px) clamp(10px, 1.2cqw, 16px); animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
@@ -141,17 +146,15 @@
 .ticker .card i::after { content: ""; position: absolute; left: 6px; top: 4px; border-left: 6px solid var(--ink); border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
 @keyframes slide { to { transform: translateX(-50%); } }
 
-/* ---- theme button on the black field ---- */
-.it02 .theme { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .12); color: #f4f4f7; }
-.it02 .labtag { color: #8fa3aa; }
+/* the notch hangs from the sheet's top edge, merged into the bezel */
 .it02 .island-wrap { position: absolute; top: 0; }
 
 @media (prefers-reduced-motion: reduce) { .ticker .track, .sw, .fc .bars i, .fc-in { animation: none !important; } }
 
 /* ---- phones: the grid becomes a column; the hero keeps its proportions ---- */
 @media (max-width: 700px) {
-  .it02 { position: static; display: block; }
-  .field { aspect-ratio: auto; width: 100%; height: auto; max-height: none; padding: 12px 12px 110px; }
+  .it02 { position: static; display: block; min-height: 100%; padding: 0 16px; }
+  .field { aspect-ratio: auto; width: 100%; height: auto; max-height: none; padding: 60px 12px 110px; margin: 14px 0 0; border-radius: 22px; box-shadow: var(--shadow); }
   .bento02 { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: auto;
     grid-template-areas: "life life" "hero hero" "micro projects" "xp team" "tools brand" "reel reel"; }
   .t.hero02 { min-height: 360px; margin-top: 60px; }

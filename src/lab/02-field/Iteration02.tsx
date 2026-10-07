@@ -6,6 +6,7 @@ import { useTheme } from '../../lib/theme';
 import Island from '../../components/island/Island';
 import { ThemeToggle } from '../../components/dock/Dock';
 import { Like, Switch } from '../../components/micro/Widgets';
+import cutout from '../../assets/nitish-cutout.png';
 import './field.css';
 
 /* ---------- small pieces ---------- */
@@ -101,10 +102,7 @@ export default function Iteration02() {
 
           {/* hero: the person, with live assets floating around */}
           <section className="t hero02 b" ref={heroRef} onPointerMove={move} onPointerLeave={reset}>
-            <div className="person" aria-hidden="true">
-              {/* PLACEHOLDER silhouette until the cutout photo arrives */}
-              <svg viewBox="0 0 200 260" preserveAspectRatio="xMidYMax meet"><g fill="var(--ink)"><circle cx="100" cy="64" r="44" /><rect x="84" y="96" width="32" height="40" rx="12" /><path d="M14 260c0-70 36-108 86-108s86 38 86 108z" /></g></svg>
-            </div>
+            <div className="person-clip" aria-hidden="true"><img className="person" src={cutout} alt="" /></div>
             <span className="shape" style={{ left: '8%', top: '20%', borderColor: 'var(--sky)' }} />
             <span className="shape" style={{ right: '10%', top: '34%' }} />
             <span className="shape tri" style={{ left: '18%', bottom: '10%' }} />
