@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, LayoutGroup } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { PROJECTS, VIEW_ORDER, contextFor, type ViewName } from '../../lib/data';
+import { PROJECTS, VIEW_ORDER, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import Hero from '../../components/hero/Hero';
 import Island from '../../components/island/Island';
@@ -38,7 +38,7 @@ export default function Iteration01() {
 
   return (
     <LayoutGroup>
-      <Island context={contextFor(view, pid)} onGo={go} onToggleTheme={toggle} />
+      <Island onGo={go} onToggleTheme={toggle} />
       <ThemeToggle isDark={isDark} onToggle={toggle} />
       <Link className="labtag" to="/lab">Lab · 01 Sheet</Link>
 

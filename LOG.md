@@ -28,7 +28,7 @@ Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 - Bento grid for the home; project pages are not bento: persistent card + one big container + one or two side tiles. (6 Oct)
 - One view at a time on desktop; scrolling inside containers. (6 Oct)
 - Nav: the reference's rotated-label side nav, exactly as designed, inside the centred layout (not pinned to the window edge); the only addition is the selected-state highlight. Phones keep a bottom bar. (6 Oct, supersedes the earlier icon rail)
-- Island follows ref 2: notch, not floating pill. (6 Oct)
+- Island follows ref 2: notch, not floating pill. (6 Oct) One line only, merged into a thin bezel around the whole layout. (7 Oct)
 - About lives on the back of the intro card (hover flip with intent delay on desktop; tap on touch; mobile hint pending a feel test). (6 Oct)
 
 **Decisions so far (Claude, overridable):**
@@ -49,5 +49,6 @@ Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 - v3 — nav moved to a left rail; sheet reclaimed the bottom space.
 - v4 — island rebuilt as a notch (ref 2).
 - v5 — ported from the single-file artifact into this repo as components; behaviour unchanged, transitions now on Motion (layout-animated rail pill, segmented pill and notch width).
+- v8 — (Nitish) a thin device bezel around the sheet, in the island colour; the notch hangs from the bezel's inner edge so the two merge (the reference's black bar). Island cut to one line — the context line is gone; status still swaps in place.
 - v7 — (Nitish) fonts re-assessed against ref 1 and matched: Unbounded / Inter / Outfit, mono dropped, sizes retuned for the wide display face. Nav rebuilt as the reference's rotated side nav inside the sheet, with the travelling pill; island re-centred over the sheet.
 - v6 — (Nitish) title and short description moved into the intro card; the right column is tiles only. Re-laid as micro (wide) · photo stack (tall, suits phone photos) · clients · tools · campaign band full width. CV button and socials moved into the card with the text; the rotating badge moved to the card's top-right.

@@ -62,9 +62,9 @@ function route(q: string): Reply {
   return { text: "I'm a placeholder for now. The real assistant arrives in a later iteration." };
 }
 
-type Props = { context: string; onGo: (view: ViewName, pid?: string) => void; onToggleTheme: () => void };
+type Props = { onGo: (view: ViewName, pid?: string) => void; onToggleTheme: () => void };
 
-export default function Island({ context, onGo, onToggleTheme }: Props) {
+export default function Island({ onGo, onToggleTheme }: Props) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<{ text: string; mode: Mode }>({ text: 'Ask about Nitish', mode: 'idle' });
   const [msgs, setMsgs] = useState<{ me: boolean; text: string }[]>([{ me: false, text: 'Hi. I can take you around. Try "show me the projects" or "switch to dark".' }]);
@@ -109,7 +109,6 @@ export default function Island({ context, onGo, onToggleTheme }: Props) {
         transition={{ layout: { type: 'spring', bounce: .12, duration: .55 } }}>
         <motion.div layout="position" className="island-top">
           <button className="island-pill" type="button" aria-expanded={open} aria-controls="islandPanel" onClick={() => setOpenState(!open)}>
-            <BlurText className="ctx" text={context} />
             <span className="stat"><Pixel mode={status.mode} /><BlurText text={status.text} /></span>
           </button>
           <button className="island-x" type="button" aria-label="Close" onClick={() => setOpenState(false)}>×</button>

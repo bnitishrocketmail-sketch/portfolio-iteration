@@ -14,7 +14,7 @@
   --island: #111216; --on-island: #f4f4f7;
   --shadow: 0 40px 80px -40px rgba(24, 26, 48, .28);
   --chip-shadow: 0 12px 28px -12px rgba(20, 22, 40, .45);
-  --r: 26px; --gap: 16px;
+  --r: 26px; --gap: 16px; --bezel: 12px; --edge: 24px;
   /* ref 1 mixes three families: a wide geometric for display words and numbers,
      a neo-grotesque for the name, a round geometric for labels and body */
   --display: 'Unbounded', ui-sans-serif, system-ui, sans-serif;

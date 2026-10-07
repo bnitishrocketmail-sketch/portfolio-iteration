@@ -1,19 +1,20 @@
 /* Island: a notch hanging from the sheet's top edge (reference 2, the old iOS notch).
    Two lines: a muted context line, a bold status line with a 3×3 pixel icon. */
-.island-wrap { position: fixed; top: 24px; left: 0; right: 0; display: flex; justify-content: center; pointer-events: none; z-index: 60; }
-.island { pointer-events: auto; position: relative; max-width: calc(100vw - 150px); background: var(--island); color: var(--on-island); border-radius: 0 0 24px 24px; box-shadow: 0 26px 50px -22px rgba(0, 0, 0, .6); }
-.island::before, .island::after { content: ""; position: absolute; top: 0; width: 18px; height: 18px; background: radial-gradient(circle at 0 100%, transparent 17.4px, var(--island) 18px); }
-.island::before { left: -18px; }
-.island::after { right: -18px; transform: scaleX(-1); }
+/* hangs from the bezel's inner edge, same colour, so it reads as one piece */
+.island-wrap { position: fixed; top: calc(var(--edge) + var(--bezel)); left: 0; right: 0; display: flex; justify-content: center; pointer-events: none; z-index: 60; }
+.island { pointer-events: auto; position: relative; max-width: calc(100vw - 150px); background: var(--island); color: var(--on-island); border-radius: 0 0 20px 20px; box-shadow: 0 22px 44px -22px rgba(0, 0, 0, .55); }
+.island::before, .island::after { content: ""; position: absolute; top: 0; width: 16px; height: 16px; background: radial-gradient(circle at 0 100%, transparent 15.4px, var(--island) 16px); }
+.island::before { left: -16px; }
+.island::after { right: -16px; transform: scaleX(-1); }
 .island.open { max-width: calc(100vw - 32px); }
-.island-top { display: flex; align-items: center; gap: 12px; padding: 9px 16px 11px 16px; }
-.island-pill { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; background: none; border: 0; color: inherit; cursor: pointer; text-align: left; padding: 0; }
-.ctx { font: 400 11.5px/1.2 var(--body); color: rgba(255, 255, 255, .55); white-space: nowrap; display: block; }
-.stat { display: flex; align-items: center; gap: 9px; font: 600 15px/1.25 var(--body); white-space: nowrap; }
-.px { width: 16px; height: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; flex: none; filter: drop-shadow(0 0 5px var(--pc, #7fe3c2)); }
+/* one line: pixel icon + status */
+.island-top { display: flex; align-items: center; gap: 10px; padding: 6px 16px 9px 14px; }
+.island-pill { flex: 1; display: flex; align-items: center; min-width: 0; background: none; border: 0; color: inherit; cursor: pointer; text-align: left; padding: 0; }
+.stat { display: flex; align-items: center; gap: 9px; font: 600 13.5px/1.25 var(--body); white-space: nowrap; }
+.px { width: 14px; height: 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; flex: none; filter: drop-shadow(0 0 5px var(--pc, #7fe3c2)); }
 .px i { background: var(--pc, #7fe3c2); border-radius: 1px; opacity: .07; transition: opacity .14s, background .5s; }
 .px i.on { opacity: 1; }
-.island-x { display: none; width: 28px; height: 28px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .1); color: inherit; cursor: pointer; font-size: 14px; line-height: 1; flex: none; }
+.island-x { display: none; width: 24px; height: 24px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .1); color: inherit; cursor: pointer; font-size: 14px; line-height: 1; flex: none; }
 .island.open .island-x { display: grid; place-items: center; }
 .island-panel { width: 368px; max-width: calc(100vw - 64px); padding: 2px 12px 12px; display: flex; flex-direction: column; gap: 10px; box-sizing: content-box; }
 .msgs { display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow: auto; padding: 2px 2px 4px; font-size: 13px; line-height: 1.4; }
@@ -25,6 +26,6 @@
 .island form button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--on-island); color: var(--island); cursor: pointer; font: 600 16px var(--display); }
 
 @media (max-width: 700px) {
-  .island-wrap { top: env(safe-area-inset-top, 0px); }
+  .island-wrap { top: calc(14px + var(--bezel) + env(safe-area-inset-top, 0px)); }
   .island { max-width: calc(100vw - 100px); }
 }
