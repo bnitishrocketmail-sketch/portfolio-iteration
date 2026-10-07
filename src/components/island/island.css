@@ -25,7 +25,11 @@
 .island input::placeholder { color: rgba(255, 255, 255, .45); }
 .island form button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--on-island); color: var(--island); cursor: pointer; font: 600 16px var(--display); }
 
+/* phones: no bezel to hang from, so the island is a pill at the top-left (phones have their own at the centre) */
 @media (max-width: 700px) {
-  .island-wrap { top: calc(14px + var(--bezel) + env(safe-area-inset-top, 0px)); }
-  .island { max-width: calc(100vw - 100px); }
+  .island-wrap { top: calc(10px + env(safe-area-inset-top, 0px)); justify-content: flex-start; padding-left: 16px; }
+  .island { max-width: calc(100vw - 100px); border-radius: 999px !important; }
+  .island.open { border-radius: 22px !important; max-width: calc(100vw - 32px); }
+  .island::before, .island::after { display: none; }
+  .island-top { padding: 7px 14px 8px 12px; }
 }

@@ -22,7 +22,7 @@ export function SideNav({ active, onGo }: Props) {
     <nav className="sidenav" aria-label="Sections">
       {NAV.map(item => (
         <button key={item.id} type="button" className={item.id === key ? 'on' : ''} aria-current={item.id === key ? 'page' : undefined} onClick={() => onGo(item.id)}>
-          {item.id === key && <motion.span layoutId="nav-ind" className="nav-ind" transition={{ type: 'spring', bounce: .2, duration: .55 }} />}
+          {item.id === key && <motion.span layoutId="nav-ind" className="nav-ind" transition={{ type: 'spring', visualDuration: .36, bounce: .14 }} />}
           <span>{item.label}</span>
         </button>
       ))}

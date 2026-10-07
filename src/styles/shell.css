@@ -23,7 +23,7 @@
   .view.project { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
 }
 @media (max-width: 700px) {
-  .sheet { height: auto; margin: calc(14px + var(--bezel)) auto 110px; border-radius: 22px; padding-top: 66px; overflow: visible; }
+  .sheet { height: auto; margin: 14px auto 110px; border-radius: 22px; padding-top: 66px; overflow: visible; box-shadow: var(--shadow); }
   .shell { display: flex; flex-direction: column; height: auto; min-height: 0; }
   .views { position: static; }
   .view { position: static; overflow: visible; }

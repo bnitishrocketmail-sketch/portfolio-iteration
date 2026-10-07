@@ -105,7 +105,7 @@ export default function Island({ onGo, onToggleTheme }: Props) {
   return (
     <div className="island-wrap">
       {/* `layout` lets the notch's width and height follow the content instead of jumping */}
-      <motion.div ref={ref} layout className={`island${open ? ' open' : ''}`} style={{ borderRadius: '0 0 24px 24px' }}
+      <motion.div ref={ref} layout className={`island${open ? ' open' : ''}`} style={{ borderRadius: '0 0 20px 20px' }}
         transition={{ layout: { type: 'spring', bounce: .12, duration: .55 } }}>
         <motion.div layout="position" className="island-top">
           <button className="island-pill" type="button" aria-expanded={open} aria-controls="islandPanel" onClick={() => setOpenState(!open)}>
