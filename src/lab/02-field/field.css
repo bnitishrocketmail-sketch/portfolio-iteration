@@ -160,10 +160,15 @@
 /* ---- phones: the grid becomes a column; the hero keeps its proportions ---- */
 @media (max-width: 700px) {
   .it02 { position: static; display: block; min-height: 100%; padding: 0 16px; overflow: visible; }
-  .field { width: 100%; height: auto; max-height: none; transform: none; padding: 60px 12px 110px; margin: 14px 0 0; border-radius: 22px; box-shadow: var(--shadow); }
+  /* size containment would collapse an auto-height field, so the phone container is inline-size only */
+  .field { container-type: inline-size; width: 100%; height: auto; max-height: none; transform: none; padding: 60px 12px 110px; margin: 14px 0 0; border-radius: 22px; box-shadow: var(--shadow); }
   .bento02 { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: auto;
-    grid-template-areas: "life life" "hero hero" "micro projects" "xp team" "tools brand" "reel reel"; }
-  .t.hero02 { min-height: 360px; margin-top: 60px; }
+    grid-template-areas: "hero hero" "life life" "micro projects" "xp team" "tools brand" "reel reel"; }
+  /* hero first, so the head rises into the sheet's top padding and not over another tile */
+  .t.hero02 { min-height: 380px; margin-top: 36px; }
+  .person-clip { top: -28%; }
+  .person { height: 95%; right: 0; }
+  .life02 .ovals { min-height: 180px; }
   .t.xp, .t.team { min-height: 300px; }
   .t.reel02 { min-height: 200px; }
 }

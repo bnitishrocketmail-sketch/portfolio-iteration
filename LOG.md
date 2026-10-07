@@ -82,4 +82,5 @@ Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky p
 - v1 — first build of the home grid from ref 3.
 - v2 — (Nitish) background and shadows as in 01: near-white sheet on the grey page, 01's shadow.
 - v3 — (Nitish) bezel and island removed from this iteration.
+- v5 — phone fixed: the size-contained container collapsed to its padding on phones (only the top tile showed); phones now use an inline-size container, hero first with the head rising into the top padding.
 - v4 — (Nitish) sizing: width-driven 1200–1440px, no horizontal or vertical scroll; the sheet's aspect follows the screen between 4:3 and 1.7:1; narrower or shorter viewports scale the whole 1200px layout down instead of reflowing; tall pieces also capped by the sheet's height. Phones unchanged. The real photo keyed off its green screen (despilled, edges softened) and placed at the reference's size, ~1.5× the hero tile, head over the row above; the frame's right cut fades out, the waist is clipped by the tile.
