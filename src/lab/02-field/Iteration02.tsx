@@ -52,6 +52,23 @@ export default function Iteration02() {
   const heroRef = useRef<HTMLDivElement>(null);
   const [sw, setSw] = useState(false);
 
+  /* sheet sizing: width 1200–1440, aspect between 4:3 and 1.7:1, scaled down as one piece when the viewport can't hold it */
+  useEffect(() => {
+    const root = document.documentElement, EDGE = 24;
+    const fit = () => {
+      const vw = window.innerWidth, vh = window.innerHeight;
+      if (vw <= 700) { ['--W', '--H', '--s02'].forEach(v => root.style.removeProperty(v)); return; }
+      const W = Math.min(1440, Math.max(1200, vw - 2 * EDGE));
+      let s = vw - 2 * EDGE < 1200 ? (vw - 32) / 1200 : 1;
+      const availH = (vh - 2 * EDGE) / s;
+      const H = Math.min(Math.max(availH, W / 1.7), W / 1.333);
+      if (H > availH) s *= availH / H;
+      root.style.setProperty('--W', W + 'px'); root.style.setProperty('--H', H + 'px'); root.style.setProperty('--s02', s.toFixed(4));
+    };
+    fit(); addEventListener('resize', fit);
+    return () => { removeEventListener('resize', fit); ['--W', '--H', '--s02'].forEach(v => root.style.removeProperty(v)); };
+  }, []);
+
   /* floating assets follow the pointer by depth, as in 01 */
   const move = (e: React.PointerEvent) => {
     if (!canHover || reduce || !heroRef.current) return;

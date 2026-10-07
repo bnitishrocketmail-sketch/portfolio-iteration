@@ -28,9 +28,17 @@
 
 /* ---- field + grid: ref 3 is 1200 × 900 with 15px margins, ~17px gaps ---- */
 .it02 { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--body); }
-.field { position: relative; container-type: inline-size; container-name: field; aspect-ratio: 4 / 3;
-  width: min(100% - 2 * var(--edge), calc((100vh - 2 * var(--edge)) * 4 / 3)); height: auto; max-height: calc(100% - 2 * var(--edge));
+/* Sizing (Nitish, 7 Oct): width-driven, 1200–1440px, never a horizontal scroll, never a vertical one.
+   The sheet's aspect follows the screen between 4:3 (the reference) and 1.7:1. When the viewport can't
+   hold that (narrower than 1248px, or too short for a 1.7:1 sheet), the whole layout scales down as one
+   piece instead of reflowing, so nothing gets cramped. --W / --H / --s02 are set from the viewport in JS;
+   the CSS fallbacks cover the first paint. */
+.field { position: relative; container-type: size; container-name: field; flex: none;
+  width: var(--W, clamp(1200px, 100vw - 2 * var(--edge), 1440px));
+  height: var(--H, clamp(700px, 100vh - 2 * var(--edge), 1080px));
+  transform: scale(var(--s02, 1)); transform-origin: center center;
   padding: 1.25cqw; background: var(--field); border-radius: 34px; box-shadow: var(--shadow); transition: background .4s; }
+.it02 { overflow: hidden; }
 .bento02 { display: grid; height: 100%; gap: var(--gap);
   grid-template-columns: minmax(0, 27fr) minmax(0, 29fr) minmax(0, 29fr) minmax(0, 27fr); grid-template-rows: minmax(0, 24fr) minmax(0, 18.5fr) minmax(0, 19.5fr) minmax(0, 20.5fr);
   grid-template-areas:
@@ -38,14 +46,14 @@
     "xp hero hero team"
     "life hero hero brand"
     "life tools reel reel"; }
-.t { position: relative; border-radius: var(--r); padding: clamp(14px, 1.9cqw, 26px); min-width: 0; min-height: 0; overflow: hidden; background: var(--tileA); display: flex; flex-direction: column; }
+.t { position: relative; border-radius: var(--r); padding: min(clamp(14px, 1.9cqw, 26px), 2.6cqh); min-width: 0; min-height: 0; overflow: hidden; background: var(--tileA); display: flex; flex-direction: column; }
 .t.b { background: var(--tileB); }
 .t.xp { grid-area: xp; } .t.micro02 { grid-area: micro; } .t.projects { grid-area: projects; } .t.team { grid-area: team; }
 .t.hero02 { grid-area: hero; overflow: visible; } .t.life02 { grid-area: life; } .t.brand { grid-area: brand; } .t.tools02 { grid-area: tools; } .t.reel02 { grid-area: reel; }
 
 /* ---- type hierarchy from ref 3 (of the field's width: big numbers ~5.5%, mid ~3.8%, pills ~2.5%, titles ~1.85%, labels ~1.35%) ---- */
-.num { font: 500 clamp(34px, 5.5cqw, 72px)/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.num.mid { font-size: clamp(28px, 3.8cqw, 50px); }
+.num { font: 500 min(clamp(34px, 5.5cqw, 72px), 8cqh)/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.num.mid { font-size: min(clamp(28px, 3.8cqw, 50px), 5.6cqh); }
 .ttl { font: 500 clamp(15px, 1.85cqw, 24px)/1.3 var(--body); letter-spacing: -.01em; text-wrap: balance; }
 .lbl { font: 600 clamp(12px, 1.35cqw, 17px)/1.3 var(--body); }
 .sm { font: 500 clamp(11px, 1.15cqw, 14px)/1.35 var(--body); color: var(--muted); }
@@ -59,7 +67,7 @@
 .cta02:hover .arr { transform: translateX(3px); }
 
 /* ---- xp: ring + number ---- */
-.ring { position: relative; width: clamp(90px, 11cqw, 150px); aspect-ratio: 1; margin: clamp(8px, 1.2cqw, 16px) auto; display: grid; place-items: center; }
+.ring { position: relative; width: min(clamp(90px, 11cqw, 150px), 16cqh); aspect-ratio: 1; margin: min(clamp(8px, 1.2cqw, 16px), 1.4cqh) auto; display: grid; place-items: center; }
 .ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .ring .track { fill: none; stroke: var(--ink); stroke-width: 7; opacity: .95; }
 .ring .arc { fill: none; stroke: var(--ocean); stroke-width: 7; stroke-linecap: round; }
@@ -68,7 +76,7 @@
 .ring .in small { display: block; font: 500 clamp(9px, .9cqw, 11px)/1.2 var(--body); color: var(--muted); margin-top: 3px; }
 .xp .xpstat { margin-top: auto; text-align: center; }
 .xp .xpstat .lbl { margin-top: .35em; max-width: 20ch; margin-inline: auto; }
-.xp .cta02 { align-self: center; margin-top: clamp(10px, 1.4cqw, 18px); }
+.xp .cta02 { align-self: center; margin-top: min(clamp(10px, 1.4cqw, 18px), 1.4cqh); }
 
 /* ---- micro / projects ---- */
 .micro02 .row1 { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -111,11 +119,11 @@
 .avatars i:first-child { margin-left: 0; }
 .team .num { margin-top: .15em; }
 .team .lbl { margin-top: auto; }
-.brand { align-items: center; justify-content: center; text-align: center; gap: clamp(6px, .9cqw, 12px); }
-.mark { width: clamp(30px, 3.4cqw, 44px); aspect-ratio: 1; position: relative; }
+.brand { align-items: center; justify-content: center; text-align: center; gap: min(clamp(6px, .9cqw, 12px), 1cqh); }
+.mark { width: min(clamp(30px, 3.4cqw, 44px), 5cqh); aspect-ratio: 1; position: relative; }
 .mark i { position: absolute; inset: 0; border: 2.5px solid var(--ink); border-radius: 8px; }
 .mark i:nth-child(2) { transform: rotate(30deg); } .mark i:nth-child(3) { transform: rotate(60deg); }
-.word { font: 500 clamp(18px, 2.3cqw, 30px)/1 var(--display); letter-spacing: -.02em; }
+.word { font: 500 min(clamp(18px, 2.3cqw, 30px), 3.4cqh)/1 var(--display); letter-spacing: -.02em; }
 .brand .links { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
 .brand .links a { font: 600 clamp(10.5px, 1.05cqw, 13px) var(--body); color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); padding: .45em .7em; border-radius: 999px; }
 
@@ -151,8 +159,8 @@
 
 /* ---- phones: the grid becomes a column; the hero keeps its proportions ---- */
 @media (max-width: 700px) {
-  .it02 { position: static; display: block; min-height: 100%; padding: 0 16px; }
-  .field { aspect-ratio: auto; width: 100%; height: auto; max-height: none; padding: 60px 12px 110px; margin: 14px 0 0; border-radius: 22px; box-shadow: var(--shadow); }
+  .it02 { position: static; display: block; min-height: 100%; padding: 0 16px; overflow: visible; }
+  .field { width: 100%; height: auto; max-height: none; transform: none; padding: 60px 12px 110px; margin: 14px 0 0; border-radius: 22px; box-shadow: var(--shadow); }
   .bento02 { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: auto;
     grid-template-areas: "life life" "hero hero" "micro projects" "xp team" "tools brand" "reel reel"; }
   .t.hero02 { min-height: 360px; margin-top: 60px; }
