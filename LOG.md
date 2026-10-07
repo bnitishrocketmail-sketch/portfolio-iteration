@@ -78,6 +78,20 @@ Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky p
 
 **Open:** phone layout is a first pass (column, hero keeps its proportions); the projects bento and its transition; which real Lotties go in the ticker and around the person.
 
+### Hero card — spec (Nitish, 7 Oct; not built yet, build as one pass when he says go)
+
+1. **Photo.** Body facing front, looking into the phone (as ref 3's person does); centre-aligned, no more right offset. Second photo received 7 Oct (`docs/refs/photo-2-phone-pose.jpg`): this pose, on a dark grey studio background rather than green, so the cutout needs a proper segmentation rather than a chroma key.
+2. **Meaning.** The assets floating around him stand for what he's looking at on the phone and what he's built. No extra visual device to say so; the floating cards do it exactly as ref 3 does.
+3. **Placement.** Cards sit close to the body, not far out: some behind him (masked by the body), some in front, overlapping the shirt. What to do with the card's remaining width is decided later.
+4. **Glass.** The glass card becomes more transparent; preferred: liquid glass.
+5. **The cards (Lotties to come from Nitish; placeholders until then):**
+   - liquid-glass card: the "B" assistant Lottie, all states played back to back; a static label, e.g. "AI assistant interaction"; no dynamic text.
+   - a card with the faux-3D coin turning (perspective, elevation, depth) — his Lottie; the canvas coin stands in.
+   - title card: his name + the title with a rolling word. Two variants given: (a) "Product designer" → the second word rolls designer → motion → interaction; (b) "Product motion design" → the middle word rolls motion → interaction, "Product" and "design" static. Claude to pick unless Nitish decides.
+   - description card: one or two lines on what he does (01's lede length), placed next to the title card.
+   - one or two more Lotties later.
+6. The current stand-in cards (play count, easing bars, switch) give way to this set.
+
 **History**
 - v1 — first build of the home grid from ref 3.
 - v2 — (Nitish) background and shadows as in 01: near-white sheet on the grey page, 01's shadow.
