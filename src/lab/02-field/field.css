@@ -13,7 +13,9 @@
   --ink: #0f1416; --muted: #5c6b70; --line: rgba(15, 20, 22, .1);
   --ocean: #159e8c; --sky: #2f9ee5; --pos: #1db27a;
   --pill: #0f1416; --on-pill: #f6fbfc;
-  --card: #ffffff; --glass: rgba(255, 255, 255, .42);
+  --card: #ffffff;
+  /* liquid glass: the fill is nearly clear; the rim and the specular carry the material */
+  --glass-hi: rgba(255, 255, 255, .34); --glass-lo: rgba(255, 255, 255, .10); --glass-rim: rgba(255, 255, 255, .62); --glass-spec: rgba(255, 255, 255, .9);
   --island: #4a4c56; --on-island: #f4f4f7;
   --sheet: #fbfbfd; --sheet2: #e3f1f9; /* for shared widgets (switch knob, like button) */
   --r: clamp(16px, 2cqw, 26px); --gap: clamp(10px, 1.45cqw, 18px);
@@ -22,9 +24,9 @@
   --body: 'Outfit', ui-sans-serif, system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass: rgba(22, 52, 63, .55); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; }
+  :root:not([data-theme="light"]) .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; }
 }
-:root[data-theme="dark"] .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass: rgba(22, 52, 63, .55); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; }
+:root[data-theme="dark"] .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; }
 
 /* ---- field + grid: ref 3 is 1200 × 900 with 15px margins, ~17px gaps ---- */
 .it02 { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--body); }
@@ -89,29 +91,66 @@
 .projects .num { margin-top: .2em; }
 .projects .delta { margin-top: auto; }
 
-/* ---- hero: the person, with live assets floating around ---- */
+/* ---- hero: the person, centred, with what he's looking at floating close to the body ----
+   Spec (Nitish, 7 Oct): front-facing phone pose, centre-aligned; cards near or over the body, some behind
+   it (masked by the figure), some in front over the shirt; the glass card as liquid glass. */
 .hero02 { background: radial-gradient(70% 70% at 50% 60%, color-mix(in srgb, var(--tileB) 70%, var(--sky) 30%), var(--tileB) 72%); }
-/* the person: clipped by the tile's sides and bottom, free to rise above it (ref 3: ~1.5× the tile's height) */
+/* the person: clipped by the tile's sides and bottom, free to rise above it (ref 3: ~1.5× the tile's height).
+   The clip sits above the tile's background and the "behind" cards; the front cards sit above the clip. */
 .t.hero02 { z-index: 2; }
 .person-clip { position: absolute; left: 0; right: 0; bottom: 0; top: -62%; overflow: hidden; border-radius: 0 0 var(--r) var(--r); z-index: 2; pointer-events: none; }
-.person { position: absolute; bottom: -1.5%; right: 3%; height: 93.8%; width: auto; -webkit-mask-image: linear-gradient(to right, #000 84%, transparent 100%); mask-image: linear-gradient(to right, #000 84%, transparent 100%); filter: drop-shadow(0 22px 28px rgba(0, 0, 0, .16)); }
+.person { position: absolute; bottom: -1.2%; left: 50%; height: 93.5%; width: auto; transform: translateX(-50%); filter: drop-shadow(0 22px 28px rgba(0, 0, 0, .16)); }
 .fc { position: absolute; z-index: 3; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .fc.behind { z-index: 1; }
-.fc-in { background: var(--card); color: var(--ink); border-radius: clamp(10px, 1.3cqw, 18px); box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .45); padding: clamp(8px, 1cqw, 14px) clamp(10px, 1.2cqw, 16px); animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
-.fc.glass .fc-in { background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, .55); }
+.fc-in { background: var(--card); color: var(--ink); border-radius: clamp(12px, 1.5cqw, 20px); box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .45); padding: clamp(9px, 1.1cqw, 15px) clamp(11px, 1.3cqw, 17px); animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
+/* liquid glass: mostly see-through, a strong blur with lifted saturation, a bright rim that catches light at the
+   top-left and fades out, and a soft inner glow; whatever sits behind it (the arm, the tile) shows through softened */
+.fc.glass .fc-in { position: relative; background: linear-gradient(135deg, var(--glass-hi), var(--glass-lo)); backdrop-filter: blur(18px) saturate(1.7); -webkit-backdrop-filter: blur(18px) saturate(1.7);
+  border: 1px solid var(--glass-rim); box-shadow: inset 0 1px 0 var(--glass-spec), inset 1px 0 0 color-mix(in srgb, var(--glass-spec) 45%, transparent), inset 0 -10px 24px -16px var(--glass-spec), 0 18px 40px -18px rgba(0, 0, 0, .35); }
+.fc.glass .fc-in::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(90% 60% at 18% 0%, color-mix(in srgb, var(--glass-spec) 70%, transparent), transparent 60%); }
 .fc .cap { display: block; font: 600 clamp(10px, 1.05cqw, 13px)/1.2 var(--body); color: var(--muted); }
-.fc .big { display: block; font: 600 clamp(14px, 1.7cqw, 22px)/1.1 var(--display); letter-spacing: -.02em; }
+.fc.glass .cap { color: var(--ink); opacity: .78; }
 .fc .coin { width: clamp(64px, 7.5cqw, 100px); aspect-ratio: 1; display: block; }
-.fc .play { display: flex; align-items: center; gap: 8px; }
-.fc .play i { width: clamp(22px, 2.4cqw, 32px); aspect-ratio: 1; border-radius: 50%; background: var(--ocean); display: grid; place-items: center; }
-.fc .play i::after { content: ""; border-left: 8px solid #fff; border-top: 5px solid transparent; border-bottom: 5px solid transparent; margin-left: 2px; }
-.fc .bars { display: flex; align-items: flex-end; gap: 4px; height: clamp(30px, 3.6cqw, 48px); margin-top: 6px; }
-.fc .bars i { width: clamp(6px, .8cqw, 10px); border-radius: 3px 3px 0 0; background: var(--sky); animation: bar 2.6s ease-in-out infinite; animation-delay: var(--d); transform-origin: bottom; }
-.fc .bars i:nth-child(odd) { background: var(--ocean); }
-@keyframes bar { 0%, 100% { transform: scaleY(.55); } 50% { transform: scaleY(1); } }
+.coin-card .cap { margin-top: 2px; text-align: center; }
+/* the assistant card: the B above its label */
+.fc.ai .fc-in { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(8px, .9cqw, 12px); }
+.fc.ai .cap { max-width: 11ch; }
+/* the title card: name, then "Product <rolling word>" */
+.title-card .nm { display: block; font: 600 clamp(16px, 1.9cqw, 25px)/1.1 var(--display); letter-spacing: -.025em; }
+.title-card .role { display: flex; gap: .28em; align-items: baseline; margin-top: .3em; font: 500 clamp(12.5px, 1.35cqw, 17px)/1.2 var(--body); color: var(--muted); white-space: nowrap; }
+.rw { display: inline-block; position: relative; overflow: hidden; vertical-align: bottom; color: var(--ocean); font-weight: 600; padding: 0 .04em; margin: 0 -.04em; }
+.rw-w { display: inline-block; will-change: transform; }
+/* the description card: one or two lines beside the title */
+.desc-card .fc-in { width: clamp(170px, 24cqw, 300px); }
+.desc-card p { font: 500 clamp(11.5px, 1.15cqw, 14.5px)/1.4 var(--body); color: var(--ink); opacity: .9; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 .hero02 .shape { position: absolute; z-index: 1; border-radius: 50%; border: 3px solid var(--ocean); width: 14px; height: 14px; }
 .hero02 .shape.tri { border: 0; border-radius: 0; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid var(--sky); opacity: .7; }
+
+/* ---- PLACEHOLDER: the B assistant's states, until the Lottie arrives ---- */
+.bb { position: relative; width: clamp(44px, 4.6cqw, 60px); aspect-ratio: 1; border-radius: 32%; background: var(--pill); color: var(--on-pill); display: grid; place-items: center; transition: border-radius .5s; }
+.bb b { font: 700 clamp(20px, 2.2cqw, 28px)/1 var(--display); transition: transform .5s cubic-bezier(.3, 1.2, .4, 1), opacity .4s; }
+.bb .ring { position: absolute; inset: -4px; border-radius: 38%; border: 2px solid var(--ocean); opacity: 0; transform: scale(.9); }
+.bb .dots, .bb .wave { position: absolute; display: flex; gap: 3px; opacity: 0; transition: opacity .3s; }
+.bb .dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--on-pill); }
+.bb .wave { align-items: center; height: 60%; }
+.bb .wave i { width: 3px; height: 30%; border-radius: 2px; background: var(--on-pill); }
+.bb.s-idle b { animation: breathe 1.5s ease-in-out infinite; }
+.bb.s-listen { border-radius: 50%; }
+.bb.s-listen .ring { animation: ping 1.5s ease-out infinite; }
+.bb.s-listen .ring.r2 { animation-delay: .5s; }
+.bb.s-think b, .bb.s-reply b { transform: scale(.4); opacity: 0; }
+.bb.s-think .dots { opacity: 1; }
+.bb.s-think .dots i { animation: hop .9s ease-in-out infinite; }
+.bb.s-think .dots i:nth-child(2) { animation-delay: .15s; } .bb.s-think .dots i:nth-child(3) { animation-delay: .3s; }
+.bb.s-reply .wave { opacity: 1; }
+.bb.s-reply .wave i { animation: talk .7s ease-in-out infinite; }
+.bb.s-reply .wave i:nth-child(2) { animation-delay: .12s; } .bb.s-reply .wave i:nth-child(3) { animation-delay: .24s; } .bb.s-reply .wave i:nth-child(4) { animation-delay: .36s; }
+@keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+@keyframes ping { 0% { opacity: .9; transform: scale(.85); } 100% { opacity: 0; transform: scale(1.5); } }
+@keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes talk { 0%, 100% { height: 30%; } 50% { height: 100%; } }
 
 /* ---- team / brand ---- */
 .avatars { display: flex; margin: clamp(10px, 1.3cqw, 18px) 0; }
@@ -155,7 +194,7 @@
 @keyframes slide { to { transform: translateX(-50%); } }
 
 
-@media (prefers-reduced-motion: reduce) { .ticker .track, .sw, .fc .bars i, .fc-in { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .ticker .track, .sw, .fc-in, .bb b, .bb .ring, .bb .dots i, .bb .wave i { animation: none !important; } }
 
 /* ---- phones: the grid becomes a column; the hero keeps its proportions ---- */
 @media (max-width: 700px) {
@@ -165,9 +204,20 @@
   .bento02 { height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: auto;
     grid-template-areas: "hero hero" "life life" "micro projects" "xp team" "tools brand" "reel reel"; }
   /* hero first, so the head rises into the sheet's top padding and not over another tile */
-  .t.hero02 { min-height: 380px; margin-top: 36px; }
+  .t.hero02 { min-height: 440px; margin-top: 36px; }
   .person-clip { top: -28%; }
-  .person { height: 95%; right: 0; }
+  .person { height: 92%; }
+  /* the cards keep their places but shrink; title and description share the bottom band */
+  .fc-in { padding: 9px 11px; }
+  .fc.ai { left: 2% !important; top: 0 !important; }
+  .fc.coin-card { right: 4% !important; top: -8% !important; }
+  .fc .coin { width: 56px; }
+  /* title above-left, description below-right, so the two never meet on a narrow tile */
+  .fc.title-card { left: 3% !important; bottom: 30% !important; }
+  .fc.desc-card { right: 3% !important; bottom: 5% !important; }
+  .desc-card .fc-in { width: 58vw; max-width: 230px; }
+  .title-card .nm { font-size: 15px; }
+  .title-card .role { font-size: 12px; }
   .life02 .ovals { min-height: 180px; }
   .t.xp, .t.team { min-height: 300px; }
   .t.reel02 { min-height: 200px; }

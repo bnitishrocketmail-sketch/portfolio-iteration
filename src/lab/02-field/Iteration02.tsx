@@ -1,14 +1,57 @@
 import { useEffect, useRef, useState } from 'react';
-import { useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { CLIENTS, LINKS, PROJECTS } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import { ThemeToggle } from '../../components/dock/Dock';
-import { Like, Switch } from '../../components/micro/Widgets';
-import cutout from '../../assets/nitish-cutout.png';
+import { Like } from '../../components/micro/Widgets';
+import cutout from '../../assets/nitish-phone-cutout.webp';
 import './field.css';
 
 /* ---------- small pieces ---------- */
+
+/* The title's rolling word (Nitish, 7 Oct, variant a): "Product" stays, the second word rolls
+   designer → motion → interaction. Each word rises in as the last one leaves upward. */
+const WORDS = ['designer', 'motion', 'interaction'];
+function RollingWord() {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setI(n => (n + 1) % WORDS.length), 2400);
+    return () => clearInterval(id);
+  }, [reduce]);
+  return (
+    <motion.span className="rw" layout transition={{ duration: .5, ease: [.3, 1, .4, 1] }}>
+      <AnimatePresence initial={false} mode="popLayout">
+        <motion.span key={WORDS[i]} className="rw-w"
+          initial={{ y: '110%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '-110%', opacity: 0 }}
+          transition={{ duration: .5, ease: [.3, 1, .4, 1] }}>{WORDS[i]}</motion.span>
+      </AnimatePresence>
+    </motion.span>
+  );
+}
+
+/* PLACEHOLDER for the "B" assistant Lottie: a stand-in that walks the assistant's states back to back
+   (idle → listening → thinking → replying) so the card reads as live until the real file arrives. */
+const STATES = ['idle', 'listen', 'think', 'reply'] as const;
+function BAssistant() {
+  const reduce = useReducedMotion();
+  const [s, setS] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setS(n => (n + 1) % STATES.length), 1500);
+    return () => clearInterval(id);
+  }, [reduce]);
+  return (
+    <div className={`bb s-${STATES[s]}`} aria-hidden="true">
+      <i className="ring" /><i className="ring r2" />
+      <b>B</b>
+      <span className="dots"><i /><i /><i /></span>
+      <span className="wave"><i /><i /><i /><i /></span>
+    </div>
+  );
+}
 
 /* the faux-3D coin from 01, as a floating hero asset */
 function Coin({ className }: { className?: string }) {
@@ -50,7 +93,6 @@ export default function Iteration02() {
   const reduce = useReducedMotion();
   const canHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
   const heroRef = useRef<HTMLDivElement>(null);
-  const [sw, setSw] = useState(false);
 
   /* sheet sizing: width 1200–1440, aspect between 4:3 and 1.7:1, scaled down as one piece when the viewport can't hold it */
   useEffect(() => {
@@ -112,27 +154,29 @@ export default function Iteration02() {
             <p className="delta">+2 in progress</p>
           </button>
 
-          {/* hero: the person, with live assets floating around */}
+          {/* hero: the person, centred, looking into the phone; what he's looking at and what he's built float
+              close to the body — the coin behind his shoulder, the assistant over his arm, title and description
+              over the shirt (spec: LOG.md, "Hero card — spec") */}
           <section className="t hero02 b" ref={heroRef} onPointerMove={move} onPointerLeave={reset}>
             <div className="person-clip" aria-hidden="true"><img className="person" src={cutout} alt="" /></div>
-            <span className="shape" style={{ left: '8%', top: '20%', borderColor: 'var(--sky)' }} />
-            <span className="shape" style={{ right: '10%', top: '34%' }} />
-            <span className="shape tri" style={{ left: '18%', bottom: '10%' }} />
-            {/* glass card: the coin */}
-            <div className="fc glass" data-depth="1.2" style={{ left: '6%', top: '22%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
-              <div className="fc-in"><span className="cap">Rupee · loader</span><Coin className="coin" /></div>
+            <span className="shape" style={{ left: '6%', top: '38%', borderColor: 'var(--sky)' }} />
+            <span className="shape" style={{ right: '7%', top: '48%' }} />
+            <span className="shape tri" style={{ left: '15%', top: '52%' }} />
+            {/* the assistant: liquid glass, over his arm, as if it had come off the phone */}
+            <div className="fc glass ai" data-depth="1.3" style={{ left: '9%', top: '2%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
+              <div className="fc-in"><BAssistant /><span className="cap">AI assistant interaction</span></div>
             </div>
-            {/* play card */}
-            <div className="fc" data-depth="1.4" style={{ left: '4%', bottom: '18%', '--dur': '6.2s', '--dl': '-2.4s' } as React.CSSProperties}>
-              <div className="fc-in play"><i /><div><span className="big">26,807</span><span className="cap">Lottie plays</span></div></div>
+            {/* the coin, behind his shoulder */}
+            <div className="fc behind coin-card" data-depth=".6" style={{ right: '15%', top: '1%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
+              <div className="fc-in"><Coin className="coin" /><span className="cap">Rupee · faux 3D</span></div>
             </div>
-            {/* bars card, behind */}
-            <div className="fc behind" data-depth=".6" style={{ right: '4%', top: '-4%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
-              <div className="fc-in"><span className="cap">Easing · states</span><div className="bars">{[.1, .4, .7, 1.0, .55, .3].map((d, i) => <i key={i} style={{ '--d': `${-d * 2}s` } as React.CSSProperties} />)}</div></div>
+            {/* the title: name + the rolling word */}
+            <div className="fc title-card" data-depth="1.1" style={{ left: '5%', bottom: '8%', '--dur': '6.2s', '--dl': '-2.4s' } as React.CSSProperties}>
+              <div className="fc-in"><span className="nm">Nitish Bhardwaj</span><span className="role">Product <RollingWord /></span></div>
             </div>
-            {/* switch card */}
-            <div className="fc" data-depth="1.1" style={{ right: '5%', bottom: '10%', '--dur': '5.1s', '--dl': '-.6s' } as React.CSSProperties}>
-              <div className="fc-in"><span className="cap">state · {sw ? 'on' : 'off'}</span><div style={{ marginTop: 6, transform: 'scale(.62)', transformOrigin: 'left top', height: 44 }}><Switch on={sw} onChange={setSw} /></div></div>
+            {/* the description, beside it */}
+            <div className="fc desc-card" data-depth="1.2" style={{ right: '5%', bottom: '11%', '--dur': '5.1s', '--dl': '-.6s' } as React.CSSProperties}>
+              <div className="fc-in"><p>Motion, interaction and code-driven animation for products people use every day.</p></div>
             </div>
           </section>
 

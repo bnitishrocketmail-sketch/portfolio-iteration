@@ -60,7 +60,7 @@ Route: `/lab/01-sheet`. Composition: Nitish's requirements + ref 1 styling.
 
 Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky palette.
 
-**Tries:** everything on one grid, no sheet, no nav. Black field, 4:3, scaled to the viewport. The person cut out in the centre tile with live assets floating around them (coin on a glass card, a play card, an easing-bars card, the live switch); the head rises over the row above, as in the reference. Long tiles carry motion: the bottom-right tile runs a ticker of Lotties (placeholders now). The island hangs from the top of the field in the field's own black (ref 2, merged).
+**Tries:** everything on one grid, no sheet, no nav. Black field, 4:3, scaled to the viewport. The person cut out in the centre tile, looking into his phone, with what he's looking at and what he's built floating close to the body (the assistant on liquid glass over his arm, the coin behind his shoulder, his name and a line about him over the shirt); the head rises over the row above, as in the reference. Long tiles carry motion: the bottom-right tile runs a ticker of Lotties (placeholders now). The island hangs from the top of the field in the field's own black (ref 2, merged).
 
 **What goes where (Claude's call, overridable):**
 - top-left tall → Experience: a ring (years, placeholder) + "3 products shipped with…" + View CV
@@ -74,25 +74,26 @@ Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky p
 
 **Decisions (Nitish, 7 Oct):** desktop width 1200–1440 with safe margins (Studio Display in mind), no horizontal scroll, no vertical scroll; no navigation bar on this iteration; no bezel or border around the bento, only the sheet's shadow on the grey page; no island / notch on this version (the assistant's form here is undecided, revisit later); projects as a tile that opens a bento (later, not now); assets around the person are his own small animations, one on a glass background; palette ocean green + sky blue instead of pink; long horizontal tiles can carry a running ticker of Lotties.
 
-**Placeholders:** all numbers (7+, 3, 32, 05/+2, 54/+40%, 26,807); the oval photos; the ticker thumbnails; links. Sk-Modernist to self-host (free licence) if Outfit isn't close enough.
+**Placeholders:** all numbers (7+, 3, 32, 05/+2, 54/+40%); the oval photos; the ticker thumbnails; links; in the hero, the "B" assistant is a CSS stand-in that walks four states (idle → listening → thinking → replying) until the Lottie arrives, and the coin is the canvas rig from 01 until its Lottie arrives. Sk-Modernist to self-host (free licence) if Outfit isn't close enough.
 
-**Open:** phone layout is a first pass (column, hero keeps its proportions); the projects bento and its transition; which real Lotties go in the ticker and around the person.
+**Open:** phone layout is a first pass (column, hero keeps its proportions); the projects bento and its transition; which real Lotties go in the ticker and around the person; the life tile's pills still say "Product designer." now that the hero's title card does too — decide whether the pills change; one or two more Lotties for the hero (slots left: top-centre-right above the shoulder, lower-left under the assistant).
 
-### Hero card — spec (Nitish, 7 Oct; not built yet, build as one pass when he says go)
+### Hero card — spec (Nitish, 7 Oct; built in v6)
 
-1. **Photo.** Body facing front, looking into the phone (as ref 3's person does); centre-aligned, no more right offset. Second photo received 7 Oct (`docs/refs/photo-2-phone-pose.jpg`): this pose, on a dark grey studio background rather than green, so the cutout needs a proper segmentation rather than a chroma key.
+1. **Photo.** Body facing front, looking into the phone (as ref 3's person does); centre-aligned, no more right offset. Second photo received 7 Oct (`docs/refs/photo-2-phone-pose.jpg`): this pose on a dark grey studio background; the same pose on the green screen followed (`docs/refs/photo-2-phone-pose-green.png`) and is the one used — chroma-keyed like the first, cropped to the figure, stored as WebP with alpha (`src/assets/nitish-phone-cutout.webp`, 686 × 1246).
 2. **Meaning.** The assets floating around him stand for what he's looking at on the phone and what he's built. No extra visual device to say so; the floating cards do it exactly as ref 3 does.
 3. **Placement.** Cards sit close to the body, not far out: some behind him (masked by the body), some in front, overlapping the shirt. What to do with the card's remaining width is decided later.
 4. **Glass.** The glass card becomes more transparent; preferred: liquid glass.
 5. **The cards (Lotties to come from Nitish; placeholders until then):**
    - liquid-glass card: the "B" assistant Lottie, all states played back to back; a static label, e.g. "AI assistant interaction"; no dynamic text.
    - a card with the faux-3D coin turning (perspective, elevation, depth) — his Lottie; the canvas coin stands in.
-   - title card: his name + the title with a rolling word. Two variants given: (a) "Product designer" → the second word rolls designer → motion → interaction; (b) "Product motion design" → the middle word rolls motion → interaction, "Product" and "design" static. Claude to pick unless Nitish decides.
+   - title card: his name + the title with a rolling word. Two variants given: (a) "Product designer" → the second word rolls designer → motion → interaction; (b) "Product motion design" → the middle word rolls motion → interaction, "Product" and "design" static. **Nitish picked (a)** (7 Oct); built: "Product" static, the word rises in as the last one leaves upward, 2.4 s per word, ocean green, still under reduced motion.
    - description card: one or two lines on what he does (01's lede length), placed next to the title card.
    - one or two more Lotties later.
 6. The current stand-in cards (play count, easing bars, switch) give way to this set.
 
 **History**
+- v6 — (Nitish) the hero card rebuilt to the spec above, in one pass: the green-screen phone pose keyed and centred (1.5× the tile, head over the row above, waist clipped by the tile); four cards close to the body — the assistant on liquid glass over his right arm (in front; the arm shows through blurred), the coin tucked behind his left shoulder (masked by the figure), the title card over the shirt bottom-left, the description card bottom-right; the play, easing-bars and switch cards gone. Liquid glass: near-clear fill, 18px blur with lifted saturation, a bright rim that catches light top-left, a soft inner glow; dark-mode variants. Phones: the same four cards, smaller; title above-left, description below-right so they never meet.
 - v1 — first build of the home grid from ref 3.
 - v2 — (Nitish) background and shadows as in 01: near-white sheet on the grey page, 01's shadow.
 - v3 — (Nitish) bezel and island removed from this iteration.
