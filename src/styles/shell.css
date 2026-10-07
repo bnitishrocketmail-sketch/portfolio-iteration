@@ -1,29 +1,40 @@
-/* Shell: the sheet inside a thin device bezel on the field; the nav | hero | views grid; the view containers.
-   The bezel is a spread shadow in the island colour, so the notch hanging from the top edge merges with it. */
-.sheet { height: calc(100% - 2 * (var(--edge) + var(--bezel))); max-width: 1320px; margin: calc(var(--edge) + var(--bezel)) auto 0; background: var(--sheet); border-radius: 28px; padding: 58px clamp(16px, 2.6vw, 34px) clamp(18px, 2.4vw, 28px) clamp(12px, 1.6vw, 20px); box-shadow: 0 0 0 var(--bezel) var(--island), var(--shadow); overflow: auto; transition: background .4s; scrollbar-width: thin; }
-/* nav column | hero | views — the nav is part of the centred layout, not pinned to the window */
-.shell { display: grid; grid-template-columns: 36px minmax(0, 2fr) minmax(0, 4fr); gap: var(--gap); height: 100%; min-height: 600px; }
+/* Shell.
+   .device is the bezel: it holds the sheet's aspect ratio (ref 1: 1000 × 590), floats centred in the
+   viewport with margins, and is the size container every cqw value measures against. The island hangs
+   from its top edge. .sheet fills it; the shell inside is nav | hero | views at the reference's split
+   (hero 35% of the sheet, views 52%, the rest nav and gaps). */
+.device { position: relative; container-type: inline-size; container-name: device;
+  aspect-ratio: 1000 / 590; width: min(100%, 1320px, calc((100vh - 2 * (var(--edge) + var(--bezel))) * 1.695));
+  max-height: calc(100vh - 2 * (var(--edge) + var(--bezel)));
+  border-radius: 36px; box-shadow: 0 0 0 var(--bezel) var(--island), var(--shadow); background: var(--sheet); }
+.sheet { position: absolute; inset: 0; border-radius: inherit; background: var(--sheet); overflow: auto; scrollbar-width: thin; transition: background .4s;
+  padding: clamp(44px, 4.4cqw, 58px) clamp(16px, 4.2cqw, 56px) clamp(18px, 4.2cqw, 56px) clamp(12px, 1.4cqw, 18px); }
+.shell { display: grid; grid-template-columns: clamp(28px, 2.6cqw, 34px) minmax(0, 35fr) minmax(0, 52fr); gap: var(--gap); height: 100%; min-height: 520px; }
 .views { position: relative; min-width: 0; min-height: 0; }
 .view { position: absolute; inset: 0; overflow: auto; min-width: 0; scrollbar-width: thin; padding-right: 2px; }
 
-/* home view: the right-hand bento, tiles only (the intro text lives in the hero card) */
-.view.home { display: grid; gap: var(--gap); grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(132px, 1fr));
+/* home view: the right-hand bento, tiles only. Columns and rows follow ref 1's right column:
+   a wide media tile beside a narrow stat column, and a square + fused band below. */
+.view.home { display: grid; gap: var(--gap); grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
   grid-template-areas:
-    "micro micro micro life"
-    "clients tools tools life"
-    "fused fused fused fused"; }
+    "micro micro micro micro micro micro micro micro life life life life"
+    "micro micro micro micro micro micro micro micro clients clients clients clients"
+    "tools tools tools tools fused fused fused fused fused fused fused fused"; }
 
 /* project detail view: reading column + side column */
 .view.project { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1.1fr); gap: var(--gap); overflow: hidden; }
 
 @media (max-width: 1040px) {
-  .shell { grid-template-columns: 36px minmax(0, 2fr) minmax(0, 3fr); }
+  .device { aspect-ratio: auto; height: calc(100vh - 2 * (var(--edge) + var(--bezel))); width: 100%; }
+  .shell { grid-template-columns: 30px minmax(0, 2fr) minmax(0, 3fr); }
   .view.home { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(220px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto);
     grid-template-areas: "micro micro" "life tools" "clients clients" "fused fused"; }
   .view.project { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
 }
 @media (max-width: 700px) {
-  .sheet { height: auto; margin: 14px auto 110px; border-radius: 22px; padding-top: 66px; overflow: visible; box-shadow: var(--shadow); }
+  #root { display: block; }
+  .device { aspect-ratio: auto; height: auto; max-height: none; width: 100%; margin: 14px auto 110px; border-radius: 22px; box-shadow: var(--shadow); }
+  .sheet { position: static; height: auto; padding-top: 66px; overflow: visible; }
   .shell { display: flex; flex-direction: column; height: auto; min-height: 0; }
   .views { position: static; }
   .view { position: static; overflow: visible; }

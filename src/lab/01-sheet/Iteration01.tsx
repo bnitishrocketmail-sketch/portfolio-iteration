@@ -38,10 +38,12 @@ export default function Iteration01() {
 
   return (
     <LayoutGroup>
-      <Island onGo={go} onToggleTheme={toggle} />
       <ThemeToggle isDark={isDark} onToggle={toggle} />
       <Link className="labtag" to="/lab">Lab · 01 Sheet</Link>
 
+      {/* the device holds the sheet's aspect ratio and is what every cqw measures against */}
+      <div className="device">
+      <Island onGo={go} onToggleTheme={toggle} />
       <main className="sheet">
         <div className="shell">
           <SideNav active={view} onGo={go} />
@@ -59,6 +61,7 @@ export default function Iteration01() {
           </div>
         </div>
       </main>
+      </div>
 
       <Dock active={view} onGo={go} />
     </LayoutGroup>

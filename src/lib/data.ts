@@ -66,7 +66,7 @@ export const LINKS = {
 
 export const COPY = {
   eyebrow: 'Motion · Interaction · Code-driven animation',
-  lede: 'Interaction, state-machine motion and code-driven animation for products people use every day — from the first prototype to the Lottie that ships.',
+  lede: 'Interaction, state-machine motion and code-driven animation for products people use every day.',
   aboutTitle: 'Motion is how a product talks.',
   about: "I'm a product designer who works in motion: the transitions, states and micro-interactions that make an interface feel like one thing. Most of it is scripted — expressions, state machines, code-driven rigs — so what ships is what was designed. Lately: faux-3D rigs inside Lottie, a Creator plugin, and assistants with states of their own.", // DRAFT copy
 };

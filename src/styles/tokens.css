@@ -14,11 +14,13 @@
   --island: #4a4c56; --on-island: #f4f4f7;
   --shadow: 0 40px 80px -40px rgba(24, 26, 48, .28);
   --chip-shadow: 0 12px 28px -12px rgba(20, 22, 40, .45);
-  --r: 26px; --gap: 16px; --bezel: 10px; --edge: 24px;
-  /* ref 1 mixes three families: a wide geometric for display words and numbers,
-     a neo-grotesque for the name, a round geometric for labels and body */
-  --display: 'Unbounded', ui-sans-serif, system-ui, sans-serif;
-  --name: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  /* proportions follow the sheet's width (cqw of .device), measured off ref 1 */
+  --r: clamp(16px, 2.1cqw, 28px); --gap: clamp(14px, 2.1cqw, 28px); --bezel: 10px; --edge: 24px;
+  /* ref 1 mixes three families: a wide face with squared counters and cut terminals for display words
+     and numbers (Krona One, single weight), a tight grotesque for the name (Instrument Sans),
+     a round geometric for labels and body (Outfit) */
+  --display: 'Krona One', ui-sans-serif, system-ui, sans-serif;
+  --name: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
   --body: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   --mono: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   color-scheme: light;

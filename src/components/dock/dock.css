@@ -2,9 +2,9 @@
    Desktop / tablet: the reference's side nav — rotated labels stacked in the sheet's left margin,
    reading bottom to top, in the round sans. The selected label gets a travelling pill.
    Phones: a fixed bottom bar with icons (rotated text has no room there). */
-.sidenav { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 22px; padding: 0; width: 36px; }
+.sidenav { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: clamp(16px, 2.2cqw, 30px); padding: 0; width: 100%; }
 /* the button stays unrotated so the travelling pill measures in normal space; only the label turns */
-.sidenav button { position: relative; border: 0; background: none; padding: 12px 8px; border-radius: 999px; cursor: pointer; color: var(--ink); font: 500 12.5px/1 var(--body); letter-spacing: .01em; transition: color .35s, opacity .25s; }
+.sidenav button { position: relative; border: 0; background: none; padding: 12px 8px; border-radius: 999px; cursor: pointer; color: var(--ink); font: 500 clamp(11.5px, 1.15cqw, 15px)/1 var(--body); letter-spacing: .01em; transition: color .35s, opacity .25s; }
 .sidenav button:hover { opacity: .7; }
 .sidenav button span:not(.nav-ind) { position: relative; z-index: 1; display: block; writing-mode: vertical-rl; transform: rotate(180deg); }
 .sidenav button.on { color: var(--sheet); opacity: 1; }
