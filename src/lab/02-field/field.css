@@ -156,7 +156,9 @@
   background: radial-gradient(90% 60% at 18% 0%, color-mix(in srgb, var(--glass-spec) 70%, transparent), transparent 60%); }
 .fc .cap { display: block; font: 600 clamp(10px, 1.05cqw, 13px)/1.2 var(--body); color: var(--muted); }
 .fc.glass .cap { color: var(--ink); opacity: .78; }
-.fc .coin { width: clamp(64px, 7.5cqw, 77px); aspect-ratio: 1; display: block; }
+.fc .coin { width: clamp(64px, 7.5cqw, 77px); aspect-ratio: 1; display: block; margin-inline: auto; }
+/* the coin fills about half of its 400px canvas, so it's drawn 1.6× inside its box to read at card size (the turn stays inside) */
+.fc .coin svg { transform: scale(1.6) !important; overflow: visible; } /* !important: lottie-web sets an inline transform on its svg */
 .coin-card .cap { margin-top: 2px; text-align: center; }
 /* the assistant card: the B above its label */
 .fc.ai .fc-in { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(8px, .9cqw, 12px); }

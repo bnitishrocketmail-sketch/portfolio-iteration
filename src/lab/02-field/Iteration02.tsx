@@ -8,6 +8,8 @@ import { Like } from '../../components/micro/Widgets';
 import { Lottie } from '../../components/micro/Lottie';
 /* B, Lenskart's AI assistant (Nitish's Lottie, hosted on lottie.host): all states back to back in one loop, a marker per state */
 const bStates = 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie';
+/* the faux-3D rupee coin, made with Nitish's faux-3D plugin (hosted on lottie.host): one 2.8 s turn, looping. The plugin's link comes later. */
+const coinTurn = 'https://lottie.host/baf8073b-3068-48ed-9e57-7a55cd7c97ed/KOTff0Mhna.lottie';
 import cutout from '../../assets/nitish-phone-cutout.webp';
 import './field.css';
 
@@ -35,32 +37,6 @@ function RollingWord() {
   );
 }
 
-/* the faux-3D coin from 01, as a floating hero asset */
-function Coin({ className }: { className?: string }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  const reduce = useReducedMotion();
-  useEffect(() => {
-    const cv = ref.current; if (!cv) return; const ctx = cv.getContext('2d'); if (!ctx) return;
-    let t = 0, raf = 0;
-    const size = () => { const r = cv.getBoundingClientRect(); cv.width = Math.max(1, r.width * devicePixelRatio); cv.height = Math.max(1, r.height * devicePixelRatio); };
-    const draw = () => {
-      const w = cv.width, h = cv.height; ctx.clearRect(0, 0, w, h);
-      const R = Math.min(w, h) * .4, cx = w / 2, cy = h / 2, c = Math.cos(t), s = Math.sin(t);
-      const sx = Math.max(Math.abs(c), .06), thick = R * .22, N = 8;
-      for (let i = N; i >= 1; i--) { const o = (thick * s) * (i / N); ctx.beginPath(); ctx.ellipse(cx - o, cy, R * sx, R, 0, 0, Math.PI * 2); ctx.fillStyle = i % 2 ? '#8A5A12' : '#A66F1C'; ctx.fill(); }
-      const g = ctx.createLinearGradient(cx - R, cy - R, cx + R, cy + R); g.addColorStop(0, '#FFE39A'); g.addColorStop(.55, '#F5BD56'); g.addColorStop(1, '#B5801F');
-      ctx.beginPath(); ctx.ellipse(cx, cy, R * sx, R, 0, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
-      ctx.beginPath(); ctx.ellipse(cx, cy, R * sx * .78, R * .78, 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(120,80,10,.45)'; ctx.lineWidth = Math.max(1, R * .03); ctx.stroke();
-      ctx.save(); ctx.translate(cx, cy); ctx.scale(c, 1); ctx.fillStyle = 'rgba(90,58,6,.9)'; ctx.font = `700 ${R * .95}px Outfit, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('₹', 0, R * .04); ctx.restore();
-      if (!reduce) { t += .022; raf = requestAnimationFrame(draw); }
-    };
-    size(); draw();
-    const onResize = () => { size(); if (reduce) draw(); };
-    addEventListener('resize', onResize);
-    return () => { cancelAnimationFrame(raf); removeEventListener('resize', onResize); };
-  }, [reduce]);
-  return <canvas ref={ref} className={className} aria-hidden="true" />;
-}
 
 /* PLACEHOLDER thumbnails standing in for the Lotties the ticker will carry; colours come from the palette tokens */
 const REEL = [
@@ -183,11 +159,11 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
             <span className="shape tri" style={{ left: '15%', top: '52%' }} />
             {/* the assistant: liquid glass, over his arm, as if it had come off the phone */}
             <div className="fc glass ai" data-depth="1.3" style={{ left: '6%', top: '2%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
-              <div className="fc-in"><Lottie className="bl" src={bStates} still={150} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">AI assistant interaction</span></div>
+              <div className="fc-in"><Lottie className="bl" src={bStates} still={150} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
             </div>
             {/* the coin, behind his shoulder */}
             <div className="fc behind coin-card" data-depth=".6" style={{ right: '9%', top: '1%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
-              <div className="fc-in"><Coin className="coin" /><span className="cap">Rupee · faux 3D</span></div>
+              <div className="fc-in"><Lottie className="coin" src={coinTurn} still={84} label="A rupee coin turning in faux 3D" /><span className="cap">Faux 3D coin</span></div>
             </div>
             {/* the title: name + the rolling word */}
             <div className="fc title-card" data-depth="1.1" style={{ left: '5%', bottom: '8%', '--dur': '6.2s', '--dl': '-2.4s' } as React.CSSProperties}>
