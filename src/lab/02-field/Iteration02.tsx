@@ -97,6 +97,13 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
   const canHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
   const heroRef = useRef<HTMLDivElement>(null);
 
+  /* the hero tile's size in px, for the circle geometry (02b): the disc, its rings and the figure's mask share it */
+  useEffect(() => {
+    const el = heroRef.current; if (!el) return;
+    const ro = new ResizeObserver(() => { el.style.setProperty('--hw', el.offsetWidth + 'px'); el.style.setProperty('--hh', el.offsetHeight + 'px'); });
+    ro.observe(el); return () => ro.disconnect();
+  }, []);
+
   /* sheet sizing: width 1200–1440, aspect between 4:3 and 1.7:1, scaled down as one piece when the viewport can't hold it */
   useEffect(() => {
     const root = document.documentElement, EDGE = 24;
@@ -161,6 +168,9 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
               close to the body — the coin behind his shoulder, the assistant over his arm, title and description
               over the shirt (spec: LOG.md, "Hero card — spec") */}
           <section className="t hero02 b" ref={heroRef} onPointerMove={move} onPointerLeave={reset}>
+            {/* 02b (ref 3, hi-res): a lighter disc behind the figure, clipped to the tile, with thin rings just outside it;
+                the figure is masked by the disc's lower half only, so the head stays free above the tile */}
+            {palette === '01' && <div className="disc-wrap" aria-hidden="true"><i className="disc" /><i className="ring1" /><i className="ring2" /></div>}
             <div className="person-clip" aria-hidden="true"><img className="person" src={cutout} alt="" /></div>
             <span className="shape alt" style={{ left: '6%', top: '38%' }} />
             <span className="shape" style={{ right: '7%', top: '48%' }} />
