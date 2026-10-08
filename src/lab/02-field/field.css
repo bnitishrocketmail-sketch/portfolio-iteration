@@ -98,8 +98,10 @@
 /* the person: clipped by the tile's sides and bottom, free to rise above it (ref 3: ~1.5× the tile's height).
    The clip sits above the tile's background and the "behind" cards; the front cards sit above the clip. */
 .t.hero02 { z-index: 2; }
-.person-clip { position: absolute; left: 0; right: 0; bottom: 0; top: -62%; overflow: hidden; border-radius: 0 0 var(--r) var(--r); z-index: 2; pointer-events: none; }
-.person { position: absolute; bottom: -1.2%; left: 50%; height: 93.5%; width: auto; transform: translateX(-50%); filter: drop-shadow(0 22px 28px rgba(0, 0, 0, .16)); }
+.person-clip { position: absolute; left: 0; right: 0; bottom: 0; top: -64%; overflow: hidden; border-radius: 0 0 var(--r) var(--r); z-index: 2; pointer-events: none; }
+/* the figure (Nitish's own cutout, bottom 20% trimmed) stands ~1.57× the tile's height: the most the sheet's top edge
+   allows with the feet-end on the tile's bottom; a literal 1.5× zoom of the earlier size would put the head outside the sheet */
+.person { position: absolute; bottom: -1%; left: 50%; height: 96%; width: auto; transform: translateX(-50%); filter: drop-shadow(0 22px 28px rgba(0, 0, 0, .16)); }
 .fc { position: absolute; z-index: 3; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .fc.behind { z-index: 1; }
 .fc-in { background: var(--card); color: var(--ink); border-radius: clamp(12px, 1.5cqw, 20px); box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .45); padding: clamp(9px, 1.1cqw, 15px) clamp(11px, 1.3cqw, 17px); animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
@@ -205,8 +207,8 @@
     grid-template-areas: "hero hero" "life life" "micro projects" "xp team" "tools brand" "reel reel"; }
   /* hero first, so the head rises into the sheet's top padding and not over another tile */
   .t.hero02 { min-height: 440px; margin-top: 36px; }
-  .person-clip { top: -28%; }
-  .person { height: 92%; }
+  .person-clip { top: -30%; }
+  .person { height: 88%; }
   /* the cards keep their places but shrink; title and description share the bottom band */
   .fc-in { padding: 9px 11px; }
   .fc.ai { left: 2% !important; top: 0 !important; }

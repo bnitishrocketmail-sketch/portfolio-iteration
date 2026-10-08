@@ -163,11 +163,11 @@ export default function Iteration02() {
             <span className="shape" style={{ right: '7%', top: '48%' }} />
             <span className="shape tri" style={{ left: '15%', top: '52%' }} />
             {/* the assistant: liquid glass, over his arm, as if it had come off the phone */}
-            <div className="fc glass ai" data-depth="1.3" style={{ left: '9%', top: '2%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
+            <div className="fc glass ai" data-depth="1.3" style={{ left: '6%', top: '2%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
               <div className="fc-in"><BAssistant /><span className="cap">AI assistant interaction</span></div>
             </div>
             {/* the coin, behind his shoulder */}
-            <div className="fc behind coin-card" data-depth=".6" style={{ right: '15%', top: '1%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
+            <div className="fc behind coin-card" data-depth=".6" style={{ right: '9%', top: '1%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
               <div className="fc-in"><Coin className="coin" /><span className="cap">Rupee · faux 3D</span></div>
             </div>
             {/* the title: name + the rolling word */}

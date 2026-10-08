@@ -80,7 +80,7 @@ Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky p
 
 ### Hero card — spec (Nitish, 7 Oct; built in v6)
 
-1. **Photo.** Body facing front, looking into the phone (as ref 3's person does); centre-aligned, no more right offset. Second photo received 7 Oct (`docs/refs/photo-2-phone-pose.jpg`): this pose on a dark grey studio background; the same pose on the green screen followed (`docs/refs/photo-2-phone-pose-green.png`) and is the one used — chroma-keyed like the first, cropped to the figure, stored as WebP with alpha (`src/assets/nitish-phone-cutout.webp`, 686 × 1246).
+1. **Photo.** Body facing front, looking into the phone (as ref 3's person does); centre-aligned, no more right offset. Second photo received 7 Oct (`docs/refs/photo-2-phone-pose.jpg`): this pose on a dark grey studio background; the same pose on the green screen followed (`docs/refs/photo-2-phone-pose-green.png`) and was keyed for v6; since v7 the file in use is Nitish's own cutout of the pose (`docs/refs/photo-3-phone-pose-cutout.png`), bottom 20% trimmed, stored as WebP with alpha (`src/assets/nitish-phone-cutout.webp`, 685 × 996).
 2. **Meaning.** The assets floating around him stand for what he's looking at on the phone and what he's built. No extra visual device to say so; the floating cards do it exactly as ref 3 does.
 3. **Placement.** Cards sit close to the body, not far out: some behind him (masked by the body), some in front, overlapping the shirt. What to do with the card's remaining width is decided later.
 4. **Glass.** The glass card becomes more transparent; preferred: liquid glass.
@@ -93,6 +93,7 @@ Route: `/lab/02-field`. Composition: ref 3's grid, Nitish's content, ocean/sky p
 6. The current stand-in cards (play count, easing bars, switch) give way to this set.
 
 **History**
+- v7 — (Nitish) his own cutout replaces the keyed one (`docs/refs/photo-3-phone-pose-cutout.png`, alpha included, softer edge); the figure's bottom 20% trimmed (hem and pocket go, the tile now cuts at the lower shirt) and the figure sized up: ~1.57× the tile's height, head to within ~30px of the sheet's top. Asked for 1.5× on the earlier size; that would put the head outside the sheet, so this is the most the top edge allows — `.person-clip { top }` and `.person { height }` in field.css are the two numbers. Side cards nudged outward for the wider figure. Phones: the figure is wider than the tile, so the sleeves clip at its sides.
 - v6 — (Nitish) the hero card rebuilt to the spec above, in one pass: the green-screen phone pose keyed and centred (1.5× the tile, head over the row above, waist clipped by the tile); four cards close to the body — the assistant on liquid glass over his right arm (in front; the arm shows through blurred), the coin tucked behind his left shoulder (masked by the figure), the title card over the shirt bottom-left, the description card bottom-right; the play, easing-bars and switch cards gone. Liquid glass: near-clear fill, 18px blur with lifted saturation, a bright rim that catches light top-left, a soft inner glow; dark-mode variants. Phones: the same four cards, smaller; title above-left, description below-right so they never meet.
 - v1 — first build of the home grid from ref 3.
 - v2 — (Nitish) background and shadows as in 01: near-white sheet on the grey page, 01's shadow.
