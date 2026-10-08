@@ -47,28 +47,26 @@
 .pal-01 .hero02 .shape.tri { border-bottom-color: var(--amber); }
 .pal-01 .t.projects { background: var(--tileA); } /* projects reads as a quiet tile here; mint stays with life and brand */
 .pal-01 .avatars i { border-color: var(--tileA); }
-/* The hero's circle (ref 3, hi-res, measured pixel by pixel, 8 Oct). Three shapes, all driven by the tile's px size (--hw/--hh):
-   - the disc: a lighter, tall ellipse (rx .5h, ry .66h, centred on the figure at 46% of the tile's height),
-     clipped by the tile — in the ref it never crosses the tile's edge;
-   - the stroke: one thin circle (r .58h, centred on the figure at 49% of the tile's height) drawn as two broken arcs (Iteration02.tsx, strokeArcs): a long
-     left arc that crosses the tile's top edge into the gap above and ends just before the bottom edge, and a short
-     bottom-right piece that spills into the gap below. Not clipped — it sits under the neighbouring tiles, so the spill
-     shows only in the gaps. In the ref it is a light grey at ~30%: a touch lighter than a dark tile, darker than the field;
-   - the figure's mask: a circle (r .495h, centred at 54% of the tile's height) whose bottom lies ~3% below the tile, applied
-     from below only, so the shirt hangs into the gap as a rounded tongue and its lower corners are rounded off.
+/* The hero's circle (ref 3, hi-res, circles fitted to the pixels, 8 Oct). One geometry, driven by the tile's px size (--hh):
+   centre on the figure's centre line, 48.3% down the tile (--cc); the DISC is a true circle, r .548h (--rd), a lighter
+   fill clipped by the tile (its top and bottom run 3–6% past the tile's edges but the fill stops at them); the FIGURE is
+   masked from below by that same circle, so the shirt hangs 3% into the gap as a rounded tongue; the STROKE is a concentric
+   circle, r .593h, drawn as two broken arcs (Iteration02.tsx, strokeArcs) that sit under the neighbouring tiles — the
+   spill shows only in the gaps. In the ref the stroke is a light grey at ~30%: lighter than its tile, darker than the field.
    .halo is a second grid item in the hero's cell at z-index -1 (below the tiles, above the field) carrying the tile's fill,
    the disc and the stroke; the hero tile itself goes transparent. */
+.pal-01 .hero02, .pal-01 .halo { --cc: calc(.483 * var(--hh)); --rd: calc(.548 * var(--hh)); }
 .pal-01 .halo { grid-area: hero; position: relative; z-index: -1; border-radius: var(--r); pointer-events: none;
   background: radial-gradient(70% 70% at 50% 60%, var(--heroA), var(--heroB) 85%); }
 .it02.pal-01 .t.hero02 { background: transparent; }
 .pal-01 .disc-clip { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
-.pal-01 .disc { position: absolute; left: 50%; top: calc(.456 * var(--hh)); transform: translate(-50%, -50%); border-radius: 50%;
-  width: calc(1.0 * var(--hh)); height: calc(1.32 * var(--hh)); background: var(--disc); }
+.pal-01 .disc { position: absolute; left: 50%; top: var(--cc); transform: translate(-50%, -50%); border-radius: 50%;
+  width: calc(2 * var(--rd)); height: calc(2 * var(--rd)); background: var(--disc); }
 .pal-01 .stroke { position: absolute; left: 0; top: 0; overflow: visible; fill: none; stroke: var(--ring); stroke-width: 2px; stroke-linecap: round; }
-.pal-01 .hero02 { --rise: .45; --mr: calc(.495 * var(--hh)); --mcy: calc((var(--rise) + .536) * var(--hh)); }
-.pal-01 .person-clip { top: calc(-1 * var(--rise) * var(--hh)); bottom: calc(-.06 * var(--hh)); border-radius: 0;
-  -webkit-mask-image: radial-gradient(circle var(--mr) at 50% var(--mcy), #000 calc(var(--mr) - 1px), transparent var(--mr)), linear-gradient(#000, #000);
-  mask-image: radial-gradient(circle var(--mr) at 50% var(--mcy), #000 calc(var(--mr) - 1px), transparent var(--mr)), linear-gradient(#000, #000);
+.pal-01 .hero02 { --rise: .45; --mcy: calc(var(--rise) * var(--hh) + var(--cc)); }
+.pal-01 .person-clip { top: calc(-1 * var(--rise) * var(--hh)); bottom: calc(-.07 * var(--hh)); border-radius: 0;
+  -webkit-mask-image: radial-gradient(circle var(--rd) at 50% var(--mcy), #000 calc(var(--rd) - 1px), transparent var(--rd)), linear-gradient(#000, #000);
+  mask-image: radial-gradient(circle var(--rd) at 50% var(--mcy), #000 calc(var(--rd) - 1px), transparent var(--rd)), linear-gradient(#000, #000);
   -webkit-mask-size: 100% 100%, 100% var(--mcy); mask-size: 100% 100%, 100% var(--mcy);
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
 .pal-01 .person { top: 0; bottom: auto; height: calc((var(--rise) + 1.05) * var(--hh)); }
@@ -266,7 +264,7 @@
   .desc-card .fc-in { width: 58vw; max-width: 230px; }
   .title-card .nm { font-size: 15px; }
   .title-card .role { font-size: 12px; }
-  .pal-01 .hero02 { --rise: .17; --mcy: calc((var(--rise) + .515) * var(--hh)); } /* the tongue hangs less: the gap below is only 10px here */
+  .pal-01 .hero02, .pal-01 .halo { --rise: .17; --cc: calc(.46 * var(--hh)); } /* the circle a touch higher: the tongue then hangs ~1%, the gap below is only 10px */
   .pal-01 .halo { overflow: hidden; } /* no neighbouring tiles above on phones, so the circle stays inside the tile */
   .life02 .ovals { min-height: 180px; }
   .t.xp, .t.team { min-height: 300px; }

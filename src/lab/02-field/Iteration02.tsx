@@ -87,17 +87,17 @@ const REEL = [
   { g1: 'var(--coal)', g2: 'var(--ocean)', label: 'Lenskart · launch' }, { g1: 'var(--acc3)', g2: 'var(--sky)', label: 'MobiKwik · loop' },
 ];
 
-/* The stroke around the hero (02b): one circle centred on the figure (the tile's centre line) just below the tile's middle,
-   radius ~0.58 of the tile's height (ref 3, measured; the ref's circles are centred on its figure, which sits right of its
-   tile's centre — ours is centred, so the circles are too), drawn as two arcs. Angles are screen angles (clockwise from 3 o'clock). */
+/* The stroke around the hero (02b). Measured on the hi-res ref by fitting circles to the pixels: the disc, the figure's
+   mask and the stroke share ONE centre (on the figure, 48.3% down the tile); the disc/mask radius is .548 of the tile's
+   height, the stroke's .593. The stroke is drawn as the two arcs that are visible in the ref: a long left arc from above
+   the tile (it crosses the top edge at about 11 o'clock) round the left side to just before the bottom edge, and a short
+   bottom-right piece that comes out under the card and into the gap. Angles are screen angles, clockwise from 3 o'clock. */
 function strokeArcs(w: number, h: number) {
-  const cx = w / 2, cy = .486 * h, r = .578 * h;
+  const cx = w / 2, cy = .483 * h, r = .593 * h;
   const P = (deg: number) => { const a = deg * Math.PI / 180; return `${(cx + r * Math.cos(a)).toFixed(1)} ${(cy + r * Math.sin(a)).toFixed(1)}`; };
   const arc = (a0: number, a1: number) => { const sweep = a1 > a0 ? 1 : 0, large = Math.abs(a1 - a0) > 180 ? 1 : 0; return `M ${P(a0)} A ${r} ${r} 0 ${large} ${sweep} ${P(a1)}`; };
-  /* left: from 10 o'clock (above the tile) counter-clockwise down the left side to just before the bottom edge */
-  const left = arc(-108, -236);
-  /* bottom right: a short piece from behind the description card, out under the tile's bottom edge */
-  const right = arc(28, 76);
+  const left = arc(-116, -238);   /* ref: -117.5° → 121.5°, counter-clockwise through 180° */
+  const right = arc(55, 76);      /* ref: 57.5° → 76° */
   return `${left} ${right}`;
 }
 
