@@ -11,3 +11,5 @@
 .lab-status.adopted { background: var(--mint); color: var(--on-mint); border-color: transparent; }
 .lab-status.shortlisted { background: var(--lilac); color: var(--on-lilac); border-color: transparent; }
 .lab-status.parked { opacity: .55; }
+.lab-card.sub { margin-left: 28px; }
+.lab-sub { font: 500 11px/1 var(--body); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }

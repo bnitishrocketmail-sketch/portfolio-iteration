@@ -14,6 +14,8 @@
   --ocean: #159e8c; --sky: #2f9ee5; --pos: #1db27a;
   --pill: #0f1416; --on-pill: #f6fbfc;
   --card: #ffffff;
+  --amber: #f5bd56; --warm: #c94a3a; --acc3: #5a7bd6; /* the ticker's and ovals' third colours */
+  --coal: #0f1416; /* a chip that stays dark in both themes (AE swatch, the M avatar, dark ticker cards) */
   /* liquid glass: the fill is nearly clear; the rim and the specular carry the material */
   --glass-hi: rgba(255, 255, 255, .34); --glass-lo: rgba(255, 255, 255, .10); --glass-rim: rgba(255, 255, 255, .62); --glass-spec: rgba(255, 255, 255, .9);
   --island: #4a4c56; --on-island: #f4f4f7;
@@ -24,9 +26,27 @@
   --body: 'Outfit', ui-sans-serif, system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; }
+  :root:not([data-theme="light"]) .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; --coal: #0b0c10; }
 }
-:root[data-theme="dark"] .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; }
+:root[data-theme="dark"] .it02 { --page: #0b0c10; --field: #15161c; --shadow: 0 40px 80px -40px rgba(0, 0, 0, .7); --tileA: #0f2230; --tileB: #0e2a26; --tileC: #14303c; --ink: #eaf4f6; --muted: #8fa3aa; --line: rgba(234, 244, 246, .12); --pill: #eaf4f6; --on-pill: #0f1416; --card: #16343f; --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); --island: #2b2c35; --sheet: #15161c; --sheet2: #0f2230; --coal: #0b0c10; }
+
+/* ---- 02b: the same grid in 01's palette (tokens.css: periwinkle, blush, mint, lilac, amber, coal) ----
+   Role mapping: the quiet tiles take lilac, the accent tiles mint, the hero tile periwinkle (01's hero card);
+   periwinkle is the accent (ring, rolling word, deltas), blush and amber the small shapes, coal the pills. */
+.it02.pal-01 { --tileA: #ece9fa; --tileB: #bde6d9; --tileC: #ece9fa; --ocean: #7b7ee4; --sky: #5a5dd1; --pos: #1f8a70; --pill: #141419; --on-pill: #ffffff;
+  --amber: #f5bd56; --warm: #dfb3f3; --acc3: #7b7ee4; --sheet2: #ece9fa; --heroA: #7b7ee4; --heroB: #5a5dd1; --shape: #dfb3f3; --coal: #141419; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .it02.pal-01 { --tileA: #27233a; --tileB: #2c6658; --tileC: #27233a; --ocean: #7b7ee4; --sky: #b587d6; --pos: #2bc48a; --pill: #f0f0f4; --on-pill: #09090c;
+    --amber: #d9a341; --warm: #b587d6; --acc3: #5b5ecc; --card: #1d1e26; --sheet2: #27233a; --heroA: #5b5ecc; --heroB: #4548b4; --shape: #b587d6; --coal: #09090c; }
+}
+:root[data-theme="dark"] .it02.pal-01 { --tileA: #27233a; --tileB: #2c6658; --tileC: #27233a; --ocean: #7b7ee4; --sky: #b587d6; --pos: #2bc48a; --pill: #f0f0f4; --on-pill: #09090c;
+  --amber: #d9a341; --warm: #b587d6; --acc3: #5b5ecc; --card: #1d1e26; --sheet2: #27233a; --heroA: #5b5ecc; --heroB: #4548b4; --shape: #b587d6; --coal: #09090c; }
+.it02.pal-01 .t.hero02 { background: radial-gradient(70% 70% at 50% 60%, var(--heroA), var(--heroB) 85%); }
+.pal-01 .hero02 .shape { border-color: var(--shape); }
+.pal-01 .hero02 .shape.alt { border-color: var(--amber); }
+.pal-01 .hero02 .shape.tri { border-bottom-color: var(--amber); }
+.pal-01 .t.projects { background: var(--tileA); } /* projects reads as a quiet tile here; mint stays with life and brand */
+.pal-01 .avatars i { border-color: var(--tileA); }
 
 /* ---- field + grid: ref 3 is 1200 × 900 with 15px margins, ~17px gaps ---- */
 .it02 { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--body); }
@@ -128,6 +148,7 @@
 .desc-card p { font: 500 clamp(11.5px, 1.15cqw, 14.5px)/1.4 var(--body); color: var(--ink); opacity: .9; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 .hero02 .shape { position: absolute; z-index: 1; border-radius: 50%; border: 3px solid var(--ocean); width: 14px; height: 14px; }
+.hero02 .shape.alt { border-color: var(--sky); }
 .hero02 .shape.tri { border: 0; border-radius: 0; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid var(--sky); opacity: .7; }
 
 /* ---- PLACEHOLDER: the B assistant's states, until the Lottie arrives ---- */

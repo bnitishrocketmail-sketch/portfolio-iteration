@@ -13,8 +13,9 @@ export default function LabIndex() {
       <ul className="lab-list">
         {ITERATIONS.map(it => (
           <li key={it.id}>
-            <Link to={`/lab/${it.id}`} className="lab-card">
+            <Link to={`/lab/${it.id}`} className={`lab-card${it.parent ? ' sub' : ''}`}>
               <span className={`lab-status ${it.status}`}>{it.status}</span>
+              {it.parent && <span className="lab-sub">sub-iteration of {it.parent}</span>}
               <h2>{it.name}</h2>
               <p>{it.tries}</p>
               <p className="mono-s dim">{it.refs.join(' · ')}</p>

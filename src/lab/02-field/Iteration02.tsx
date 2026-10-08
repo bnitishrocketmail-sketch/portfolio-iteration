@@ -80,15 +80,18 @@ function Coin({ className }: { className?: string }) {
   return <canvas ref={ref} className={className} aria-hidden="true" />;
 }
 
-/* PLACEHOLDER thumbnails standing in for the Lotties the ticker will carry */
+/* PLACEHOLDER thumbnails standing in for the Lotties the ticker will carry; colours come from the palette tokens */
 const REEL = [
-  { g1: '#159e8c', g2: '#2f9ee5', label: 'Coin · loader' }, { g1: '#0f1416', g2: '#2f9ee5', label: 'B · assistant' },
-  { g1: '#2f9ee5', g2: '#dcf4ee', label: 'Blinkit · promo' }, { g1: '#f5bd56', g2: '#159e8c', label: 'Rupee · success' },
-  { g1: '#0f1416', g2: '#159e8c', label: 'Lenskart · launch' }, { g1: '#7b7ee4', g2: '#2f9ee5', label: 'MobiKwik · loop' },
+  { g1: 'var(--ocean)', g2: 'var(--sky)', label: 'Coin · loader' }, { g1: 'var(--coal)', g2: 'var(--sky)', label: 'B · assistant' },
+  { g1: 'var(--sky)', g2: 'var(--tileB)', label: 'Blinkit · promo' }, { g1: 'var(--amber)', g2: 'var(--ocean)', label: 'Rupee · success' },
+  { g1: 'var(--coal)', g2: 'var(--ocean)', label: 'Lenskart · launch' }, { g1: 'var(--acc3)', g2: 'var(--sky)', label: 'MobiKwik · loop' },
 ];
 
+/* Palettes: the iteration's own (ocean green + sky blue) and 01's (periwinkle, blush, mint, lilac, amber, coal) as a sub-iteration */
+export type Palette = 'ocean' | '01';
+
 /* ---------- the iteration ---------- */
-export default function Iteration02() {
+export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }) {
   const { isDark, toggle } = useTheme();
   const reduce = useReducedMotion();
   const canHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
@@ -124,9 +127,9 @@ export default function Iteration02() {
   const C = 2 * Math.PI * 45;
 
   return (
-    <div className="it02">
+    <div className={`it02${palette === '01' ? ' pal-01' : ''}`}>
       <ThemeToggle isDark={isDark} onToggle={toggle} />
-      <Link className="labtag" to="/lab">Lab · 02 Field</Link>
+      <Link className="labtag" to="/lab">{palette === '01' ? 'Lab · 02b Field · 01 palette' : 'Lab · 02 Field'}</Link>
       <div className="field">
         <div className="bento02">
 
@@ -159,7 +162,7 @@ export default function Iteration02() {
               over the shirt (spec: LOG.md, "Hero card — spec") */}
           <section className="t hero02 b" ref={heroRef} onPointerMove={move} onPointerLeave={reset}>
             <div className="person-clip" aria-hidden="true"><img className="person" src={cutout} alt="" /></div>
-            <span className="shape" style={{ left: '6%', top: '38%', borderColor: 'var(--sky)' }} />
+            <span className="shape alt" style={{ left: '6%', top: '38%' }} />
             <span className="shape" style={{ right: '7%', top: '48%' }} />
             <span className="shape tri" style={{ left: '15%', top: '52%' }} />
             {/* the assistant: liquid glass, over his arm, as if it had come off the phone */}
@@ -184,7 +187,7 @@ export default function Iteration02() {
           <section className="t team">
             <p className="ttl">Motion for products people use every day.</p>
             <div className="avatars" aria-label="Clients">
-              {CLIENTS.map((c, i) => <i key={c} style={{ background: ['#159e8c', '#2f9ee5', '#0f1416'][i % 3] }} title={c}>{c[0]}</i>)}
+              {CLIENTS.map((c, i) => <i key={c} style={{ background: ['var(--ocean)', 'var(--sky)', 'var(--coal)'][i % 3] }} title={c}>{c[0]}</i>)}
               <i style={{ background: 'var(--muted)' }}>+2</i>
             </div>
             <p className="lbl">Lotties<br />shipped</p>
@@ -207,8 +210,8 @@ export default function Iteration02() {
           <section className="t life02 b">
             <div className="pillrow"><span>Product designer.</span><span>I make UI move.</span></div>
             <div className="ovals">
-              <figure className="oval a" style={{ '--g1': '#5a7bd6', '--g2': '#dcf4ee' } as React.CSSProperties}><figcaption>Spiti, by bike</figcaption></figure>
-              <figure className="oval b" style={{ '--g1': '#c94a3a', '--g2': '#f5bd56' } as React.CSSProperties}><figcaption>A recipe I'd never tried</figcaption></figure>
+              <figure className="oval a" style={{ '--g1': 'var(--acc3)', '--g2': 'var(--tileB)' } as React.CSSProperties}><figcaption>Spiti, by bike</figcaption></figure>
+              <figure className="oval b" style={{ '--g1': 'var(--warm)', '--g2': 'var(--amber)' } as React.CSSProperties}><figcaption>A recipe I'd never tried</figcaption></figure>
               <span className="avchip one" aria-hidden="true" /><span className="avchip two" aria-hidden="true" />
             </div>
           </section>
@@ -218,7 +221,7 @@ export default function Iteration02() {
             <p className="ttl">Stack</p>
             <p className="sm">After Effects · Lottie · Rive · JavaScript</p>
             <div className="swatches" aria-hidden="true">
-              {[['AE', '#0f1416'], ['Lottie', '#159e8c'], ['Rive', '#2f9ee5'], ['JS', '#8fa3aa']].map(([l, c], i) => <div key={l} className="sw" style={{ background: c, '--d': `${-i * .9}s` } as React.CSSProperties}>{l}</div>)}
+              {[['AE', 'var(--coal)'], ['Lottie', 'var(--ocean)'], ['Rive', 'var(--sky)'], ['JS', 'var(--muted)']].map(([l, c], i) => <div key={l} className="sw" style={{ background: c, '--d': `${-i * .9}s` } as React.CSSProperties}>{l}</div>)}
             </div>
           </section>
 

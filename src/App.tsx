@@ -14,6 +14,7 @@ export default function App() {
         <Route path="/lab/01-sheet/:view" element={<Iteration01 />} />
         <Route path="/lab/01-sheet/:view/:pid" element={<Iteration01 />} />
         <Route path="/lab/02-field" element={<Iteration02 />} />
+        <Route path="/lab/02b-field" element={<Iteration02 palette="01" />} />
         <Route path="*" element={<Navigate to="/lab" replace />} />
       </Routes>
     </BrowserRouter>

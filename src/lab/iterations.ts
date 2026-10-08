@@ -7,6 +7,7 @@ export type Iteration = {
   status: Status;
   tries: string;     // one line on what it's testing
   refs: string[];    // references it draws from (see LOG.md)
+  parent?: string;   // set on a sub-iteration: the id of the iteration it varies
 };
 
 export const ITERATIONS: Iteration[] = [
@@ -23,5 +24,13 @@ export const ITERATIONS: Iteration[] = [
     status: 'exploring',
     tries: 'Dense bento on a black field, no sheet and no nav: the person cut out in the centre with live assets floating around; every section is a tile; a ticker of Lotties in the long tile. Ocean green + sky blue.',
     refs: ['ref-3 field bento (pink agency shot)', 'ref-2 iOS notch recording'],
+  },
+  {
+    id: '02b-field',
+    name: '02b Field · 01 palette',
+    status: 'exploring',
+    parent: '02-field',
+    tries: "The same grid and hero as 02, recoloured with 01's palette: lilac and mint tiles, the hero on periwinkle, periwinkle as the accent, coal pills.",
+    refs: ['02 Field', '01 Sheet palette (tokens.css)'],
   },
 ];
