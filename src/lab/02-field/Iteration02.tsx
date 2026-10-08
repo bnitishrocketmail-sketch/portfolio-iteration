@@ -87,6 +87,19 @@ const REEL = [
   { g1: 'var(--coal)', g2: 'var(--ocean)', label: 'Lenskart · launch' }, { g1: 'var(--acc3)', g2: 'var(--sky)', label: 'MobiKwik · loop' },
 ];
 
+/* The stroke around the hero (02b): one circle, centre a little right of the tile's centre and just below its middle,
+   radius ~0.58 of the tile's height (ref 3, measured), drawn as two arcs. Angles are screen angles (clockwise from 3 o'clock). */
+function strokeArcs(w: number, h: number) {
+  const cx = w / 2 + .046 * w, cy = .486 * h, r = .578 * h;
+  const P = (deg: number) => { const a = deg * Math.PI / 180; return `${(cx + r * Math.cos(a)).toFixed(1)} ${(cy + r * Math.sin(a)).toFixed(1)}`; };
+  const arc = (a0: number, a1: number) => { const sweep = a1 > a0 ? 1 : 0, large = Math.abs(a1 - a0) > 180 ? 1 : 0; return `M ${P(a0)} A ${r} ${r} 0 ${large} ${sweep} ${P(a1)}`; };
+  /* left: from 10 o'clock (above the tile) counter-clockwise down the left side to just before the bottom edge */
+  const left = arc(-108, -236);
+  /* bottom right: a short piece from behind the description card, out under the tile's bottom edge */
+  const right = arc(28, 76);
+  return `${left} ${right}`;
+}
+
 /* Palettes: the iteration's own (ocean green + sky blue) and 01's (periwinkle, blush, mint, lilac, amber, coal) as a sub-iteration */
 export type Palette = 'ocean' | '01';
 
@@ -97,27 +110,22 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
   const canHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
   const heroRef = useRef<HTMLDivElement>(null);
 
-  /* the hero tile's size in px, for the circle geometry (02b): the disc, its rings and the figure's mask share it */
+  /* the hero tile's size in px, for the circle geometry (02b): the disc, the stroke and the figure's mask share it.
+     Set on the grid (so the halo, a sibling in the same cell, reads it) and kept in state for the stroke's path. */
+  const [hsize, setHsize] = useState<[number, number]>([0, 0]);
   useEffect(() => {
     const el = heroRef.current; if (!el) return;
-    const grid = el.parentElement as HTMLElement; /* on the grid, so the halo (a sibling in the same cell) reads it too */
-    const ro = new ResizeObserver(() => { grid.style.setProperty('--hw', el.offsetWidth + 'px'); grid.style.setProperty('--hh', el.offsetHeight + 'px'); });
+    const grid = el.parentElement as HTMLElement;
+    const ro = new ResizeObserver(() => { grid.style.setProperty('--hw', el.offsetWidth + 'px'); grid.style.setProperty('--hh', el.offsetHeight + 'px'); setHsize([el.offsetWidth, el.offsetHeight]); });
     ro.observe(el); return () => ro.disconnect();
   }, []);
 
-  /* sheet sizing: width 1200–1440, aspect between 4:3 and 1.7:1, scaled down as one piece when the viewport can't hold it.
-     02b (Nitish, 8 Oct): the field is the whole screen, end to end, like a dashboard — the same 1200–1440 layout, scaled
-     as one piece to fill the viewport, so type, gaps and radii keep the proportions measured off the reference. */
+  /* sheet sizing: width 1200–1440, aspect between 4:3 and 1.7:1, scaled down as one piece when the viewport can't hold it */
   useEffect(() => {
-    const root = document.documentElement, EDGE = 24, full = palette === '01';
+    const root = document.documentElement, EDGE = 24;
     const fit = () => {
       const vw = window.innerWidth, vh = window.innerHeight;
       if (vw <= 700) { ['--W', '--H', '--s02'].forEach(v => root.style.removeProperty(v)); return; }
-      if (full) {
-        const W = Math.min(1440, Math.max(1200, vw)), s = vw / W, H = vh / s;
-        root.style.setProperty('--W', W + 'px'); root.style.setProperty('--H', H + 'px'); root.style.setProperty('--s02', s.toFixed(4));
-        return;
-      }
       const W = Math.min(1440, Math.max(1200, vw - 2 * EDGE));
       let s = vw - 2 * EDGE < 1200 ? (vw - 32) / 1200 : 1;
       const availH = (vh - 2 * EDGE) / s;
@@ -127,7 +135,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
     };
     fit(); addEventListener('resize', fit);
     return () => { removeEventListener('resize', fit); ['--W', '--H', '--s02'].forEach(v => root.style.removeProperty(v)); };
-  }, [palette]);
+  }, []);
 
   /* floating assets follow the pointer by depth, as in 01 */
   const move = (e: React.PointerEvent) => {
@@ -175,9 +183,16 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
           {/* hero: the person, centred, looking into the phone; what he's looking at and what he's built float
               close to the body — the coin behind his shoulder, the assistant over his arm, title and description
               over the shirt (spec: LOG.md, "Hero card — spec") */}
-          {/* 02b (ref 3, hi-res): the hero's fill, a lighter disc and thin rings, in the hero's cell but under the other tiles,
-              so the circle runs past the tile and shows in the gaps; the tile above is transparent (see field.css, .halo) */}
-          {palette === '01' && <div className="halo" aria-hidden="true"><i className="disc" /><i className="ring1" /><i className="ring2" /></div>}
+          {/* 02b (ref 3, hi-res, measured): the hero's fill and the lighter disc (clipped to the tile), plus one thin circle drawn
+              as two broken arcs that cross the tile's edge into the gaps — in the hero's cell but under the other tiles
+              (field.css, .halo); the tile above it is transparent. The arcs: a long one from the gap above, down the left
+              side, ending before the bottom edge; a short one at the bottom right spilling into the gap below. */}
+          {palette === '01' && (
+            <div className="halo" aria-hidden="true">
+              <div className="disc-clip"><i className="disc" /></div>
+              {hsize[1] > 0 && <svg className="stroke" width={hsize[0]} height={hsize[1]} overflow="visible"><path d={strokeArcs(hsize[0], hsize[1])} /></svg>}
+            </div>
+          )}
           <section className="t hero02 b" ref={heroRef} onPointerMove={move} onPointerLeave={reset}>
             <div className="person-clip" aria-hidden="true"><img className="person" src={cutout} alt="" /></div>
             <span className="shape alt" style={{ left: '6%', top: '38%' }} />
