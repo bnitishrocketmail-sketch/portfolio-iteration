@@ -172,7 +172,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
             </div>
             {/* the description, beside it */}
             <div className="fc desc-card" data-depth="1.2" style={{ left: '58%', bottom: '5%', '--dur': '5.1s', '--dl': '-.6s' } as React.CSSProperties}>
-              <div className="fc-in"><p>I design <span className="nw">feedback-rich</span> interfaces powered by motion.</p></div>
+              <div className="fc-in"><p>I design feedback{"\u00a0"}rich interfaces powered by motion.</p></div>
             </div>
           </section>
 
