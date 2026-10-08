@@ -8,7 +8,10 @@ import type { AnimationItem } from 'lottie-web';
    - Played with lottie-web's light SVG build (no effects, no expressions engine): Nitish's files are plain shapes —
      the B assistant's glow is a shape, not a blur effect. If a future file needs effects, switch to the 'lottie_svg' build.
    - The player and the unzipper load as their own chunk after the page paints.
-   - Under reduced motion it holds at `still` (a frame) instead of playing. */
+   - Under reduced motion it holds at `still` (a frame) instead of playing.
+   - `drop` removes top-level layers (by a test on name/type) before playing, and `viewBox` crops the canvas to a region
+     ("x y w h", in the file's own pixels) — so a hosted file can be trimmed without editing it. Image assets of dropped
+     layers are removed too (a .lottie's images aren't reachable by path once unzipped). */
 const player = () => import('lottie-web/build/player/lottie_light').then(m => m.default);
 
 async function animationData(src: string): Promise<unknown> {
@@ -23,22 +26,32 @@ async function animationData(src: string): Promise<unknown> {
   return JSON.parse(strFromU8(files[path]));
 }
 
-export function Lottie({ src, className, loop = true, speed = 1, still = 0, label }: {
+type Layer = { nm?: string; ty?: number; refId?: string };
+type Anim = { layers: Layer[]; assets?: { id: string; p?: string }[] };
+
+export function Lottie({ src, className, loop = true, speed = 1, still = 0, label, drop, viewBox }: {
   src: string; className?: string; loop?: boolean; speed?: number; still?: number; label?: string;
+  drop?: (layer: Layer) => boolean; viewBox?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   useEffect(() => {
     const el = ref.current; if (!el) return;
     let anim: AnimationItem | undefined, gone = false;
-    Promise.all([player(), animationData(src)]).then(([lottie, data]) => {
+    Promise.all([player(), animationData(src)]).then(([lottie, raw]) => {
       if (gone) return;
+      const data = raw as Anim;
+      if (drop) {
+        const dropped = new Set(data.layers.filter(drop).map(l => l.refId).filter(Boolean));
+        data.layers = data.layers.filter(l => !drop(l));
+        if (data.assets) data.assets = data.assets.filter(a => !(dropped.has(a.id) && a.p));
+      }
       anim = lottie.loadAnimation({ container: el, renderer: 'svg', loop, autoplay: !reduce, animationData: data,
-        rendererSettings: { preserveAspectRatio: 'xMidYMid meet', progressiveLoad: true } });
+        rendererSettings: { preserveAspectRatio: 'xMidYMid meet', progressiveLoad: true, ...(viewBox ? { viewBoxSize: viewBox } : {}) } });
       anim.setSpeed(speed);
       if (reduce) anim.addEventListener('DOMLoaded', () => anim?.goToAndStop(still, true));
     }).catch(err => console.warn(err)); /* a failed load leaves the card's label in place */
     return () => { gone = true; anim?.destroy(); };
-  }, [src, loop, speed, still, reduce]);
+  }, [src, loop, speed, still, reduce, drop, viewBox]);
   return <div ref={ref} className={className} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} />;
 }

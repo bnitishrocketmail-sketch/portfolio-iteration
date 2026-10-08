@@ -163,6 +163,11 @@
 /* the assistant card: the B above its label */
 .fc.ai .fc-in { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(8px, .9cqw, 12px); }
 .fc.ai .cap { max-width: 11ch; }
+/* the loader card (Lenskart): much smaller than the B and coin cards, wide — the loader above a one-line label */
+.fc.loader-card .fc-in { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: clamp(6px, .7cqw, 8px) clamp(9px, 1cqw, 11px); border-radius: clamp(10px, 1.2cqw, 12px); }
+.fc .lk { width: clamp(58px, 5.6cqw, 70px); aspect-ratio: 72 / 34; }
+.fc .lk svg { display: block; }
+.fc.loader-card .cap { font-size: clamp(9px, .85cqw, 10.5px); white-space: nowrap; }
 /* the title card: name, then "Product <rolling word>" */
 .title-card .nm { display: block; font: 600 clamp(16px, 1.9cqw, 25px)/1.1 var(--display); letter-spacing: -.025em; }
 .title-card .role { display: flex; gap: .28em; align-items: baseline; margin-top: .3em; font: 500 clamp(12.5px, 1.35cqw, 17px)/1.2 var(--body); color: var(--muted); white-space: nowrap; }
@@ -248,6 +253,7 @@
   /* title above-left, description below-right, so the two never meet on a narrow tile */
   .fc.title-card { left: 3% !important; top: auto !important; bottom: 30% !important; }
   .fc.desc-card { left: auto !important; right: 3% !important; bottom: 5% !important; }
+  .fc.loader-card { left: auto !important; right: 3% !important; top: 42% !important; }
   .desc-card .fc-in { width: 58vw; max-width: 230px; }
   .title-card .nm { font-size: 15px; }
   .title-card .role { font-size: 12px; }

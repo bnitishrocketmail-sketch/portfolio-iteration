@@ -10,6 +10,12 @@ import { Lottie } from '../../components/micro/Lottie';
 const bStates = 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie';
 /* the rupee coin, made with Nitish's Vector 3D plugin (hosted on lottie.host): one 2.8 s turn, looping. The card links to the plugin once he sends the link. */
 const coinTurn = 'https://lottie.host/baf8073b-3068-48ed-9e57-7a55cd7c97ed/KOTff0Mhna.lottie';
+/* Lenskart's loader (Nitish's Lottie, hosted): the infinity-glasses loader, 2.1 s loop. The file also carries the line
+   "Hold on! We're looking out for you" as outlined shapes (two layers named TEXT Outlines) with an image shimmer across it;
+   those three layers are dropped as it loads and the canvas is cropped to the loader (66 × 28 of 297 × 66, measured
+   across every frame, +3px all round). */
+const lkLoader = 'https://lottie.host/e331b8eb-11ac-466a-96da-98916b4052da/t7zZAGNw8i.lottie';
+const dropLoaderText = (l: { nm?: string; ty?: number }) => (l.nm ?? '').startsWith('TEXT') || l.ty === 2;
 import cutout from '../../assets/nitish-phone-cutout.webp';
 import './field.css';
 
@@ -165,6 +171,10 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
             {/* the coin, behind his shoulder */}
             <div className="fc behind coin-card" data-depth=".6" style={{ left: '63%', top: '-11%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
               <div className="fc-in"><Lottie className="coin" src={coinTurn} still={84} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
+            </div>
+            {/* Lenskart's loader: a small wide card, in front, beside his right arm (the ref's yellow ring sits here) */}
+            <div className="fc loader-card" data-depth="1.25" style={{ left: '72%', top: '38%', '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>
+              <div className="fc-in"><Lottie className="lk" src={lkLoader} drop={dropLoaderText} viewBox="113 34 72 34" still={60} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
             </div>
             {/* the title: name + the rolling word */}
             <div className="fc title-card" data-depth="1.1" style={{ left: '8.5%', top: '58%', '--dur': '6.2s', '--dl': '-2.4s' } as React.CSSProperties}>
