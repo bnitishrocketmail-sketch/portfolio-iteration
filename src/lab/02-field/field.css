@@ -156,7 +156,7 @@
   background: radial-gradient(90% 60% at 18% 0%, color-mix(in srgb, var(--glass-spec) 70%, transparent), transparent 60%); }
 .fc .cap { display: block; font: 600 clamp(10px, 1.05cqw, 13px)/1.2 var(--body); color: var(--muted); }
 .fc.glass .cap { color: var(--ink); opacity: .78; }
-.fc .coin { width: clamp(64px, 7.5cqw, 100px); aspect-ratio: 1; display: block; }
+.fc .coin { width: clamp(64px, 7.5cqw, 77px); aspect-ratio: 1; display: block; }
 .coin-card .cap { margin-top: 2px; text-align: center; }
 /* the assistant card: the B above its label */
 .fc.ai .fc-in { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(8px, .9cqw, 12px); }
@@ -175,7 +175,12 @@
 .hero02 .shape.tri { border: 0; border-radius: 0; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid var(--sky); opacity: .7; }
 
 /* ---- the B assistant (Lenskart) on the glass card: Nitish's Lottie, 626 × 626, 12 s loop through its states ---- */
-.fc.ai .bl { width: clamp(76px, 8cqw, 112px); aspect-ratio: 1; margin: -4px 0 -2px -6px; }
+.fc.ai .bl { width: clamp(76px, 8cqw, 91px); aspect-ratio: 1; margin: -4px 0 -2px -6px; }
+/* the Lottie cards (B, coin) — Nitish, 8 Oct: they read too big on desktop. Each keeps its minimum (what the phone shows)
+   and grows to at most 1.2× that: animation 76→91px (coin 64→77px), padding 9/11→11/13px, radius 12→14px, label 10→12px. */
+.fc.ai .fc-in, .fc.coin-card .fc-in { padding: clamp(9px, 1.1cqw, 11px) clamp(11px, 1.3cqw, 13px); border-radius: clamp(12px, 1.5cqw, 14px); }
+.fc.ai .cap, .fc.coin-card .cap { font-size: clamp(10px, 1.05cqw, 12px); }
+.fc.ai .fc-in { gap: clamp(8px, .9cqw, 10px); }
 .fc.ai .bl svg { display: block; }
 
 /* ---- team / brand ---- */
