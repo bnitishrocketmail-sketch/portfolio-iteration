@@ -5,6 +5,8 @@ import { CLIENTS, LINKS, PROJECTS } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import { ThemeToggle } from '../../components/dock/Dock';
 import { Like } from '../../components/micro/Widgets';
+import { Lottie } from '../../components/micro/Lottie';
+import bStates from '../../assets/lotties/b-states.json?url'; /* B, Lenskart's assistant: all states back to back, markers per state */
 import cutout from '../../assets/nitish-phone-cutout.webp';
 import './field.css';
 
@@ -29,27 +31,6 @@ function RollingWord() {
           transition={{ duration: .5, ease: [.3, 1, .4, 1] }}>{WORDS[i]}</motion.span>
       </AnimatePresence>
     </motion.span>
-  );
-}
-
-/* PLACEHOLDER for the "B" assistant Lottie: a stand-in that walks the assistant's states back to back
-   (idle → listening → thinking → replying) so the card reads as live until the real file arrives. */
-const STATES = ['idle', 'listen', 'think', 'reply'] as const;
-function BAssistant() {
-  const reduce = useReducedMotion();
-  const [s, setS] = useState(0);
-  useEffect(() => {
-    if (reduce) return;
-    const id = setInterval(() => setS(n => (n + 1) % STATES.length), 1500);
-    return () => clearInterval(id);
-  }, [reduce]);
-  return (
-    <div className={`bb s-${STATES[s]}`} aria-hidden="true">
-      <i className="ring" /><i className="ring r2" />
-      <b>B</b>
-      <span className="dots"><i /><i /><i /></span>
-      <span className="wave"><i /><i /><i /><i /></span>
-    </div>
   );
 }
 
@@ -201,7 +182,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
             <span className="shape tri" style={{ left: '15%', top: '52%' }} />
             {/* the assistant: liquid glass, over his arm, as if it had come off the phone */}
             <div className="fc glass ai" data-depth="1.3" style={{ left: '6%', top: '2%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
-              <div className="fc-in"><BAssistant /><span className="cap">AI assistant interaction</span></div>
+              <div className="fc-in"><Lottie className="bl" src={bStates} still={150} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">AI assistant interaction</span></div>
             </div>
             {/* the coin, behind his shoulder */}
             <div className="fc behind coin-card" data-depth=".6" style={{ right: '9%', top: '1%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>

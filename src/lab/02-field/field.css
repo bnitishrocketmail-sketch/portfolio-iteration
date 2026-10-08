@@ -174,29 +174,9 @@
 .hero02 .shape.alt { border-color: var(--sky); }
 .hero02 .shape.tri { border: 0; border-radius: 0; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid var(--sky); opacity: .7; }
 
-/* ---- PLACEHOLDER: the B assistant's states, until the Lottie arrives ---- */
-.bb { position: relative; width: clamp(44px, 4.6cqw, 60px); aspect-ratio: 1; border-radius: 32%; background: var(--pill); color: var(--on-pill); display: grid; place-items: center; transition: border-radius .5s; }
-.bb b { font: 700 clamp(20px, 2.2cqw, 28px)/1 var(--display); transition: transform .5s cubic-bezier(.3, 1.2, .4, 1), opacity .4s; }
-.bb .ring { position: absolute; inset: -4px; border-radius: 38%; border: 2px solid var(--ocean); opacity: 0; transform: scale(.9); }
-.bb .dots, .bb .wave { position: absolute; display: flex; gap: 3px; opacity: 0; transition: opacity .3s; }
-.bb .dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--on-pill); }
-.bb .wave { align-items: center; height: 60%; }
-.bb .wave i { width: 3px; height: 30%; border-radius: 2px; background: var(--on-pill); }
-.bb.s-idle b { animation: breathe 1.5s ease-in-out infinite; }
-.bb.s-listen { border-radius: 50%; }
-.bb.s-listen .ring { animation: ping 1.5s ease-out infinite; }
-.bb.s-listen .ring.r2 { animation-delay: .5s; }
-.bb.s-think b, .bb.s-reply b { transform: scale(.4); opacity: 0; }
-.bb.s-think .dots { opacity: 1; }
-.bb.s-think .dots i { animation: hop .9s ease-in-out infinite; }
-.bb.s-think .dots i:nth-child(2) { animation-delay: .15s; } .bb.s-think .dots i:nth-child(3) { animation-delay: .3s; }
-.bb.s-reply .wave { opacity: 1; }
-.bb.s-reply .wave i { animation: talk .7s ease-in-out infinite; }
-.bb.s-reply .wave i:nth-child(2) { animation-delay: .12s; } .bb.s-reply .wave i:nth-child(3) { animation-delay: .24s; } .bb.s-reply .wave i:nth-child(4) { animation-delay: .36s; }
-@keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-@keyframes ping { 0% { opacity: .9; transform: scale(.85); } 100% { opacity: 0; transform: scale(1.5); } }
-@keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-@keyframes talk { 0%, 100% { height: 30%; } 50% { height: 100%; } }
+/* ---- the B assistant (Lenskart) on the glass card: Nitish's Lottie, 626 × 626, 12 s loop through its states ---- */
+.fc.ai .bl { width: clamp(76px, 8cqw, 112px); aspect-ratio: 1; margin: -4px 0 -2px -6px; }
+.fc.ai .bl svg { display: block; }
 
 /* ---- team / brand ---- */
 .avatars { display: flex; margin: clamp(10px, 1.3cqw, 18px) 0; }
@@ -240,7 +220,7 @@
 @keyframes slide { to { transform: translateX(-50%); } }
 
 
-@media (prefers-reduced-motion: reduce) { .ticker .track, .sw, .fc-in, .bb b, .bb .ring, .bb .dots i, .bb .wave i { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .ticker .track, .sw, .fc-in { animation: none !important; } }
 
 /* ---- phones: the grid becomes a column; the hero keeps its proportions ---- */
 @media (max-width: 700px) {
