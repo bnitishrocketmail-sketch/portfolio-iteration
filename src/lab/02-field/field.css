@@ -48,9 +48,9 @@
 .pal-01 .t.projects { background: var(--tileA); } /* projects reads as a quiet tile here; mint stays with life and brand */
 .pal-01 .avatars i { border-color: var(--tileA); }
 /* The hero's circle (ref 3, hi-res, measured pixel by pixel, 8 Oct). Three shapes, all driven by the tile's px size (--hw/--hh):
-   - the disc: a lighter, tall ellipse (rx .5h, ry .66h, centre 4.6% right of the tile's centre at 46% of its height),
+   - the disc: a lighter, tall ellipse (rx .5h, ry .66h, centred on the figure at 46% of the tile's height),
      clipped by the tile — in the ref it never crosses the tile's edge;
-   - the stroke: one thin circle (r .58h, centre +4.6%, 49%) drawn as two broken arcs (Iteration02.tsx, strokeArcs): a long
+   - the stroke: one thin circle (r .58h, centred on the figure at 49% of the tile's height) drawn as two broken arcs (Iteration02.tsx, strokeArcs): a long
      left arc that crosses the tile's top edge into the gap above and ends just before the bottom edge, and a short
      bottom-right piece that spills into the gap below. Not clipped — it sits under the neighbouring tiles, so the spill
      shows only in the gaps. In the ref it is a light grey at ~30%: a touch lighter than a dark tile, darker than the field;
@@ -62,7 +62,7 @@
   background: radial-gradient(70% 70% at 50% 60%, var(--heroA), var(--heroB) 85%); }
 .it02.pal-01 .t.hero02 { background: transparent; }
 .pal-01 .disc-clip { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
-.pal-01 .disc { position: absolute; left: calc(50% + .046 * var(--hw)); top: calc(.456 * var(--hh)); transform: translate(-50%, -50%); border-radius: 50%;
+.pal-01 .disc { position: absolute; left: 50%; top: calc(.456 * var(--hh)); transform: translate(-50%, -50%); border-radius: 50%;
   width: calc(1.0 * var(--hh)); height: calc(1.32 * var(--hh)); background: var(--disc); }
 .pal-01 .stroke { position: absolute; left: 0; top: 0; overflow: visible; fill: none; stroke: var(--ring); stroke-width: 2px; stroke-linecap: round; }
 .pal-01 .hero02 { --rise: .45; --mr: calc(.495 * var(--hh)); --mcy: calc((var(--rise) + .536) * var(--hh)); }

@@ -87,10 +87,11 @@ const REEL = [
   { g1: 'var(--coal)', g2: 'var(--ocean)', label: 'Lenskart · launch' }, { g1: 'var(--acc3)', g2: 'var(--sky)', label: 'MobiKwik · loop' },
 ];
 
-/* The stroke around the hero (02b): one circle, centre a little right of the tile's centre and just below its middle,
-   radius ~0.58 of the tile's height (ref 3, measured), drawn as two arcs. Angles are screen angles (clockwise from 3 o'clock). */
+/* The stroke around the hero (02b): one circle centred on the figure (the tile's centre line) just below the tile's middle,
+   radius ~0.58 of the tile's height (ref 3, measured; the ref's circles are centred on its figure, which sits right of its
+   tile's centre — ours is centred, so the circles are too), drawn as two arcs. Angles are screen angles (clockwise from 3 o'clock). */
 function strokeArcs(w: number, h: number) {
-  const cx = w / 2 + .046 * w, cy = .486 * h, r = .578 * h;
+  const cx = w / 2, cy = .486 * h, r = .578 * h;
   const P = (deg: number) => { const a = deg * Math.PI / 180; return `${(cx + r * Math.cos(a)).toFixed(1)} ${(cy + r * Math.sin(a)).toFixed(1)}`; };
   const arc = (a0: number, a1: number) => { const sweep = a1 > a0 ? 1 : 0, large = Math.abs(a1 - a0) > 180 ? 1 : 0; return `M ${P(a0)} A ${r} ${r} 0 ${large} ${sweep} ${P(a1)}`; };
   /* left: from 10 o'clock (above the tile) counter-clockwise down the left side to just before the bottom edge */
