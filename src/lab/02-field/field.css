@@ -34,7 +34,7 @@
    Role mapping: the quiet tiles take lilac, the accent tiles mint, the hero tile periwinkle (01's hero card);
    periwinkle is the accent (ring, rolling word, deltas), blush and amber the small shapes, coal the pills. */
 .it02.pal-01 { --tileA: #ece9fa; --tileB: #bde6d9; --tileC: #ece9fa; --ocean: #7b7ee4; --sky: #5a5dd1; --pos: #1f8a70; --pill: #141419; --on-pill: #ffffff;
-  --amber: #f5bd56; --warm: #dfb3f3; --acc3: #7b7ee4; --sheet2: #ece9fa; --heroA: #7b7ee4; --heroB: #5a5dd1; --shape: #dfb3f3; --coal: #141419; --disc: rgba(255, 255, 255, .16); --ring: rgba(255, 255, 255, .6); }
+  --amber: #f5bd56; --warm: #dfb3f3; --acc3: #7b7ee4; --sheet2: #ece9fa; --heroA: #7b7ee4; --heroB: #5a5dd1; --shape: #dfb3f3; --coal: #141419; --disc: rgba(236, 233, 250, .42); --ring: rgba(226, 223, 252, .95); } /* lavender-white: lighter than the tile inside it, still visible on the near-white field outside it */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .it02.pal-01 { --tileA: #27233a; --tileB: #2c6658; --tileC: #27233a; --ocean: #7b7ee4; --sky: #b587d6; --pos: #2bc48a; --pill: #f0f0f4; --on-pill: #09090c;
     --amber: #d9a341; --warm: #b587d6; --acc3: #5b5ecc; --card: #1d1e26; --sheet2: #27233a; --heroA: #5b5ecc; --heroB: #4548b4; --shape: #b587d6; --coal: #09090c; --disc: rgba(255, 255, 255, .1); --ring: rgba(255, 255, 255, .4); }
@@ -49,19 +49,22 @@
 .pal-01 .avatars i { border-color: var(--tileA); }
 /* 02b fills the screen: no sheet on a page, the field is the page; its padding is the outer margin (ref 3: 15px) */
 .pal-01 .field { border-radius: 0; box-shadow: none; }
-/* the hero's circle (ref 3, measured on the hi-res shot): a disc of ~1.1× the tile's height centred at 42% of its height,
-   a thin ring ~7% outside it; the figure's head rises ~45% of the tile above its top (the ref: ~47%); --hw/--hh are the tile's px size */
-.pal-01 .disc-wrap { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; z-index: 0; pointer-events: none; }
-.pal-01 .disc, .pal-01 .ring1, .pal-01 .ring2 { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); border-radius: 50%; }
+/* the hero's circle (ref 3, hi-res, read closely with Nitish, 8 Oct): the disc and its rings are not clipped by the tile —
+   they run on past its edges but sit UNDER the neighbouring tiles, so they only show in the gaps: the disc's colour above
+   the tile, a ring at the bottom right. The figure is clipped by the tile's bottom alone, not by the disc, so it spills
+   past the disc (whose bottom ends a little above the tile's). The circle sits a touch right of centre, as in the ref,
+   which is why its left foot hides behind the figure and its right foot shows.
+   .halo is a second grid item in the hero's cell at z-index -1 (below the tiles, above the field) carrying the tile's fill
+   and the circle; the hero tile itself goes transparent. --hw/--hh are the hero's px size, set on the grid. */
+.pal-01 .halo { grid-area: hero; position: relative; z-index: -1; border-radius: var(--r); pointer-events: none;
+  background: radial-gradient(70% 70% at 50% 60%, var(--heroA), var(--heroB) 85%); }
+.it02.pal-01 .t.hero02 { background: transparent; }
+.pal-01 .disc, .pal-01 .ring1, .pal-01 .ring2 { position: absolute; left: 54%; top: 42%; transform: translate(-50%, -50%); border-radius: 50%; }
 .pal-01 .disc { width: calc(1.1 * var(--hh)); height: calc(1.1 * var(--hh)); background: var(--disc); }
-.pal-01 .ring1 { width: calc(1.24 * var(--hh)); height: calc(1.24 * var(--hh)); border: 1.5px solid var(--ring); }
-.pal-01 .ring2 { width: calc(1.4 * var(--hh)); height: calc(1.4 * var(--hh)); border: 1px solid var(--ring); opacity: .5; }
-.pal-01 .hero02 { --rise: .45; --cy: calc((var(--rise) + .42) * var(--hh)); --rr: calc(.55 * var(--hh)); }
-.pal-01 .person-clip { top: calc(-1 * var(--rise) * var(--hh)); border-radius: 0;
-  -webkit-mask-image: radial-gradient(circle var(--rr) at 50% var(--cy), #000 calc(var(--rr) - 1px), transparent var(--rr)), linear-gradient(#000, #000);
-  mask-image: radial-gradient(circle var(--rr) at 50% var(--cy), #000 calc(var(--rr) - 1px), transparent var(--rr)), linear-gradient(#000, #000);
-  -webkit-mask-size: 100% 100%, 100% var(--cy); mask-size: 100% 100%, 100% var(--cy);
-  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
+.pal-01 .ring1 { width: calc(1.28 * var(--hh)); height: calc(1.28 * var(--hh)); border: 1.5px solid var(--ring); }
+.pal-01 .ring2 { width: calc(1.56 * var(--hh)); height: calc(1.56 * var(--hh)); border: 1px solid var(--ring); opacity: .5; }
+.pal-01 .hero02 { --rise: .45; }
+.pal-01 .person-clip { top: calc(-1 * var(--rise) * var(--hh)); }
 .pal-01 .person { top: 0; bottom: auto; height: calc((var(--rise) + 1.05) * var(--hh)); }
 
 /* ---- field + grid: ref 3 is 1200 × 900 with 15px margins, ~17px gaps ---- */
@@ -71,7 +74,7 @@
    hold that (narrower than 1248px, or too short for a 1.7:1 sheet), the whole layout scales down as one
    piece instead of reflowing, so nothing gets cramped. --W / --H / --s02 are set from the viewport in JS;
    the CSS fallbacks cover the first paint. */
-.field { position: relative; container-type: size; container-name: field; flex: none;
+.field { position: relative; isolation: isolate; container-type: size; container-name: field; flex: none; /* isolate: the halo at z-index -1 stays above the field's own fill, phones included */
   width: var(--W, clamp(1200px, 100vw - 2 * var(--edge), 1440px));
   height: var(--H, clamp(700px, 100vh - 2 * var(--edge), 1080px));
   transform: scale(var(--s02, 1)); transform-origin: center center;
@@ -258,6 +261,7 @@
   .title-card .nm { font-size: 15px; }
   .title-card .role { font-size: 12px; }
   .pal-01 .hero02 { --rise: .17; }
+  .pal-01 .halo { overflow: hidden; } /* no neighbouring tiles above on phones, so the circle stays inside the tile */
   .life02 .ovals { min-height: 180px; }
   .t.xp, .t.team { min-height: 300px; }
   .t.reel02 { min-height: 200px; }

@@ -100,7 +100,8 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
   /* the hero tile's size in px, for the circle geometry (02b): the disc, its rings and the figure's mask share it */
   useEffect(() => {
     const el = heroRef.current; if (!el) return;
-    const ro = new ResizeObserver(() => { el.style.setProperty('--hw', el.offsetWidth + 'px'); el.style.setProperty('--hh', el.offsetHeight + 'px'); });
+    const grid = el.parentElement as HTMLElement; /* on the grid, so the halo (a sibling in the same cell) reads it too */
+    const ro = new ResizeObserver(() => { grid.style.setProperty('--hw', el.offsetWidth + 'px'); grid.style.setProperty('--hh', el.offsetHeight + 'px'); });
     ro.observe(el); return () => ro.disconnect();
   }, []);
 
@@ -174,10 +175,10 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
           {/* hero: the person, centred, looking into the phone; what he's looking at and what he's built float
               close to the body — the coin behind his shoulder, the assistant over his arm, title and description
               over the shirt (spec: LOG.md, "Hero card — spec") */}
+          {/* 02b (ref 3, hi-res): the hero's fill, a lighter disc and thin rings, in the hero's cell but under the other tiles,
+              so the circle runs past the tile and shows in the gaps; the tile above is transparent (see field.css, .halo) */}
+          {palette === '01' && <div className="halo" aria-hidden="true"><i className="disc" /><i className="ring1" /><i className="ring2" /></div>}
           <section className="t hero02 b" ref={heroRef} onPointerMove={move} onPointerLeave={reset}>
-            {/* 02b (ref 3, hi-res): a lighter disc behind the figure, clipped to the tile, with thin rings just outside it;
-                the figure is masked by the disc's lower half only, so the head stays free above the tile */}
-            {palette === '01' && <div className="disc-wrap" aria-hidden="true"><i className="disc" /><i className="ring1" /><i className="ring2" /></div>}
             <div className="person-clip" aria-hidden="true"><img className="person" src={cutout} alt="" /></div>
             <span className="shape alt" style={{ left: '6%', top: '38%' }} />
             <span className="shape" style={{ right: '7%', top: '48%' }} />
