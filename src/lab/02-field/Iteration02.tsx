@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { CLIENTS, LINKS, PROJECTS } from '../../lib/data';
+import { CLIENTS, LINKS, PROJECTS, WRITING } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import { ThemeToggle } from '../../components/dock/Dock';
 import { Like } from '../../components/micro/Widgets';
@@ -96,6 +96,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
   const reduce = useReducedMotion();
   const canHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
   const heroRef = useRef<HTMLDivElement>(null);
+  const [cols5, setCols5] = useState(false);
 
   /* the hero tile's size in px, for the circle geometry (02b): the disc, its rings and the figure's mask share it */
   useEffect(() => {
@@ -104,12 +105,21 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
     ro.observe(el); return () => ro.disconnect();
   }, []);
 
-  /* sheet sizing: width 1200–1440, aspect between 4:3 and 1.7:1, scaled down as one piece when the viewport can't hold it */
+  /* sheet sizing: width 1200–1440, aspect between 4:3 and 1.7:1, scaled down as one piece when the viewport can't hold it.
+     02b (Nitish, 8 Oct): the field is the whole screen, end to end, like a dashboard — the grid takes the viewport's size,
+     and when the screen is wide enough (≥1700px and wider than 1.7:1) it gets a fifth column of tiles rather than stretching four. */
   useEffect(() => {
-    const root = document.documentElement, EDGE = 24;
+    const root = document.documentElement, EDGE = 24, full = palette === '01';
     const fit = () => {
       const vw = window.innerWidth, vh = window.innerHeight;
-      if (vw <= 700) { ['--W', '--H', '--s02'].forEach(v => root.style.removeProperty(v)); return; }
+      if (vw <= 700) { ['--W', '--H', '--s02'].forEach(v => root.style.removeProperty(v)); setCols5(false); return; }
+      if (full) {
+        /* the layout is designed between 1200 and 1920px; narrower or wider screens get it scaled as one piece, so
+           type, gaps and radii keep the proportions measured off the reference instead of the type capping out */
+        const W = Math.min(1920, Math.max(1200, vw)), s = vw / W, H = vh / s;
+        root.style.setProperty('--W', W + 'px'); root.style.setProperty('--H', H + 'px'); root.style.setProperty('--s02', s.toFixed(4));
+        setCols5(W >= 1700 && W / H > 1.7); return;
+      }
       const W = Math.min(1440, Math.max(1200, vw - 2 * EDGE));
       let s = vw - 2 * EDGE < 1200 ? (vw - 32) / 1200 : 1;
       const availH = (vh - 2 * EDGE) / s;
@@ -119,7 +129,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
     };
     fit(); addEventListener('resize', fit);
     return () => { removeEventListener('resize', fit); ['--W', '--H', '--s02'].forEach(v => root.style.removeProperty(v)); };
-  }, []);
+  }, [palette]);
 
   /* floating assets follow the pointer by depth, as in 01 */
   const move = (e: React.PointerEvent) => {
@@ -137,7 +147,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
     <div className={`it02${palette === '01' ? ' pal-01' : ''}`}>
       <ThemeToggle isDark={isDark} onToggle={toggle} />
       <Link className="labtag" to="/lab">{palette === '01' ? 'Lab · 02b Field · 01 palette' : 'Lab · 02 Field'}</Link>
-      <div className="field">
+      <div className={`field${cols5 ? ' cols-5' : ''}`}>
         <div className="bento02">
 
           {/* experience: ring + shipped count + CV */}
@@ -234,6 +244,24 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
               {[['AE', 'var(--coal)'], ['Lottie', 'var(--ocean)'], ['Rive', 'var(--sky)'], ['JS', 'var(--muted)']].map(([l, c], i) => <div key={l} className="sw" style={{ background: c, '--d': `${-i * .9}s` } as React.CSSProperties}>{l}</div>)}
             </div>
           </section>
+
+          {/* 02b, wide screens only: a fifth column — writing, and a way to get in touch */}
+          {cols5 && (
+            <section className="t writing">
+              <p className="ttl">Writing</p>
+              <ul className="wlist">
+                {WRITING.map(w => <li key={w.title}><a href={w.href}><span className="wt">{w.title}</span><span className="wm">{w.meta}</span></a></li>)}
+              </ul>
+              <a className="cta02" href="#">All notes <span className="arr" aria-hidden="true">↗</span></a>
+            </section>
+          )}
+          {cols5 && (
+            <section className="t contact b">
+              <p className="ttl">Say hi.</p>
+              <p className="sm">{LINKS.email}</p>
+              <a className="cta02" href="#">Email <span className="arr" aria-hidden="true">↗</span></a>
+            </section>
+          )}
 
           {/* reel: headline + ticker */}
           <section className="t reel02">

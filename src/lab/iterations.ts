@@ -30,7 +30,7 @@ export const ITERATIONS: Iteration[] = [
     name: '02b Field · 01 palette',
     status: 'exploring',
     parent: '02-field',
-    tries: "The same grid and hero as 02, recoloured with 01's palette: lilac and mint tiles, the hero on periwinkle, periwinkle as the accent, coal pills.",
+    tries: "02's grid in 01's palette, filling the screen end to end like a dashboard: a fifth column of tiles on wide screens; the hero on a disc with rings, masked by its lower half (ref 3, hi-res).",
     refs: ['02 Field', '01 Sheet palette (tokens.css)'],
   },
 ];

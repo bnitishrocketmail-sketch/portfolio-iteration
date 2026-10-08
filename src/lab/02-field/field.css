@@ -47,6 +47,26 @@
 .pal-01 .hero02 .shape.tri { border-bottom-color: var(--amber); }
 .pal-01 .t.projects { background: var(--tileA); } /* projects reads as a quiet tile here; mint stays with life and brand */
 .pal-01 .avatars i { border-color: var(--tileA); }
+/* 02b fills the screen: no sheet on a page, the field is the page; its padding is the outer margin (ref 3: 15px) */
+.pal-01 .field { border-radius: 0; box-shadow: none; }
+/* five columns on wide screens: the extra column on the right carries writing and contact; the ticker runs under three columns */
+.field.cols-5 .bento02 { grid-template-columns: minmax(0, 27fr) minmax(0, 29fr) minmax(0, 29fr) minmax(0, 27fr) minmax(0, 27fr);
+  grid-template-areas:
+    "xp micro projects team writing"
+    "xp hero hero team writing"
+    "life hero hero brand contact"
+    "life tools reel reel reel"; }
+.t.writing { grid-area: writing; } .t.contact { grid-area: contact; }
+.wlist { list-style: none; margin: min(clamp(10px, 1.2cqw, 16px), 1.4cqh) 0 0; padding: 0; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.wlist li { border-top: 1px solid var(--line); }
+.wlist li:first-child { border-top: 0; }
+.wlist a { display: flex; flex-direction: column; gap: .2em; padding: min(clamp(8px, 1cqw, 14px), 1.2cqh) 0; color: inherit; text-decoration: none; }
+.wlist .wt { font: 500 clamp(12.5px, 1.3cqw, 17px)/1.25 var(--body); letter-spacing: -.01em; }
+.wlist .wm { font: 500 clamp(10.5px, 1.05cqw, 13px)/1.3 var(--body); color: var(--muted); }
+.wlist a:hover .wt { color: var(--ocean); }
+.writing .cta02 { margin-top: auto; }
+.contact .sm { margin-top: .4em; }
+.contact .cta02 { margin-top: auto; }
 /* the hero's circle (ref 3, measured on the hi-res shot): a disc of ~1.1× the tile's height centred at 42% of its height,
    a thin ring ~7% outside it; the figure's head rises ~45% of the tile above its top (the ref: ~47%); --hw/--hh are the tile's px size */
 .pal-01 .disc-wrap { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; z-index: 0; pointer-events: none; }
