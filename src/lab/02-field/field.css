@@ -150,7 +150,7 @@
 .fc-in { background: var(--card); color: var(--ink); border-radius: clamp(12px, 1.5cqw, 20px); box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .45); padding: clamp(9px, 1.1cqw, 15px) clamp(11px, 1.3cqw, 17px); animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
 /* liquid glass: mostly see-through, a strong blur with lifted saturation, a bright rim that catches light at the
    top-left and fades out, and a soft inner glow; whatever sits behind it (the arm, the tile) shows through softened */
-.fc.glass .fc-in { position: relative; background: linear-gradient(135deg, var(--glass-hi), var(--glass-lo)); backdrop-filter: blur(18px) saturate(1.7); -webkit-backdrop-filter: blur(18px) saturate(1.7);
+.fc.glass .fc-in { position: relative; background: linear-gradient(135deg, var(--glass-hi), var(--glass-lo)); -webkit-backdrop-filter: blur(18px) saturate(1.7); backdrop-filter: blur(18px) saturate(1.7); /* -webkit- first: the minifier keeps only the last of the two */
   border: 1px solid var(--glass-rim); box-shadow: inset 0 1px 0 var(--glass-spec), inset 1px 0 0 color-mix(in srgb, var(--glass-spec) 45%, transparent), inset 0 -10px 24px -16px var(--glass-spec), 0 18px 40px -18px rgba(0, 0, 0, .35); }
 .fc.glass .fc-in::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   background: radial-gradient(90% 60% at 18% 0%, color-mix(in srgb, var(--glass-spec) 70%, transparent), transparent 60%); }
@@ -169,7 +169,7 @@
 .rw { display: inline-block; position: relative; overflow: hidden; vertical-align: bottom; color: var(--ocean); font-weight: 600; padding: 0 .04em; margin: 0 -.04em; }
 .rw-w { display: inline-block; will-change: transform; }
 /* the description card: one or two lines beside the title */
-.desc-card .fc-in { width: clamp(170px, 24cqw, 300px); }
+.desc-card .fc-in { width: clamp(170px, 16cqw, 220px); } /* narrower, so it overlaps the body's right side by about as much as ref 3's engagement card */
 .desc-card p { font: 500 clamp(11.5px, 1.15cqw, 14.5px)/1.4 var(--body); color: var(--ink); opacity: .9; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 .hero02 .shape { position: absolute; z-index: 1; border-radius: 50%; border: 3px solid var(--ocean); width: 14px; height: 14px; }
@@ -243,11 +243,11 @@
   /* the cards keep their places but shrink; title and description share the bottom band */
   .fc-in { padding: 9px 11px; }
   .fc.ai { left: 2% !important; top: 0 !important; }
-  .fc.coin-card { right: 4% !important; top: -8% !important; }
+  .fc.coin-card { left: auto !important; right: 4% !important; top: -8% !important; }
   .fc .coin { width: 56px; }
   /* title above-left, description below-right, so the two never meet on a narrow tile */
-  .fc.title-card { left: 3% !important; bottom: 30% !important; }
-  .fc.desc-card { right: 3% !important; bottom: 5% !important; }
+  .fc.title-card { left: 3% !important; top: auto !important; bottom: 30% !important; }
+  .fc.desc-card { left: auto !important; right: 3% !important; bottom: 5% !important; }
   .desc-card .fc-in { width: 58vw; max-width: 230px; }
   .title-card .nm { font-size: 15px; }
   .title-card .role { font-size: 12px; }

@@ -141,7 +141,8 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
 
           {/* hero: the person, centred, looking into the phone; what he's looking at and what he's built float
               close to the body — the coin behind his shoulder, the assistant over his arm, title and description
-              over the shirt (spec: LOG.md, "Hero card — spec") */}
+              over the shirt (spec: LOG.md, "Hero card — spec"). Positions are ref 3's, as fractions of the tile (hi-res, measured):
+              B ↔ its chart card, title ↔ its play pill, coin ↔ its segmentation card (behind), description ↔ its engagement card */}
           {/* 02b (ref 3, hi-res, measured): the hero's fill and the lighter disc (clipped to the tile), plus one thin circle drawn
               as two broken arcs that cross the tile's edge into the gaps — in the hero's cell but under the other tiles
               (field.css, .halo); the tile above it is transparent. The arcs: a long one from the gap above, down the left
@@ -158,19 +159,19 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
             <span className="shape" style={{ right: '7%', top: '48%' }} />
             <span className="shape tri" style={{ left: '15%', top: '52%' }} />
             {/* the assistant: liquid glass, over his arm, as if it had come off the phone */}
-            <div className="fc glass ai" data-depth="1.3" style={{ left: '6%', top: '2%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
+            <div className="fc glass ai" data-depth="1.3" style={{ left: '16%', top: '10%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
               <div className="fc-in"><Lottie className="bl" src={bStates} still={150} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
             </div>
             {/* the coin, behind his shoulder */}
-            <div className="fc behind coin-card" data-depth=".6" style={{ right: '9%', top: '1%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
+            <div className="fc behind coin-card" data-depth=".6" style={{ left: '63%', top: '-11%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
               <div className="fc-in"><Lottie className="coin" src={coinTurn} still={84} label="A rupee coin turning in faux 3D" /><span className="cap">Faux 3D coin</span></div>
             </div>
             {/* the title: name + the rolling word */}
-            <div className="fc title-card" data-depth="1.1" style={{ left: '5%', bottom: '8%', '--dur': '6.2s', '--dl': '-2.4s' } as React.CSSProperties}>
+            <div className="fc title-card" data-depth="1.1" style={{ left: '8.5%', top: '58%', '--dur': '6.2s', '--dl': '-2.4s' } as React.CSSProperties}>
               <div className="fc-in"><span className="nm">Nitish Bhardwaj</span><span className="role">Product <RollingWord /></span></div>
             </div>
             {/* the description, beside it */}
-            <div className="fc desc-card" data-depth="1.2" style={{ right: '5%', bottom: '11%', '--dur': '5.1s', '--dl': '-.6s' } as React.CSSProperties}>
+            <div className="fc desc-card" data-depth="1.2" style={{ left: '58%', bottom: '5%', '--dur': '5.1s', '--dl': '-.6s' } as React.CSSProperties}>
               <div className="fc-in"><p>Motion, interaction and code-driven animation for products people use every day.</p></div>
             </div>
           </section>
