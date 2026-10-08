@@ -157,8 +157,8 @@
 .fc .cap { display: block; font: 600 clamp(10px, 1.05cqw, 13px)/1.2 var(--body); color: var(--muted); }
 .fc.glass .cap { color: var(--ink); opacity: .78; }
 .fc .coin { width: clamp(64px, 7.5cqw, 77px); aspect-ratio: 1; display: block; margin-inline: auto; }
-/* the coin fills about 40% of its 400px canvas, so it is drawn 2.4× inside its box: face-on it spans the box (Nitish: 1.5× the earlier 1.6×) */
-.fc .coin svg { transform: scale(2.4) !important; overflow: visible; } /* !important: lottie-web sets an inline transform on its svg */
+/* the coin fills about 40% of its 400px canvas, so it is drawn 1.8× inside its box (Nitish: 2.4× read too big, 25% less) */
+.fc .coin svg { transform: scale(1.8) !important; overflow: visible; } /* !important: lottie-web sets an inline transform on its svg */
 .coin-card .cap { margin-top: 2px; text-align: center; }
 /* the assistant card: the B above its label */
 .fc.ai .fc-in { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(8px, .9cqw, 12px); }
