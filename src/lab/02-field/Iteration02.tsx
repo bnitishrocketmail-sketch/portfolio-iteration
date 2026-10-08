@@ -8,7 +8,7 @@ import { Like } from '../../components/micro/Widgets';
 import { Lottie } from '../../components/micro/Lottie';
 /* B, Lenskart's AI assistant (Nitish's Lottie, hosted on lottie.host): all states back to back in one loop, a marker per state */
 const bStates = 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie';
-/* the faux-3D rupee coin, made with Nitish's faux-3D plugin (hosted on lottie.host): one 2.8 s turn, looping. The plugin's link comes later. */
+/* the rupee coin, made with Nitish's Vector 3D plugin (hosted on lottie.host): one 2.8 s turn, looping. The card links to the plugin once he sends the link. */
 const coinTurn = 'https://lottie.host/baf8073b-3068-48ed-9e57-7a55cd7c97ed/KOTff0Mhna.lottie';
 import cutout from '../../assets/nitish-phone-cutout.webp';
 import './field.css';
@@ -164,7 +164,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
             </div>
             {/* the coin, behind his shoulder */}
             <div className="fc behind coin-card" data-depth=".6" style={{ left: '63%', top: '-11%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
-              <div className="fc-in"><Lottie className="coin" src={coinTurn} still={84} label="A rupee coin turning in faux 3D" /><span className="cap">Faux 3D coin</span></div>
+              <div className="fc-in"><Lottie className="coin" src={coinTurn} still={84} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
             </div>
             {/* the title: name + the rolling word */}
             <div className="fc title-card" data-depth="1.1" style={{ left: '8.5%', top: '58%', '--dur': '6.2s', '--dl': '-2.4s' } as React.CSSProperties}>
