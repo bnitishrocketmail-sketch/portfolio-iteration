@@ -170,7 +170,8 @@
 .rw-w { display: inline-block; will-change: transform; }
 /* the description card: one or two lines beside the title */
 .desc-card .fc-in { width: clamp(170px, 16cqw, 220px); } /* narrower, so it overlaps the body's right side by about as much as ref 3's engagement card */
-.desc-card p { font: 500 clamp(11.5px, 1.15cqw, 14.5px)/1.4 var(--body); color: var(--ink); opacity: .9; }
+.desc-card p { font: 500 clamp(11.5px, 1.15cqw, 14.5px)/1.4 var(--body); color: var(--ink); opacity: .9; text-wrap: balance; }
+.desc-card .nw { white-space: nowrap; } /* keeps "feedback-rich" from splitting at its hyphen */
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 .hero02 .shape { position: absolute; z-index: 1; border-radius: 50%; border: 3px solid var(--ocean); width: 14px; height: 14px; }
 .hero02 .shape.alt { border-color: var(--sky); }
