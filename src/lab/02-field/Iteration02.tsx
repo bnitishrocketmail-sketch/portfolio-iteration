@@ -6,7 +6,8 @@ import { useTheme } from '../../lib/theme';
 import { ThemeToggle } from '../../components/dock/Dock';
 import { Like } from '../../components/micro/Widgets';
 import { Lottie } from '../../components/micro/Lottie';
-import bStates from '../../assets/lotties/b-states.json?url'; /* B, Lenskart's assistant: all states back to back, markers per state */
+/* B, Lenskart's AI assistant (Nitish's Lottie, hosted on lottie.host): all states back to back in one loop, a marker per state */
+const bStates = 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie';
 import cutout from '../../assets/nitish-phone-cutout.webp';
 import './field.css';
 
