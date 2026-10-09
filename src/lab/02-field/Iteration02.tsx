@@ -66,6 +66,9 @@ function strokeArcs(w: number, h: number) {
   return `${left} ${right}`;
 }
 
+/* the skills Nitish named (9 Oct); "Custom AI workflows" stands for his structured use of AI — feeding it his own skills */
+const SKILLS02 = ['Product design', 'UX design', 'UI design', 'Interaction design', 'Micro-interactions', 'UI animation', 'State-machine design', 'Custom AI workflows'];
+
 /* Palettes: the iteration's own (ocean green + sky blue) and 01's (periwinkle, blush, mint, lilac, amber, coal) as a sub-iteration */
 export type Palette = 'ocean' | '01';
 
@@ -217,12 +220,13 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
           </section>
 
           {/* tools */}
-          <section className="t tools02">
-            <p className="ttl">Stack</p>
-            <p className="sm">After Effects · Lottie · Rive · JavaScript</p>
-            <div className="swatches" aria-hidden="true">
-              {[['AE', 'var(--coal)'], ['Lottie', 'var(--ocean)'], ['Rive', 'var(--sky)'], ['JS', 'var(--muted)']].map(([l, c], i) => <div key={l} className="sw" style={{ background: c, '--d': `${-i * .9}s` } as React.CSSProperties}>{l}</div>)}
-            </div>
+          {/* skills (Nitish, 9 Oct): replaces the Stack card — capsule pills, one line each, stacked from the bottom right:
+              the longest form the base, shorter ones rise above (sorted by length; wrap-reverse fills rows bottom-up) */}
+          <section className="t tools02 skills">
+            <p className="ttl">Skills</p>
+            <ul className="pills" aria-label="Skills">
+              {[...SKILLS02].sort((a, b) => b.length - a.length).map(s => <li key={s}>{s}</li>)}
+            </ul>
           </section>
 
           {/* reel: headline + ticker */}

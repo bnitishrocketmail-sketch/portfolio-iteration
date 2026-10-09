@@ -226,7 +226,14 @@
 .avchip { position: absolute; width: clamp(22px, 2.4cqw, 30px); aspect-ratio: 1; border-radius: 50%; background: var(--ocean); border: 2px solid var(--tileB); }
 .avchip.one { right: 20%; top: 4%; } .avchip.two { left: 4%; bottom: 2%; background: var(--sky); }
 
-/* ---- tools: swatches ---- */
+/* ---- skills: a right-aligned pill pyramid. wrap-reverse fills rows from the bottom, so the first (longest) pills make
+   the base and shorter ones stack above; each pill stays on one line. ---- */
+.skills .pills { list-style: none; margin: auto 0 0; padding: 0; display: flex; flex-wrap: wrap-reverse; justify-content: flex-end; align-content: flex-start;
+  gap: min(clamp(5px, .55cqw, 8px), .9cqh) min(clamp(5px, .5cqw, 7px), .9cqh); }
+.skills .pills li { white-space: nowrap; padding: .5em .95em; border-radius: 999px; background: var(--card); color: var(--ink);
+  font: 500 min(clamp(11px, 1.05cqw, 14px), 1.6cqh)/1 var(--body); letter-spacing: -.005em; box-shadow: 0 1px 0 var(--line), 0 6px 14px -10px rgba(0, 0, 0, .25); }
+
+/* ---- tools: swatches (no longer used on 02; kept for reference) ---- */
 .swatches { display: flex; gap: clamp(6px, .9cqw, 12px); margin-top: auto; }
 .sw { flex: 1; aspect-ratio: 1.6; border-radius: 22% / 35%; display: grid; place-items: center; color: #fff; font: 600 clamp(9px, .95cqw, 12px) var(--body); animation: wave 4s ease-in-out infinite; animation-delay: var(--d); }
 @keyframes wave { 0%, 100% { border-radius: 22% / 35%; } 50% { border-radius: 35% / 22%; } }
