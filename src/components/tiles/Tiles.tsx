@@ -35,8 +35,9 @@ export function Tools() {
 /* ---- photo stack: drag or tap through ----
    PhotoStack is the stack itself (header with the count, the fanned photos, the hint); 01's LifeStack wraps it in its tile.
    `bleed` (02): the photos are anchored to the bottom and run past the tile's bottom edge, the tile hiding the lowest
-   ~15% of each; the captions sit above the hidden part, and the hint moves up into the header. */
-export function PhotoStack({ bleed = false }: { bleed?: boolean }) {
+   ~15% of each; the captions sit above the hidden part, and the hint moves up into the header.
+   `tints` overrides the placeholder gradients so a page can colour them from its own palette (01's colours stay in 01). */
+export function PhotoStack({ bleed = false, tints }: { bleed?: boolean; tints?: [string, string][] }) {
   const [i, setI] = useState(0);
   const [leaving, setLeaving] = useState<null | { idx: number; dir: number }>(null);
   const reduce = useReducedMotion();
@@ -57,7 +58,7 @@ export function PhotoStack({ bleed = false }: { bleed?: boolean }) {
           const isTop = pos === 0;
           const out = leaving && leaving.idx === k;
           return (
-            <motion.figure key={c.caption} style={{ '--g1': c.g1, '--g2': c.g2, zIndex: n - pos } as React.CSSProperties}
+            <motion.figure key={c.caption} style={{ '--g1': tints ? tints[k % tints.length][0] : c.g1, '--g2': tints ? tints[k % tints.length][1] : c.g2, zIndex: n - pos } as React.CSSProperties}
               animate={out ? { x: leaving.dir * 420, rotate: leaving.dir * 14, opacity: 0 }
                 : { x: 0, y: pos * -6, rotate: (pos % 2 ? -1 : 1) * pos * 2.4, scale: 1 - pos * .045, opacity: pos > 3 ? 0 : 1 }}
               transition={{ type: 'spring', bounce: .18, duration: .5 }}

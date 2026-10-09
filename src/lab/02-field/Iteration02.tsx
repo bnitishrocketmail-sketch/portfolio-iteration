@@ -69,6 +69,9 @@ function strokeArcs(w: number, h: number) {
 /* the skills Nitish named (9 Oct); "Custom AI workflows" stands for his structured use of AI — feeding it his own skills */
 const SKILLS02 = ['Product design', 'UX design', 'UI design', 'Interaction design', 'Micro-interactions', 'UI animation', 'State-machine design', 'Custom AI workflows'];
 
+/* PLACEHOLDER gradients for the Off duty photos, from this page's own palette tokens (not 01's colours) */
+const OFFDUTY_TINTS: [string, string][] = [['var(--ocean)', 'var(--sky)'], ['var(--sky)', 'var(--tileA)'], ['var(--coal)', 'var(--ocean)'], ['var(--ocean)', 'var(--tileB)'], ['var(--sky)', 'var(--coal)'], ['var(--muted)', 'var(--sky)']];
+
 /* Palettes: the iteration's own (ocean green + sky blue) and 01's (periwinkle, blush, mint, lilac, amber, coal) as a sub-iteration */
 export type Palette = 'ocean' | '01';
 
@@ -206,7 +209,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
           {/* off duty (Nitish, 9 Oct): replaces the brand card in its slot — 01's photo stack, drag or tap through,
               anchored to the bottom and running past the card's edge (the card hides the lowest ~15% of each photo) */}
           <section className="t offduty b">
-            <PhotoStack bleed />
+            <PhotoStack bleed tints={OFFDUTY_TINTS} />
           </section>
 
           {/* life: the statement in pills, two oval photos */}
