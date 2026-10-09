@@ -8,7 +8,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/lab/02-field" replace />} />
+        <Route path="/" element={<Navigate to="/lab/02b-field" replace />} />
         <Route path="/lab" element={<LabIndex />} />
         <Route path="/lab/01-sheet" element={<Iteration01 />} />
         <Route path="/lab/01-sheet/:view" element={<Iteration01 />} />
