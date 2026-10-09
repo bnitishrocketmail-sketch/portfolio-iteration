@@ -6,6 +6,7 @@ import { useTheme } from '../../lib/theme';
 import { ThemeToggle } from '../../components/dock/Dock';
 import { Like } from '../../components/micro/Widgets';
 import { Lottie } from '../../components/micro/Lottie';
+import { PhotoStack } from '../../components/tiles/Tiles';
 /* B, Lenskart's AI assistant (Nitish's Lottie, hosted on lottie.host): all states back to back in one loop, a marker per state */
 const bStates = 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie';
 /* the rupee coin, made with Nitish's Vector 3D plugin (hosted on lottie.host): one 2.8 s turn, looping. The card links to the plugin once he sends the link. */
@@ -199,14 +200,10 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
           </section>
 
           {/* brand */}
-          <section className="t brand b">
-            <div className="mark" aria-hidden="true"><i /><i /><i /></div>
-            <div className="word">imakeuimove</div>
-            <div className="links">
-              <a href={LINKS.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-              <a href={LINKS.lottiefiles}>LottieFiles</a>
-              <a href="#">Notes</a>
-            </div>
+          {/* off duty (Nitish, 9 Oct): replaces the brand card in its slot — 01's photo stack, drag or tap through,
+              anchored to the bottom and running past the card's edge (the card hides the lowest ~15% of each photo) */}
+          <section className="t offduty b">
+            <PhotoStack bleed />
           </section>
 
           {/* life: the statement in pills, two oval photos */}

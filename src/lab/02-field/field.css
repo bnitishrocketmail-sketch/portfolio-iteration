@@ -94,7 +94,7 @@
 .t { position: relative; border-radius: var(--r); padding: min(clamp(14px, 1.9cqw, 26px), 2.6cqh); min-width: 0; min-height: 0; overflow: hidden; background: var(--tileA); display: flex; flex-direction: column; }
 .t.b { background: var(--tileB); }
 .t.xp { grid-area: xp; } .t.micro02 { grid-area: micro; } .t.projects { grid-area: projects; } .t.team { grid-area: team; }
-.t.hero02 { grid-area: hero; overflow: visible; } .t.life02 { grid-area: life; } .t.brand { grid-area: brand; } .t.tools02 { grid-area: tools; } .t.reel02 { grid-area: reel; }
+.t.hero02 { grid-area: hero; overflow: visible; } .t.life02 { grid-area: life; } .t.brand, .t.offduty { grid-area: brand; } .t.tools02 { grid-area: tools; } .t.reel02 { grid-area: reel; }
 
 /* ---- type hierarchy from ref 3 (of the field's width: big numbers ~5.5%, mid ~3.8%, pills ~2.5%, titles ~1.85%, labels ~1.35%) ---- */
 .num { font: 500 min(clamp(34px, 5.5cqw, 72px), 8cqh)/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
@@ -190,6 +190,16 @@
 .fc.ai .fc-in { gap: clamp(8px, .9cqw, 10px); }
 .fc.ai .bl svg { display: block; }
 
+/* ---- off duty: 01's photo stack, bottom-anchored. The stack fills the card from under the header to the card's
+   bottom edge (it cancels the card's bottom padding); each photo is 1/0.85 of that height, so the card's own clip hides
+   the lowest 15%. Photos are near the card's full width. Captions sit 15% + 10px up, clear of the hidden strip. ---- */
+.t.offduty { --tp: min(clamp(14px, 1.9cqw, 26px), 2.6cqh); gap: min(clamp(6px, .8cqw, 10px), 1.2cqh); }
+.offduty .tile-head .eyebrow { opacity: 1; font-weight: 600; }
+.offduty .hint-inline { opacity: .9; }
+.offduty .stack.bleed { flex: 1; min-height: 0; margin: 0 calc(-.35 * var(--tp)) calc(-1 * var(--tp)); }
+.offduty .stack.bleed figure { inset: auto 0 auto 0; top: 0; height: calc(100% / .85); border-radius: clamp(12px, 1.4cqw, 18px); transform-origin: 50% 100%; }
+.offduty .stack.bleed figcaption { bottom: calc(15% + 9px); }
+
 /* ---- team / brand ---- */
 .avatars { display: flex; margin: clamp(10px, 1.3cqw, 18px) 0; }
 .avatars i { width: clamp(30px, 3.3cqw, 44px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--tileA); margin-left: -8px; font: 600 clamp(11px, 1.2cqw, 15px) var(--body); color: #fff; }
@@ -262,4 +272,6 @@
   .life02 .ovals { min-height: 180px; }
   .t.xp, .t.team { min-height: 300px; }
   .t.reel02 { min-height: 200px; }
+  .t.offduty { min-height: 210px; }
+  .offduty .hint-inline { display: none; } /* no room beside the count on a half-width phone card */
 }

@@ -32,12 +32,16 @@ export function Tools() {
   );
 }
 
-/* ---- photo stack: drag or tap through ---- */
-export function LifeStack() {
+/* ---- photo stack: drag or tap through ----
+   PhotoStack is the stack itself (header with the count, the fanned photos, the hint); 01's LifeStack wraps it in its tile.
+   `bleed` (02): the photos are anchored to the bottom and run past the tile's bottom edge, the tile hiding the lowest
+   ~15% of each; the captions sit above the hidden part, and the hint moves up into the header. */
+export function PhotoStack({ bleed = false }: { bleed?: boolean }) {
   const [i, setI] = useState(0);
   const [leaving, setLeaving] = useState<null | { idx: number; dir: number }>(null);
   const reduce = useReducedMotion();
   const n = LIFE.length;
+  const dragged = useRef(false); /* a drag's release also fires a tap; this stops one gesture advancing twice */
   const advance = (dir: number) => {
     if (leaving) return;
     if (reduce) { setI(v => (v + 1) % n); return; }
@@ -45,9 +49,9 @@ export function LifeStack() {
     window.setTimeout(() => { setI(v => (v + 1) % n); setLeaving(null); }, 260);
   };
   return (
-    <motion.div className="tile life" variants={item}>
-      <div className="tile-head"><p className="eyebrow">Off duty</p><span className="mono-s dim">{i + 1} / {n}</span></div>
-      <div className="stack" aria-label="Photo stack">
+    <>
+      <div className="tile-head"><p className="eyebrow">Off duty</p><span className="mono-s dim">{bleed && <span className="hint-inline">drag or tap · </span>}{i + 1} / {n}</span></div>
+      <div className={`stack${bleed ? ' bleed' : ''}`} aria-label="Photo stack">
         {LIFE.map((c, k) => {
           const pos = (k - i + n) % n;
           const isTop = pos === 0;
@@ -58,16 +62,21 @@ export function LifeStack() {
                 : { x: 0, y: pos * -6, rotate: (pos % 2 ? -1 : 1) * pos * 2.4, scale: 1 - pos * .045, opacity: pos > 3 ? 0 : 1 }}
               transition={{ type: 'spring', bounce: .18, duration: .5 }}
               drag={isTop && !out ? 'x' : false} dragSnapToOrigin dragElastic={.9}
-              onDragEnd={(_, info) => { if (Math.abs(info.offset.x) > 56) advance(info.offset.x > 0 ? 1 : -1); }}
-              onTap={() => { if (isTop) advance(1); }}>
+              onDragStart={() => { dragged.current = true; }}
+              onDragEnd={(_, info) => { if (Math.abs(info.offset.x) > 56) advance(info.offset.x > 0 ? 1 : -1); window.setTimeout(() => { dragged.current = false; }, 0); }}
+              onTap={() => { if (isTop && !dragged.current) advance(1); }}>
               <figcaption>{c.caption}</figcaption>
             </motion.figure>
           );
         })}
       </div>
-      <p className="mono-s hint">drag or tap</p>
-    </motion.div>
+      {!bleed && <p className="mono-s hint">drag or tap</p>}
+    </>
   );
+}
+
+export function LifeStack() {
+  return <motion.div className="tile life" variants={item}><PhotoStack /></motion.div>;
 }
 
 /* ---- clients: a wordmark cycle ---- */
