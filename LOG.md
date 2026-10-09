@@ -107,6 +107,7 @@ Route: `/lab/02b-field`, same component as 02 with `palette="01"`; only colour t
 - b1 — the palette swap.
 
 **History**
+- v19 — (Nitish) the Off duty photos 8% wider (229 → ~247px on a 1440 screen), centred; height unchanged.
 - v18 — (Nitish) the Off duty photos 20% smaller, scaled about the card's bottom centre: 286 × 152 → 229 × 122 on a 1440 screen, still centred, the card still hiding the lowest 15% of each. Header and caption text unchanged.
 - v17 — (Nitish, 9 Oct) the brand card (mark, "imakeuimove", LinkedIn / LottieFiles / Notes) replaced by **Off duty**, in the same slot and size: 01's photo stack, the same component (drag sideways or tap the top photo to go to the next; the rest fan behind with a slight turn; titles on the photos). Changed for 02: the photos are bottom-anchored and larger, running past the card's bottom edge so the card hides the lowest 15% of each; captions sit just above the hidden strip; "drag or tap" moved up beside the count. Shared as `PhotoStack` in Tiles.tsx (01's tile uses it unchanged). Bug fixed on the way, in both: a drag's release also fired a tap, so one drag moved two photos. Phones: the card gets a 210px minimum height.
   The social links (LinkedIn, LottieFiles, Notes) and the wordmark are no longer on 02 — they need a new home.
