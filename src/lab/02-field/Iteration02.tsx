@@ -222,7 +222,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
           {/* tools */}
           {/* skills (Nitish, 9 Oct): replaces the Stack card — capsule pills, one line each, stacked from the bottom right:
               the longest form the base, shorter ones rise above (sorted by length; wrap-reverse fills rows bottom-up) */}
-          <section className="t tools02 skills">
+          <section className="t tools02 skillset">
             <p className="ttl">Skills</p>
             <ul className="pills" aria-label="Skills">
               {[...SKILLS02].sort((a, b) => b.length - a.length).map(s => <li key={s}>{s}</li>)}
