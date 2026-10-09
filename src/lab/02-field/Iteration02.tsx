@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { CLIENTS, LINKS, PROJECTS } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import { ThemeToggle } from '../../components/dock/Dock';
-import { Like } from '../../components/micro/Widgets';
 import { Lottie } from '../../components/micro/Lottie';
 import { PhotoStack } from '../../components/tiles/Tiles';
 /* B, Lenskart's AI assistant (Nitish's Lottie, hosted on lottie.host): all states back to back in one loop, a marker per state */
@@ -68,6 +67,9 @@ function strokeArcs(w: number, h: number) {
 
 /* the skills Nitish named (9 Oct); "Custom AI workflows" stands for his structured use of AI — feeding it his own skills */
 const SKILLS02 = ['Product design', 'UX design', 'UI design', 'Interaction design', 'Micro-interactions', 'UI animation', 'State-machine design', 'Custom AI workflows'];
+
+/* the projects from iteration 01 (lib/data PROJECTS), named for this card; "Coin Rig" is the Vector 3D plugin (Nitish, 8 Oct) */
+const WORK02 = ["B, Lenskart's AI assistant", 'Vector 3D plugin', 'Rupee coin flight', 'RideQuest', 'Swiggy bottom navigation'];
 
 /* PLACEHOLDER gradients for the Off duty photos, from this page's own palette tokens (not 01's colours) */
 const OFFDUTY_TINTS: [string, string][] = [['var(--ocean)', 'var(--sky)'], ['var(--sky)', 'var(--tileA)'], ['var(--coal)', 'var(--ocean)'], ['var(--ocean)', 'var(--tileB)'], ['var(--sky)', 'var(--coal)'], ['var(--muted)', 'var(--sky)']];
@@ -140,10 +142,17 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
           </section>
 
           {/* micro-interactions: a live like beside the count */}
-          <section className="t micro02">
-            <div className="row1"><div className="num">32</div><Like /></div>
-            <p className="lbl">micro-interactions,<br />all of them live</p>
-          </section>
+          {/* projects (Nitish, 9 Oct): replaces the micro-interactions card in its slot. The whole card is a button that will
+              open a window with every project (its layout is still to be decided). No numbers. The list is 01's projects;
+              it sits on the left — his head rises over the card's lower right. */}
+          <button className="t micro02 workcard" type="button" aria-label="Open projects">
+            <span className="wc-head"><span className="ttl">Projects</span><span className="wc-open" aria-hidden="true">↗</span></span>
+            <span className="wc-box">
+              <ul className="wc-list">
+                {WORK02.map(w => <li key={w}>{w}</li>)}
+              </ul>
+            </span>
+          </button>
 
           {/* projects: a tile now, a bento of its own later */}
           <button className="t projects b" type="button">
