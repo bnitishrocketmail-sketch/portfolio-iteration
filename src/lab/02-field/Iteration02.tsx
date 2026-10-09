@@ -70,6 +70,8 @@ const SKILLS02 = ['Product design', 'UX design', 'UI design', 'Interaction desig
 
 /* the projects from iteration 01 (lib/data PROJECTS), named for this card; "Coin Rig" is the Vector 3D plugin (Nitish, 8 Oct) */
 const WORK02 = ["B, Lenskart's AI assistant", 'Vector 3D plugin', 'Rupee coin flight', 'RideQuest', 'Swiggy bottom navigation'];
+/* placeholder thumbnail fills, from this page's own palette tokens */
+const THUMB_TINTS: [string, string][] = [['var(--ocean)', 'var(--sky)'], ['var(--coal)', 'var(--ocean)'], ['var(--sky)', 'var(--tileB)'], ['var(--pill)', 'var(--sky)'], ['var(--ocean)', 'var(--tileA)']];
 
 /* PLACEHOLDER gradients for the Off duty photos, from this page's own palette tokens (not 01's colours) */
 const OFFDUTY_TINTS: [string, string][] = [['var(--ocean)', 'var(--sky)'], ['var(--sky)', 'var(--tileA)'], ['var(--coal)', 'var(--ocean)'], ['var(--ocean)', 'var(--tileB)'], ['var(--sky)', 'var(--coal)'], ['var(--muted)', 'var(--sky)']];
@@ -143,14 +145,22 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
 
           {/* micro-interactions: a live like beside the count */}
           {/* projects (Nitish, 9 Oct): replaces the micro-interactions card in its slot. The whole card is a button that will
-              open a window with every project (its layout is still to be decided). No numbers. The list is 01's projects;
-              it sits on the left — his head rises over the card's lower right. */}
+              open a window with every project (its layout is still to be decided). No numbers, no list: a deck of project
+              thumbnails (01's projects). It keeps to the left — his head rises over the card's lower right. */}
           <button className="t micro02 workcard" type="button" aria-label="Open projects">
             <span className="wc-head"><span className="ttl">Projects</span><span className="wc-open" aria-hidden="true">↗</span></span>
-            <span className="wc-box">
-              <ul className="wc-list">
-                {WORK02.map(w => <li key={w}>{w}</li>)}
-              </ul>
+            {/* a fanned deck of thumbnails (PLACEHOLDERS until real covers): pivoting from the bottom-left, the front one upright
+                with its name, the rest behind at growing angles; the fan opens a little on hover */}
+            <span className="wc-box" aria-hidden="true">
+              {WORK02.map((w, i) => {
+                const back = i; /* 0 = front: the first project (B) leads */
+                return (
+                  <span key={w} className="thumb" style={{ '--i': back, '--t1': THUMB_TINTS[i % THUMB_TINTS.length][0], '--t2': THUMB_TINTS[i % THUMB_TINTS.length][1], zIndex: WORK02.length - back } as React.CSSProperties}>
+                    <i className="bar" /><i className="ln" /><i className="ln s" />
+                    {back === 0 && <b className="nm">{w}</b>}
+                  </span>
+                );
+              }).reverse()}
             </span>
           </button>
 
