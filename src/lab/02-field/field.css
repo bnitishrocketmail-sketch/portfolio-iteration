@@ -227,11 +227,16 @@
 .avchip.one { right: 20%; top: 4%; } .avchip.two { left: 4%; bottom: 2%; background: var(--sky); }
 
 /* ---- skills: a right-aligned pill pyramid. wrap-reverse fills rows from the bottom, so the first (longest) pills make
-   the base and shorter ones stack above; each pill stays on one line. ---- */
-.skillset .pills { list-style: none; margin: auto 0 0; padding: 0; display: flex; flex-wrap: wrap-reverse; justify-content: flex-end; align-content: flex-start;
-  gap: min(clamp(4px, .5cqw, 7px), .75cqh) min(clamp(5px, .5cqw, 7px), .9cqh); }
-.skillset .pills li { white-space: nowrap; padding: .4em .85em .42em; border-radius: 999px; background: var(--card); color: var(--ink);
-  font: 500 min(clamp(10.5px, .98cqw, 13px), 1.45cqh)/1 var(--body); letter-spacing: -.005em; box-shadow: 0 1px 0 var(--line), 0 6px 14px -10px rgba(0, 0, 0, .25); }
+   the base and shorter ones stack above; each pill stays on one line.
+   Sizing (Nitish, 9 Oct): the pills size from the space they have, not from the page. .pills-box takes whatever the card
+   leaves under its title (flex: 1) and is a size container, so its size comes only from the card — never from the pills —
+   and the card can't grow. Pill text = min(width-based, height-based) of that box: the width term keeps the rows packing
+   the same way at every width (the pyramid's shape is scale-invariant), the height term guarantees the rows fit. ---- */
+.skillset .pills-box { flex: 1; min-height: 0; container-type: size; container-name: pills; position: relative; margin-top: min(clamp(6px, .8cqw, 10px), 1cqh); }
+.skillset .pills { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; display: flex; flex-wrap: wrap-reverse; justify-content: flex-end; align-content: flex-start;
+  --f: clamp(9px, min(4.3cqw, 11.4cqh), 14px); font-size: var(--f); gap: calc(var(--f) * .38) calc(var(--f) * .42); }
+.skillset .pills li { white-space: nowrap; padding: .42em .85em .44em; border-radius: 999px; background: var(--card); color: var(--ink);
+  font: 500 1em/1 var(--body); letter-spacing: -.005em; box-shadow: 0 1px 0 var(--line), 0 6px 14px -10px rgba(0, 0, 0, .25); }
 
 /* ---- tools: swatches (no longer used on 02; kept for reference) ---- */
 .swatches { display: flex; gap: clamp(6px, .9cqw, 12px); margin-top: auto; }
