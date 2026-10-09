@@ -197,7 +197,9 @@
 .offduty .tile-head .eyebrow { opacity: 1; font-weight: 600; }
 .offduty .hint-inline { opacity: .9; }
 .offduty .stack.bleed { flex: 1; min-height: 0; margin: 0 calc(-.35 * var(--tp)) calc(-1 * var(--tp)); }
-.offduty .stack.bleed figure { inset: auto 0 auto 0; top: 0; height: calc(100% / .85); border-radius: clamp(12px, 1.4cqw, 18px); transform-origin: 50% 100%; }
+/* photos at 80% (Nitish, 9 Oct), scaled about the card's bottom centre: 80% of the width, centred; 80% of the height,
+   their bottoms set so the card still hides the lowest 15% of each (−.15 × .8 / .85 of the stack's height) */
+.offduty .stack.bleed figure { inset: auto 10% auto 10%; top: auto; bottom: calc(-100% * .8 * .15 / .85); height: calc(100% * .8 / .85); border-radius: clamp(12px, 1.4cqw, 18px); transform-origin: 50% 100%; }
 .offduty .stack.bleed figcaption { bottom: calc(15% + 9px); }
 
 /* ---- team / brand ---- */
