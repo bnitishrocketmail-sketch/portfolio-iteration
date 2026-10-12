@@ -76,8 +76,9 @@ export function PhotoStack({ bleed = false, tints }: { bleed?: boolean; tints?: 
   );
 }
 
+/* 01's Off duty tile, built as 02's (Nitish, 12 Oct): bottom-bleed photos, the tile hiding their lowest 15% */
 export function LifeStack() {
-  return <motion.div className="tile life" variants={item}><PhotoStack /></motion.div>;
+  return <motion.div className="tile life" variants={item}><PhotoStack bleed /></motion.div>;
 }
 
 /* ---- clients: a wordmark cycle ---- */
