@@ -21,9 +21,9 @@ import './field.css';
 
 /* ---------- small pieces ---------- */
 
-/* The title's rolling word (Nitish, 7 Oct, variant a): "Product" stays, the second word rolls
-   designer → motion → interaction. Each word rises in as the last one leaves upward. */
-const WORDS = ['designer', 'motion', 'interaction'];
+/* The title's rolling word (Nitish, 12 Oct): "designer" stays, the FIRST word rolls
+   Product → Interaction → Motion. Each word rises in as the last one leaves upward. */
+const WORDS = ['Product', 'Interaction', 'Motion'];
 function RollingWord() {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
@@ -204,7 +204,7 @@ export default function Iteration02({ palette = 'ocean' }: { palette?: Palette }
             </div>
             {/* the title: name + the rolling word */}
             <div className="fc title-card" data-depth="1.1" style={{ left: '8.5%', top: '58%', '--dur': '6.2s', '--dl': '-2.4s' } as React.CSSProperties}>
-              <div className="fc-in"><span className="nm">Nitish Bhardwaj</span><span className="role">Product <RollingWord /></span></div>
+              <div className="fc-in"><span className="nm">Nitish Bhardwaj</span><span className="role"><RollingWord /> designer</span></div>
             </div>
             {/* the description, beside it */}
             <div className="fc desc-card" data-depth="1.2" style={{ left: '58%', bottom: '5%', '--dur': '5.1s', '--dl': '-.6s' } as React.CSSProperties}>
