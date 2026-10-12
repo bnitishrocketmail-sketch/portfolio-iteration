@@ -27,11 +27,14 @@
 .nav4 ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: .5cqh; width: 100%; }
 .nav4 li { display: flex; justify-content: center; width: 100%; }
 /* the button stays unrotated so the pill measures in normal space; only the label turns (01) */
-.nav4 ul button { position: relative; width: 78%; padding: 1.1cqh 0; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 999px; font: 500 clamp(11px, 1.05cqw, 13.5px)/1 var(--body); letter-spacing: .01em; transition: color .3s; }
+/* the pill hugs its content: 10px at the ends, 10px either side of the label's line (the button is content-sized) */
+.nav4 ul button { position: relative; padding: 10px 10px; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 999px; font: 500 clamp(11px, 1.05cqw, 13.5px)/1 var(--body); letter-spacing: .01em; transition: color .3s; }
 .nav4 ul button:hover { color: var(--frame); }
 .nav4 ul button.on { color: var(--g6); }
-.lbl4 { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; writing-mode: vertical-rl; transform: rotate(180deg); }
-.lbl4 svg { width: clamp(13px, 1.3cqw, 16px); height: clamp(13px, 1.3cqw, 16px); transform: rotate(180deg); } /* back upright */
+.lbl4 { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 7px; writing-mode: vertical-rl; transform: rotate(180deg); }
+/* the icon turns with the label: the glyphs end up a quarter-turn anticlockwise (sideways, then the half-turn); a replaced
+   element only gets the half-turn, so it takes the remaining quarter itself */
+.lbl4 svg { width: clamp(14px, 1.4cqw, 17px); height: clamp(14px, 1.4cqw, 17px); transform: rotate(90deg); }
 .hl4 { position: absolute; inset: 0; border-radius: 999px; background: var(--frame); z-index: 0; }
 .ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: var(--frame); color: var(--g6); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
 .ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
@@ -46,7 +49,7 @@
 .links4::before { left: -14px; } .links4::after { right: -14px; transform: scaleX(-1); }
 .links4 a { width: 30px; height: 26px; display: grid; place-items: center; color: var(--g6); border-radius: 8px; transition: background .2s; }
 .links4 a:hover { background: rgba(255, 255, 255, .1); }
-.links4 a svg { width: 17px; height: 17px; }
+.links4 a svg { width: 15px; height: 15px; }
 .notch4 .island-wrap { position: absolute; }
 .notch4 .island:not(.open) { opacity: 0; pointer-events: none; } /* the assistant shows only when asked for, from the nav's button */
 /* the cutout at the bottom-left: the frame's colour, its top-right corner rounded; two or three lines about him */

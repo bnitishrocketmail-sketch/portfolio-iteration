@@ -6,6 +6,8 @@ import { useTheme } from '../../lib/theme';
 import Island from '../../components/island/Island';
 import { PhotoStack } from '../../components/tiles/Tiles';
 import illustration from '../../assets/nitish-desk-illustration.webp';
+import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
+import { siLottiefiles } from 'simple-icons';
 import './profile.css';
 
 /* Iteration 04 — "Profile". One screen, after the hi-fi reference (ref 5) with Nitish's changes (13 Oct) and the lo-fi
@@ -30,13 +32,13 @@ const SHOWN = 3; /* cards in view (ref 4 shows three) */
 const OFFSET = .58; /* ref 4, measured: each card peeks 58% of a card's height above the one in front; a card is 46% of the stack */
 const WORDS = ['Product', 'Interaction', 'Motion']; /* the title's rolling first word (02 v29) */
 
-/* the notch's links: generic glyphs in the nav's colour — a work profile, a camera, a loop, an envelope — not the brand marks;
-   Nitish can drop the official SVGs in as his own assets */
-const SOCIAL: { label: string; href: string; d: string }[] = [
-  { label: 'LinkedIn', href: LINKS.linkedin, d: 'M4 8h16v11H4zM9 8V5h6v3M4 13h16' },
-  { label: 'Instagram', href: LINKS.instagram, d: 'M5 8h3l1.5-2h5L16 8h3v10H5zM12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6z' },
-  { label: 'LottieFiles', href: LINKS.lottiefiles, d: 'M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M17 3v4h-4M7 21v-4h4' },
-  { label: 'Email', href: '#', d: 'M4 6h16v12H4zM4 7l8 6 8-6' },
+/* the notch's links: the brands' own marks (Nitish, 13 Oct) — LinkedIn and Instagram from Font Awesome's brand set,
+   LottieFiles from Simple Icons (which no longer carries LinkedIn); the email one is an envelope glyph */
+const SOCIAL: { label: string; href: string; path: string; box: string }[] = [
+  { label: 'LinkedIn', href: LINKS.linkedin, path: String(faLinkedinIn.icon[4]), box: `0 0 ${faLinkedinIn.icon[0]} ${faLinkedinIn.icon[1]}` },
+  { label: 'Instagram', href: LINKS.instagram, path: String(faInstagram.icon[4]), box: `0 0 ${faInstagram.icon[0]} ${faInstagram.icon[1]}` },
+  { label: 'LottieFiles', href: LINKS.lottiefiles, path: siLottiefiles.path, box: '0 0 24 24' },
+  { label: 'Email', href: '#', path: 'M2 5h20v14H2zm1 1v1.2l9 6 9-6V6zm18 2.4-9 6-9-6V18h18z', box: '0 0 24 24' },
 ];
 
 function Icon({ d }: { d: string }) { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" /></svg>; }
@@ -124,15 +126,15 @@ export default function Iteration04() {
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${illustration})` }} />
       <div className="frame4">
         {/* nav: icons only, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
-        {/* nav: the section names along the bar (reading bottom to top, as 01's side nav), each with its icon after it;
-            the selected one in a travelling pill — 01's highlight, inverted for the light bar (Nitish, 13 Oct) */}
+        {/* nav: icons along the bar; the selected one shows its name before the icon, reading bottom to top as 01's side
+            nav, inside a travelling pill — 01's highlight, inverted for the light bar (Nitish, 13 Oct) */}
         <nav className="nav4" aria-label="Sections">
           <ul>
             {NAV.map(n => (
               <li key={n.id}>
                 <button type="button" className={n.id === tab ? 'on' : ''} aria-current={n.id === tab ? 'page' : undefined} onClick={() => go(n.id)}>
                   {n.id === tab && <motion.i className="hl4" layoutId="hl4" transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .14, visualDuration: .36 }} />}
-                  <span className="lbl4"><span>{n.label}</span><Icon d={ICONS[n.id]} /></span>
+                  <span className="lbl4">{n.id === tab && <span>{n.label}</span>}<Icon d={ICONS[n.id]} /></span>
                 </button>
               </li>
             ))}
@@ -148,7 +150,7 @@ export default function Iteration04() {
           {/* the notch holds the links (Nitish, 13 Oct); the assistant lives behind the nav's button and opens here */}
           <div className="notch4">
             <div className="links4">
-              {SOCIAL.map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><Icon d={l.d} /></a>)}
+              {SOCIAL.map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}
             </div>
             <Island onGo={go} onToggleTheme={toggle} />
           </div>
