@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
+import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, NAV, PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
@@ -24,7 +24,8 @@ const ICONS: Record<Tab, string> = {
   writing: 'M6 4h12v16H6zM9 9h6M9 13h6',
   experience: 'M4 19h16M7 16V9M12 16V5M17 16v-6',
 };
-const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g4)', 'var(--g2)'], ['var(--g6)', 'var(--g4)'], ['var(--g3)', 'var(--g2)'], ['var(--g5)', 'var(--g2)'], ['var(--g4)', 'var(--g3)']];
+/* photo placeholders: close mid-greys, so in the fan the depth comes from the shading, not from the tints */
+const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g5)', 'var(--g4)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g3)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g4)']];
 const SHOWN = 3; /* cards in view (ref 4 shows three) */
 const OFFSET = .58; /* ref 4, measured: each card peeks 58% of a card's height above the one in front; a card is 46% of the stack */
 const WORDS = ['Product', 'Interaction', 'Motion']; /* the title's rolling first word (02 v29) */
@@ -34,11 +35,15 @@ function Icon({ d }: { d: string }) { return <svg viewBox="0 0 24 24" aria-hidde
 /* ---- the projects stack: three cards in view, the front one at the bottom, the rest peeking above it (ref 4);
    a drag slider at the right scrolls the list — the deck follows the thumb continuously and settles on a card ---- */
 function Card({ p, k, pos, onOpen }: { p: (typeof PROJECTS)[number]; k: number; pos: MotionValue<number>; onOpen: () => void }) {
-  /* rank: 0 = furthest back (top), SHOWN-1 = front (bottom); fractional while dragging. Every card is the same size —
-     a card is either behind or in front; the front card leaves by slipping down and behind, the next comes in from above */
-  const rank = useTransform(pos, v => k - v);
+  /* rank: 0 = furthest back (top), SHOWN-1 = front (bottom); fractional while moving. The front card is the one at the
+     slider's position; the cards behind it are the next ones in the list. Going forward, the front card slips down and
+     out, the one above it comes down into the front, and the next one enters at the top, behind (Nitish, 13 Oct). Every
+     card is the same size — behind or in front. `pos` is a spring-smoothed follower of the slider, so a drag reads as
+     motion rather than a jump. */
+  const rank = useTransform(pos, v => SHOWN - 1 - (k - v));
   const y = useTransform(rank, r => `${r * OFFSET * 100}%`);
-  const opacity = useTransform(rank, r => (r < -.7 || r > SHOWN - .3 ? 0 : r < 0 ? 1 + r / .7 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .7 : 1));
+  const opacity = useTransform(rank, r => (r < -.8 || r > SHOWN - .2 ? 0 : r < 0 ? 1 + r / .8 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .8 : 1));
+  /* behind in order of rank; a card past the front goes under everything as it leaves */
   const z = useTransform(rank, r => (r > SHOWN - 1 + .02 ? 0 : 10 + Math.round(r * 10)));
   const shade = useTransform(rank, r => `var(--g${Math.max(2, Math.min(4, Math.round(4 - (SHOWN - 1 - r))))})`);
   const pe = useTransform(opacity, o => (o > .5 ? 'auto' : 'none'));
@@ -65,27 +70,28 @@ function RollingWord() {
 
 function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   const n = PROJECTS.length, max = n - SHOWN;
-  const pos = useMotionValue(0);
+  const target = useMotionValue(0); /* where the slider is */
+  const pos = useSpring(target, { stiffness: 170, damping: 26, mass: .9 }); /* where the deck is: follows with a lag, settles without bounce */
   const trackRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const thumbH = SHOWN / n; /* of the track */
-  const thumbY = useTransform(pos, v => `${Math.max(0, Math.min(1, v / max)) * (1 - thumbH) * 100}%`); /* the thumb travels the track less its own height, and never leaves it */
-  const settle = (v: number) => animate(pos, Math.max(0, Math.min(max, Math.round(v))), reduce ? { duration: 0 } : { type: 'spring', bounce: .06, duration: .8 });
+  const thumbY = useTransform(target, v => `${Math.max(0, Math.min(1, v / max)) * (1 - thumbH) * 100}%`); /* the thumb travels the track less its own height, and never leaves it */
+  const settle = (v: number) => { const to = Math.max(0, Math.min(max, Math.round(v))); if (reduce) { target.jump(to); pos.jump(to); } else target.set(to); };
   /* the thumb: its travel is the track minus its own height; drag maps that travel to 0…max */
   const onDrag = (e: PointerEvent) => {
     const t = trackRef.current; if (!t) return;
     const r = t.getBoundingClientRect(); const thumb = r.height * (SHOWN / n); const travel = r.height - thumb;
-    const v = ((e.clientY - r.top - thumb / 2) / travel) * max; pos.set(Math.max(-.3, Math.min(max + .3, v)));
+    const v = ((e.clientY - r.top - thumb / 2) / travel) * max; target.set(Math.max(-.25, Math.min(max + .25, v)));
   };
-  const down = (e: React.PointerEvent) => { (e.target as HTMLElement).setPointerCapture(e.pointerId); onDrag(e.nativeEvent); const move = (ev: PointerEvent) => onDrag(ev); const up = () => { settle(pos.get()); removeEventListener('pointermove', move); removeEventListener('pointerup', up); }; addEventListener('pointermove', move); addEventListener('pointerup', up); };
-  const wheel = (e: React.WheelEvent) => { settle(pos.get() + (e.deltaY > 0 ? 1 : -1)); };
+  const down = (e: React.PointerEvent) => { (e.target as HTMLElement).setPointerCapture(e.pointerId); onDrag(e.nativeEvent); const move = (ev: PointerEvent) => onDrag(ev); const up = () => { settle(target.get()); removeEventListener('pointermove', move); removeEventListener('pointerup', up); }; addEventListener('pointermove', move); addEventListener('pointerup', up); };
+  const wheel = (e: React.WheelEvent) => { settle(Math.round(target.get()) + (e.deltaY > 0 ? 1 : -1)); };
   return (
     <div className="stack4" onWheel={wheel}>
       <div className="deck4" style={{ '--n': SHOWN } as React.CSSProperties}>
         {PROJECTS.map((p, k) => <Card key={p.id} p={p} k={k} pos={pos} onOpen={() => onOpen(p.id)} />)}
       </div>
-      <div className="slider4" ref={trackRef} onPointerDown={down} role="slider" aria-label="Scroll projects" aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.round(pos.get())} tabIndex={0}
-        onKeyDown={e => { if (e.key === 'ArrowDown') settle(pos.get() + 1); if (e.key === 'ArrowUp') settle(pos.get() - 1); }}>
+      <div className="slider4" ref={trackRef} onPointerDown={down} role="slider" aria-label="Scroll projects" aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.round(target.get())} tabIndex={0}
+        onKeyDown={e => { if (e.key === 'ArrowDown') settle(Math.round(target.get()) + 1); if (e.key === 'ArrowUp') settle(Math.round(target.get()) - 1); }}>
         <motion.i className="thumb4" style={{ top: thumbY, height: `${thumbH * 100}%` }} />
       </div>
     </div>
@@ -142,7 +148,7 @@ export default function Iteration04() {
         <aside className="col4">
           <div className="pill4"><span>Projects</span><small>drag the bar · scroll</small></div>
           <ProjectStack onOpen={id => go('project', id)} />
-          <section className="off4"><PhotoStack tints={GREYS} /></section>
+          <section className="off4"><PhotoStack fan tints={GREYS} /></section>
         </aside>
       </div>
       <Link className="labtag" to="/lab">Lab · 04 Profile</Link>

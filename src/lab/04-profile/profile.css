@@ -12,20 +12,25 @@
 /* the frame takes 01's device sizing (ref 1's 1000 × 590, at most 1320 wide, 24px + 10px clear of the viewport's edges, so
    there is air above and below) — Nitish, 13 Oct. Inside, ref 5's split: the nav at its 9.7% less a quarter, the right
    column at its 21%, the picture the rest. */
-.frame4 { position: relative; width: min(calc(100vw - 32px), 1320px, calc((100vh - 68px) * 1.695)); aspect-ratio: 1000 / 590; container-type: size;
-  display: grid; grid-template-columns: 7.3cqw minmax(0, 1fr) 21cqw; gap: 1.6cqw; padding: 1.4cqw; border-radius: 36px; background: var(--frame);
+.frame4 { --fw: min(calc(100vw - 32px), 1320px, calc((100vh - 68px) * 1.695)); position: relative; width: var(--fw); aspect-ratio: 1000 / 590; container-type: size;
+  /* the frame's own tracks, gap and inset are fractions of --fw, its width: its own container units resolve against the
+     viewport (an element is not its own query container) and percentage padding against the parent's width, so both
+     made the nav and the column grow with the monitor while the frame stayed put */
+  display: grid; grid-template-columns: calc(.073 * var(--fw)) minmax(0, 1fr) calc(.21 * var(--fw)); gap: calc(.016 * var(--fw)); padding: calc(.014 * var(--fw)); border-radius: 36px; background: var(--frame);
   box-shadow: 0 40px 80px -40px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .06); }
 
 /* ---- nav: icons, a travelling highlighter on the right edge (the reference's yellow bar, grey here), the assistant below ---- */
-.nav4 { display: flex; flex-direction: column; align-items: center; padding: 1.2cqw 0 .6cqw; }
-.nav4 ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .9cqh; width: 100%; }
+/* the nav is a pill in the assistant button's colour (ref 4's bar; Nitish, 13 Oct), the button its own circle below it;
+   the active mark sits just outside the pill, on the frame, as ref 5's bar does */
+.nav4 { display: flex; flex-direction: column; align-items: center; gap: 1.2cqh; padding: 0; }
+.nav4 ul { list-style: none; margin: 0; padding: 1.2cqh 0; display: flex; flex-direction: column; gap: .6cqh; width: 100%; border-radius: 999px; background: var(--g6); }
 .nav4 li { display: flex; justify-content: center; }
-.nav4 ul button { position: relative; width: 100%; aspect-ratio: 1; max-height: 56px; display: grid; place-items: center; border: 0; background: none; color: var(--g5); cursor: pointer; border-radius: 12px; transition: color .2s; }
-.nav4 ul button:hover { color: var(--ink); }
-.nav4 ul button.on { color: var(--ink); }
+.nav4 ul button { position: relative; width: 100%; aspect-ratio: 1; max-height: 52px; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 12px; transition: color .2s; }
+.nav4 ul button:hover { color: var(--frame); }
+.nav4 ul button.on { color: var(--frame); }
 .nav4 ul button svg { width: clamp(16px, 2cqw, 22px); height: clamp(16px, 2cqw, 22px); }
-.hl4 { position: absolute; right: -1.4cqw; top: 22%; width: 3px; height: 56%; border-radius: 2px; background: var(--g6); }
-.ai4 { margin-top: auto; width: clamp(34px, 4.4cqw, 46px); height: clamp(34px, 4.4cqw, 46px); border-radius: 50%; border: 0; background: var(--g6); color: var(--frame); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
+.hl4 { position: absolute; right: calc(-1.6cqw + 2px); top: 24%; width: 3px; height: 52%; border-radius: 2px; background: var(--g6); }
+.ai4 { margin-top: auto; width: clamp(34px, 4.6cqw, 48px); height: clamp(34px, 4.6cqw, 48px); border-radius: 50%; border: 0; background: var(--g6); color: var(--frame); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
 .ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
 
 /* ---- the picture ---- */
@@ -75,7 +80,9 @@
 .off4 .tile-head .eyebrow { font: 600 clamp(12px, 1.3cqw, 15px) var(--body); opacity: 1; }
 .off4 .tile-head .mono-s { font-size: clamp(10px, 1cqw, 12px); }
 .off4 .stack { margin-top: 4px; }
-.off4 .stack figure { border-radius: 12px; }
+/* the fan: each photo is 52% of the box's width and sits at the bottom-left; the ones behind step up-right (Tiles.tsx) */
+.off4 .stack.fan figure { inset: auto auto 0 0; width: 50%; height: 52%; border-radius: 12px; transform-origin: 50% 100%; } /* 1 + 2 × .45 of either side fits the box */
+.off4 { overflow: hidden; }
 .off4 .hint { display: none; }
 
 @media (max-width: 700px) {

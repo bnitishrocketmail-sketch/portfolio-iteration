@@ -36,8 +36,11 @@ export function Tools() {
    PhotoStack is the stack itself (header with the count, the fanned photos, the hint); 01's LifeStack wraps it in its tile.
    `bleed` (02): the photos are anchored to the bottom and run past the tile's bottom edge, the tile hiding the lowest
    ~15% of each; the captions sit above the hidden part, and the hint moves up into the header.
-   `tints` overrides the placeholder gradients so a page can colour them from its own palette (01's colours stay in 01). */
-export function PhotoStack({ bleed = false, tints }: { bleed?: boolean; tints?: [string, string][] }) {
+   `tints` overrides the placeholder gradients so a page can colour them from its own palette (01's colours stay in 01).
+   `fan` (04, ref 4's bottom-right tile): three photos laid diagonally — the front one at the bottom-left, each one behind it
+   stepped up and to the right by 45% of a photo, so at least 70% of every photo shows (Nitish, 13 Oct); the photos are
+   52% of the box so three fit. The next photo after a tap or drag takes the front. */
+export function PhotoStack({ bleed = false, fan = false, tints }: { bleed?: boolean; fan?: boolean; tints?: [string, string][] }) {
   const [i, setI] = useState(0);
   const [leaving, setLeaving] = useState<null | { idx: number; dir: number }>(null);
   const reduce = useReducedMotion();
@@ -52,14 +55,15 @@ export function PhotoStack({ bleed = false, tints }: { bleed?: boolean; tints?: 
   return (
     <>
       <div className="tile-head"><p className="eyebrow">Off duty</p><span className="mono-s dim">{bleed && <span className="hint-inline">drag or tap · </span>}{i + 1} / {n}</span></div>
-      <div className={`stack${bleed ? ' bleed' : ''}`} aria-label="Photo stack">
+      <div className={`stack${bleed ? ' bleed' : ''}${fan ? ' fan' : ''}`} aria-label="Photo stack">
         {LIFE.map((c, k) => {
           const pos = (k - i + n) % n;
           const isTop = pos === 0;
           const out = leaving && leaving.idx === k;
           return (
             <motion.figure key={c.caption} style={{ '--g1': tints ? tints[k % tints.length][0] : c.g1, '--g2': tints ? tints[k % tints.length][1] : c.g2, zIndex: n - pos } as React.CSSProperties}
-              animate={out ? { x: leaving.dir * 420, rotate: leaving.dir * 14, opacity: 0 }
+              animate={out ? { x: leaving.dir * 420, rotate: leaving.dir * 14, opacity: 0, ...(fan ? { filter: 'brightness(1)' } : {}) }
+                : fan ? { x: `${pos * 45}%`, y: `${pos * -45}%`, rotate: (pos % 2 ? -1 : 1) * pos * 2, scale: 1, opacity: pos > 2 ? 0 : 1, filter: `brightness(${1 - pos * .22})` } /* the ones behind sit in shade, whatever their tint */
                 : { x: 0, y: pos * -6, rotate: (pos % 2 ? -1 : 1) * pos * 2.4, scale: 1 - pos * .045, opacity: pos > 3 ? 0 : 1 }}
               transition={{ type: 'spring', bounce: .18, duration: .5 }}
               drag={isTop && !out ? 'x' : false} dragSnapToOrigin dragElastic={.9}
