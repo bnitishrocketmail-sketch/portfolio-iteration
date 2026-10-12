@@ -51,7 +51,8 @@ button { font-family: inherit; }
 
 @media (max-width: 1040px) { .labtag { display: none; } }
 @media (max-width: 700px) {
-  html, body { overflow: auto; height: auto; }
+  html { overflow: auto; height: auto; }
+  body { overflow: visible; height: auto; } /* body must not be its own scroll container, or sticky bars inside it scroll away */
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }

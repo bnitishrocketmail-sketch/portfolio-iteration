@@ -33,4 +33,11 @@ export const ITERATIONS: Iteration[] = [
     tries: "02's grid in 01's palette; the hero as ref 3 does it, measured off the hi-res shot: a lighter disc, one thin broken stroke crossing into the gaps, the figure hanging a little below the tile.",
     refs: ['02 Field', '01 Sheet palette (tokens.css)'],
   },
+  {
+    id: '03-console',
+    name: '03 Console',
+    status: 'exploring',
+    tries: "The portfolio as a product dashboard: a fixed app frame (sidebar, top bar with a command bar, widgets per section) on the web; the same content as an app (large titles, a scrolling column, a tab bar) on phones. Monochrome first; transitions built to lower cognitive load.",
+    refs: ['Nitish\'s brief, 12 Oct (dashboard on web, app on mobile; Claude\'s layout decisions)'],
+  },
 ];

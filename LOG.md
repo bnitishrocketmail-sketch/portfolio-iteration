@@ -139,3 +139,35 @@ Route: `/lab/02b-field`, same component as 02 with `palette="01"`; only colour t
 - v3 — (Nitish) bezel and island removed from this iteration.
 - v5 — phone fixed: the size-contained container collapsed to its padding on phones (only the top tile showed); phones now use an inline-size container, hero first with the head rising into the top padding.
 - v4 — (Nitish) sizing: width-driven 1200–1440px, no horizontal or vertical scroll; the sheet's aspect follows the screen between 4:3 and 1.7:1; narrower or shorter viewports scale the whole 1200px layout down instead of reflowing; tall pieces also capped by the sheet's height. Phones unchanged. The real photo keyed off its green screen (despilled, edges softened) and placed at the reference's size, ~1.5× the hero tile, head over the row above; the frame's right cut fades out, the waist is clipped by the tile.
+
+## 03 Console — exploring (12 Oct)
+
+Route: `/lab/03-console` (views: `/work`, `/play`, `/motion`, `/notes`, `/about`; a project: `/work/<id>`). Brief (Nitish, 12 Oct): the portfolio as a **dashboard** on the web that becomes an **app** on phones; interactions and transitions chosen for UX first (help the user, lower cognitive load) with some creativity; layout first in monochrome, colour and theming later; the look is Claude's call.
+
+**Tries:** a product's admin console, with Nitish as the product. A fixed app frame — sidebar (profile, six sections, CV, theme) · top bar (breadcrumb, "Ask or jump to…" command bar, status chip) · main — fills the viewport; one view at a time, nothing scrolls except inside a widget or an open project. Monochrome: paper, ink, six greys, one UI face (Instrument Sans) at a dashboard scale (14px base); `--acc` is the accent slot, set to ink until the theming pass. Each view is a grid of widgets with the same card, head and action pattern, so the eye learns one thing. Phones: the same content as an app — large-title header, a scrolling column, a sticky search bar, a tab bar (Home · Work · Play · Motion · Me; Notes stays reachable from the search); a project opens as a full-screen sheet.
+
+**What goes where (Claude's call, overridable):**
+- Overview (6 × 4): hero (3 × 2: name, the rolling title, the one-liner, View work + CV, the cutout on a quiet gradient) · four stats (2 × 2) · Playground (1 × 2: a live Like and Switch) · Latest work (2 × 2: four projects) · Motion (2 × 1: B and the loader, running) · Off duty (2 × 1: 01's photo stack, bottom-bleed) · Skills (2 × 2: his eight skills, and a muted Tools group anchored at the bottom).
+- Work: a 3-column card grid; a card grows into the case study in place (shared-layout: the card, its thumbnail and its title are the same elements before and after), with a sticky facts column (client, role, year, tags). Esc or "← Work" shrinks it back.
+- Playground: Like, Switch, Stepper, Segmented — each in its own widget with a one-line note on what the motion does.
+- Motion: three Lotties with captions over three reel placeholders.
+- Notes: a list.
+- About: the copy with the skills, Experience (with the second CV link), Off duty, Contact.
+
+**Motion decisions (Claude, overridable) — each one has a job:**
+- Views swap with a short fade-and-rise and the widgets stagger in (35 ms apart) so the eye reads the grid in order; the leaving view fades faster than the arriving one (120 ms vs 280 ms), so there is never a long blank.
+- The sidebar's selection is one pill that slides between items (spring, ~320 ms) — the same object moving says "you went from here to there"; phones do the same in the tab bar.
+- Opening a project morphs the card into the page instead of swapping screens, so the user never loses what they clicked; the case-study body fades in after the shape settles. Closing reverses it.
+- Stats count up once as the overview enters (tabular digits, no layout shift).
+- The command bar (⌘K / Ctrl K / "/"): type to jump to a section or project, arrows and Enter; free text gets scripted answers for now (travel, tools, contact) — the real assistant replaces this, and this is the dynamic-island assistant's seat in this iteration.
+- Hover is a cue, not a show: cards lift 2px, arrows nudge 2–3px, the Like and Switch are 01's.
+- Reduced motion: no stagger, no slides, Lotties hold a frame, counts appear.
+
+**Responsive:** ≥1181px full sidebar; 701–1180px an icon-only sidebar (72px) and a 4-column overview that scrolls when the screen is short; ≤700px the app layout. Every grid row has a floor (150–200px), so a short desktop window scrolls the main area rather than crushing the widgets. The hero's title sizes from its own column (container units) and never wraps, so the rolling word can't reflow the card.
+
+**Placeholders:** all four stats (7+, 3, 54, 32) and "Open to work"; the tools list; project thumbnails, case-study bodies, reels and notes; email; the three scripted answers. The Lotties keep their own colours — they are his work, not the UI — so they are the only colour on the page for now.
+
+**Open:** the colour and theming pass (where the accent goes: selection pill, status dot, the rolling word, the Like); whether the assistant stays in the command bar or returns as an island; a project's real content model; whether the overview wants Notes back (dropped so Skills could have room; Notes is in the sidebar and the search); Nitish's feel test on a phone (the sheet, the tab bar, the photo stack).
+
+**History**
+- c1 — first build. Fixed on the way: the hero title clipped at 36px in its column (now sized from the column); the photo's head cut (image 102% of the figure box, head clear); the overview Playground widget overflowed (Like and Switch stacked, count hidden there); the Off duty stack became a tall slab in a 1 × 2 slot (now capped to a portrait of its width, and the slot is 2 × 1); the phone top bar didn't stick (base.css: `body` had `overflow: auto` on phones, which made it its own scroll container — now `visible`; 01 and 02b phones still scroll); the phone photo stack collapsed to 0 (container units don't resolve from a flex-grown box on the phone layout; the stack gets a definite 200px height there); the narrow sidebar's CV button showed "V CV" (label wrapped in a span); `backdrop-filter` written after `-webkit-` in two places (the minifier bug from 02 v13). Checked at 1440 × 900 (light, dark), 1024 × 768, 390 × 844: no page scroll on desktop, no console errors; open/close, ⌘K, nav and the phone sheet exercised with Playwright.
