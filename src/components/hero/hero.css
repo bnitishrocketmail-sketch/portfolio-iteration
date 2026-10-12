@@ -1,5 +1,5 @@
 /* Hero: the persistent left column. A flip card (intro / about) with a notched corner,
-   floating depth chips, and a project mode that replaces the card's content. */
+   the figure (02b's composition) with floating Lottie cards, and a project mode that replaces the card's content. */
 .hero { position: relative; min-height: 0; perspective: 1800px; }
 .hero-card { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .85s cubic-bezier(.2, .8, .2, 1), opacity .45s, scale .45s; }
 .hero.flipped .hero-card { transform: rotateY(180deg); }
@@ -12,35 +12,69 @@
 .tap-hint { position: absolute; top: 14px; right: 16px; display: none; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .35); background: rgba(255, 255, 255, .12); color: inherit; font: 500 11px var(--body); letter-spacing: .02em; }
 @media (hover: none) { .tap-hint { display: inline-flex; } }
 
-.stage { position: absolute; left: 0; right: 0; top: 44px; bottom: clamp(250px, 21cqw, 300px); }
-.portrait { position: absolute; left: 50%; top: 50%; width: min(70%, 300px, 36vh); aspect-ratio: 1; max-width: 100%; transform: translate(-50%, -50%); border-radius: 50%; background: var(--blush); overflow: hidden; z-index: 2; }
-.portrait svg { position: absolute; left: 50%; bottom: -2%; width: 82%; height: auto; transform: translateX(-50%); }
-
-/* the intro text lives in the card: name, statement, one-liner, actions */
-.hero-text { position: absolute; left: clamp(16px, 1.6cqw, 22px); right: clamp(16px, 1.6cqw, 22px); bottom: clamp(16px, 1.6cqw, 22px); display: flex; flex-direction: column; gap: 6px; }
-.hero-text .lt { display: block; font: 400 clamp(20px, 2.9cqw, 38px)/1.05 var(--name); letter-spacing: -.02em; opacity: .95; }
-.hero-text .nm { font: 700 clamp(30px, 4.3cqw, 57px)/1 var(--name); letter-spacing: -.035em; }
-.hero-text .st { font: 400 clamp(14px, 1.5cqw, 20px)/1.3 var(--body); letter-spacing: 0; margin-top: 8px; text-wrap: balance; }
-.hero-text .st strong { font: 400 clamp(13px, 1.4cqw, 18px)/1.3 var(--display); }
+/* ---- the front face: notch band · the figure (takes the height the text leaves) · the text ---- */
+.face.front { display: flex; flex-direction: column; }
+.hero-text { position: relative; z-index: 4; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+/* the type measures against the card, so the 20% narrower card (12 Oct) keeps its proportions: the sheet-relative sizes × .8 */
+.hero-text .lt { display: block; font: 400 clamp(16px, 2.32cqw, 30px)/1.05 var(--name); letter-spacing: -.02em; opacity: .95; }
+.hero-text .nm { font: 700 clamp(24px, 3.44cqw, 46px)/1 var(--name); letter-spacing: -.035em; }
+.hero-text .st { font: 400 clamp(12px, 1.2cqw, 16px)/1.3 var(--body); letter-spacing: 0; margin-top: 6px; text-wrap: balance; }
+.hero-text .st strong { font: 400 clamp(11px, 1.12cqw, 14.5px)/1.3 var(--display); }
 .hero-lede { font-size: clamp(12.5px, 1.1cqw, 14.5px); line-height: 1.45; opacity: .88; max-width: 40ch; margin-top: 2px; }
-.hero-cta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.hero-cta .btn { background: var(--sheet); color: var(--ink); }
-.hero-cta .pill { border-color: rgba(255, 255, 255, .42); color: inherit; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.hero-cta .btn { background: var(--sheet); color: var(--ink); padding: .7em 1em; }
+.hero-cta .pill { border-color: rgba(255, 255, 255, .42); color: inherit; padding: .65em .8em; }
 .hero-cta .pill:hover { border-color: #fff; }
-.badge { position: absolute; top: 56px; right: 16px; width: clamp(52px, 5.4cqw, 72px); height: clamp(52px, 5.4cqw, 72px); animation: spin 14s linear infinite; z-index: 2; }
-.badge svg { width: 100%; height: 100%; display: block; }
-@keyframes spin { to { transform: rotate(360deg); } }
 
-/* floating depth chips: the wrapper carries parallax + depth scale, the inner carries the float */
-.chip { position: absolute; z-index: 3; transform: translate(var(--px, 0px), var(--py, 0px)) scale(var(--s, 1)); transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .35s; }
-.chip.behind { z-index: 1; --s: .92; }
-.chip-in { display: flex; align-items: center; gap: 8px; padding: .75em 1em; border-radius: 12px; background: var(--sheet); color: var(--ink); font: 500 clamp(11.5px, 1cqw, 13.5px)/1 var(--body); letter-spacing: .01em; box-shadow: var(--chip-shadow); animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); white-space: nowrap; }
-.chip.behind .chip-in { opacity: .86; }
-.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
-.chip.tilechip .chip-in { padding: 0; width: 66px; height: 50px; border-radius: 12px; background: var(--coal); color: var(--on-coal); flex-direction: column; gap: 3px; justify-content: center; font-size: 10.5px; }
-.chip.tilechip svg { width: 12px; height: 12px; }
-.hero.flipped .chip { opacity: 0; }
+/* ---- the figure: 02b's hero composition, as is (LOG, 02b history b6–b8), inside a stage that spans the card's width ----
+   The stage is a size container; a virtual "tile" of height --T sits at its bottom, as wide as the stage: the figure is
+   1.5 T tall (its head rising .45 T over the tile, as on 02b), so T is the stage's height / 1.5, capped by the width so
+   the stroke (1.186 T across) stays inside. --yt is the tile's top; the disc, the mask and the stroke share one centre
+   .483 T below it (disc r .548 T, stroke r .593 T), the cards sit at 02b's tile fractions (--ty). The disc shows whole:
+   there is no tile edge here to clip it. Colours: the disc and the stroke as on 02b (01's palette), cards on the sheet. */
+.hero { --disc: rgba(236, 233, 250, .42); --ring: rgba(222, 222, 230, .55);
+  --glass-hi: rgba(255, 255, 255, .34); --glass-lo: rgba(255, 255, 255, .10); --glass-rim: rgba(255, 255, 255, .62); --glass-spec: rgba(255, 255, 255, .9); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero { --disc: rgba(255, 255, 255, .1); --ring: rgba(222, 222, 230, .4);
+  --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); } }
+:root[data-theme="dark"] .hero { --disc: rgba(255, 255, 255, .1); --ring: rgba(222, 222, 230, .4);
+  --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); }
+.stage { position: relative; flex: 1; min-height: 0; margin: 24px -20px 0; container-type: size; pointer-events: none;
+  --T: min(calc(100cqh / 1.5), calc(100cqw / 1.2)); --yt: calc(100cqh - 1.05 * var(--T)); --cy: calc(var(--yt) + .483 * var(--T)); --rd: calc(.548 * var(--T)); }
+.stage > * { pointer-events: auto; }
+.fg-disc { position: absolute; left: 50%; top: var(--cy); width: calc(2 * var(--rd)); height: calc(2 * var(--rd)); transform: translate(-50%, -50%); border-radius: 50%; background: var(--disc); }
+.fg-stroke { position: absolute; left: 50%; top: var(--cy); width: calc(1.186 * var(--T)); height: calc(1.186 * var(--T)); transform: translate(-50%, -50%); overflow: visible; fill: none; stroke: var(--ring); stroke-width: 2px; stroke-linecap: round; }
+.fg-clip { position: absolute; left: 0; right: 0; top: calc(100cqh - 1.5 * var(--T)); bottom: calc(-.02 * var(--T)); overflow: hidden; z-index: 2;
+  -webkit-mask-image: radial-gradient(circle var(--rd) at 50% calc(.933 * var(--T)), #000 calc(var(--rd) - 1px), transparent var(--rd)), linear-gradient(#000, #000);
+  mask-image: radial-gradient(circle var(--rd) at 50% calc(.933 * var(--T)), #000 calc(var(--rd) - 1px), transparent var(--rd)), linear-gradient(#000, #000);
+  -webkit-mask-size: 100% 100%, 100% calc(.933 * var(--T)); mask-size: 100% 100%, 100% calc(.933 * var(--T));
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
+.fg-person { position: absolute; top: 0; left: 50%; height: calc(1.5 * var(--T)); width: auto; transform: translateX(-50%); filter: drop-shadow(0 22px 28px rgba(0, 0, 0, .16)); }
+.stage .fg-shape { position: absolute; z-index: 1; top: calc(var(--yt) + var(--ty) * var(--T)); border-radius: 50%; border: 3px solid var(--blush); width: 14px; height: 14px; }
+.stage .fg-shape.alt { border-color: var(--amber); }
+.stage .fg-shape.tri { border: 0; border-radius: 0; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid var(--amber); opacity: .7; }
+
+/* the floating cards: the wrapper carries the parallax, the inner the float (as 01's chips did). Sizes: 02b's phone sizes
+   × .85 — this stage is about as wide as 02b's phone tile but its figure is smaller, so the cards come down with it */
+.fcd { position: absolute; z-index: 3; top: calc(var(--yt) + var(--ty) * var(--T)); transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .35s; }
+.fcd.behind { z-index: 1; }
+.fcd-in { background: var(--sheet); color: var(--ink); border-radius: 11px; box-shadow: var(--chip-shadow); padding: 8px 10px; animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
+.fcd.glass .fcd-in { position: relative; background: linear-gradient(135deg, var(--glass-hi), var(--glass-lo)); -webkit-backdrop-filter: blur(18px) saturate(1.7); backdrop-filter: blur(18px) saturate(1.7); /* -webkit- first: the minifier keeps only the last of the two */
+  border: 1px solid var(--glass-rim); box-shadow: inset 0 1px 0 var(--glass-spec), inset 1px 0 0 color-mix(in srgb, var(--glass-spec) 45%, transparent), inset 0 -10px 24px -16px var(--glass-spec), 0 18px 40px -18px rgba(0, 0, 0, .35); }
+.fcd.glass .fcd-in::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(90% 60% at 18% 0%, color-mix(in srgb, var(--glass-spec) 70%, transparent), transparent 60%); }
+.fcd .cap { display: block; font: 600 clamp(8.5px, 2.5cqw, 9.5px)/1.2 var(--body); color: var(--muted); }
+.fcd.glass .cap { color: var(--ink); opacity: .78; }
+.fcd.ai .fcd-in { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.fcd.ai .bl { width: clamp(54px, 17.5cqw, 64px); aspect-ratio: 1; margin: -4px 0 -2px -6px; } .fcd.ai .bl svg { display: block; }
+.fcd.ai .cap { max-width: 11ch; }
+.fcd .coin { width: clamp(40px, 13cqw, 48px); aspect-ratio: 1; display: block; margin-inline: auto; }
+.fcd .coin svg { transform: scale(1.8) !important; overflow: visible; } /* !important: lottie-web sets an inline transform on its svg */
+.coin-card .cap { margin-top: 2px; text-align: center; }
+.fcd.loader-card .fcd-in { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 9px; border-radius: 10px; }
+.fcd .lk { width: clamp(44px, 13.5cqw, 50px); aspect-ratio: 72 / 34; } .fcd .lk svg { display: block; }
+.fcd.loader-card .cap { font-size: clamp(8.5px, 2.4cqw, 9px); white-space: nowrap; }
+.hero.flipped .fcd, .hero.flipped .fg-shape { opacity: 0; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@media (prefers-reduced-motion: reduce) { .fcd-in { animation: none; } }
 
 .back-in { position: relative; height: 100%; display: flex; flex-direction: column; gap: 12px; padding-top: 40px; overflow: auto; }
 .back-in h3 { font: 400 clamp(15px, 1.5cqw, 20px)/1.3 var(--display); letter-spacing: 0; }
@@ -60,4 +94,4 @@
 .hp-meta dd { margin: 0; font: 600 13px var(--body); }
 .hero-proj .skills { margin-top: auto; padding-top: 12px; }
 
-@media (max-width: 700px) { .hero { min-height: 640px; } .stage { bottom: 320px; } }
+@media (max-width: 700px) { .hero { min-height: 640px; } .stage { min-height: 200px; } }

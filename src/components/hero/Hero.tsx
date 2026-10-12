@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import type { Project } from '../../lib/data';
 import { COPY, LINKS, SKILLS } from '../../lib/data';
+import { LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
+import { Lottie } from '../micro/Lottie';
+import cutout from '../../assets/nitish-phone-cutout.webp';
 import './hero.css';
 
 /* The notched top-left corner: a sheet-coloured cover with the label sitting in it. */
@@ -13,11 +16,16 @@ export function Notch() {
   );
 }
 
-const CHIPS = [
-  { label: 'Lottie', color: '#2BC48A', depth: 1.3, style: { top: '30%', right: '3%', '--dur': '5.6s', '--dl': '-1s' } },
-  { label: 'Rive', color: '#F5BD56', depth: .6, behind: true, style: { top: '66%', left: '2%', '--dur': '6.4s', '--dl': '-2.5s' } },
-  { label: 'After Effects', color: '#9A82D6', depth: 1.1, style: { top: '72%', right: '6%', '--dur': '5.1s', '--dl': '-.6s' } },
-] as const;
+/* 02b's circle (LOG, 02b history b8), carried over as is: one centre on the figure, the disc r = .548 of the tile's
+   height, a concentric stroke r = .593 drawn as two broken arcs. Here the "tile" is a virtual box inside the stage
+   (hero.css, --T); the arcs are drawn in a unit box and scaled by CSS. Screen angles, clockwise from 3 o'clock. */
+function strokeArcs() {
+  const c = 50, r = 50;
+  const P = (deg: number) => { const a = deg * Math.PI / 180; return `${(c + r * Math.cos(a)).toFixed(2)} ${(c + r * Math.sin(a)).toFixed(2)}`; };
+  const arc = (a0: number, a1: number) => { const sweep = a1 > a0 ? 1 : 0, large = Math.abs(a1 - a0) > 180 ? 1 : 0; return `M ${P(a0)} A ${r} ${r} 0 ${large} ${sweep} ${P(a1)}`; };
+  return `${arc(-116, -238)} ${arc(55, 76)}`; /* ref: -117.5° → 121.5° counter-clockwise through 180°; 57.5° → 76° */
+}
+const ARCS = strokeArcs();
 
 type Props = { project?: Project | null; onBack?: () => void; onCv?: () => void };
 
@@ -40,13 +48,13 @@ export default function Hero({ project, onBack, onCv }: Props) {
     if (!canHover || reduce || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     const dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;
-    ref.current.querySelectorAll<HTMLElement>('.chip').forEach(c => {
+    ref.current.querySelectorAll<HTMLElement>('.fcd').forEach(c => {
       const d = Number(c.dataset.depth);
       c.style.setProperty('--px', (dx * 26 * d).toFixed(1) + 'px');
       c.style.setProperty('--py', (dy * 18 * d).toFixed(1) + 'px');
     });
   };
-  const resetChips = () => ref.current?.querySelectorAll<HTMLElement>('.chip').forEach(c => { c.style.setProperty('--px', '0px'); c.style.setProperty('--py', '0px'); });
+  const resetChips = () => ref.current?.querySelectorAll<HTMLElement>('.fcd').forEach(c => { c.style.setProperty('--px', '0px'); c.style.setProperty('--py', '0px'); });
 
   const toggle = (e: React.MouseEvent) => { e.stopPropagation(); window.clearTimeout(timer.current); setFlipped(f => !f); };
 
@@ -63,18 +71,24 @@ export default function Hero({ project, onBack, onCv }: Props) {
             About me
           </button>
           <span className="tap-hint" aria-hidden="true">tap to flip</span>
-          <div className="stage">
-            <div className="portrait" aria-hidden="true">
-              {/* PLACEHOLDER silhouette until the cutout photo arrives */}
-              <svg viewBox="0 0 200 220"><g fill="#2B2C35"><circle cx="100" cy="78" r="46" /><path d="M28 220c0-50 30-82 72-82s72 32 72 82z" /></g><path d="M62 70c4-30 24-44 44-44 18 0 34 10 36 36-6-8-16-12-26-10-12 2-20 10-30 10-10 0-18-2-24 8z" fill="#1E1F27" /></svg>
+          {/* the figure: 02b's hero composition (Nitish, 12 Oct — "as is"): the lighter disc, the broken stroke, his cutout masked by
+              the disc's lower half, and the three Lottie cards at 02b's positions. The title and description cards stay out: the
+              name and the line are the text below. */}
+          <div className="stage" aria-hidden="true">
+            <i className="fg-disc" />
+            <svg className="fg-stroke" viewBox="0 0 100 100"><path d={ARCS} vectorEffect="non-scaling-stroke" /></svg>
+            <div className="fg-clip"><img className="fg-person" src={cutout} alt="" /></div>
+            <span className="fg-shape alt" style={{ left: '6%', '--ty': .38 } as React.CSSProperties} />
+            <span className="fg-shape" style={{ right: '7%', '--ty': .8 } as React.CSSProperties} />
+            <span className="fg-shape tri" style={{ left: '15%', '--ty': .86 } as React.CSSProperties} />
+            <div className="fcd glass ai" data-depth="1.3" style={{ left: '16%', '--ty': .10, '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
+              <div className="fcd-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
             </div>
-            {CHIPS.map(c => (
-              <div key={c.label} className={`chip${'behind' in c && c.behind ? ' behind' : ''}`} data-depth={c.depth} style={c.style as React.CSSProperties}>
-                <span className="chip-in"><span className="dot" style={{ '--c': c.color } as React.CSSProperties} />{c.label}</span>
-              </div>
-            ))}
-            <div className="chip behind tilechip" data-depth=".7" style={{ top: '20%', left: '2%', '--dur': '7s', '--dl': '-3.4s' } as React.CSSProperties}>
-              <span className="chip-in"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>coin rig</span>
+            <div className="fcd behind coin-card" data-depth=".6" style={{ left: '68%', '--ty': -.2, '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
+              <div className="fcd-in"><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
+            </div>
+            <div className="fcd loader-card" data-depth="1.25" style={{ left: '72%', '--ty': .38, '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>
+              <div className="fcd-in"><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
             </div>
           </div>
           <div className="hero-text">
@@ -88,14 +102,6 @@ export default function Hero({ project, onBack, onCv }: Props) {
               <a className="pill" href={LINKS.lottiefiles} onClick={e => e.stopPropagation()}>LottieFiles</a>
               <a className="pill" href="#" onClick={e => e.stopPropagation()}>Email</a>
             </div>
-          </div>
-          <div className="badge" aria-hidden="true">
-            <svg viewBox="0 0 80 80">
-              <defs><path id="bp" d="M40,40 m-29,0 a29,29 0 1,1 58,0 a29,29 0 1,1 -58,0" /></defs>
-              <circle cx="40" cy="40" r="40" style={{ fill: 'var(--coal)' }} />
-              <text fontSize="8.4" letterSpacing="1.2" fontWeight="600" style={{ fill: '#fff', fontFamily: 'var(--body)' }}><textPath href="#bp">MOTION · INTERACTION · CODE · </textPath></text>
-              <circle cx="40" cy="40" r="7" style={{ fill: 'var(--amber)' }} />
-            </svg>
           </div>
         </div>
         {/* back */}

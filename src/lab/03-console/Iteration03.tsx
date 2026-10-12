@@ -6,6 +6,7 @@ import { useTheme } from '../../lib/theme';
 import { Like, Segmented, Stepper, Switch } from '../../components/micro/Widgets';
 import { PhotoStack } from '../../components/tiles/Tiles';
 import { Lottie } from '../../components/micro/Lottie';
+import { LOTTIES as L, dropLoaderText } from '../../lib/lotties';
 import cutout from '../../assets/nitish-phone-cutout.webp';
 import './console.css';
 
@@ -25,14 +26,6 @@ const VIEWS: { id: View; label: string; short: string; icon: string }[] = [
   { id: 'about', label: 'About', short: 'Me', icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 20c0-4 4-6 8-6s8 2 8 6' },
 ];
 const isView = (s?: string): s is View => !!s && VIEWS.some(v => v.id === s);
-
-/* hosted Lotties (Nitish's, lottie.host) */
-const L = {
-  b: 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie',
-  coin: 'https://lottie.host/baf8073b-3068-48ed-9e57-7a55cd7c97ed/KOTff0Mhna.lottie',
-  loader: 'https://lottie.host/e331b8eb-11ac-466a-96da-98916b4052da/t7zZAGNw8i.lottie',
-};
-const dropLoaderText = (l: { nm?: string; ty?: number }) => (l.nm ?? '').startsWith('TEXT') || l.ty === 2;
 
 /* the skills Nitish named (9 Oct) */
 const SKILLS03 = ['Product design', 'UX design', 'UI design', 'Interaction design', 'Micro-interactions', 'UI animation', 'State-machine design', 'Custom AI workflows'];
