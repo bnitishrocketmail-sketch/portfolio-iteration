@@ -48,10 +48,12 @@
   mask-image: radial-gradient(circle var(--rd) at 50% calc(.933 * var(--T)), #000 calc(var(--rd) - 1px), transparent var(--rd)), linear-gradient(#000, #000);
   -webkit-mask-size: 100% 100%, 100% calc(.933 * var(--T)); mask-size: 100% 100%, 100% calc(.933 * var(--T));
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 0 0, 0 0; mask-position: 0 0, 0 0; }
-/* the photo zoomed inside the mask (Nitish, 12 Oct): --zoom × its 02b size, scaled from the top centre so the head stays
-   where it is (never above the mask) and the chest comes to the disc's centre; the mask and the clip are unchanged */
-.stage { --zoom: 2; }
-.fg-person { position: absolute; top: 0; left: 50%; height: calc(1.5 * var(--T)); width: auto; transform: translateX(-50%) scale(var(--zoom)); transform-origin: 50% 0; filter: drop-shadow(0 22px 28px rgba(0, 0, 0, .16)); }
+/* the photo zoomed inside the mask (Nitish, 12 Oct): --zoom × its 02b size, scaled from the top of the shoulders' centre
+   line so the head stays where it is (never above the mask) and the chest comes to the disc's centre. The cutout's box is
+   wider on the right (the arm with the phone): measured on its alpha, the shoulders' midpoint is at 46% of the width,
+   so that line — not the box's centre — sits on the circle's centre (--fx). Mask and clip unchanged. */
+.stage { --zoom: 1.5; --fx: 46%; }
+.fg-person { position: absolute; top: 0; left: 50%; height: calc(1.5 * var(--T)); width: auto; transform: translateX(calc(-1 * var(--fx))) scale(var(--zoom)); transform-origin: var(--fx) 0; filter: drop-shadow(0 22px 28px rgba(0, 0, 0, .16)); }
 .stage .fg-shape { position: absolute; z-index: 1; top: calc(var(--yt) + var(--ty) * var(--T)); border-radius: 50%; border: 3px solid var(--blush); width: 14px; height: 14px; }
 .stage .fg-shape.alt { border-color: var(--amber); }
 .stage .fg-shape.tri { border: 0; border-radius: 0; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid var(--amber); opacity: .7; }
