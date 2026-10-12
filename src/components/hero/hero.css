@@ -105,12 +105,26 @@
 .hero.v2 .notch, .hero.v2 .notch-btn, .hero.v2 .tap-hint { position: absolute; }
 /* the desk photo: the person, head's top to the desk, is 65% of its height and maps to 1.5 T (01's figure height), so the
    photo is 2.3 T tall, shifted up by the 35% above the head; centred between the shoulders' line and the head's (45%) */
-.hero.v2 .stage { position: absolute; left: 0; right: 0; top: 44px; height: calc(1.5 * var(--T)); margin: 0; flex: none; z-index: 1;
-  --T: calc(100cqw / 1.613); --zoom: 1; --fx: 45%; --ph: 2.3; --oy: -.348; }
-.hero.v2 .hero-text { z-index: 2; margin: auto 0 0; padding: 16px; border-radius: 16px; }
+/* the stage takes the height the panel leaves plus --ov, the overlap: the circle's bottom comes --ov over the panel's
+   top edge, in front of it (Nitish, 13 Oct: 1–2%). T follows from that height (1.5 T = the stage), which at 1440 with the
+   panel's type below is 1.22 × 01's tile — the "22% bigger" — and at other sizes whatever fits. */
+.hero.v2 .stage { --ov: 1.5cqh; margin-bottom: calc(-1 * var(--ov)); z-index: 2; --zoom: 1; --fx: 45%; --ph: 2.3; --oy: -.348; }
+.hero.v2 .hero-text { z-index: 1; margin: 0; padding: 16px; border-radius: 16px; }
+/* the panel's type: fixed at the sizes the card had when Nitish approved the panel (13 Oct) — the card being a size
+   container, the sheet-relative clamps had fallen to their minimums; these are those values, now deliberate */
+.hero.v2 .hero-text .lt { font-size: 16px; } .hero.v2 .hero-text .nm { font-size: 24px; }
+.hero.v2 .hero-text .st { font-size: 12px; } .hero.v2 .hero-text .st strong { font-size: 11px; } .hero.v2 .hero-lede { font-size: 12.5px; }
 .hero.v2 .hero-text > * { position: relative; }
 .hero.v2 .fg-photo { clip-path: circle(var(--rd) at 50% calc(.933 * var(--T))); z-index: 0; }
 .hero.v2 .fg-photo .fg-person { filter: none; }
+.hero.v2 .fg-shape { display: none; } /* the small rings and the triangle don't sit with the photo (Nitish, 13 Oct); maybe later */
+/* this photo's arms are wider than the circle at its centre line, so the straight edge where the mask's upper half ends
+   showed as a notch below the left shoulder. Outside the circle the cutout now fades out over the .25 T above the centre
+   line instead of stopping dead — the dark hoodie dissolves into the dark ground; inside the circle nothing changes. */
+.hero.v2 .fg-clip {
+  -webkit-mask-image: radial-gradient(circle var(--rd) at 50% calc(.933 * var(--T)), #000 calc(var(--rd) - 1px), transparent var(--rd)), linear-gradient(#000 calc(.683 * var(--T)), transparent calc(.933 * var(--T)));
+  mask-image: radial-gradient(circle var(--rd) at 50% calc(.933 * var(--T)), #000 calc(var(--rd) - 1px), transparent var(--rd)), linear-gradient(#000 calc(.683 * var(--T)), transparent calc(.933 * var(--T)));
+  -webkit-mask-size: 100% 100%, 100% 100%; mask-size: 100% 100%, 100% 100%; }
 .hero.v2 .hero-cta .btn { background: var(--on-peri); color: var(--coal); }
 .hero.v2 .hero-cta .pill { border-color: rgba(255, 255, 255, .42); }
 .hero.v2 .face.back { background: #1b1b1e; }
