@@ -5,6 +5,8 @@ import { COPY, LINKS, SKILLS } from '../../lib/data';
 import { LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { Lottie } from '../micro/Lottie';
 import cutout from '../../assets/nitish-phone-cutout.webp';
+import deskPhoto from '../../assets/nitish-desk.webp';
+import deskCutout from '../../assets/nitish-desk-cutout.webp';
 import './hero.css';
 
 /* The notched top-left corner: a sheet-coloured cover with the label sitting in it. */
@@ -27,9 +29,9 @@ function strokeArcs() {
 }
 const ARCS = strokeArcs();
 
-type Props = { project?: Project | null; onBack?: () => void; onCv?: () => void };
+type Props = { project?: Project | null; onBack?: () => void; onCv?: () => void; v2?: boolean };
 
-export default function Hero({ project, onBack, onCv }: Props) {
+export default function Hero({ project, onBack, onCv, v2 = false }: Props) {
   const ref = useRef<HTMLElement>(null);
   const [flipped, setFlipped] = useState(false);
   const timer = useRef<number | undefined>(undefined);
@@ -59,7 +61,7 @@ export default function Hero({ project, onBack, onCv }: Props) {
   const toggle = (e: React.MouseEvent) => { e.stopPropagation(); window.clearTimeout(timer.current); setFlipped(f => !f); };
 
   return (
-    <aside ref={ref} className={`hero${flipped ? ' flipped' : ''}${inProject ? ' in-project' : ''}`} aria-label="Intro card"
+    <aside ref={ref} className={`hero${v2 ? ' v2' : ''}${flipped ? ' flipped' : ''}${inProject ? ' in-project' : ''}`} aria-label="Intro card"
       onPointerEnter={enter} onPointerLeave={leave} onPointerMove={move}
       onClick={() => { if (!canHover && !inProject) setFlipped(f => !f); }}>
       <div className="hero-card">
@@ -74,10 +76,11 @@ export default function Hero({ project, onBack, onCv }: Props) {
           {/* the figure: 02b's hero composition (Nitish, 12 Oct — "as is"): the lighter disc, the broken stroke, his cutout masked by
               the disc's lower half, and the three Lottie cards at 02b's positions. The title and description cards stay out: the
               name and the line are the text below. */}
+          {/* v2 (01b): the photo itself fills the circle (a window onto it, same geometry as the cutout) in place of the disc */}
           <div className="stage" aria-hidden="true">
-            <i className="fg-disc" />
+            {v2 ? <div className="fg-photo"><img className="fg-person" src={deskPhoto} alt="" /></div> : <i className="fg-disc" />}
             <svg className="fg-stroke" viewBox="0 0 100 100"><path d={ARCS} vectorEffect="non-scaling-stroke" /></svg>
-            <div className="fg-clip"><img className="fg-person" src={cutout} alt="" /></div>
+            <div className="fg-clip"><img className="fg-person" src={v2 ? deskCutout : cutout} alt="" /></div>
             <span className="fg-shape alt" style={{ left: '6%', '--ty': .38 } as React.CSSProperties} />
             <span className="fg-shape" style={{ right: '7%', '--ty': .48 } as React.CSSProperties} />
             <span className="fg-shape tri" style={{ left: '15%', '--ty': .52 } as React.CSSProperties} />

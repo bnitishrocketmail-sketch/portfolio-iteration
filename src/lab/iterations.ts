@@ -14,9 +14,17 @@ export const ITERATIONS: Iteration[] = [
   {
     id: '01-sheet',
     name: '01 Sheet',
-    status: 'parked',
+    status: 'exploring',
     tries: 'One-view app shell: a pale sheet on a grey field, persistent hero card on the left, views swapping on the right; rotated side nav; notch-style assistant.',
     refs: ['ref-1 bento portfolio', 'ref-2 iOS notch recording'],
+  },
+  {
+    id: '01b-sheet',
+    name: '01b Sheet · v2 intro card',
+    status: 'exploring',
+    parent: '01-sheet',
+    tries: "01's shell with the intro card rebuilt on his desk photo: the cutout free above the circle, the photo itself inside it, the same photo blurred as the card's ground, the text on glass, the composition 1.5× larger.",
+    refs: ['01 Sheet', '02b hero geometry', 'photo-4 desk (b&w)'],
   },
   {
     id: '02-field',

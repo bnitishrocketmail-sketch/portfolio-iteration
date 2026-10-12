@@ -9,10 +9,11 @@ import Dock, { SideNav, ThemeToggle } from '../../components/dock/Dock';
 import { Campaign, Experience, Home, Micro, ProjectDetail, Projects, Writing } from '../../views/Views';
 import '../../styles/shell.css';
 
-const BASE = '/lab/01-sheet';
-
-/* Iteration 01 — "Sheet". One view at a time: the hero column persists, the right column swaps. */
-export default function Iteration01() {
+/* Iteration 01 — "Sheet". One view at a time: the hero column persists, the right column swaps.
+   variant 'b' (01b, 12 Oct): the same shell with the v2 intro card — his desk photo, cut out over its own blurred background,
+   the text on glass. */
+export default function Iteration01({ variant }: { variant?: 'b' }) {
+  const BASE = variant === 'b' ? '/lab/01b-sheet' : '/lab/01-sheet';
   const { view: viewParam, pid } = useParams();
   const navigate = useNavigate();
   const { isDark, toggle } = useTheme();
@@ -29,7 +30,7 @@ export default function Iteration01() {
   const go = useCallback((next: ViewName, nextPid?: string) => {
     if (next === 'project' && !nextPid) next = 'projects';
     navigate(next === 'home' ? BASE : next === 'project' ? `${BASE}/project/${nextPid}` : `${BASE}/${next}`);
-  }, [navigate]);
+  }, [navigate, BASE]);
 
   /* on phones the sheet scrolls; a view change starts at the top */
   useEffect(() => { window.scrollTo({ top: 0 }); }, [view, pid]);
@@ -39,7 +40,7 @@ export default function Iteration01() {
   return (
     <LayoutGroup>
       <ThemeToggle isDark={isDark} onToggle={toggle} />
-      <Link className="labtag" to="/lab">Lab · 01 Sheet</Link>
+      <Link className="labtag" to="/lab">Lab · {variant === 'b' ? '01b' : '01'} Sheet</Link>
 
       {/* the device holds the sheet's aspect ratio and is what every cqw measures against */}
       <div className="device">
@@ -47,7 +48,7 @@ export default function Iteration01() {
       <main className="sheet">
         <div className="shell">
           <SideNav active={view} onGo={go} />
-          <Hero project={project} onBack={() => go('projects')} onCv={() => go('experience')} />
+          <Hero project={project} onBack={() => go('projects')} onCv={() => go('experience')} v2={variant === 'b'} />
           <div className="views">
             <AnimatePresence mode="wait" custom={dir} initial={false}>
               {view === 'home' && <Home key="home" onGo={go} dir={dir} />}
