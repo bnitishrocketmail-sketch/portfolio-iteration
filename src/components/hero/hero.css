@@ -89,33 +89,28 @@
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @media (prefers-reduced-motion: reduce) { .fcd-in { animation: none; } }
 
-/* ---- v2 (01b, Nitish 12 Oct): the card on his desk photo ----
+/* ---- v2 (01b, Nitish 12–13 Oct): the card on his desk photo ----
    The card's ground is the photo itself, blurred past recognition and darkened, so the card takes the photo's tones; the
-   text sits in a liquid-glass panel; the circle is a window onto the photo (background and all, same geometry as the
-   cutout above it), the cutout rises free above it; the composition is 1.5× the 01 size, which this card's height only
-   allows if the panel overlaps the circle — --ov is that overlap (25% of the card = 1.5× at 1440). Dark in both themes,
-   so the glass uses the dark set and the CV button stays light. */
-.hero.v2 { container-type: size; --ov: 25cqh; --disc: transparent; --ring: rgba(222, 222, 230, .5);
+   text sits in a liquid-glass panel at the bottom; the circle is a window onto the photo (him in it, background and
+   all) and his own cutout lies over it in the same frame, hiding him inside the photo and rising free above the circle,
+   masked by it below — 01's geometry. Everything (figure, circle, stroke, cards) is 1.22 × 01's: 01's tile height is the
+   card's width / 1.968 at 1440, so here T = width / 1.613. The stage is pinned under the notch band at that height
+   and the glass panel takes the text's height, so where the two meet is what's left: at 1440 the panel covers the
+   circle's lowest third, blurred. Dark in both themes, so the glass uses the dark set and the CV button stays light. */
+.hero.v2 { container-type: size; --disc: transparent; --ring: rgba(222, 222, 230, .5);
   --glass-hi: rgba(255, 255, 255, .14); --glass-lo: rgba(255, 255, 255, .04); --glass-rim: rgba(255, 255, 255, .28); --glass-spec: rgba(255, 255, 255, .5); }
 .hero.v2 .face, .hero.v2 .hero-proj { background: #1b1b1e; color: #fff; }
 .hero.v2 .face::before, .hero.v2 .hero-proj::before { content: ""; position: absolute; inset: -12%; background: url('../../assets/nitish-desk.webp') center / cover no-repeat; filter: blur(34px) brightness(.72); pointer-events: none; }
 .hero.v2 .face > *, .hero.v2 .hero-proj > * { position: relative; }
 .hero.v2 .notch, .hero.v2 .notch-btn, .hero.v2 .tap-hint { position: absolute; }
-/* the desk photo: the person from the head's top to the desk is 64% of its height and maps to 1.5 T (the 02b figure's
-   height), so the photo is 2.34 T tall, shifted up by the 36% above the head; the shoulders' centre is at 45% of its width */
-.hero.v2 .stage { margin-bottom: calc(-1 * var(--ov)); z-index: 1; --zoom: 1; --fx: 45%; --ph: 2.34; --oy: -.36; }
-/* the glass panel sits over the composition's lower part: the circle's lower half shows through it, blurred, the head and
-   shoulders rise clear above its top edge */
-.hero.v2 .hero-text { z-index: 2; margin: 0; padding: 16px; border-radius: 16px; }
+/* the desk photo: the person, head's top to the desk, is 65% of its height and maps to 1.5 T (01's figure height), so the
+   photo is 2.3 T tall, shifted up by the 35% above the head; centred between the shoulders' line and the head's (45%) */
+.hero.v2 .stage { position: absolute; left: 0; right: 0; top: 44px; height: calc(1.5 * var(--T)); margin: 0; flex: none; z-index: 1;
+  --T: calc(100cqw / 1.613); --zoom: 1; --fx: 45%; --ph: 2.3; --oy: -.348; }
+.hero.v2 .hero-text { z-index: 2; margin: auto 0 0; padding: 16px; border-radius: 16px; }
 .hero.v2 .hero-text > * { position: relative; }
 .hero.v2 .fg-photo { clip-path: circle(var(--rd) at 50% calc(.933 * var(--T))); z-index: 0; }
 .hero.v2 .fg-photo .fg-person { filter: none; }
-/* the bust fills the card's width, so the cards sit beside the head rather than on the arm: B over the left shoulder,
-   the loader by the right shoulder, the coin behind the hair's right side (02b: behind the shoulder) */
-.hero.v2 .fcd.ai { left: 3% !important; --ty: .34; }
-.hero.v2 .fcd.loader-card { left: auto !important; right: 3%; --ty: .52; }
-.hero.v2 .fcd.coin-card { left: 70% !important; --ty: -.04; }
-.hero.v2 .fg-shape.alt { --ty: .62; } .hero.v2 .fg-shape.tri { left: 12%; --ty: .78; } .hero.v2 .fg-shape { --ty: .86; }
 .hero.v2 .hero-cta .btn { background: var(--on-peri); color: var(--coal); }
 .hero.v2 .hero-cta .pill { border-color: rgba(255, 255, 255, .42); }
 .hero.v2 .face.back { background: #1b1b1e; }
