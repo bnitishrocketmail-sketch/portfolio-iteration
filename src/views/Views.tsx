@@ -58,9 +58,7 @@ export function Projects({ onGo, dir }: ViewProps) {
   );
 }
 
-export function ProjectDetail({ onGo, dir, project }: ViewProps & { project: Project }) {
-  const i = PROJECTS.findIndex(p => p.id === project.id);
-  const next = PROJECTS[(i + 1) % PROJECTS.length];
+export function ProjectDetail({ dir, project }: Omit<ViewProps, 'onGo'> & { onGo?: ViewProps['onGo']; project: Project }) {
   const vars = { '--m1': project.m1, '--m2': project.m2 } as React.CSSProperties;
   return (
     <View className="project" dir={dir}>
@@ -78,14 +76,8 @@ export function ProjectDetail({ onGo, dir, project }: ViewProps & { project: Pro
           <div className="media">final · in-context placeholder</div>
         </div>
       </motion.article>
-      <aside className="side">
-        <motion.p className="eyebrow" variants={item} style={{ padding: '2px 4px 0' }}>Next project</motion.p>
-        <ProjectCard p={next} onGo={onGo} />
-        <motion.div className="side-cta" variants={item}>
-          <p className="eyebrow">All projects</p>
-          <button className="more" type="button" onClick={() => onGo('projects')}>Back to the grid <span className="arr" aria-hidden="true">→</span></button>
-        </motion.div>
-      </aside>
+      {/* the side column (next project, all projects) is gone (Nitish, 12 Oct): the reading column takes the whole width;
+          where the next-project cards go is to be decided */}
     </View>
   );
 }
