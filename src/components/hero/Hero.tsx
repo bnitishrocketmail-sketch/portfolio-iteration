@@ -79,12 +79,12 @@ export default function Hero({ project, onBack, onCv }: Props) {
             <svg className="fg-stroke" viewBox="0 0 100 100"><path d={ARCS} vectorEffect="non-scaling-stroke" /></svg>
             <div className="fg-clip"><img className="fg-person" src={cutout} alt="" /></div>
             <span className="fg-shape alt" style={{ left: '6%', '--ty': .38 } as React.CSSProperties} />
-            <span className="fg-shape" style={{ right: '7%', '--ty': .8 } as React.CSSProperties} />
-            <span className="fg-shape tri" style={{ left: '15%', '--ty': .86 } as React.CSSProperties} />
+            <span className="fg-shape" style={{ right: '7%', '--ty': .48 } as React.CSSProperties} />
+            <span className="fg-shape tri" style={{ left: '15%', '--ty': .52 } as React.CSSProperties} />
             <div className="fcd glass ai" data-depth="1.3" style={{ left: '16%', '--ty': .10, '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
               <div className="fcd-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
             </div>
-            <div className="fcd behind coin-card" data-depth=".6" style={{ left: '68%', '--ty': -.2, '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
+            <div className="fcd behind coin-card" data-depth=".6" style={{ left: '63%', '--ty': -.11, '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
               <div className="fcd-in"><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
             </div>
             <div className="fcd loader-card" data-depth="1.25" style={{ left: '72%', '--ty': .38, '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>

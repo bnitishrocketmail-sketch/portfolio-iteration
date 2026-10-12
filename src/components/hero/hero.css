@@ -53,25 +53,27 @@
 .stage .fg-shape.alt { border-color: var(--amber); }
 .stage .fg-shape.tri { border: 0; border-radius: 0; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid var(--amber); opacity: .7; }
 
-/* the floating cards: the wrapper carries the parallax, the inner the float (as 01's chips did). Sizes: 02b's phone sizes
-   × .85 — this stage is about as wide as 02b's phone tile but its figure is smaller, so the cards come down with it */
+/* the floating cards: the wrapper carries the parallax, the inner the float (as 01's chips did). Sizes follow the figure
+   (Nitish, 12 Oct): every dimension is 02b's desktop value as a fraction of its tile height (369px at 1440), applied to
+   this stage's tile height T, so the cards shrink by the same ratio the figure did. B's animation 91px → .247 T, the coin
+   77px → .209 T, the loader 70px → .19 T; captions 12px → .0325 T; padding, gaps and radii likewise. */
 .fcd { position: absolute; z-index: 3; top: calc(var(--yt) + var(--ty) * var(--T)); transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .35s; }
 .fcd.behind { z-index: 1; }
-.fcd-in { background: var(--sheet); color: var(--ink); border-radius: 11px; box-shadow: var(--chip-shadow); padding: 8px 10px; animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
+.fcd-in { background: var(--sheet); color: var(--ink); border-radius: calc(.038 * var(--T)); box-shadow: var(--chip-shadow); padding: calc(.03 * var(--T)) calc(.035 * var(--T)); animation: float var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
 .fcd.glass .fcd-in { position: relative; background: linear-gradient(135deg, var(--glass-hi), var(--glass-lo)); -webkit-backdrop-filter: blur(18px) saturate(1.7); backdrop-filter: blur(18px) saturate(1.7); /* -webkit- first: the minifier keeps only the last of the two */
   border: 1px solid var(--glass-rim); box-shadow: inset 0 1px 0 var(--glass-spec), inset 1px 0 0 color-mix(in srgb, var(--glass-spec) 45%, transparent), inset 0 -10px 24px -16px var(--glass-spec), 0 18px 40px -18px rgba(0, 0, 0, .35); }
 .fcd.glass .fcd-in::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(90% 60% at 18% 0%, color-mix(in srgb, var(--glass-spec) 70%, transparent), transparent 60%); }
-.fcd .cap { display: block; font: 600 clamp(8.5px, 2.5cqw, 9.5px)/1.2 var(--body); color: var(--muted); }
+.fcd .cap { display: block; font: 600 calc(.0325 * var(--T))/1.2 var(--body); color: var(--muted); }
 .fcd.glass .cap { color: var(--ink); opacity: .78; }
-.fcd.ai .fcd-in { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.fcd.ai .bl { width: clamp(54px, 17.5cqw, 64px); aspect-ratio: 1; margin: -4px 0 -2px -6px; } .fcd.ai .bl svg { display: block; }
+.fcd.ai .fcd-in { display: flex; flex-direction: column; align-items: flex-start; gap: calc(.027 * var(--T)); }
+.fcd.ai .bl { width: calc(.247 * var(--T)); aspect-ratio: 1; margin: calc(-.011 * var(--T)) 0 calc(-.005 * var(--T)) calc(-.016 * var(--T)); } .fcd.ai .bl svg { display: block; }
 .fcd.ai .cap { max-width: 11ch; }
-.fcd .coin { width: clamp(40px, 13cqw, 48px); aspect-ratio: 1; display: block; margin-inline: auto; }
+.fcd .coin { width: calc(.209 * var(--T)); aspect-ratio: 1; display: block; margin-inline: auto; }
 .fcd .coin svg { transform: scale(1.8) !important; overflow: visible; } /* !important: lottie-web sets an inline transform on its svg */
-.coin-card .cap { margin-top: 2px; text-align: center; }
-.fcd.loader-card .fcd-in { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 9px; border-radius: 10px; }
-.fcd .lk { width: clamp(44px, 13.5cqw, 50px); aspect-ratio: 72 / 34; } .fcd .lk svg { display: block; }
-.fcd.loader-card .cap { font-size: clamp(8.5px, 2.4cqw, 9px); white-space: nowrap; }
+.coin-card .cap { margin-top: calc(.005 * var(--T)); text-align: center; }
+.fcd.loader-card .fcd-in { display: flex; flex-direction: column; align-items: center; gap: calc(.008 * var(--T)); padding: calc(.022 * var(--T)) calc(.03 * var(--T)); border-radius: calc(.0325 * var(--T)); }
+.fcd .lk { width: calc(.19 * var(--T)); aspect-ratio: 72 / 34; } .fcd .lk svg { display: block; }
+.fcd.loader-card .cap { font-size: calc(.0285 * var(--T)); white-space: nowrap; }
 .hero.flipped .fcd, .hero.flipped .fg-shape { opacity: 0; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @media (prefers-reduced-motion: reduce) { .fcd-in { animation: none; } }
