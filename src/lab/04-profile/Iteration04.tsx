@@ -41,10 +41,11 @@ function Card({ p, k, pos, onOpen }: { p: (typeof PROJECTS)[number]; k: number; 
      card is the same size — behind or in front. `pos` is a spring-smoothed follower of the slider, so a drag reads as
      motion rather than a jump. */
   const rank = useTransform(pos, v => SHOWN - 1 - (k - v));
-  const y = useTransform(rank, r => `${r * OFFSET * 100}%`);
+  /* a card arrives from a little above its slot and leaves a little below the front slot, fading over that travel — it never
+     crosses the deck's edges, so nothing needs clipping; the order (z) follows the rank throughout, no pop */
+  const y = useTransform(rank, r => `${Math.max(-.35, Math.min(SHOWN - 1 + .35, r)) * OFFSET * 100}%`);
   const opacity = useTransform(rank, r => (r < -.8 || r > SHOWN - .2 ? 0 : r < 0 ? 1 + r / .8 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .8 : 1));
-  /* behind in order of rank; a card past the front goes under everything as it leaves */
-  const z = useTransform(rank, r => (r > SHOWN - 1 + .02 ? 0 : 10 + Math.round(r * 10)));
+  const z = useTransform(rank, r => 10 + Math.round(r * 10));
   const shade = useTransform(rank, r => `var(--g${Math.max(2, Math.min(4, Math.round(4 - (SHOWN - 1 - r))))})`);
   const pe = useTransform(opacity, o => (o > .5 ? 'auto' : 'none'));
   return (
@@ -139,7 +140,7 @@ export default function Iteration04() {
             <p className="lede4">{COPY.lede}</p>
           </div>
           <div className="name4">
-            <span className="nm4">Nitish<br />Bhardwaj</span>
+            <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
             <span className="role4"><RollingWord /> designer</span>
           </div>
         </section>
