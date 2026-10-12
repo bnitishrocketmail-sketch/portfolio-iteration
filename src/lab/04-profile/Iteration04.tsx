@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { COPY, NAV, PROJECTS, type ViewName } from '../../lib/data';
+import { COPY, LINKS, NAV, PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import Island from '../../components/island/Island';
 import { PhotoStack } from '../../components/tiles/Tiles';
@@ -29,6 +29,15 @@ const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g5)', 'va
 const SHOWN = 3; /* cards in view (ref 4 shows three) */
 const OFFSET = .58; /* ref 4, measured: each card peeks 58% of a card's height above the one in front; a card is 46% of the stack */
 const WORDS = ['Product', 'Interaction', 'Motion']; /* the title's rolling first word (02 v29) */
+
+/* the notch's links: generic glyphs in the nav's colour — a work profile, a camera, a loop, an envelope — not the brand marks;
+   Nitish can drop the official SVGs in as his own assets */
+const SOCIAL: { label: string; href: string; d: string }[] = [
+  { label: 'LinkedIn', href: LINKS.linkedin, d: 'M4 8h16v11H4zM9 8V5h6v3M4 13h16' },
+  { label: 'Instagram', href: LINKS.instagram, d: 'M5 8h3l1.5-2h5L16 8h3v10H5zM12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6z' },
+  { label: 'LottieFiles', href: LINKS.lottiefiles, d: 'M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M17 3v4h-4M7 21v-4h4' },
+  { label: 'Email', href: '#', d: 'M4 6h16v12H4zM4 7l8 6 8-6' },
+];
 
 function Icon({ d }: { d: string }) { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" /></svg>; }
 
@@ -115,13 +124,15 @@ export default function Iteration04() {
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${illustration})` }} />
       <div className="frame4">
         {/* nav: icons only, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
+        {/* nav: the section names along the bar (reading bottom to top, as 01's side nav), each with its icon after it;
+            the selected one in a travelling pill — 01's highlight, inverted for the light bar (Nitish, 13 Oct) */}
         <nav className="nav4" aria-label="Sections">
           <ul>
             {NAV.map(n => (
               <li key={n.id}>
-                <button type="button" className={n.id === tab ? 'on' : ''} aria-current={n.id === tab ? 'page' : undefined} aria-label={n.label} title={n.label} onClick={() => go(n.id)}>
-                  {n.id === tab && <motion.i className="hl4" layoutId="hl4" transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .15, visualDuration: .32 }} />}
-                  <Icon d={ICONS[n.id]} />
+                <button type="button" className={n.id === tab ? 'on' : ''} aria-current={n.id === tab ? 'page' : undefined} onClick={() => go(n.id)}>
+                  {n.id === tab && <motion.i className="hl4" layoutId="hl4" transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .14, visualDuration: .36 }} />}
+                  <span className="lbl4"><span>{n.label}</span><Icon d={ICONS[n.id]} /></span>
                 </button>
               </li>
             ))}
@@ -134,14 +145,22 @@ export default function Iteration04() {
         {/* the picture, with the notch hanging in from the top, the cutout at the bottom-left, the name box at the bottom-right */}
         <section className="pic4">
           <img className="pic4-img" src={illustration} alt="Nitish at his desk, drawn" />
-          <div className="notch4"><Island onGo={go} onToggleTheme={toggle} /></div>
-          <div className="cut4">
-            <p className="st4"><strong>I make UI move.</strong></p>
-            <p className="lede4">{COPY.lede}</p>
+          {/* the notch holds the links (Nitish, 13 Oct); the assistant lives behind the nav's button and opens here */}
+          <div className="notch4">
+            <div className="links4">
+              {SOCIAL.map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><Icon d={l.d} /></a>)}
+            </div>
+            <Island onGo={go} onToggleTheme={toggle} />
           </div>
-          <div className="name4">
+          {/* the cutout: the name, the title, the CV — the glass box: the line and the one-liner (swapped, Nitish, 13 Oct) */}
+          <div className="cut4">
             <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
             <span className="role4"><RollingWord /> designer</span>
+            <a className="cv4" href={LINKS.cv}>View CV <span aria-hidden="true">↗</span></a>
+          </div>
+          <div className="name4">
+            <p className="st4"><strong>I make UI move.</strong></p>
+            <p className="lede4">{COPY.lede}</p>
           </div>
         </section>
 
