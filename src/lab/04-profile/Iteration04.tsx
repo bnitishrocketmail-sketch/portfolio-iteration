@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, NAV, PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
@@ -26,27 +26,40 @@ const ICONS: Record<Tab, string> = {
 };
 const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g4)', 'var(--g2)'], ['var(--g6)', 'var(--g4)'], ['var(--g3)', 'var(--g2)'], ['var(--g5)', 'var(--g2)'], ['var(--g4)', 'var(--g3)']];
 const SHOWN = 3; /* cards in view (ref 4 shows three) */
-const OFFSET = .46; /* each card peeks this much of a card's height above the one in front; the card is 1 / (1 + 2 × OFFSET) of the deck */
+const OFFSET = .58; /* ref 4, measured: each card peeks 58% of a card's height above the one in front; a card is 46% of the stack */
+const WORDS = ['Product', 'Interaction', 'Motion']; /* the title's rolling first word (02 v29) */
 
 function Icon({ d }: { d: string }) { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" /></svg>; }
 
 /* ---- the projects stack: three cards in view, the front one at the bottom, the rest peeking above it (ref 4);
    a drag slider at the right scrolls the list — the deck follows the thumb continuously and settles on a card ---- */
 function Card({ p, k, pos, onOpen }: { p: (typeof PROJECTS)[number]; k: number; pos: MotionValue<number>; onOpen: () => void }) {
-  /* rank: 0 = furthest back (top), SHOWN-1 = front (bottom); fractional while dragging */
+  /* rank: 0 = furthest back (top), SHOWN-1 = front (bottom); fractional while dragging. Every card is the same size —
+     a card is either behind or in front; the front card leaves by slipping down and behind, the next comes in from above */
   const rank = useTransform(pos, v => k - v);
-  const y = useTransform(rank, r => `${r * OFFSET * 100}%`); /* each rank steps down by OFFSET of a card's height */
-  const scale = useTransform(rank, r => 1 - (SHOWN - 1 - r) * .045);
-  const opacity = useTransform(rank, r => (r < -.6 || r > SHOWN - .4 ? 0 : r < 0 ? 1 + r / .6 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .6 : 1));
-  const z = useTransform(rank, r => Math.round(r * 10));
-  const pe = useTransform(opacity, o => (o > .5 ? 'auto' : 'none'));
+  const y = useTransform(rank, r => `${r * OFFSET * 100}%`);
+  const opacity = useTransform(rank, r => (r < -.7 || r > SHOWN - .3 ? 0 : r < 0 ? 1 + r / .7 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .7 : 1));
+  const z = useTransform(rank, r => (r > SHOWN - 1 + .02 ? 0 : 10 + Math.round(r * 10)));
   const shade = useTransform(rank, r => `var(--g${Math.max(2, Math.min(4, Math.round(4 - (SHOWN - 1 - r))))})`);
+  const pe = useTransform(opacity, o => (o > .5 ? 'auto' : 'none'));
   return (
-    <motion.button type="button" className="pcard4" style={{ y, scale, opacity, zIndex: z, background: shade, pointerEvents: pe }} onClick={onOpen}>
+    <motion.button type="button" className="pcard4" style={{ y, opacity, zIndex: z, background: shade, pointerEvents: pe }} onClick={onOpen}>
       <i className="tab4" aria-hidden="true" />
-      <span className="pc-head"><span className="pc-t"><b>{p.title}</b><small>{p.client} · {p.year}</small></span><span className="chev" aria-hidden="true">→</span></span>
-      <span className="pc-media" aria-hidden="true" />
+      <span className="pc-name"><b>{p.title}</b><small>{p.client} · {p.year}</small></span>
     </motion.button>
+  );
+}
+
+function RollingWord() {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => { if (reduce) return; const id = setInterval(() => setI(n => (n + 1) % WORDS.length), 2400); return () => clearInterval(id); }, [reduce]);
+  return (
+    <motion.span className="rw4" layout transition={{ duration: .45, ease: [.3, 1, .4, 1] }}>
+      <AnimatePresence initial={false} mode="popLayout">
+        <motion.span key={WORDS[i]} className="rw4-w" initial={{ y: '110%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '-110%', opacity: 0 }} transition={{ duration: .45, ease: [.3, 1, .4, 1] }}>{WORDS[i]}</motion.span>
+      </AnimatePresence>
+    </motion.span>
   );
 }
 
@@ -55,8 +68,9 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   const pos = useMotionValue(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const thumbY = useTransform(pos, v => `${(v / max) * 100}%`);
-  const settle = (v: number) => animate(pos, Math.max(0, Math.min(max, Math.round(v))), reduce ? { duration: 0 } : { type: 'spring', bounce: .18, duration: .55 });
+  const thumbH = SHOWN / n; /* of the track */
+  const thumbY = useTransform(pos, v => `${Math.max(0, Math.min(1, v / max)) * (1 - thumbH) * 100}%`); /* the thumb travels the track less its own height, and never leaves it */
+  const settle = (v: number) => animate(pos, Math.max(0, Math.min(max, Math.round(v))), reduce ? { duration: 0 } : { type: 'spring', bounce: .06, duration: .8 });
   /* the thumb: its travel is the track minus its own height; drag maps that travel to 0…max */
   const onDrag = (e: PointerEvent) => {
     const t = trackRef.current; if (!t) return;
@@ -72,7 +86,7 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
       </div>
       <div className="slider4" ref={trackRef} onPointerDown={down} role="slider" aria-label="Scroll projects" aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.round(pos.get())} tabIndex={0}
         onKeyDown={e => { if (e.key === 'ArrowDown') settle(pos.get() + 1); if (e.key === 'ArrowUp') settle(pos.get() - 1); }}>
-        <motion.i className="thumb4" style={{ top: thumbY, height: `${(SHOWN / n) * 100}%` }} />
+        <motion.i className="thumb4" style={{ top: thumbY, height: `${thumbH * 100}%` }} />
       </div>
     </div>
   );
@@ -115,11 +129,12 @@ export default function Iteration04() {
           <img className="pic4-img" src={illustration} alt="Nitish at his desk, drawn" />
           <div className="notch4"><Island onGo={go} onToggleTheme={toggle} /></div>
           <div className="cut4">
-            <p className="st4"><span>Product designer.</span> <strong>I make UI move.</strong></p>
+            <p className="st4"><strong>I make UI move.</strong></p>
             <p className="lede4">{COPY.lede}</p>
           </div>
           <div className="name4">
             <span className="nm4">Nitish<br />Bhardwaj</span>
+            <span className="role4"><RollingWord /> designer</span>
           </div>
         </section>
 
