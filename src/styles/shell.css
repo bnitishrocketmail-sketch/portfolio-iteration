@@ -9,17 +9,22 @@
   border-radius: 36px; box-shadow: 0 0 0 var(--bezel) var(--island), var(--shadow); background: var(--sheet); }
 .sheet { position: absolute; inset: 0; border-radius: inherit; background: var(--sheet); overflow: auto; scrollbar-width: thin; transition: background .4s;
   padding: clamp(44px, 4.4cqw, 58px) clamp(16px, 4.2cqw, 56px) clamp(18px, 4.2cqw, 56px) clamp(12px, 1.4cqw, 18px); }
-.shell { display: grid; grid-template-columns: clamp(28px, 2.6cqw, 34px) minmax(0, 35fr) minmax(0, 52fr); gap: var(--gap); height: 100%; min-height: 520px; }
+/* the hero was 35 of 87 parts (ref 1); 20% narrower (Nitish, 12 Oct) is 28, and the 7 it gave up go to the views column */
+.shell { display: grid; grid-template-columns: clamp(28px, 2.6cqw, 34px) minmax(0, 28fr) minmax(0, 59fr); gap: var(--gap); height: 100%; min-height: 520px; }
 .views { position: relative; min-width: 0; min-height: 0; }
 .view { position: absolute; inset: 0; overflow: auto; min-width: 0; scrollbar-width: thin; padding-right: 2px; }
 
 /* home view: the right-hand bento, tiles only. Columns and rows follow ref 1's right column:
    a wide media tile beside a narrow stat column, and a square + fused band below. */
-.view.home { display: grid; gap: var(--gap); grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+.view.home { display: grid; gap: var(--gap); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+  /* the width the hero gave up goes to the two tiles beside it (micro, tools) only: the other three keep the widths they
+     had on the 12-column grid (4 of 12 columns of the old views width, which was 52/59 of this one), so --c is that width */
+  --c: calc(100% * 52 / 177 - var(--gap) * 2 / 3);
+  grid-template-columns: minmax(0, 1fr) var(--c) var(--c);
   grid-template-areas:
-    "micro micro micro micro micro micro micro micro life life life life"
-    "micro micro micro micro micro micro micro micro clients clients clients clients"
-    "tools tools tools tools fused fused fused fused fused fused fused fused"; }
+    "micro micro life"
+    "micro micro clients"
+    "tools fused fused"; }
 
 /* project detail view: reading column + side column */
 .view.project { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1.1fr); gap: var(--gap); overflow: hidden; }
