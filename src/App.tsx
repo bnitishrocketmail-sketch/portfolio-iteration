@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import LabIndex from './lab/LabIndex';
 import Iteration01 from './lab/01-sheet/Iteration01';
+import Iteration04 from './lab/04-profile/Iteration04';
 import Iteration02 from './lab/02-field/Iteration02';
 import Iteration03 from './lab/03-console/Iteration03';
 
@@ -17,6 +18,8 @@ export default function App() {
         <Route path="/lab/01b-sheet" element={<Iteration01 variant="b" />} />
         <Route path="/lab/01b-sheet/:view" element={<Iteration01 variant="b" />} />
         <Route path="/lab/01b-sheet/:view/:pid" element={<Iteration01 variant="b" />} />
+        <Route path="/lab/04-profile" element={<Iteration04 />} />
+        <Route path="/lab/04-profile/:view" element={<Iteration04 />} />
         <Route path="/lab/02-field" element={<Iteration02 />} />
         <Route path="/lab/02b-field" element={<Iteration02 palette="01" />} />
         <Route path="/lab/03-console" element={<Iteration03 />} />

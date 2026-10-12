@@ -48,4 +48,11 @@ export const ITERATIONS: Iteration[] = [
     tries: "The portfolio as a product dashboard: a fixed app frame (sidebar, top bar with a command bar, widgets per section) on the web; the same content as an app (large titles, a scrolling column, a tab bar) on phones. Monochrome first; transitions built to lower cognitive load.",
     refs: ['Nitish\'s brief, 12 Oct (dashboard on web, app on mobile; Claude\'s layout decisions)'],
   },
+  {
+    id: '04-profile',
+    name: '04 Profile',
+    status: 'exploring',
+    tries: "One screen after the hi-fi profile reference, in greys: a narrow icon nav with a travelling highlighter and the assistant at its foot, the drawn picture filling the middle with the assistant's notch, a line about him in the cutout and his name in marker lettering on glass; the lo-fi's right column — projects as a stack with a drag slider, Off duty fanned.",
+    refs: ['ref-5 hi-fi profile (yellow)', 'ref-4 lo-fi profile wireframe', 'ref-6 marker lettering', 'photo-5 desk illustration'],
+  },
 ];
