@@ -152,27 +152,45 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
   return clip;
 }
 
-/* ---- temporary colour controls (Nitish, 13 Oct): a panel at the page's corner with a picker per token; the values go on
-   the screen as custom properties and are kept in this browser between reloads; "Copy" puts them on the clipboard to send
-   over. To go when the colours are settled. ---- */
-const TOKENS: { key: string; label: string; def: string }[] = [
-  { key: '--frame', label: 'Main container', def: '#2b2b2e' },
-  { key: '--nav-bg', label: 'Nav background', def: '#d6d6db' },
-  { key: '--nav-ink', label: 'Nav names', def: '#5a5a61' },
-  { key: '--nav-hl', label: 'Nav highlight', def: '#2b2b2e' },
-  { key: '--nav-hl-ink', label: 'Highlight name', def: '#d6d6db' },
-  { key: '--ai-bg', label: 'AI button', def: '#2b2b2e' },
-  { key: '--ai-ink', label: 'AI icon', def: '#d6d6db' },
-  { key: '--glass-bg', label: 'Glass box', def: '#18181b' },
-  { key: '--glass-ink', label: 'Glass text', def: '#c9c9cc' },
-  { key: '--name-ink', label: 'Name', def: '#ffffff' },
-  { key: '--title-ink', label: 'Title', def: '#f2f2f4' },
-  { key: '--line-ink', label: 'Line about me', def: '#d6d6d8' },
-  { key: '--social-ink', label: 'Social icons', def: '#d6d6db' },
-  { key: '--cv-bg', label: 'View CV button', def: '#d6d6db' },
-  { key: '--cv-ink', label: 'View CV text & arrow', def: '#2b2b2e' },
-  { key: '--ink', label: 'Other text', def: '#f2f2f4' },
-  { key: '--muted', label: 'Secondary text', def: '#a7a7ae' },
+/* ---- temporary controls (Nitish, 13 Oct): an "Edit" pill at the page's corner opens a panel — colours, the name's and
+   the copy's type, the floating cards' places and layers; every value goes on the screen as a custom property, stays in
+   this browser between reloads, and "Copy values" puts them on the clipboard to send over. To go once settled. ---- */
+type Control = { key: string; label: string; def: string; group: string } & ({ kind: 'color' } | { kind: 'range'; min: number; max: number; step: number; unit?: string } | { kind: 'select'; options: [string, string][] });
+const FONTS: [string, string][] = [['Josefin Sans', "'Josefin Sans'"], ['Outfit', "'Outfit'"], ['Poiret One', "'Poiret One'"], ['Limelight', "'Limelight'"], ['Marcellus', "'Marcellus'"], ['Marcellus SC', "'Marcellus SC'"], ['Bodoni Moda', "'Bodoni Moda'"], ['Krona One', "'Krona One'"], ['Instrument Sans', "'Instrument Sans'"]];
+const CONTROLS: Control[] = [
+  { group: 'Colours', kind: 'color', key: '--frame', label: 'Main container', def: '#2b2b2e' },
+  { group: 'Colours', kind: 'color', key: '--nav-bg', label: 'Nav background', def: '#d6d6db' },
+  { group: 'Colours', kind: 'color', key: '--nav-ink', label: 'Nav names', def: '#5a5a61' },
+  { group: 'Colours', kind: 'color', key: '--nav-hl', label: 'Nav highlight', def: '#2b2b2e' },
+  { group: 'Colours', kind: 'color', key: '--nav-hl-ink', label: 'Highlight name', def: '#d6d6db' },
+  { group: 'Colours', kind: 'color', key: '--ai-bg', label: 'AI button', def: '#2b2b2e' },
+  { group: 'Colours', kind: 'color', key: '--ai-ink', label: 'AI icon', def: '#d6d6db' },
+  { group: 'Colours', kind: 'color', key: '--glass-bg', label: 'Glass box', def: '#18181b' },
+  { group: 'Colours', kind: 'range', key: '--glass-a', label: 'Glass opacity', def: '.55', min: 0, max: 1, step: .05 },
+  { group: 'Colours', kind: 'color', key: '--glass-ink', label: 'Glass text', def: '#c9c9cc' },
+  { group: 'Colours', kind: 'color', key: '--name-ink', label: 'Name', def: '#ffffff' },
+  { group: 'Colours', kind: 'color', key: '--title-ink', label: 'Title', def: '#f2f2f4' },
+  { group: 'Colours', kind: 'color', key: '--line-ink', label: 'Line about me', def: '#d6d6d8' },
+  { group: 'Colours', kind: 'color', key: '--social-ink', label: 'Social icons', def: '#d6d6db' },
+  { group: 'Colours', kind: 'color', key: '--cv-bg', label: 'View CV button', def: '#d6d6db' },
+  { group: 'Colours', kind: 'color', key: '--cv-ink', label: 'View CV text & arrow', def: '#2b2b2e' },
+  { group: 'Colours', kind: 'color', key: '--corner-ink', label: 'Corner bracket', def: '#8a8a92' },
+  { group: 'Colours', kind: 'color', key: '--ink', label: 'Other text', def: '#f2f2f4' },
+  { group: 'Colours', kind: 'color', key: '--muted', label: 'Secondary text', def: '#a7a7ae' },
+  { group: 'Type', kind: 'select', key: '--name-font', label: 'Name font', def: "'Josefin Sans'", options: FONTS },
+  { group: 'Type', kind: 'range', key: '--name-w1', label: 'First name weight', def: '300', min: 100, max: 900, step: 100 },
+  { group: 'Type', kind: 'range', key: '--name-w2', label: 'Surname weight', def: '700', min: 100, max: 900, step: 100 },
+  { group: 'Type', kind: 'select', key: '--copy-font', label: 'Copy font', def: "'Outfit'", options: FONTS },
+  { group: 'Type', kind: 'range', key: '--copy-w', label: 'Copy weight', def: '400', min: 100, max: 900, step: 100 },
+  { group: 'Cards', kind: 'range', key: '--c-ai-x', label: 'Assistant · x', def: '19%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-ai-y', label: 'Assistant · y', def: '25%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'select', key: '--c-ai-z', label: 'Assistant · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'range', key: '--c-coin-x', label: 'Coin · x', def: '64%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-coin-y', label: 'Coin · y', def: '18%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'select', key: '--c-coin-z', label: 'Coin · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'range', key: '--c-loader-x', label: 'Loader · x', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-loader-y', label: 'Loader · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'select', key: '--c-loader-z', label: 'Loader · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
 ];
 const TWEAK_KEY = 'it04-colours';
 function readTweaks(): Record<string, string> { try { return JSON.parse(localStorage.getItem(TWEAK_KEY) || '{}'); } catch { return {}; } }
@@ -181,16 +199,28 @@ function Tweaks({ values, onChange }: { values: Record<string, string>; onChange
   const [copied, setCopied] = useState(false);
   const set = (k: string, v: string) => { const next = { ...values, [k]: v }; onChange(next); try { localStorage.setItem(TWEAK_KEY, JSON.stringify(next)); } catch { /* fine */ } };
   const reset = () => { onChange({}); try { localStorage.removeItem(TWEAK_KEY); } catch { /* fine */ } };
-  const copy = () => { const out = Object.fromEntries(TOKENS.map(t => [t.label, values[t.key] ?? t.def]).concat([['Glass opacity', values['--glass-a'] ?? '.55']])); navigator.clipboard?.writeText(JSON.stringify(out, null, 2)).then(() => { setCopied(true); window.setTimeout(() => setCopied(false), 1400); }); };
+  const copy = () => { const out = Object.fromEntries(CONTROLS.map(c => [`${c.group} · ${c.label}`, values[c.key] ?? c.def])); navigator.clipboard?.writeText(JSON.stringify(out, null, 2)).then(() => { setCopied(true); window.setTimeout(() => setCopied(false), 1400); }); };
+  const groups = [...new Set(CONTROLS.map(c => c.group))];
   return (
     <div className={`tweaks4${open ? ' open' : ''}`}>
-      <button type="button" className="tw-toggle" onClick={() => setOpen(o => !o)}>{open ? 'Close' : 'Colours'}</button>
+      <button type="button" className="tw-toggle" onClick={() => setOpen(o => !o)}>{open ? 'Close' : 'Edit'}</button>
       {open && (
         <div className="tw-panel">
-          {TOKENS.map(t => (
-            <label key={t.key}><span>{t.label}</span><input type="color" value={values[t.key] ?? t.def} onChange={e => set(t.key, e.target.value)} /></label>
+          {groups.map(g => (
+            <section key={g}>
+              <h4>{g}</h4>
+              {CONTROLS.filter(c => c.group === g).map(c => {
+                const v = values[c.key] ?? c.def;
+                return (
+                  <label key={c.key}><span>{c.label}</span>
+                    {c.kind === 'color' && <input type="color" value={v} onChange={e => set(c.key, e.target.value)} />}
+                    {c.kind === 'range' && <span className="tw-range"><input type="range" min={c.min} max={c.max} step={c.step} value={parseFloat(v)} onChange={e => set(c.key, e.target.value + (c.unit ?? ''))} /><output>{v}</output></span>}
+                    {c.kind === 'select' && <select value={v} onChange={e => set(c.key, e.target.value)}>{c.options.map(([l, val]) => <option key={val} value={val}>{l}</option>)}</select>}
+                  </label>
+                );
+              })}
+            </section>
           ))}
-          <label><span>Glass opacity</span><input type="range" min="0" max="1" step=".05" value={values['--glass-a'] ?? '.55'} onChange={e => set('--glass-a', e.target.value)} /></label>
           <div className="tw-row"><button type="button" onClick={copy}>{copied ? 'Copied' : 'Copy values'}</button><button type="button" onClick={reset}>Reset</button></div>
         </div>
       )}
@@ -241,15 +271,16 @@ export default function Iteration04() {
               <img className="pic4-img" src={illustration} alt="Nitish at his desk, drawn" />
               {/* the floating Lottie cards (01/02b's three), in this page's glass (Nitish, 13 Oct): the coin and the loader
                   behind him — his cutout from the illustration lies over them, so they are a little masked — the assistant's
-                  in front, over his hair. They float, and lean with the pointer by their depth. */}
-              <div className="fl4 behind coin-card" data-depth=".5" style={{ left: '64%', top: '18%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
+                  in front, over his hair; each one's place and layer are tokens (the Edit panel moves them). They float, and
+                  lean with the pointer by their depth. */}
+              <div className="fl4 coin-card" data-depth=".5" style={{ '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
               </div>
-              <div className="fl4 behind loader-card" data-depth=".6" style={{ left: '6%', top: '44%', '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>
+              <div className="fl4 loader-card" data-depth=".6" style={{ '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
               </div>
               <img className="pic4-img pic4-me" src={illustrationCutout} alt="" aria-hidden="true" />
-              <div className="fl4 front ai-card" data-depth="1.3" style={{ left: '19%', top: '25%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
+              <div className="fl4 ai-card" data-depth="1.3" style={{ '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
               </div>
               <div className="name4">
@@ -268,7 +299,7 @@ export default function Iteration04() {
           </div>
           {/* the cut-out: the name, the title, the line, the CV, the photo */}
           <div className="cut4" ref={cutRef}>
-            <i className="corner4" aria-hidden="true" /> {/* a small bracket on the blank area's bottom-left corner — the tile's corner, with its radius (Nitish, 13 Oct) */}
+            <i className="corner4" aria-hidden="true" /> {/* a small bracket on the blank area's bottom-left corner — the tile's corner, with its radius, round-capped (Nitish, 13 Oct) */}
             <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
             {/* his photo in a disc beside the name (Nitish, 13 Oct); the desk photo stands in until he sends the one he means */}
             <span className="me4"><img src={desk} alt="" /></span>
