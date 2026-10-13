@@ -12,8 +12,8 @@
   --card-back: #6f6f74; --card-mid: #84848a; --card-front: #c3c3c8; --card-tab: #a5a5aa; /* the stack's greys as ref 4 has them (112, 132, 196 and 167 of 255), in the page's cool tint */
   --corner-ink: var(--g5); --name-font: 'Josefin Sans'; --name-w1: 300; --name-w2: 700; --copy-font: 'Outfit'; --copy-w: 400;
   --c-ai-x: 19%; --c-ai-y: 25%; --c-ai-z: 3; --c-coin-x: 64%; --c-coin-y: 18%; --c-coin-z: 1; --c-loader-x: 6%; --c-loader-y: 44%; --c-loader-z: 1; --c-micro-x: 68%; --c-micro-y: 44%; --c-micro-z: 3; --c-gold-x: 38%; --c-gold-y: 6%; --c-gold-z: 3;
-  --c-pers-x: 40%; --c-pers-y: 50%; --c-pers-z: 3;
-  --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: block; --c-gold-v: block; --c-pers-v: none; /* each card shown or hidden; the persuasion one hidden until its file comes */
+  --c-pers-x: 22%; --c-pers-y: 52%; --c-pers-z: 3;
+  --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: block; --c-gold-v: block; --c-pers-v: block; /* each card shown or hidden */
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
   --shadow-el: 0 1px 1px rgba(0, 0, 0, .16), 0 4px 10px -2px rgba(0, 0, 0, .18), 0 14px 28px -10px rgba(0, 0, 0, .26);
@@ -94,7 +94,7 @@
 .gold-card .cap { white-space: nowrap; }
 /* the persuasion card: the Lottie's whole canvas in the glass at the standard padding, no rounding of its own */
 .pers-card .fl4-in { gap: .8cqw; }
-.fl4 .pa { width: 14cqw; aspect-ratio: 1; } .fl4 .pa svg { display: block; }
+.fl4 .pa { width: 17cqw; aspect-ratio: 360 / 80; } .fl4 .pa svg { display: block; }
 .pers-card .cap { white-space: nowrap; }
 @keyframes float4 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @media (prefers-reduced-motion: reduce) { .fl4-in { animation: none; } }

@@ -198,10 +198,10 @@ const CONTROLS: Control[] = [
   { group: 'Cards', kind: 'range', key: '--c-gold-y', label: 'Success · y', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-gold-z', label: 'Success · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
   { group: 'Cards', kind: 'select', key: '--c-gold-v', label: 'Success · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
-  { group: 'Cards', kind: 'range', key: '--c-pers-x', label: 'Persuasion · x', def: '40%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'range', key: '--c-pers-y', label: 'Persuasion · y', def: '50%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-pers-x', label: 'Persuasion · x', def: '22%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-pers-y', label: 'Persuasion · y', def: '52%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-pers-z', label: 'Persuasion · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
-  { group: 'Cards', kind: 'select', key: '--c-pers-v', label: 'Persuasion · shown', def: 'none', options: [['Shown', 'block'], ['Hidden', 'none']] },
+  { group: 'Cards', kind: 'select', key: '--c-pers-v', label: 'Persuasion · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
   { group: 'Cards', kind: 'range', key: '--c-loader-x', label: 'Loader · x', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-loader-y', label: 'Loader · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-loader-z', label: 'Loader · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
@@ -305,7 +305,7 @@ export default function Iteration04() {
                 <div className="fl4-in"><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state animation</span></div>
               </div>
               {/* the sixth card (Nitish, 13 Oct): the persuasion animation, the whole canvas in the glass with the standard padding and
-                  no rounding of its own; hidden until its link comes (the one sent was the Gold file's) */}
+                  no rounding of its own */}
               <div className="fl4 pers-card" data-depth="1.2" style={{ '--dur': '6.6s', '--dl': '-.9s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} label="The persuasion animation" /><span className="cap">Persuasion animation</span></div>
               </div>
