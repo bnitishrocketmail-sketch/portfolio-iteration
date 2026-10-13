@@ -158,6 +158,25 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
   );
 }
 
+/* the intro tile's shape: its rectangle with the bottom-left corner cut out to the cut-out's size, every convex corner
+   rounded with the tile's radius and the cut-out's inner corner rounded the other way — measured from the two boxes, as
+   a clip path, so the tile and its shadow follow it. On the phone the cut-out sits below the picture, so there is none. */
+function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.RefObject<HTMLDivElement | null>) {
+  const [clip, setClip] = useState<string | null>(null);
+  useLayoutEffect(() => {
+    const w = wrap.current, c = cut.current; if (!w || !c) return;
+    const measure = () => {
+      if (getComputedStyle(c).position !== 'absolute') { setClip(null); return; }
+      const W = w.clientWidth, H = w.clientHeight, cw = c.offsetWidth, ch = c.offsetHeight, r = parseFloat(getComputedStyle(c).borderTopRightRadius) || 0;
+      const d = `M ${r} 0 L ${W - r} 0 A ${r} ${r} 0 0 1 ${W} ${r} L ${W} ${H - r} A ${r} ${r} 0 0 1 ${W - r} ${H} L ${cw + r} ${H} A ${r} ${r} 0 0 1 ${cw} ${H - r} L ${cw} ${H - ch + r} A ${r} ${r} 0 0 0 ${cw - r} ${H - ch} L ${r} ${H - ch} A ${r} ${r} 0 0 1 0 ${H - ch - r} L 0 ${r} A ${r} ${r} 0 0 1 ${r} 0 Z`;
+      setClip(`path("${d}")`);
+    };
+    measure();
+    const ro = new ResizeObserver(measure); ro.observe(w); ro.observe(c); return () => ro.disconnect();
+  }, [wrap, cut]);
+  return clip;
+}
+
 /* ---- temporary colour controls (Nitish, 13 Oct): a panel at the page's corner with a picker per token; the values go on
    the screen as custom properties and are kept in this browser between reloads; "Copy" puts them on the clipboard to send
    over. To go when the colours are settled. ---- */
@@ -203,6 +222,8 @@ export default function Iteration04() {
   const go = (v: ViewName, pid?: string) => { if (v === 'project' && pid) { navigate(`/lab/04-profile/projects`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
   const [ask, setAsk] = useState(0);
   const [tweaks, setTweaks] = useState<Record<string, string>>(readTweaks);
+  const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null);
+  const clip = useNotchClip(wrapRef, cutRef);
   /* after the button's own click has finished bubbling — the island closes on any click outside itself */
   useEffect(() => { if (!ask) return; const id = window.setTimeout(() => document.querySelector<HTMLButtonElement>('.it04 .island-pill')?.click(), 0); return () => window.clearTimeout(id); }, [ask]);
 
@@ -218,18 +239,29 @@ export default function Iteration04() {
           </button>
         </div>
 
-        {/* the picture, with the notch hanging in from the top, the cutout at the bottom-left, the name box at the bottom-right */}
-        <section className="pic4">
-          <img className="pic4-img" src={illustration} alt="Nitish at his desk, drawn" />
-          {/* the notch holds the links (Nitish, 13 Oct); the assistant lives behind the nav's button and opens here */}
-          <div className="notch4">
-            <div className="links4">
-              {SOCIAL.map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}
+        {/* the picture, with the notch hanging in from the top and the name box at the bottom-right, is the intro tile; the
+            area at its bottom-left — the name, the title, the line, the CV, the photo — is not part of it but the frame
+            showing through a corner cut out of the tile (Nitish, 13 Oct). So the tile is clipped to that shape and casts its
+            shadow as that shape — onto the frame around it and onto the cut-out area — and the cut-out sits beside it. */}
+        <div className="picwrap4" ref={wrapRef}>
+          <section className="pic4">
+            <div className="pic4-in" style={clip ? { clipPath: clip } : undefined}>
+              <img className="pic4-img" src={illustration} alt="Nitish at his desk, drawn" />
+              {/* the notch holds the links (Nitish, 13 Oct); the assistant lives behind the nav's button and opens here */}
+              <div className="notch4">
+                <div className="links4">
+                  {SOCIAL.map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}
+                </div>
+                <Island onGo={go} onToggleTheme={toggle} />
+              </div>
+              <div className="name4">
+                {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}
+                <p className="lede4">{COPY.lede}</p>
+              </div>
             </div>
-            <Island onGo={go} onToggleTheme={toggle} />
-          </div>
-          {/* the cutout: the name, the title, the CV — the glass box: the line and the one-liner (swapped, Nitish, 13 Oct) */}
-          <div className="cut4">
+          </section>
+          {/* the cut-out: the name, the title, the line, the CV, the photo */}
+          <div className="cut4" ref={cutRef}>
             <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
             {/* his photo in a disc beside the name (Nitish, 13 Oct); the desk photo stands in until he sends the one he means */}
             <span className="me4"><img src={desk} alt="" /></span>
@@ -237,11 +269,7 @@ export default function Iteration04() {
             <p className="sub4">I design feedback{'\u00a0'}rich interfaces powered by motion.</p>
             <a className="cv4" href={LINKS.cv}>View CV <span aria-hidden="true">↗</span></a>
           </div>
-          <div className="name4">
-            {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}
-            <p className="lede4">{COPY.lede}</p>
-          </div>
-        </section>
+        </div>
 
         {/* the right column: the lo-fi's widgets — a pill, the project stack with its dots, Off duty fanned */}
         <aside className="col4">
