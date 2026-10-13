@@ -13,8 +13,14 @@ export const LOTTIES = {
   /* micro-interactions: a bottom navigation bar's tabs (home, category, basket, wallet, more) in turn — 1920 × 300, a
      10.5 s loop from frame 90; it draws its own background, so its card rounds its corners (04, 13 Oct) */
   micro: 'https://lottie.host/8fac2084-725c-4d96-85eb-5ebeda917340/FEazPvZ1dz.lottie',
+  /* the Gold membership reveal: a rounded card comes in and gold confetti bursts around it — 720 × 720, 7.2 s; the card
+     itself sits at x 26–697, y 280–432 of the canvas (measured on a render), and its floating card is padded to that
+     rectangle, the confetti free to fly past the glass (04, 13 Oct) */
+  gold: 'https://lottie.host/7ed2ea72-f586-467f-945c-a41825140bf3/EFyepJCYvm.lottie',
 };
+/* the Gold card's rectangle, as fractions of its canvas: left, top, width, height */
+export const GOLD_RECT = { x: 26 / 720, y: 280 / 720, w: 672 / 720, h: 153 / 720 };
 export const dropLoaderText = (l: { nm?: string; ty?: number }) => (l.nm ?? '').startsWith('TEXT') || l.ty === 2;
 export const LOADER_VIEWBOX = '113 34 72 34';
 /* the frames held under reduced motion: B mid-state, the coin face-on, the loader at its widest */
-export const STILL = { b: 150, coin: 84, loader: 60, micro: 240 };
+export const STILL = { b: 150, coin: 84, loader: 60, micro: 240, gold: 400 };

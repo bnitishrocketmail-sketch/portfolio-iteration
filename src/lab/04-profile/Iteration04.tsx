@@ -9,7 +9,7 @@ import illustration from '../../assets/nitish-desk-illustration.webp';
 import desk from '../../assets/nitish-desk.webp';
 import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.webp';
 import { Lottie } from '../../components/micro/Lottie';
-import { LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
+import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { siLottiefiles } from 'simple-icons';
 import './profile.css';
@@ -191,6 +191,9 @@ const CONTROLS: Control[] = [
   { group: 'Cards', kind: 'range', key: '--c-micro-x', label: 'Micro · x', def: '68%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-micro-y', label: 'Micro · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-micro-z', label: 'Micro · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'range', key: '--c-gold-x', label: 'Gold · x', def: '38%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-gold-y', label: 'Gold · y', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'select', key: '--c-gold-z', label: 'Gold · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
   { group: 'Cards', kind: 'range', key: '--c-loader-x', label: 'Loader · x', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-loader-y', label: 'Loader · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-loader-z', label: 'Loader · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
@@ -253,7 +256,7 @@ export default function Iteration04() {
   useEffect(() => { if (!ask) return; const id = window.setTimeout(() => document.querySelector<HTMLButtonElement>('.it04 .island-pill')?.click(), 0); return () => window.clearTimeout(id); }, [ask]);
 
   return (
-    <div className="it04" style={tweaks as React.CSSProperties}>
+    <div className="it04" style={{ '--gx': GOLD_RECT.x, '--gy': GOLD_RECT.y, '--gw': GOLD_RECT.w, '--gh': GOLD_RECT.h, ...tweaks } as React.CSSProperties}>
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${illustration})` }} />
       <div className="frame4">
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
@@ -285,6 +288,12 @@ export default function Iteration04() {
               <img className="pic4-img pic4-me" src={illustrationCutout} alt="" aria-hidden="true" />
               <div className="fl4 ai-card" data-depth="1.3" style={{ '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
+              </div>
+              {/* the fifth card (Nitish, 13 Oct): the Gold membership reveal — the glass is padded to the rounded card inside the
+                  Lottie (its canvas is laid with negative margins so that rectangle is the content box), and the confetti flies
+                  past the glass; the Lottie's corners are its own */}
+              <div className="fl4 gold-card" data-depth="1.15" style={{ '--dur': '6.1s', '--dl': '-3.8s' } as React.CSSProperties}>
+                <div className="fl4-in"><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Gold membership</span></div>
               </div>
               {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
               <div className="fl4 micro-card" data-depth="1.1" style={{ '--dur': '6.4s', '--dl': '-2.4s' } as React.CSSProperties}>

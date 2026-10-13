@@ -9,9 +9,11 @@ import type { AnimationItem } from 'lottie-web';
      the B assistant's glow is a shape, not a blur effect. If a future file needs effects, switch to the 'lottie_svg' build.
    - The player and the unzipper load as their own chunk after the page paints.
    - Under reduced motion it holds at `still` (a frame) instead of playing.
+   - A .lottie's image files are inlined into their assets as data URLs (the renderer cannot reach them by path once the
+     package is unzipped in memory); the Gold membership card's confetti pieces are PNGs, for one.
    - `drop` removes top-level layers (by a test on name/type) before playing, and `viewBox` crops the canvas to a region
      ("x y w h", in the file's own pixels) — so a hosted file can be trimmed without editing it. Image assets of dropped
-     layers are removed too (a .lottie's images aren't reachable by path once unzipped). */
+     layers are removed too. */
 const player = () => import('lottie-web/build/player/lottie_light').then(m => m.default);
 
 async function animationData(src: string): Promise<unknown> {
@@ -23,11 +25,25 @@ async function animationData(src: string): Promise<unknown> {
   const id: string | undefined = manifest?.animations?.[0]?.id;
   const path = (id && files[`animations/${id}.json`]) ? `animations/${id}.json` : Object.keys(files).find(f => f.startsWith('animations/') && f.endsWith('.json'));
   if (!path) throw new Error(`Lottie: no animation in ${src}`);
-  return JSON.parse(strFromU8(files[path]));
+  const anim = JSON.parse(strFromU8(files[path])) as Anim;
+  /* image assets: the package carries them as files; they are inlined as data URLs so the renderer can reach them */
+  for (const a of anim.assets ?? []) {
+    if (!a.p || a.p.startsWith('data:')) continue;
+    const file = files[(a.u ?? 'images/') + a.p] ?? files['images/' + a.p];
+    if (!file) continue;
+    const ext = a.p.split('.').pop()?.toLowerCase();
+    const mime = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : ext === 'webp' ? 'image/webp' : ext === 'svg' ? 'image/svg+xml' : 'image/png';
+    a.p = `data:${mime};base64,${toBase64(file)}`; a.u = ''; a.e = 1;
+  }
+  return anim;
+}
+function toBase64(bytes: Uint8Array): string {
+  let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(s);
 }
 
 type Layer = { nm?: string; ty?: number; refId?: string };
-type Anim = { layers: Layer[]; assets?: { id: string; p?: string }[] };
+type Anim = { layers: Layer[]; assets?: { id: string; p?: string; u?: string; e?: number }[] };
 
 export function Lottie({ src, className, loop = true, speed = 1, still = 0, label, drop, viewBox }: {
   src: string; className?: string; loop?: boolean; speed?: number; still?: number; label?: string;
