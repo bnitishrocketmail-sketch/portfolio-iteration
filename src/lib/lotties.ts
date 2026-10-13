@@ -10,8 +10,11 @@ export const LOTTIES = {
      dropped as it loads (dropLoaderText) and the canvas is cropped to the loader (LOADER_VIEWBOX: 66 × 28 of 297 × 66,
      measured across every frame, +3px all round). */
   loader: 'https://lottie.host/e331b8eb-11ac-466a-96da-98916b4052da/t7zZAGNw8i.lottie',
+  /* micro-interactions: a bottom navigation bar's tabs (home, category, basket, wallet, more) in turn — 1920 × 300, a
+     10.5 s loop from frame 90; it draws its own background, so its card rounds its corners (04, 13 Oct) */
+  micro: 'https://lottie.host/8fac2084-725c-4d96-85eb-5ebeda917340/FEazPvZ1dz.lottie',
 };
 export const dropLoaderText = (l: { nm?: string; ty?: number }) => (l.nm ?? '').startsWith('TEXT') || l.ty === 2;
 export const LOADER_VIEWBOX = '113 34 72 34';
 /* the frames held under reduced motion: B mid-state, the coin face-on, the loader at its widest */
-export const STILL = { b: 150, coin: 84, loader: 60 };
+export const STILL = { b: 150, coin: 84, loader: 60, micro: 240 };

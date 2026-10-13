@@ -188,6 +188,9 @@ const CONTROLS: Control[] = [
   { group: 'Cards', kind: 'range', key: '--c-coin-x', label: 'Coin · x', def: '64%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-coin-y', label: 'Coin · y', def: '18%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-coin-z', label: 'Coin · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'range', key: '--c-micro-x', label: 'Micro · x', def: '68%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-micro-y', label: 'Micro · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'select', key: '--c-micro-z', label: 'Micro · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
   { group: 'Cards', kind: 'range', key: '--c-loader-x', label: 'Loader · x', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-loader-y', label: 'Loader · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-loader-z', label: 'Loader · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
@@ -282,6 +285,10 @@ export default function Iteration04() {
               <img className="pic4-img pic4-me" src={illustrationCutout} alt="" aria-hidden="true" />
               <div className="fl4 ai-card" data-depth="1.3" style={{ '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
+              </div>
+              {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
+              <div className="fl4 micro-card" data-depth="1.1" style={{ '--dur': '6.4s', '--dl': '-2.4s' } as React.CSSProperties}>
+                <div className="fl4-in"><Lottie className="mli" src={LOTTIES.micro} still={STILL.micro} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></div>
               </div>
               <div className="name4">
                 {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}

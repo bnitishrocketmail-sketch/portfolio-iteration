@@ -11,7 +11,7 @@
   --glass-ink: #c9c9cc; --name-ink: #fff; --title-ink: var(--ink); --line-ink: #d6d6d8; --social-ink: var(--g6); --cv-bg: var(--g6); --cv-ink: var(--frame);
   --card-back: #6f6f74; --card-mid: #84848a; --card-front: #c3c3c8; --card-tab: #a5a5aa; /* the stack's greys as ref 4 has them (112, 132, 196 and 167 of 255), in the page's cool tint */
   --corner-ink: var(--g5); --name-font: 'Josefin Sans'; --name-w1: 300; --name-w2: 700; --copy-font: 'Outfit'; --copy-w: 400;
-  --c-ai-x: 19%; --c-ai-y: 25%; --c-ai-z: 3; --c-coin-x: 64%; --c-coin-y: 18%; --c-coin-z: 1; --c-loader-x: 6%; --c-loader-y: 44%; --c-loader-z: 1;
+  --c-ai-x: 19%; --c-ai-y: 25%; --c-ai-z: 3; --c-coin-x: 64%; --c-coin-y: 18%; --c-coin-z: 1; --c-loader-x: 6%; --c-loader-y: 44%; --c-loader-z: 1; --c-micro-x: 68%; --c-micro-y: 44%; --c-micro-z: 3;
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
   --shadow-el: 0 1px 1px rgba(0, 0, 0, .16), 0 4px 10px -2px rgba(0, 0, 0, .18), 0 14px 28px -10px rgba(0, 0, 0, .26);
@@ -62,6 +62,7 @@
 .fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); } /* each card's place and layer (1 behind him, 3 in front) are tokens */
 .fl4.coin-card { left: var(--c-coin-x); top: var(--c-coin-y); z-index: var(--c-coin-z); }
 .fl4.loader-card { left: var(--c-loader-x); top: var(--c-loader-y); z-index: var(--c-loader-z); }
+.fl4.micro-card { left: var(--c-micro-x); top: var(--c-micro-y); z-index: var(--c-micro-z); }
 .fl4-in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1cqw; padding: 1.1cqw 1.3cqw; border-radius: calc(var(--r) * .7); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
   border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el);
@@ -75,6 +76,11 @@
 .loader-card .fl4-in { align-items: center; gap: .4cqw; padding: .9cqw 1.1cqw; }
 .fl4 .lk { width: 5.4cqw; aspect-ratio: 72 / 34; } .fl4 .lk svg { display: block; }
 .loader-card .cap { white-space: nowrap; font-size: clamp(10px, .85cqw, 12px); }
+/* the micro-interactions card: a wide Lottie (1920 × 300) that paints its own background, so its corners are rounded with
+   the card's radius; the name below it, left-aligned like the others' */
+.micro-card .fl4-in { gap: .8cqw; }
+.fl4 .mli { width: 17cqw; aspect-ratio: 1920 / 300; border-radius: calc(var(--r) * .7); overflow: hidden; } .fl4 .mli svg { display: block; } /* .mli, not .mi: the Micro view owns that class */
+.micro-card .cap { white-space: nowrap; }
 @keyframes float4 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @media (prefers-reduced-motion: reduce) { .fl4-in { animation: none; } }
 
