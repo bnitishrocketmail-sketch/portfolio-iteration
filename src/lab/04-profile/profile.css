@@ -76,10 +76,10 @@
 .loader-card .fl4-in { align-items: center; gap: .4cqw; padding: .9cqw 1.1cqw; }
 .fl4 .lk { width: 5.4cqw; aspect-ratio: 72 / 34; } .fl4 .lk svg { display: block; }
 .loader-card .cap { white-space: nowrap; font-size: clamp(10px, .85cqw, 12px); }
-/* the micro-interactions card: a wide Lottie (1920 × 300) that paints its own background, so its corners are rounded with
-   the card's radius; the name below it, left-aligned like the others' */
+/* the micro-interactions card: a wide Lottie (1920 × 300) that paints its own background, so its corners are rounded —
+   at half the standard radius; the name below it, left-aligned like the others' */
 .micro-card .fl4-in { gap: .8cqw; }
-.fl4 .mli { width: 17cqw; aspect-ratio: 1920 / 300; border-radius: calc(var(--r) * .7); overflow: hidden; } .fl4 .mli svg { display: block; } /* .mli, not .mi: the Micro view owns that class */
+.fl4 .mli { width: 17cqw; aspect-ratio: 1920 / 300; border-radius: calc(var(--r) / 2); overflow: hidden; } .fl4 .mli svg { display: block; } /* half the standard radius (Nitish, 13 Oct: corners, not round ends — the file's own background is square-cornered, so the ends are ours). .mli, not .mi: the Micro view owns that class */
 .micro-card .cap { white-space: nowrap; }
 @keyframes float4 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @media (prefers-reduced-motion: reduce) { .fl4-in { animation: none; } }
