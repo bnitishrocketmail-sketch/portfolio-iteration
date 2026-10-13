@@ -12,7 +12,8 @@
   --card-back: #6f6f74; --card-mid: #84848a; --card-front: #c3c3c8; --card-tab: #a5a5aa; /* the stack's greys as ref 4 has them (112, 132, 196 and 167 of 255), in the page's cool tint */
   --corner-ink: var(--g5); --name-font: 'Josefin Sans'; --name-w1: 300; --name-w2: 700; --copy-font: 'Outfit'; --copy-w: 400;
   --c-ai-x: 19%; --c-ai-y: 25%; --c-ai-z: 3; --c-coin-x: 64%; --c-coin-y: 18%; --c-coin-z: 1; --c-loader-x: 6%; --c-loader-y: 44%; --c-loader-z: 1; --c-micro-x: 68%; --c-micro-y: 44%; --c-micro-z: 3; --c-gold-x: 38%; --c-gold-y: 6%; --c-gold-z: 3;
-  --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: block; --c-gold-v: block; /* each card shown or hidden */
+  --c-pers-x: 40%; --c-pers-y: 50%; --c-pers-z: 3;
+  --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: block; --c-gold-v: block; --c-pers-v: none; /* each card shown or hidden; the persuasion one hidden until its file comes */
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
   --shadow-el: 0 1px 1px rgba(0, 0, 0, .16), 0 4px 10px -2px rgba(0, 0, 0, .18), 0 14px 28px -10px rgba(0, 0, 0, .26);
@@ -65,6 +66,7 @@
 .fl4.loader-card { left: var(--c-loader-x); top: var(--c-loader-y); z-index: var(--c-loader-z); display: var(--c-loader-v); }
 .fl4.micro-card { left: var(--c-micro-x); top: var(--c-micro-y); z-index: var(--c-micro-z); display: var(--c-micro-v); }
 .fl4.gold-card { left: var(--c-gold-x); top: var(--c-gold-y); z-index: var(--c-gold-z); display: var(--c-gold-v); }
+.fl4.pers-card { left: var(--c-pers-x); top: var(--c-pers-y); z-index: var(--c-pers-z); display: var(--c-pers-v); }
 .fl4-in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1cqw; padding: 1.1cqw 1.3cqw; border-radius: calc(var(--r) * .7); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
   border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el);
@@ -90,6 +92,10 @@
 .fl4 .gm { --cw: calc(17cqw / var(--gw)); width: var(--cw); aspect-ratio: 1; margin: calc(-1 * var(--gy) * var(--cw)) calc(-1 * (1 - var(--gx) - var(--gw)) * var(--cw)) calc(-1 * (1 - var(--gy) - var(--gh)) * var(--cw)) calc(-1 * var(--gx) * var(--cw)); }
 .fl4 .gm svg { display: block; overflow: visible; }
 .gold-card .cap { white-space: nowrap; }
+/* the persuasion card: the Lottie's whole canvas in the glass at the standard padding, no rounding of its own */
+.pers-card .fl4-in { gap: .8cqw; }
+.fl4 .pa { width: 14cqw; aspect-ratio: 1; } .fl4 .pa svg { display: block; }
+.pers-card .cap { white-space: nowrap; }
 @keyframes float4 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @media (prefers-reduced-motion: reduce) { .fl4-in { animation: none; } }
 

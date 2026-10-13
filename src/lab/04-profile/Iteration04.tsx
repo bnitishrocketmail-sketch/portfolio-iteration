@@ -194,10 +194,14 @@ const CONTROLS: Control[] = [
   { group: 'Cards', kind: 'range', key: '--c-micro-y', label: 'Micro · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-micro-z', label: 'Micro · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
   { group: 'Cards', kind: 'select', key: '--c-micro-v', label: 'Micro · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
-  { group: 'Cards', kind: 'range', key: '--c-gold-x', label: 'Gold · x', def: '38%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'range', key: '--c-gold-y', label: 'Gold · y', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'select', key: '--c-gold-z', label: 'Gold · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
-  { group: 'Cards', kind: 'select', key: '--c-gold-v', label: 'Gold · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
+  { group: 'Cards', kind: 'range', key: '--c-gold-x', label: 'Success · x', def: '38%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-gold-y', label: 'Success · y', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'select', key: '--c-gold-z', label: 'Success · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'select', key: '--c-gold-v', label: 'Success · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
+  { group: 'Cards', kind: 'range', key: '--c-pers-x', label: 'Persuasion · x', def: '40%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'range', key: '--c-pers-y', label: 'Persuasion · y', def: '50%', min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Cards', kind: 'select', key: '--c-pers-z', label: 'Persuasion · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'select', key: '--c-pers-v', label: 'Persuasion · shown', def: 'none', options: [['Shown', 'block'], ['Hidden', 'none']] },
   { group: 'Cards', kind: 'range', key: '--c-loader-x', label: 'Loader · x', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-loader-y', label: 'Loader · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-loader-z', label: 'Loader · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
@@ -298,7 +302,12 @@ export default function Iteration04() {
                   Lottie (its canvas is laid with negative margins so that rectangle is the content box), and the confetti flies
                   past the glass; the Lottie's corners are its own */}
               <div className="fl4 gold-card" data-depth="1.15" style={{ '--dur': '6.1s', '--dl': '-3.8s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Gold membership</span></div>
+                <div className="fl4-in"><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state animation</span></div>
+              </div>
+              {/* the sixth card (Nitish, 13 Oct): the persuasion animation, the whole canvas in the glass with the standard padding and
+                  no rounding of its own; hidden until its link comes (the one sent was the Gold file's) */}
+              <div className="fl4 pers-card" data-depth="1.2" style={{ '--dur': '6.6s', '--dl': '-.9s' } as React.CSSProperties}>
+                <div className="fl4-in"><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} label="The persuasion animation" /><span className="cap">Persuasion animation</span></div>
               </div>
               {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
               <div className="fl4 micro-card" data-depth="1.1" style={{ '--dur': '6.4s', '--dl': '-2.4s' } as React.CSSProperties}>
