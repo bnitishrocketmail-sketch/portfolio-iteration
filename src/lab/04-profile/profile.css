@@ -19,31 +19,22 @@
   display: grid; grid-template-columns: calc(.053 * var(--fw)) minmax(0, 1fr) calc(.21 * var(--fw)); /* the nav: ref 5's 9.7% less a quarter, less a fifth, then a touch more so the round tips fit the button (Nitish, 13 Oct) */ gap: calc(.016 * var(--fw)); padding: calc(.014 * var(--fw)); border-radius: 36px; background: var(--frame);
   box-shadow: 0 40px 80px -40px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .06); }
 
-/* ---- nav: icons, a travelling highlighter on the right edge (the reference's yellow bar, grey here), the assistant below ---- */
+/* ---- nav: the names along a bar, a travelling highlighter, the assistant below ---- */
 /* the nav column: a bar in the assistant button's colour with round tips, the column's full height; the section names run
-   along it reading bottom to top (01's side nav), only the selected one shown, before its icon, in a pill in the frame's
-   colour that travels between items; the assistant's button at the foot, inverted. Fixed sizes inside the bar (13px label,
-   16px icon, 8px between, 10px at the pill's ends) so the geometry holds at every width. */
+   along it reading bottom to top (01's side nav), names only (Nitish, 13 Oct), the selected one in a pill in the frame's
+   colour that travels between them; the assistant's button at the foot, inverted. Fixed sizes inside the bar (13px names,
+   10px at the pill's ends — 11px as the eye sees it, the letters' ink stopping a pixel short of their box) so the geometry
+   holds at every width. */
 .navcol4 { display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: 1.6cqh 0 .9cqh; border-radius: 999px; background: var(--g6); }
 .nav4 { width: 100%; }
-.nav4 ul { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: .5cqh; width: 100%; }
+.nav4 ul { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: .4cqh; width: 100%; }
 .nav4 li { display: flex; justify-content: center; width: 100%; }
-.nav4 ul button { padding: 9px 10px 10px; } /* visibly 11px at both ends of the pill: the icon's glyph sits 2px inside its box, the name's first letter ~1px */
-.nav4 ul button { position: relative; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 999px; font: 500 13px/1 var(--body); letter-spacing: .01em; transition: color .2s; }
+.nav4 ul button { position: relative; padding: 10.5px 10px 10px; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 999px; font: 500 13px/1 var(--body); letter-spacing: .01em; transition: color .2s; }
 .nav4 ul button:hover { color: var(--frame); }
-.lbl4 { position: relative; display: inline-flex; align-items: center; writing-mode: vertical-rl; transform: rotate(180deg); }
-.ltx4 { overflow: hidden; display: block; } /* the name's length; the gap to the icon is inside it */
-.gh4 { visibility: hidden; } /* in the items: the space only */
-.ltx4 > span, .probe4 span { padding-bottom: 8.5px; } /* visibly 11px between the name and the icon's glyph, the same as the pill's ends */
-.ltx4 > span { display: block; position: relative; left: 1.5px; white-space: nowrap; } /* sideways text sits a pixel off its box's centre */
-.lbl4 svg { width: 16px; height: 16px; transform: rotate(90deg); } /* turned with the letters */
-.hl4 { position: absolute; left: 50%; transform: translateX(-50%); box-sizing: border-box; border-radius: 999px; background: var(--frame); color: var(--g6); z-index: 1; pointer-events: none; overflow: hidden; font: 500 13px/1 var(--body); letter-spacing: .01em; }
-.hico4 { position: absolute; top: 9px; left: 0; right: 0; display: grid; place-items: center; } /* the icon at the pill's head, where the item's is */
-.hico4 svg { width: 16px; height: 16px; transform: rotate(-90deg); } /* turned as the items' (90° inside their 180° label) */
-.hnm4 { position: absolute; top: 25px; bottom: 10px; left: 0; right: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; } /* the name at the pill's foot, below the icon; while the pill grows, its far end is clipped at the icon */
+.lbl4 { position: relative; display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+.lbl4 > span { display: block; position: relative; left: 1.5px; } /* sideways text sits a pixel off its box's centre */
+.hl4 { position: absolute; left: 50%; transform: translateX(-50%); box-sizing: border-box; border-radius: 999px; background: var(--frame); color: var(--g6); z-index: 1; pointer-events: none; overflow: hidden; font: 500 13px/1 var(--body); letter-spacing: .01em; display: grid; place-items: center; }
 .hltx4 { display: grid; place-items: center; }
-.nav4 li.probe4 { position: absolute; visibility: hidden; pointer-events: none; top: 0; left: 0; display: block; width: auto; }
-.probe4 span { display: block; writing-mode: vertical-rl; inline-size: max-content; font: 500 13px/1 var(--body); letter-spacing: .01em; white-space: nowrap; }
 .ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: var(--frame); color: var(--g6); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
 .ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
 
@@ -61,7 +52,12 @@
 .notch4 .island-wrap { position: absolute; }
 .notch4 .island:not(.open) { opacity: 0; pointer-events: none; } /* the assistant shows only when asked for, from the nav's button */
 /* the cutout at the bottom-left: the frame's colour, its top-right corner rounded; two or three lines about him */
-.cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: var(--frame); border-radius: 0 var(--r) 0 0; display: flex; flex-direction: column; gap: .5cqw; z-index: 3; }
+.cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: var(--frame); border-radius: 0 var(--r) 0 0; z-index: 3;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name me" "role me" "sub sub" "cv cv"; column-gap: 1cqw; row-gap: .5cqw; align-items: start; }
+.nm4 { grid-area: name; } .role4 { grid-area: role; } .sub4 { grid-area: sub; } .cv4 { grid-area: cv; justify-self: end; }
+/* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
+.me4 { grid-area: me; align-self: start; width: clamp(60px, 7cqw, 96px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; background: var(--g2); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18); }
+.me4 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transform: scale(2.2); transform-origin: 50% 60%; display: block; } /* the stand-in desk photo, zoomed to his face */
 .cut4::before, .cut4::after { content: ""; position: absolute; width: var(--r); height: var(--r); background: radial-gradient(circle at 100% 0, transparent calc(var(--r) - .5px), var(--frame) var(--r)); }
 .cut4::before { left: 0; top: calc(-1 * var(--r)); } /* the concave joins where the cutout meets the picture's edges, as the reference draws them */
 .cut4::after { right: calc(-1 * var(--r)); bottom: 0; }
@@ -77,7 +73,7 @@
 .nm4 b { font-weight: 700; letter-spacing: .06em; }
 /* the title under the name, as decided (02 v29): the first word rolls Product → Interaction → Motion, "designer" stays */
 .role4 { display: block; margin-top: .5cqw; font: 500 clamp(12px, 1.35cqw, 15.5px)/1.3 var(--body); color: var(--muted); white-space: nowrap; }
-.cv4 { align-self: flex-end; margin-top: .9cqw; display: inline-flex; align-items: center; gap: 6px; padding: .55em 1em; border-radius: 999px; background: var(--g6); color: var(--frame); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); text-decoration: none; transition: transform .2s; }
+.cv4 { margin-top: .9cqw; display: inline-flex; align-items: center; gap: 6px; padding: .55em 1em; border-radius: 999px; background: var(--g6); color: var(--frame); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); text-decoration: none; transition: transform .2s; }
 .cv4:hover { transform: translateY(-1px); }
 .rw4 { display: inline-block; position: relative; overflow: hidden; vertical-align: bottom; color: var(--ink); padding: .1em .04em .08em; margin: -.1em -.04em -.08em; }
 .rw4-w { display: inline-block; }
@@ -92,19 +88,22 @@
    runs past the deck's top and fades out there (Nitish: hide it by fading, above or below). The tab is a vertical pill
    5px in from the card's left edge, centred on the card's height (a little under half, 47%), 12.8% × 25% of the card, one
    mid grey on every card; on the cards behind, its lower end hides behind the card in front, as ref 4's do. */
-.stack4 { position: relative; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 14px; gap: 10px; }
+.stack4 { position: relative; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
 .deck4 { position: relative; min-height: 0; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%); mask-image: linear-gradient(to bottom, transparent, #000 22%); }
-/* the cards at 85% of the column (Nitish, 13 Oct: each card 15% smaller at least), centred in the deck */
-.pcard4 { position: absolute; left: 7.5%; width: 85%; bottom: 0; aspect-ratio: 164 / 127; display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: visible; box-shadow: 0 -6px 18px -12px rgba(0, 0, 0, .6); }
+/* the cards the column's full width, on the Off duty tile's edges (Nitish, 13 Oct) */
+.pcard4 { position: absolute; left: 0; width: 100%; bottom: 0; aspect-ratio: 164 / 127; display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: visible; box-shadow: 0 -6px 18px -12px rgba(0, 0, 0, .6); }
 .pcard4::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, rgba(0, 0, 0, .28), transparent 45%); pointer-events: none; } /* so a name reads on any image */
 .tab4 { position: absolute; left: 3%; top: 47%; transform: translateY(-50%); width: 12.8%; height: 25%; border-radius: 999px; background: var(--g5); z-index: 1; }
 .pc-name { position: absolute; left: 1.4cqw; right: 1.2cqw; top: 1.1cqw; z-index: 1; display: flex; flex-direction: column; gap: 2px; }
 .pc-name b { font: 600 clamp(12px, 1.35cqw, 15px)/1.2 var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 6px rgba(0, 0, 0, .4); }
 .pc-name small { color: rgba(255, 255, 255, .72); font-size: clamp(10px, 1.05cqw, 12px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.slider4 { position: relative; border-radius: 7px; background: var(--g2); cursor: grab; touch-action: none; }
-.slider4:active { cursor: grabbing; }
-.thumb4 { position: absolute; left: 3px; right: 3px; border-radius: 4px; background: var(--g6); }
-.slider4:focus-visible { outline: 2px solid var(--g6); outline-offset: 2px; }
+/* the dots: a column centred in the frame's inset beside the cards (outside their column, so the cards keep their width);
+   one per project, the front card's bigger and brighter; a drag along them scrolls too */
+.dots4 { position: absolute; top: 50%; left: calc(100% + .007 * var(--fw)); transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 6px 4px; cursor: grab; touch-action: none; }
+.dots4:active { cursor: grabbing; }
+.dots4 button { width: 5px; height: 5px; padding: 0; border: 0; border-radius: 50%; background: var(--g5); cursor: pointer; transition: width .25s, height .25s, background .25s; }
+.dots4 button.on { width: 9px; height: 9px; background: var(--g6); }
+.dots4 button:focus-visible { outline: 2px solid var(--g6); outline-offset: 2px; }
 
 /* Off duty: the lo-fi's fanned cards in a tile — 01's photo stack */
 .off4 { display: flex; flex-direction: column; gap: 6px; padding: 1.2cqw 1.4cqw; border-radius: var(--r); background: var(--g2); min-height: 0; }
@@ -125,7 +124,7 @@
   .it04 { position: static; display: block; padding: 14px 14px 40px; overflow: visible; }
   .bg4 { position: fixed; }
   .frame4 { height: auto; aspect-ratio: auto; width: 100%; display: flex; flex-direction: column; gap: 14px; padding: 14px; border-radius: 22px; }
-  .navcol4 { flex-direction: row; padding: 6px 8px; } .nav4 { width: auto; flex: 1; min-width: 0; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 ul button { padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; flex-direction: row; } .ltx4 { display: none; } .lbl4 svg { transform: none; } .hl4 { display: none; } .nav4 ul button.on { color: var(--frame); } .ai4 { margin: 0 0 0 auto; width: 40px; }
+  .navcol4 { flex-direction: row; padding: 6px 8px; } .nav4 { width: auto; flex: 1; min-width: 0; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 li { width: auto; } .nav4 ul button { padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; } .lbl4 > span { left: 0; } .hl4 { display: none; } .nav4 ul button.on { color: var(--frame); } .ai4 { margin: 0 0 0 auto; width: 40px; }
   .pic4 { display: flex; flex-direction: column; }
   .pic4-img { position: relative; aspect-ratio: 1; height: auto; }
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
@@ -133,5 +132,5 @@
   .it04 .island::before, .it04 .island::after { display: block; }
   .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 16px 16px 12px; } .cut4::before, .cut4::after { display: none; }
   .name4 { position: static; width: auto; margin: 0 14px 14px; }
-  .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 10px 16px; } .stack4 { flex: none; height: 320px; } .off4 { flex: none; min-height: 240px; }
+  .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 10px 16px; } .stack4 { flex: none; height: 320px; } .dots4 { left: auto; right: 6px; transform: translateY(-50%); } .off4 { flex: none; min-height: 240px; }
 }

@@ -6,26 +6,19 @@ import { useTheme } from '../../lib/theme';
 import Island from '../../components/island/Island';
 import { PhotoStack } from '../../components/tiles/Tiles';
 import illustration from '../../assets/nitish-desk-illustration.webp';
+import desk from '../../assets/nitish-desk.webp';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { siLottiefiles } from 'simple-icons';
 import './profile.css';
 
 /* Iteration 04 — "Profile". One screen, after the hi-fi reference (ref 5) with Nitish's changes (13 Oct) and the lo-fi
-   reference's right column (ref 4): a dark frame on the blurred picture; a narrow icon nav on the left with a travelling
+   reference's right column (ref 4): a dark frame on the blurred picture; a narrow nav of names on the left with a travelling
    highlighter and the assistant's button at its foot; the picture fills the middle, the assistant's notch hangs into it
    from the top, a line about him sits in the cutout at its bottom-left, his name in a glass box at its bottom-right; on
-   the right, the projects as a stack of cards with a drag slider, and Off duty as fanned cards. Greys where the
+   the right, the projects as a stack of cards with a column of dots beside it, and Off duty as fanned cards. Greys where the
    reference is yellow; the dark grey stays. Decisions and placeholders: LOG.md, "04 Profile". */
 
 type Tab = Exclude<ViewName, 'project'>;
-const ICONS: Record<Tab, string> = {
-  home: 'M4 11 12 4l8 7v9H4z',
-  projects: 'M4 7h16v12H4zM9 7V4h6v3',
-  micro: 'M8 5v14l11-7z',
-  campaign: 'M4 6h16v12H4zM4 10h16M8 6v12M16 6v12',
-  writing: 'M6 4h12v16H6zM9 9h6M9 13h6',
-  experience: 'M4 19h16M7 16V9M12 16V5M17 16v-6',
-};
 /* photo placeholders: close mid-greys, so in the fan the depth comes from the shading, not from the tints */
 const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g5)', 'var(--g4)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g3)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g4)']];
 const SHOWN = 3; /* cards in view (ref 4 shows three) */
@@ -41,10 +34,8 @@ const SOCIAL: { label: string; href: string; path: string; box: string }[] = [
   { label: 'Email', href: '#', path: 'M2 5h20v14H2zm1 1v1.2l9 6 9-6V6zm18 2.4-9 6-9-6V18h18z', box: '0 0 24 24' },
 ];
 
-function Icon({ d }: { d: string }) { return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" /></svg>; }
-
 /* ---- the projects stack: three cards in view, the front one at the bottom, the rest peeking above it (ref 4);
-   a drag slider at the right scrolls the list — the deck follows the thumb continuously and settles on a card ---- */
+   a column of dots beside it, one per project, marks and moves the front card (Nitish, 13 Oct; the drag slider went) ---- */
 function Card({ p, k, pos, onOpen }: { p: (typeof PROJECTS)[number]; k: number; pos: MotionValue<number>; onOpen: () => void }) {
   /* rank: 0 = furthest back (top), SHOWN-1 = front (bottom); fractional while moving. The front card is the one at the
      slider's position; the cards behind it are the next ones in the list. Going forward, the front card slips down and
@@ -83,101 +74,85 @@ function RollingWord() {
 }
 
 function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
-  const n = PROJECTS.length, max = n - SHOWN;
-  const target = useMotionValue(0); /* where the slider is */
+  const n = PROJECTS.length, max = n - 1;
+  const target = useMotionValue(0); /* which card is in front (fractional while a drag is on) */
   const pos = useSpring(target, { stiffness: 170, damping: 26, mass: .9 }); /* where the deck is: follows with a lag, settles without bounce */
-  const trackRef = useRef<HTMLDivElement>(null);
+  const [front, setFront] = useState(0);
+  useEffect(() => target.on('change', v => setFront(Math.max(0, Math.min(max, Math.round(v))))), [target, max]);
+  const dotsRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const thumbH = SHOWN / n; /* of the track */
-  const thumbY = useTransform(target, v => `${Math.max(0, Math.min(1, v / max)) * (1 - thumbH) * 100}%`); /* the thumb travels the track less its own height, and never leaves it */
   const settle = (v: number) => { const to = Math.max(0, Math.min(max, Math.round(v))); if (reduce) { target.jump(to); pos.jump(to); } else target.set(to); };
-  /* the thumb: its travel is the track minus its own height; drag maps that travel to 0…max */
+  /* the dots are a slider too (Nitish, 13 Oct): a drag along them maps their span to 0…max */
   const onDrag = (e: PointerEvent) => {
-    const t = trackRef.current; if (!t) return;
-    const r = t.getBoundingClientRect(); const thumb = r.height * (SHOWN / n); const travel = r.height - thumb;
-    const v = ((e.clientY - r.top - thumb / 2) / travel) * max; target.set(Math.max(-.25, Math.min(max + .25, v)));
+    const d = dotsRef.current; if (!d) return;
+    const first = d.firstElementChild!.getBoundingClientRect(), last = d.lastElementChild!.getBoundingClientRect();
+    const y0 = first.top + first.height / 2, y1 = last.top + last.height / 2;
+    target.set(Math.max(-.25, Math.min(max + .25, ((e.clientY - y0) / (y1 - y0)) * max)));
   };
-  const down = (e: React.PointerEvent) => { (e.target as HTMLElement).setPointerCapture(e.pointerId); onDrag(e.nativeEvent); const move = (ev: PointerEvent) => onDrag(ev); const up = () => { settle(target.get()); removeEventListener('pointermove', move); removeEventListener('pointerup', up); }; addEventListener('pointermove', move); addEventListener('pointerup', up); };
+  const down = (e: React.PointerEvent) => { if (e.button !== 0) return; (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); onDrag(e.nativeEvent); const move = (ev: PointerEvent) => onDrag(ev); const up = () => { settle(target.get()); removeEventListener('pointermove', move); removeEventListener('pointerup', up); }; addEventListener('pointermove', move); addEventListener('pointerup', up); };
   const wheel = (e: React.WheelEvent) => { settle(Math.round(target.get()) + (e.deltaY > 0 ? 1 : -1)); };
   return (
     <div className="stack4" onWheel={wheel}>
       <div className="deck4" style={{ '--n': SHOWN } as React.CSSProperties}>
         {PROJECTS.map((p, k) => <Card key={p.id} p={p} k={k} pos={pos} onOpen={() => onOpen(p.id)} />)}
       </div>
-      <div className="slider4" ref={trackRef} onPointerDown={down} role="slider" aria-label="Scroll projects" aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.round(target.get())} tabIndex={0}
-        onKeyDown={e => { if (e.key === 'ArrowDown') settle(Math.round(target.get()) + 1); if (e.key === 'ArrowUp') settle(Math.round(target.get()) - 1); }}>
-        <motion.i className="thumb4" style={{ top: thumbY, height: `${thumbH * 100}%` }} />
+      {/* one dot per project, the front card's a little bigger; beside the cards, outside their column, so it takes none of
+          their width (Nitish, 13 Oct) */}
+      <div className="dots4" ref={dotsRef} role="tablist" aria-label="Projects" onPointerDown={down}
+        onKeyDown={e => { if (e.key === 'ArrowDown') settle(front + 1); if (e.key === 'ArrowUp') settle(front - 1); }}>
+        {PROJECTS.map((p, k) => <button key={p.id} type="button" role="tab" className={k === front ? 'on' : ''} aria-selected={k === front} aria-label={p.title} onClick={() => settle(k)} />)}
       </div>
     </div>
   );
 }
 
-/* the nav: the names run along the bar reading bottom to top; only the selected one shows its name, before its icon,
-   inside a pill in the frame's colour that travels between items (01's highlight). Shared-layout animation broke here —
-   the items change size as a name appears or goes — so the motion is explicit, from measured numbers: every name's
-   length is measured once (the probe spans, laid as the names are, padding to the icon included); on a change the leaving
-   item's name-space shrinks and the arriving one's grows on a spring (so the items between slide), and the pill travels on
-   the same spring to where the new item will end up. The pill is the selected item itself, drawn over the list: it
-   carries the icon (at its head) and the name (at its foot), the items underneath only keeping the space — so during the
-   travel the name is always inside the pill, the pill hides whatever it passes, and what it uncovers is plain. The old
-   name goes out quickly, then the new one comes in; a name longer than the pill has grown to is clipped at the icon. */
+/* the nav: the section names run along the bar reading bottom to top (01's side nav), names only (Nitish, 13 Oct — the
+   icons went); the selected one sits in a pill in the frame's colour that travels between the names. The items are fixed
+   in size, so the pill simply animates to the selected item's measured box on a spring. It is drawn over the list and
+   carries the selected name itself — the old name goes out quickly, the new one comes in on the way — so the name is
+   always inside the pill, and the pill hides the names it passes. */
 const NAV_SPRING = { type: 'spring', stiffness: 400, damping: 38, mass: 1 } as const;
 function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
   const reduce = useReducedMotion();
   const ulRef = useRef<HTMLUListElement>(null);
-  const [geo, setGeo] = useState<{ base: number; gap: number; top0: number; w: number; lens: Record<string, number> } | null>(null);
+  const [boxes, setBoxes] = useState<Record<string, { top: number; height: number; width: number }> | null>(null);
   useLayoutEffect(() => {
     const ul = ulRef.current; if (!ul) return;
     const measure = () => {
-      const lens: Record<string, number> = {};
-      ul.querySelectorAll<HTMLElement>('.probe4 span').forEach(el => { lens[el.dataset.id!] = el.offsetHeight; });
-      const lis = [...ul.querySelectorAll<HTMLElement>('li:not(.probe4)')]; const first = lis[0];
-      const inactive = lis.find(li => !li.querySelector('button.on'))?.querySelector('button') as HTMLElement;
-      const gap = parseFloat(getComputedStyle(ul).rowGap) || 0;
-      setGeo({ base: inactive.offsetHeight, gap, top0: first.offsetTop, w: inactive.offsetWidth, lens });
+      const b: Record<string, { top: number; height: number; width: number }> = {};
+      ul.querySelectorAll<HTMLElement>('li[data-id]').forEach(li => { const btn = li.querySelector('button')!; b[li.dataset.id!] = { top: li.offsetTop, height: btn.offsetHeight, width: btn.offsetWidth }; });
+      setBoxes(b);
     };
     measure();
     const ro = new ResizeObserver(measure); ro.observe(ul); return () => ro.disconnect();
   }, []);
   const i = NAV.findIndex(n => n.id === tab);
-  const pill = geo ? { top: geo.top0 + i * (geo.base + geo.gap), height: geo.base + (geo.lens[tab] ?? 0), width: geo.w } : null;
+  const pill = boxes?.[tab] ?? null;
   const tr = reduce ? { duration: 0 } : NAV_SPRING;
   const out = reduce ? { duration: 0 } : { duration: .1, ease: 'easeOut' as const }; /* the old name goes quickly … */
   const inn = reduce ? { duration: 0 } : { duration: .22, ease: 'easeOut' as const }; /* … the new one comes in while the pill is still arriving */
-  const ico = reduce ? { duration: 0 } : { duration: .15, ease: 'easeOut' as const }; /* the icons cross-fade in place */
   return (
     <nav className="nav4" aria-label="Sections">
       <ul ref={ulRef}>
         {pill && (
           <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
-            <AnimatePresence initial={false}>
-              <motion.span key={tab} className="hico4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={ico}><Icon d={ICONS[tab]} /></motion.span>
+            <AnimatePresence initial={false} mode="wait">
+              <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
+                <span className="lbl4"><span>{NAV[i].label}</span></span>
+              </motion.span>
             </AnimatePresence>
-            <span className="hnm4">
-              <AnimatePresence initial={false} mode="wait">
-                <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
-                  <span className="lbl4"><span className="ltx4"><span>{NAV[i].label}</span></span></span>
-                </motion.span>
-              </AnimatePresence>
-            </span>
           </motion.i>
         )}
         {NAV.map(n => {
           const on = n.id === tab;
           return (
-            <li key={n.id}>
-              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} aria-label={n.label} onClick={() => go(n.id)}>
-                <span className="lbl4">
-                  {/* the space the name takes; the name itself is drawn in the pill */}
-                  <motion.span className="ltx4 gh4" initial={false} animate={{ height: on && geo ? geo.lens[n.id] : 0 }} transition={tr} aria-hidden="true" />
-                  <Icon d={ICONS[n.id]} />
-                </span>
+            <li key={n.id} data-id={n.id}>
+              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} onClick={() => go(n.id)}>
+                <span className="lbl4"><span>{n.label}</span></span>
               </button>
             </li>
           );
         })}
-        {/* the names, laid as they will be, for measuring their lengths once */}
-        <li className="probe4" aria-hidden="true">{NAV.map(n => <span key={n.id} data-id={n.id}>{n.label}</span>)}</li>
       </ul>
     </nav>
   );
@@ -197,7 +172,7 @@ export default function Iteration04() {
     <div className="it04">
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${illustration})` }} />
       <div className="frame4">
-        {/* nav: icons only, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
+        {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
           <Nav tab={tab} go={go} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
@@ -218,6 +193,8 @@ export default function Iteration04() {
           {/* the cutout: the name, the title, the CV — the glass box: the line and the one-liner (swapped, Nitish, 13 Oct) */}
           <div className="cut4">
             <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
+            {/* his photo in a disc beside the name (Nitish, 13 Oct); the desk photo stands in until he sends the one he means */}
+            <span className="me4"><img src={desk} alt="" /></span>
             <span className="role4"><RollingWord /> designer</span>
             <p className="sub4">I design feedback{'\u00a0'}rich interfaces powered by motion.</p>
             <a className="cv4" href={LINKS.cv}>View CV <span aria-hidden="true">↗</span></a>
@@ -228,9 +205,9 @@ export default function Iteration04() {
           </div>
         </section>
 
-        {/* the right column: the lo-fi's widgets — a pill, the project stack with its slider, Off duty fanned */}
+        {/* the right column: the lo-fi's widgets — a pill, the project stack with its dots, Off duty fanned */}
         <aside className="col4">
-          <div className="pill4"><span>Projects</span><small>drag the bar · scroll</small></div>
+          <div className="pill4"><span>Projects</span><small>scroll · the dots</small></div>
           <ProjectStack onOpen={id => go('project', id)} />
           <section className="off4"><PhotoStack fan tints={GREYS} /></section>
         </aside>
