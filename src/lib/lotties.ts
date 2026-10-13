@@ -17,8 +17,8 @@ export const LOTTIES = {
      itself sits at x 26–697, y 280–432 of the canvas (measured on a render), and its floating card is padded to that
      rectangle, the confetti free to fly past the glass (04, 13 Oct) */
   gold: 'https://lottie.host/7ed2ea72-f586-467f-945c-a41825140bf3/EFyepJCYvm.lottie',
-  /* the persuasion animation (04, 13–14 Oct): 360 × 80, 8 s, text in a packaged font (Cal Sans); its card takes the whole
-     canvas with the standard padding, no rounding */
+  /* the persuasion animation (04, 13–14 Oct): 360 × 80, 8 s, text in a packaged font (Cal Sans), a glow of Gaussian-blurred
+     shapes behind the pill (so it plays with `effects`); its card takes the whole canvas with the standard padding, no rounding */
   persuasion: 'https://lottie.host/971688e7-4357-4b5e-9391-0e67f4580d49/zTwfKgZDXS.lottie',
 };
 /* the Gold card's rectangle, as fractions of its canvas: left, top, width, height */
