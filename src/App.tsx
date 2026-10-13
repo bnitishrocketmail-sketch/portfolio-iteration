@@ -18,8 +18,7 @@ export default function App() {
         <Route path="/lab/01b-sheet" element={<Iteration01 variant="b" />} />
         <Route path="/lab/01b-sheet/:view" element={<Iteration01 variant="b" />} />
         <Route path="/lab/01b-sheet/:view/:pid" element={<Iteration01 variant="b" />} />
-        <Route path="/lab/04-profile" element={<Iteration04 />} />
-        <Route path="/lab/04-profile/:view" element={<Iteration04 />} />
+        <Route path="/lab/04-profile/:view?" element={<Iteration04 />} /> {/* one route for home and the sections, so a tab change never remounts the screen */}
         <Route path="/lab/02-field" element={<Iteration02 />} />
         <Route path="/lab/02b-field" element={<Iteration02 palette="01" />} />
         <Route path="/lab/03-console" element={<Iteration03 />} />

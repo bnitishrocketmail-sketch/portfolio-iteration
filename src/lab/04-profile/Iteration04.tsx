@@ -52,10 +52,12 @@ function Card({ p, k, pos, onOpen }: { p: (typeof PROJECTS)[number]; k: number; 
      card is the same size — behind or in front. `pos` is a spring-smoothed follower of the slider, so a drag reads as
      motion rather than a jump. */
   const rank = useTransform(pos, v => SHOWN - 1 - (k - v));
-  /* a card arrives from a little above its slot and leaves a little below the front slot, fading over that travel — it never
-     crosses the deck's edges, so nothing needs clipping; the order (z) follows the rank throughout, no pop */
-  const y = useTransform(rank, r => `${Math.max(-.35, Math.min(SHOWN - 1 + .35, r)) * OFFSET * 100}%`);
-  const opacity = useTransform(rank, r => (r < -.8 || r > SHOWN - .2 ? 0 : r < 0 ? 1 + r / .8 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .8 : 1));
+  /* the cards sit on the deck's bottom edge: the front one flush with it, each one behind a step (58% of a card) higher —
+     ref 4's stack; the back one may run past the deck's top, where the deck fades it out. A card arrives from a step above
+     the back slot (already faded) and leaves by slipping a third of a step below the front, fading; the order follows the
+     rank throughout. */
+  const y = useTransform(rank, r => `${(Math.min(SHOWN - 1 + .35, r) - (SHOWN - 1)) * OFFSET * 100}%`);
+  const opacity = useTransform(rank, r => (r > SHOWN - .2 ? 0 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .8 : 1));
   const z = useTransform(rank, r => 10 + Math.round(r * 10));
   const shade = useTransform(rank, r => `var(--g${Math.max(2, Math.min(4, Math.round(4 - (SHOWN - 1 - r))))})`);
   const pe = useTransform(opacity, o => (o > .5 ? 'auto' : 'none'));
@@ -131,12 +133,12 @@ export default function Iteration04() {
         <nav className="nav4" aria-label="Sections">
           <ul>
             {NAV.map(n => (
-              <li key={n.id}>
-                <button type="button" className={n.id === tab ? 'on' : ''} aria-current={n.id === tab ? 'page' : undefined} onClick={() => go(n.id)}>
-                  {n.id === tab && <motion.i className="hl4" layoutId="hl4" transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .14, visualDuration: .36 }} />}
-                  <span className="lbl4">{n.id === tab && <span>{n.label}</span>}<Icon d={ICONS[n.id]} /></span>
-                </button>
-              </li>
+              <motion.li key={n.id} layout transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .1, visualDuration: .36 }}>
+                <motion.button layout type="button" className={n.id === tab ? 'on' : ''} aria-current={n.id === tab ? 'page' : undefined} onClick={() => go(n.id)} transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .1, visualDuration: .36 }}>
+                  {n.id === tab && <motion.i className="hl4" layoutId="hl4" transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .1, visualDuration: .36 }} />}
+                  <motion.span layout="position" className="lbl4">{n.id === tab && <span>{n.label}</span>}<Icon d={ICONS[n.id]} /></motion.span>
+                </motion.button>
+              </motion.li>
             ))}
           </ul>
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
@@ -158,6 +160,7 @@ export default function Iteration04() {
           <div className="cut4">
             <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
             <span className="role4"><RollingWord /> designer</span>
+            <p className="sub4">I design feedback{'\u00a0'}rich interfaces powered by motion.</p>
             <a className="cv4" href={LINKS.cv}>View CV <span aria-hidden="true">↗</span></a>
           </div>
           <div className="name4">
