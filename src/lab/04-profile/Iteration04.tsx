@@ -185,18 +185,23 @@ const CONTROLS: Control[] = [
   { group: 'Cards', kind: 'range', key: '--c-ai-x', label: 'Assistant · x', def: '19%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-ai-y', label: 'Assistant · y', def: '25%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-ai-z', label: 'Assistant · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'select', key: '--c-ai-v', label: 'Assistant · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
   { group: 'Cards', kind: 'range', key: '--c-coin-x', label: 'Coin · x', def: '64%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-coin-y', label: 'Coin · y', def: '18%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-coin-z', label: 'Coin · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'select', key: '--c-coin-v', label: 'Coin · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
   { group: 'Cards', kind: 'range', key: '--c-micro-x', label: 'Micro · x', def: '68%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-micro-y', label: 'Micro · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-micro-z', label: 'Micro · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'select', key: '--c-micro-v', label: 'Micro · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
   { group: 'Cards', kind: 'range', key: '--c-gold-x', label: 'Gold · x', def: '38%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-gold-y', label: 'Gold · y', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-gold-z', label: 'Gold · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'select', key: '--c-gold-v', label: 'Gold · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
   { group: 'Cards', kind: 'range', key: '--c-loader-x', label: 'Loader · x', def: '6%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-loader-y', label: 'Loader · y', def: '44%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-loader-z', label: 'Loader · layer', def: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
+  { group: 'Cards', kind: 'select', key: '--c-loader-v', label: 'Loader · shown', def: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
 ];
 const TWEAK_KEY = 'it04-colours';
 function readTweaks(): Record<string, string> { try { return JSON.parse(localStorage.getItem(TWEAK_KEY) || '{}'); } catch { return {}; } }

@@ -12,6 +12,7 @@
   --card-back: #6f6f74; --card-mid: #84848a; --card-front: #c3c3c8; --card-tab: #a5a5aa; /* the stack's greys as ref 4 has them (112, 132, 196 and 167 of 255), in the page's cool tint */
   --corner-ink: var(--g5); --name-font: 'Josefin Sans'; --name-w1: 300; --name-w2: 700; --copy-font: 'Outfit'; --copy-w: 400;
   --c-ai-x: 19%; --c-ai-y: 25%; --c-ai-z: 3; --c-coin-x: 64%; --c-coin-y: 18%; --c-coin-z: 1; --c-loader-x: 6%; --c-loader-y: 44%; --c-loader-z: 1; --c-micro-x: 68%; --c-micro-y: 44%; --c-micro-z: 3; --c-gold-x: 38%; --c-gold-y: 6%; --c-gold-z: 3;
+  --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: block; --c-gold-v: block; /* each card shown or hidden */
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
   --shadow-el: 0 1px 1px rgba(0, 0, 0, .16), 0 4px 10px -2px rgba(0, 0, 0, .18), 0 14px 28px -10px rgba(0, 0, 0, .26);
@@ -59,11 +60,11 @@
 /* the floating Lottie cards: the page's glass (the name box's recipe), sized on the frame; behind him or in front; they
    float (the hero's drift) and lean with the pointer by their depth */
 .fl4 { position: absolute; z-index: 1; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
-.fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); } /* each card's place and layer (1 behind him, 3 in front) are tokens */
-.fl4.coin-card { left: var(--c-coin-x); top: var(--c-coin-y); z-index: var(--c-coin-z); }
-.fl4.loader-card { left: var(--c-loader-x); top: var(--c-loader-y); z-index: var(--c-loader-z); }
-.fl4.micro-card { left: var(--c-micro-x); top: var(--c-micro-y); z-index: var(--c-micro-z); }
-.fl4.gold-card { left: var(--c-gold-x); top: var(--c-gold-y); z-index: var(--c-gold-z); }
+.fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); display: var(--c-ai-v); } /* each card's place, layer (1 behind him, 3 in front) and whether it shows are tokens */
+.fl4.coin-card { left: var(--c-coin-x); top: var(--c-coin-y); z-index: var(--c-coin-z); display: var(--c-coin-v); }
+.fl4.loader-card { left: var(--c-loader-x); top: var(--c-loader-y); z-index: var(--c-loader-z); display: var(--c-loader-v); }
+.fl4.micro-card { left: var(--c-micro-x); top: var(--c-micro-y); z-index: var(--c-micro-z); display: var(--c-micro-v); }
+.fl4.gold-card { left: var(--c-gold-x); top: var(--c-gold-y); z-index: var(--c-gold-z); display: var(--c-gold-v); }
 .fl4-in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1cqw; padding: 1.1cqw 1.3cqw; border-radius: calc(var(--r) * .7); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
   border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el);
@@ -192,7 +193,7 @@
   .navcol4 { flex-direction: row; padding: 6px 8px; } .nav4 { width: auto; flex: 1; min-width: 0; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 li { width: auto; } .nav4 ul button { padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; } .lbl4 > span { left: 0; } .hl4 { display: none; } .nav4 ul button.on { color: var(--frame); } .ai4 { margin: 0 0 0 auto; width: 40px; }
   .picwrap4 { display: flex; flex-direction: column; } .pic4, .pic4-in { display: contents; } /* the tile's pieces become the column's: picture, cut-out, name box */
   .pic4-img { position: relative; aspect-ratio: 1; height: auto; border-radius: var(--r) var(--r) 0 0; }
-  .pic4-me, .fl4 { display: none; } /* the cards and the cutout need the picture's box, which the column has not got; later */
+  .pic4-me, .fl4 { display: none !important; } /* the cards and the cutout need the picture's box, which the column has not got; later */
   .cut4 { order: 1; } .name4 { order: 2; }
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 20px 20px !important; max-width: calc(100vw - 100px); }
