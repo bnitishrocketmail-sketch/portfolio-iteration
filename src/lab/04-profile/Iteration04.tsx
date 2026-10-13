@@ -57,7 +57,7 @@ function Card({ p, k, pos, onOpen }: { p: (typeof PROJECTS)[number]; k: number; 
      the back slot (already faded) and leaves by slipping a third of a step below the front, fading; the order follows the
      rank throughout. */
   const y = useTransform(rank, r => `${(Math.min(SHOWN - 1 + .35, r) - (SHOWN - 1)) * OFFSET * 100}%`);
-  const opacity = useTransform(rank, r => (r > SHOWN - .2 ? 0 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .8 : 1));
+  const opacity = useTransform(rank, r => (r < -.8 || r > SHOWN - .2 ? 0 : r < 0 ? 1 + r / .8 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .8 : 1)); /* the one beyond the back slot fades in as it arrives */
   const z = useTransform(rank, r => 10 + Math.round(r * 10));
   const shade = useTransform(rank, r => `var(--g${Math.max(2, Math.min(4, Math.round(4 - (SHOWN - 1 - r))))})`);
   const pe = useTransform(opacity, o => (o > .5 ? 'auto' : 'none'));

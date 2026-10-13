@@ -27,14 +27,18 @@
 .nav4 ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: .5cqh; width: 100%; }
 .nav4 li { display: flex; justify-content: center; width: 100%; }
 /* the button stays unrotated so the pill measures in normal space; only the label turns (01) */
-/* the pill hugs its content: 10px at the ends, 10px either side of the label's line (the button is content-sized) */
-.nav4 ul button { position: relative; padding: 10px 10px; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 999px; font: 500 clamp(11px, 1.05cqw, 13.5px)/1 var(--body); letter-spacing: .01em; transition: color .3s; }
+/* the pill hugs its content: 10px at both ends and 10px either side of the line; fixed sizes inside the bar (13px label,
+   16px icon, 8px between) so the geometry is the same at every width. Sideways text sits off its line box's centre by
+   about a pixel and its ink stops short of the box's end, so the label is nudged and the text end's padding trimmed
+   (Nitish, 13 Oct: the selected state's alignment) */
+.nav4 ul button { position: relative; padding: 10px 10px 8px; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 999px; font: 500 13px/1 var(--body); letter-spacing: .01em; transition: color .3s; }
 .nav4 ul button:hover { color: var(--frame); }
 .nav4 ul button.on { color: var(--g6); }
-.lbl4 { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 7px; writing-mode: vertical-rl; transform: rotate(180deg); }
+.lbl4 { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; writing-mode: vertical-rl; transform: rotate(180deg); }
+.lbl4 > span { position: relative; left: 1.5px; }
 /* the icon turns with the label: the glyphs end up a quarter-turn anticlockwise (sideways, then the half-turn); a replaced
    element only gets the half-turn, so it takes the remaining quarter itself */
-.lbl4 svg { width: clamp(14px, 1.4cqw, 17px); height: clamp(14px, 1.4cqw, 17px); transform: rotate(90deg); }
+.lbl4 svg { width: 16px; height: 16px; transform: rotate(90deg); }
 .hl4 { position: absolute; inset: 0; border-radius: 999px; background: var(--frame); z-index: 0; }
 .ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: var(--frame); color: var(--g6); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
 .ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
@@ -86,7 +90,8 @@
    mid grey on every card; on the cards behind, its lower end hides behind the card in front, as ref 4's do. */
 .stack4 { position: relative; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 14px; gap: 10px; }
 .deck4 { position: relative; min-height: 0; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%); mask-image: linear-gradient(to bottom, transparent, #000 22%); }
-.pcard4 { position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 164 / 127; display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: visible; box-shadow: 0 -6px 18px -12px rgba(0, 0, 0, .6); }
+/* the cards at 85% of the column (Nitish, 13 Oct: each card 15% smaller at least), centred in the deck */
+.pcard4 { position: absolute; left: 7.5%; width: 85%; bottom: 0; aspect-ratio: 164 / 127; display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: visible; box-shadow: 0 -6px 18px -12px rgba(0, 0, 0, .6); }
 .pcard4::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, rgba(0, 0, 0, .28), transparent 45%); pointer-events: none; } /* so a name reads on any image */
 .tab4 { position: absolute; left: 3%; top: 47%; transform: translateY(-50%); width: 12.8%; height: 25%; border-radius: 999px; background: var(--g5); z-index: 1; }
 .pc-name { position: absolute; left: 1.4cqw; right: 1.2cqw; top: 1.1cqw; z-index: 1; display: flex; flex-direction: column; gap: 2px; }
