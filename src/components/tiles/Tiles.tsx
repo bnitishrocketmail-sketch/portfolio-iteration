@@ -37,9 +37,9 @@ export function Tools() {
    `bleed` (02): the photos are anchored to the bottom and run past the tile's bottom edge, the tile hiding the lowest
    ~15% of each; the captions sit above the hidden part, and the hint moves up into the header.
    `tints` overrides the placeholder gradients so a page can colour them from its own palette (01's colours stay in 01).
-   `fan` (04, ref 4's bottom-right tile): three large photos leaning the same way, the front one at the bottom-left, each
-   one behind stepped a little up and to the right and mostly hidden (Nitish, 13 Oct). The next photo after a tap or drag
-   takes the front. */
+   `fan` (04, ref 4's bottom-right tile): three large square photos leaning the same way, the front one lowest and furthest
+   right, each one behind stepped down-left and turned more, mostly hidden under the one in front (ref 4, measured 13 Oct;
+   the box is a size container, so the steps are in its units). The next photo after a tap or drag takes the front. */
 export function PhotoStack({ bleed = false, fan = false, tints }: { bleed?: boolean; fan?: boolean; tints?: [string, string][] }) {
   const [i, setI] = useState(0);
   const [leaving, setLeaving] = useState<null | { idx: number; dir: number }>(null);
@@ -63,7 +63,7 @@ export function PhotoStack({ bleed = false, fan = false, tints }: { bleed?: bool
           return (
             <motion.figure key={c.caption} style={{ '--g1': tints ? tints[k % tints.length][0] : c.g1, '--g2': tints ? tints[k % tints.length][1] : c.g2, zIndex: n - pos } as React.CSSProperties}
               animate={out ? { x: leaving.dir * 420, rotate: leaving.dir * 14, opacity: 0, ...(fan ? { filter: 'brightness(1)' } : {}) }
-                : fan ? { x: `${pos * 16}%`, y: `${pos * -13}%`, rotate: -9 - pos * 2, scale: 1, opacity: pos > 2 ? 0 : 1, filter: `brightness(${1 - pos * .22})` } /* ref 4: the same lean, stepped up-right; the ones behind in shade */
+                : fan ? { x: `${pos * -19}cqw`, y: `${pos * 17}cqh`, rotate: -12 - pos * 10, scale: 1, opacity: pos > 2 ? 0 : 1, filter: `brightness(${1 - pos * .16})` } /* ref 4 (measured 13 Oct): the front leans 12°, each one behind 19% of the box further left, 17% of its height further down, 10° more, and in shade */
                 : { x: 0, y: pos * -6, rotate: (pos % 2 ? -1 : 1) * pos * 2.4, scale: 1 - pos * .045, opacity: pos > 3 ? 0 : 1 }}
               transition={{ type: 'spring', bounce: .18, duration: .5 }}
               drag={isTop && !out ? 'x' : false} dragSnapToOrigin dragElastic={.9}

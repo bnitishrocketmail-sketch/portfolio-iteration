@@ -108,42 +108,35 @@
 .rw4-w { display: inline-block; }
 
 /* ---- the right column ---- */
-.col4 { display: grid; grid-template-rows: 7.4fr 49.5fr 30.8fr; gap: 1.4cqw; min-height: 0; } /* ref 4's rows, measured */
+.col4 { display: grid; grid-template-rows: 7.9% auto minmax(0, 1fr); gap: 1.4cqw; min-height: 0; } /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
 .pill4 { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 1.4cqw; border-radius: 999px; background: var(--g2); font: 600 clamp(12px, 1.3cqw, 15px) var(--body); min-height: 0; box-shadow: var(--shadow-el); }
 .pill4 small { color: var(--muted); font-size: clamp(9.5px, 1cqw, 11.5px); font-weight: 500; white-space: nowrap; }
 
-/* the stack (ref 4, read off its enlarged crop): the cards run the column's full width at 164 × 127 (1.29:1), the same
-   size; the front one sits flush with the deck's bottom, each one behind peeks 58% of a card above the next; the back one
-   runs past the deck's top and fades out there (Nitish: hide it by fading, above or below). The tab is a vertical pill
-   5px in from the card's left edge, centred on the card's height (a little under half, 47%), 12.8% × 25% of the card, one
-   mid grey on every card; on the cards behind, its lower end hides behind the card in front, as ref 4's do. */
-.stack4 { position: relative; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
-.deck4 { position: relative; min-height: 0; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%); mask-image: linear-gradient(to bottom, transparent, #000 22%); }
-/* the cards the column's full width, on the Off duty tile's edges (Nitish, 13 Oct) */
-.pcard4 { position: absolute; left: 0; width: 100%; bottom: 0; aspect-ratio: 164 / 127; display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: visible; box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .18), 0 10px 20px -8px rgba(0, 0, 0, .3); } /* downward only: nothing spills above a card (Nitish, 13 Oct) */
+/* the stack (ref 4, measured again on 13 Oct): the cards run the column's full width at 165 × 127 (1.3:1); the front one
+   sits on the deck's bottom, each one behind peeks 58% of a card above the next, so the deck is 2.16 cards tall and the
+   back card's top is the deck's top. The tab is a vertical pill 3.6% in from the left, 12.1% × 25.2% of the card, one
+   mid grey on every card; centred on the front card, 28% from the top on the ones behind (whole above the card in front). */
+.stack4 { position: relative; min-height: 0; aspect-ratio: 165 / 274; width: 100%; }
+.deck4 { position: absolute; inset: 0; }
+.pcard4 { position: absolute; left: 0; width: 100%; aspect-ratio: 165 / 127; display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: visible; box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .18), 0 10px 20px -8px rgba(0, 0, 0, .3); } /* downward only: nothing spills above a card (Nitish, 13 Oct) */
 .pcard4::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, rgba(0, 0, 0, .28), transparent 45%); pointer-events: none; } /* so a name reads on any image */
-.tab4 { position: absolute; left: 3%; top: 47%; transform: translateY(-50%); width: 12.8%; height: 25%; border-radius: 999px; background: var(--g5); z-index: 1; }
+.tab4 { position: absolute; left: 3.6%; top: 50%; transform: translateY(-50%); width: 12.1%; height: 25.2%; border-radius: 999px; background: var(--g5); z-index: 1; }
+.pcard4.back .tab4 { top: 28%; transform: none; }
 .pc-name { position: absolute; left: 1.4cqw; right: 1.2cqw; top: 1.1cqw; z-index: 1; display: flex; flex-direction: column; gap: 2px; }
 .pc-name b { font: 600 clamp(12px, 1.35cqw, 15px)/1.2 var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 6px rgba(0, 0, 0, .4); }
 .pc-name small { color: rgba(255, 255, 255, .72); font-size: clamp(10px, 1.05cqw, 12px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* the dots: a column centred in the frame's inset beside the cards (outside their column, so the cards keep their width);
-   one per project, the front card's bigger and brighter; a drag along them scrolls too */
-.dots4 { position: absolute; top: 50%; left: calc(100% + .007 * var(--fw)); transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 6px 4px; cursor: grab; touch-action: none; }
-.dots4:active { cursor: grabbing; }
-.dots4 button { width: 5px; height: 5px; padding: 0; border: 0; border-radius: 50%; background: var(--g5); cursor: pointer; transition: width .25s, height .25s, background .25s; }
-.dots4 button.on { width: 9px; height: 9px; background: var(--g6); }
-.dots4 button:focus-visible { outline: 2px solid var(--g6); outline-offset: 2px; }
 
 /* Off duty: the lo-fi's fanned cards in a tile — 01's photo stack */
 .off4 { display: flex; flex-direction: column; gap: 6px; padding: 1.2cqw 1.4cqw; border-radius: var(--r); background: var(--g2); min-height: 0; box-shadow: var(--shadow-el); }
 .off4 .tile-head .eyebrow { font: 600 clamp(12px, 1.3cqw, 15px) var(--body); opacity: 1; }
 .off4 .tile-head .mono-s { font-size: clamp(10px, 1cqw, 12px); }
 .off4 .stack { margin-top: 4px; }
-/* the fan: each photo is 52% of the box's width and sits at the bottom-left; the ones behind step up-right (Tiles.tsx) */
-/* the fan as ref 4 draws it: large cards, all leaning the same way, stepped a little up and right; the front one at the
-   bottom-left, its lower corner just past the tile's edge (the tile's clip hides a sliver, never more than 30%); the ones
-   behind mostly hidden (Nitish, 13 Oct) */
-.off4 .stack.fan figure { inset: auto auto -3% 3%; width: 62%; height: 66%; border-radius: 12px; transform-origin: 50% 100%; }
+/* the fan as ref 4 draws it (measured 13 Oct, in the box under the tile's head): square cards 81% of the box's height, the
+   front one's top-left corner at 46% across and 26% down, leaning 12°; each one behind 19% of the box further left, 17%
+   further down and 10° more, in shade (Tiles.tsx); what runs past the tile's edges is clipped. The group sits further left
+   than ref 4 has it, by 30% of a card (Nitish, 13 Oct: "pushed towards left approximately 30%") — the front card at 34%. */
+.off4 .stack { position: relative; container-type: size; }
+.off4 .stack.fan figure { inset: auto; left: 34%; top: 26%; height: 81%; aspect-ratio: 1; width: auto; border-radius: 12px; transform-origin: 50% 50%; }
 .off4 { overflow: hidden; }
 .off4 .hint { display: none; }
 
@@ -172,5 +165,5 @@
   .it04 .island::before, .it04 .island::after { display: block; }
   .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 16px 16px 12px; }
   .name4 { position: static; width: auto; margin: 0 14px 14px; }
-  .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 10px 16px; } .stack4 { flex: none; height: 320px; } .dots4 { left: auto; right: 6px; transform: translateY(-50%); } .off4 { flex: none; min-height: 240px; }
+  .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 10px 16px; } .stack4 { flex: none; } .off4 { flex: none; min-height: 240px; }
 }

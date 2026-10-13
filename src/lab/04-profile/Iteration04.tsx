@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, LINKS, NAV, PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
@@ -18,14 +18,12 @@ import './profile.css';
    reference's right column (ref 4): a dark frame on the blurred picture; a narrow nav of names on the left with a travelling
    highlighter and the assistant's button at its foot; the picture fills the middle, the assistant's notch hangs into it
    from the top, a line about him sits in the cutout at its bottom-left, his name in a glass box at its bottom-right; on
-   the right, the projects as a stack of cards with a column of dots beside it, and Off duty as fanned cards. Greys where the
+   the right, the projects as a stack of three cards, and Off duty as fanned cards. Greys where the
    reference is yellow; the dark grey stays. Decisions and placeholders: LOG.md, "04 Profile". */
 
 type Tab = Exclude<ViewName, 'project'>;
 /* photo placeholders: close mid-greys, so in the fan the depth comes from the shading, not from the tints */
 const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g5)', 'var(--g4)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g3)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g4)']];
-const SHOWN = 3; /* cards in view (ref 4 shows three) */
-const OFFSET = .58; /* ref 4, measured: each card peeks 58% of a card's height above the one in front; a card is 46% of the stack */
 const WORDS = ['Product', 'Interaction', 'Motion']; /* the title's rolling first word (02 v29) */
 
 /* the notch's links: the brands' own marks (Nitish, 13 Oct) — LinkedIn and Instagram from Font Awesome's brand set,
@@ -37,29 +35,27 @@ const SOCIAL: { label: string; href: string; path: string; box: string }[] = [
   { label: 'Email', href: '#', path: 'M2 5h20v14H2zm1 1v1.2l9 6 9-6V6zm18 2.4-9 6-9-6V18h18z', box: '0 0 24 24' },
 ];
 
-/* ---- the projects stack: three cards in view, the front one at the bottom, the rest peeking above it (ref 4);
-   a column of dots beside it, one per project, marks and moves the front card (Nitish, 13 Oct; the drag slider went) ---- */
-function Card({ p, k, pos, onOpen }: { p: (typeof PROJECTS)[number]; k: number; pos: MotionValue<number>; onOpen: () => void }) {
-  /* rank: 0 = furthest back (top), SHOWN-1 = front (bottom); fractional while moving. The front card is the one at the
-     slider's position; the cards behind it are the next ones in the list. Going forward, the front card slips down and
-     out, the one above it comes down into the front, and the next one enters at the top, behind (Nitish, 13 Oct). Every
-     card is the same size — behind or in front. `pos` is a spring-smoothed follower of the slider, so a drag reads as
-     motion rather than a jump. */
-  const rank = useTransform(pos, v => SHOWN - 1 - (k - v));
-  /* the cards sit on the deck's bottom edge: the front one flush with it, each one behind a step (58% of a card) higher —
-     ref 4's stack; the back one may run past the deck's top, where the deck fades it out. A card arrives from a step above
-     the back slot (already faded) and leaves by slipping a third of a step below the front, fading; the order follows the
-     rank throughout. */
-  const y = useTransform(rank, r => `${(Math.min(SHOWN - 1 + .35, r) - (SHOWN - 1)) * OFFSET * 100}%`);
-  const opacity = useTransform(rank, r => (r < -.8 || r > SHOWN - .2 ? 0 : r < 0 ? 1 + r / .8 : r > SHOWN - 1 ? 1 - (r - (SHOWN - 1)) / .8 : 1)); /* the one beyond the back slot fades in as it arrives */
-  const z = useTransform(rank, r => 10 + Math.round(r * 10));
-  const shade = useTransform(rank, r => `var(--g${Math.max(2, Math.min(4, Math.round(4 - (SHOWN - 1 - r))))})`);
-  const pe = useTransform(opacity, o => (o > .5 ? 'auto' : 'none'));
+/* ---- the projects stack, as ref 4 draws it (Nitish, 13 Oct — "adapt this as it is"): three cards the column's full
+   width at 165 × 127, the front one at the bottom, each one behind stepped up by 58% of a card and in shade; a vertical
+   pill 3.6% in from the left on every card, centred on the front card and higher (28% from the top) on the ones behind,
+   so it shows whole above the card in front. Static for now — scrolling and the dots come later. ---- */
+const SHOWN = 3;
+const OFFSET = .58; /* ref 4, measured: each card peeks 58% of a card's height above the one in front */
+function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   return (
-    <motion.button type="button" className="pcard4" style={{ y, opacity, zIndex: z, background: shade, pointerEvents: pe }} onClick={onOpen}>
-      <i className="tab4" aria-hidden="true" />
-      <span className="pc-name"><b>{p.title}</b><small>{p.client} · {p.year}</small></span>
-    </motion.button>
+    <div className="stack4">
+      <div className="deck4">
+        {PROJECTS.slice(0, SHOWN).map((p, k) => {
+          const r = SHOWN - 1 - k; /* 0 = front (bottom), 2 = back (top) */
+          return (
+            <button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r, background: `var(--g${4 - r})` }} onClick={() => onOpen(p.id)}>
+              <i className="tab4" aria-hidden="true" />
+              <span className="pc-name"><b>{p.title}</b><small>{p.client} · {p.year}</small></span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -73,39 +69,6 @@ function RollingWord() {
         <motion.span key={WORDS[i]} className="rw4-w" initial={{ y: '110%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '-110%', opacity: 0 }} transition={{ duration: .45, ease: [.3, 1, .4, 1] }}>{WORDS[i]}</motion.span>
       </AnimatePresence>
     </motion.span>
-  );
-}
-
-function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
-  const n = PROJECTS.length, max = n - 1;
-  const target = useMotionValue(0); /* which card is in front (fractional while a drag is on) */
-  const pos = useSpring(target, { stiffness: 170, damping: 26, mass: .9 }); /* where the deck is: follows with a lag, settles without bounce */
-  const [front, setFront] = useState(0);
-  useEffect(() => target.on('change', v => setFront(Math.max(0, Math.min(max, Math.round(v))))), [target, max]);
-  const dotsRef = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const settle = (v: number) => { const to = Math.max(0, Math.min(max, Math.round(v))); if (reduce) { target.jump(to); pos.jump(to); } else target.set(to); };
-  /* the dots are a slider too (Nitish, 13 Oct): a drag along them maps their span to 0…max */
-  const onDrag = (e: PointerEvent) => {
-    const d = dotsRef.current; if (!d) return;
-    const first = d.firstElementChild!.getBoundingClientRect(), last = d.lastElementChild!.getBoundingClientRect();
-    const y0 = first.top + first.height / 2, y1 = last.top + last.height / 2;
-    target.set(Math.max(-.25, Math.min(max + .25, ((e.clientY - y0) / (y1 - y0)) * max)));
-  };
-  const down = (e: React.PointerEvent) => { if (e.button !== 0) return; (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); onDrag(e.nativeEvent); const move = (ev: PointerEvent) => onDrag(ev); const up = () => { settle(target.get()); removeEventListener('pointermove', move); removeEventListener('pointerup', up); }; addEventListener('pointermove', move); addEventListener('pointerup', up); };
-  const wheel = (e: React.WheelEvent) => { settle(Math.round(target.get()) + (e.deltaY > 0 ? 1 : -1)); };
-  return (
-    <div className="stack4" onWheel={wheel}>
-      <div className="deck4" style={{ '--n': SHOWN } as React.CSSProperties}>
-        {PROJECTS.map((p, k) => <Card key={p.id} p={p} k={k} pos={pos} onOpen={() => onOpen(p.id)} />)}
-      </div>
-      {/* one dot per project, the front card's a little bigger; beside the cards, outside their column, so it takes none of
-          their width (Nitish, 13 Oct) */}
-      <div className="dots4" ref={dotsRef} role="tablist" aria-label="Projects" onPointerDown={down}
-        onKeyDown={e => { if (e.key === 'ArrowDown') settle(front + 1); if (e.key === 'ArrowUp') settle(front - 1); }}>
-        {PROJECTS.map((p, k) => <button key={p.id} type="button" role="tab" className={k === front ? 'on' : ''} aria-selected={k === front} aria-label={p.title} onClick={() => settle(k)} />)}
-      </div>
-    </div>
   );
 }
 
@@ -313,9 +276,9 @@ export default function Iteration04() {
           </div>
         </div>
 
-        {/* the right column: the lo-fi's widgets — a pill, the project stack with its dots, Off duty fanned */}
+        {/* the right column: the lo-fi's widgets — a pill, the three stacked cards, Off duty fanned */}
         <aside className="col4">
-          <div className="pill4"><span>Projects</span><small>scroll · the dots</small></div>
+          <div className="pill4"><span>Projects</span></div>
           <ProjectStack onOpen={id => go('project', id)} />
           <section className="off4"><PhotoStack fan tints={GREYS} /></section>
         </aside>
