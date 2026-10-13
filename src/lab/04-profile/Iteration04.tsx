@@ -7,6 +7,9 @@ import Island from '../../components/island/Island';
 import { PhotoStack } from '../../components/tiles/Tiles';
 import illustration from '../../assets/nitish-desk-illustration.webp';
 import desk from '../../assets/nitish-desk.webp';
+import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.webp';
+import { Lottie } from '../../components/micro/Lottie';
+import { LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { siLottiefiles } from 'simple-icons';
 import './profile.css';
@@ -241,6 +244,14 @@ export default function Iteration04() {
   const [tweaks, setTweaks] = useState<Record<string, string>>(readTweaks);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef);
+  const reduce = useReducedMotion();
+  /* the cards lean with the pointer by their depth (the hero's chips) */
+  const lean = (e: React.PointerEvent) => {
+    const w = wrapRef.current; if (!w || reduce || e.pointerType === 'touch') return;
+    const r = w.getBoundingClientRect(); const dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;
+    w.querySelectorAll<HTMLElement>('.fl4').forEach(c => { const d = Number(c.dataset.depth); c.style.setProperty('--px', (dx * 26 * d).toFixed(1) + 'px'); c.style.setProperty('--py', (dy * 18 * d).toFixed(1) + 'px'); });
+  };
+  const unlean = () => wrapRef.current?.querySelectorAll<HTMLElement>('.fl4').forEach(c => { c.style.setProperty('--px', '0px'); c.style.setProperty('--py', '0px'); });
   /* after the button's own click has finished bubbling — the island closes on any click outside itself */
   useEffect(() => { if (!ask) return; const id = window.setTimeout(() => document.querySelector<HTMLButtonElement>('.it04 .island-pill')?.click(), 0); return () => window.clearTimeout(id); }, [ask]);
 
@@ -260,10 +271,23 @@ export default function Iteration04() {
             area at its bottom-left — the name, the title, the line, the CV, the photo — is not part of it but the frame
             showing through a corner cut out of the tile (Nitish, 13 Oct). So the tile is clipped to that shape and casts its
             shadow as that shape — onto the frame around it and onto the cut-out area — and the cut-out sits beside it. */}
-        <div className="picwrap4" ref={wrapRef}>
+        <div className="picwrap4" ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean}>
           <section className="pic4">
             <div className="pic4-in" style={clip ? { clipPath: clip } : undefined}>
               <img className="pic4-img" src={illustration} alt="Nitish at his desk, drawn" />
+              {/* the floating Lottie cards (01/02b's three), in this page's glass (Nitish, 13 Oct): the coin and the loader
+                  behind him — his cutout from the illustration lies over them, so they are a little masked — the assistant's
+                  in front, over his hair. They float, and lean with the pointer by their depth. */}
+              <div className="fl4 behind coin-card" data-depth=".5" style={{ left: '64%', top: '18%', '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
+                <div className="fl4-in"><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
+              </div>
+              <div className="fl4 behind loader-card" data-depth=".6" style={{ left: '6%', top: '44%', '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>
+                <div className="fl4-in"><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
+              </div>
+              <img className="pic4-img pic4-me" src={illustrationCutout} alt="" aria-hidden="true" />
+              <div className="fl4 front ai-card" data-depth="1.3" style={{ left: '19%', top: '25%', '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
+                <div className="fl4-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
+              </div>
               <div className="name4">
                 {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}
                 <p className="lede4">{COPY.lede}</p>

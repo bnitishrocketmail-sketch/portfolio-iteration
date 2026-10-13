@@ -51,6 +51,28 @@
 .pic4 { position: absolute; inset: 0; filter: var(--shadow-pic); } /* the shadow follows the tile's clipped shape */
 .pic4-in { position: absolute; inset: 0; border-radius: var(--r); overflow: hidden; background: var(--g1); } /* the clip path, set from the boxes, replaces the radius */
 .pic4-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; } /* the picture's bottom edge on the container's bottom edge; what doesn't fit is cut from above (Nitish, 13 Oct) */
+/* his cutout, registered on the illustration (the same box and fit), over the cards behind him */
+.pic4-me { z-index: 2; pointer-events: none; }
+/* the floating Lottie cards: the page's glass (the name box's recipe), sized on the frame; behind him or in front; they
+   float (the hero's drift) and lean with the pointer by their depth */
+.fl4 { position: absolute; z-index: 1; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.fl4.front { z-index: 3; }
+.fl4-in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1cqw; padding: 1.1cqw 1.3cqw; border-radius: calc(var(--r) * .7); color: var(--glass-ink);
+  background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el);
+  animation: float4 var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
+.fl4 .cap { display: block; font: 600 clamp(10.5px, .95cqw, 13px)/1.25 var(--body); }
+.fl4 .bl { width: 6.8cqw; aspect-ratio: 1; margin: -.4cqw 0 -.2cqw -.5cqw; } .fl4 .bl svg { display: block; }
+.ai-card .cap { max-width: 11ch; }
+.coin-card .fl4-in { align-items: center; }
+.fl4 .coin { width: 5.6cqw; aspect-ratio: 1; display: block; } .fl4 .coin svg { transform: scale(1.8) !important; overflow: visible; } /* !important: lottie-web sets an inline transform on its svg */
+.coin-card .cap { text-align: center; }
+.loader-card .fl4-in { align-items: center; gap: .4cqw; padding: .9cqw 1.1cqw; }
+.fl4 .lk { width: 5.4cqw; aspect-ratio: 72 / 34; } .fl4 .lk svg { display: block; }
+.loader-card .cap { white-space: nowrap; font-size: clamp(10px, .85cqw, 12px); }
+@keyframes float4 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@media (prefers-reduced-motion: reduce) { .fl4-in { animation: none; } }
+
 /* the notch: the links sit on the frame in a cut-out at the tile's top-centre (its shape follows this box, the radius being
    the notch's inner corners); no background of their own (Nitish, 13 Oct). The assistant opens here, from the nav's button. */
 .notch4 { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: flex; justify-content: center; }
@@ -143,6 +165,7 @@
   .navcol4 { flex-direction: row; padding: 6px 8px; } .nav4 { width: auto; flex: 1; min-width: 0; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 li { width: auto; } .nav4 ul button { padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; } .lbl4 > span { left: 0; } .hl4 { display: none; } .nav4 ul button.on { color: var(--frame); } .ai4 { margin: 0 0 0 auto; width: 40px; }
   .picwrap4 { display: flex; flex-direction: column; } .pic4, .pic4-in { display: contents; } /* the tile's pieces become the column's: picture, cut-out, name box */
   .pic4-img { position: relative; aspect-ratio: 1; height: auto; border-radius: var(--r) var(--r) 0 0; }
+  .pic4-me, .fl4 { display: none; } /* the cards and the cutout need the picture's box, which the column has not got; later */
   .cut4 { order: 1; } .name4 { order: 2; }
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 20px 20px !important; max-width: calc(100vw - 100px); }
