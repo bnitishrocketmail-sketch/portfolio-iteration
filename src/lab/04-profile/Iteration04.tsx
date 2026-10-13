@@ -38,7 +38,8 @@ const SOCIAL: { label: string; href: string; path: string; box: string }[] = [
 /* ---- the projects stack, as ref 4 draws it (Nitish, 13 Oct — "adapt this as it is"): three cards the column's full
    width at 165 × 127, the front one at the bottom, each one behind stepped up by 58% of a card and in shade; a vertical
    pill 3.6% in from the left on every card, centred on the front card and higher (28% from the top) on the ones behind,
-   so it shows whole above the card in front. Static for now — scrolling and the dots come later. ---- */
+   so it shows whole above the card in front; ref 4's greys (dark at the back, light in front) and its soft shadow. Static
+   for now — scrolling and the dots come later. ---- */
 const SHOWN = 3;
 const OFFSET = .58; /* ref 4, measured: each card peeks 58% of a card's height above the one in front */
 function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
@@ -48,7 +49,7 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
         {PROJECTS.slice(0, SHOWN).map((p, k) => {
           const r = SHOWN - 1 - k; /* 0 = front (bottom), 2 = back (top) */
           return (
-            <button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r, background: `var(--g${4 - r})` }} onClick={() => onOpen(p.id)}>
+            <button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r, background: `var(--card-${['front', 'mid', 'back'][r]})` }} onClick={() => onOpen(p.id)}>
               <i className="tab4" aria-hidden="true" />
               <span className="pc-name"><b>{p.title}</b><small>{p.client} · {p.year}</small></span>
             </button>

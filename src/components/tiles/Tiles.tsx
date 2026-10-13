@@ -63,7 +63,7 @@ export function PhotoStack({ bleed = false, fan = false, tints }: { bleed?: bool
           return (
             <motion.figure key={c.caption} style={{ '--g1': tints ? tints[k % tints.length][0] : c.g1, '--g2': tints ? tints[k % tints.length][1] : c.g2, zIndex: n - pos } as React.CSSProperties}
               animate={out ? { x: leaving.dir * 420, rotate: leaving.dir * 14, opacity: 0, ...(fan ? { filter: 'brightness(1)' } : {}) }
-                : fan ? { x: `${pos * -19}cqw`, y: `${pos * 17}cqh`, rotate: -12 - pos * 10, scale: 1, opacity: pos > 2 ? 0 : 1, filter: `brightness(${1 - pos * .16})` } /* ref 4 (measured 13 Oct): the front leans 12°, each one behind 19% of the box further left, 17% of its height further down, 10° more, and in shade */
+                : fan ? { x: `${pos * -19}cqw`, y: `${pos * 14}cqh`, rotate: -12 - pos * 10, scale: 1, opacity: pos > 2 ? 0 : 1, filter: `brightness(${1 - pos * .16})` } /* ref 4 (measured 13 Oct): the front leans 12°, each one behind 19% of the tile further left, 14% of its height further down, 10° more, and in shade */
                 : { x: 0, y: pos * -6, rotate: (pos % 2 ? -1 : 1) * pos * 2.4, scale: 1 - pos * .045, opacity: pos > 3 ? 0 : 1 }}
               transition={{ type: 'spring', bounce: .18, duration: .5 }}
               drag={isTop && !out ? 'x' : false} dragSnapToOrigin dragElastic={.9}
