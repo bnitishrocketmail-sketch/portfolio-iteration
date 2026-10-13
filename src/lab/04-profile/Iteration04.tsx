@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, LINKS, NAV, PROJECTS, type ViewName } from '../../lib/data';
@@ -112,13 +112,83 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   );
 }
 
+/* the nav: the names run along the bar reading bottom to top; only the selected one shows its name, before its icon,
+   inside a pill in the frame's colour that travels between items (01's highlight). Shared-layout animation broke here —
+   the items change size as a name appears or goes — so the motion is explicit, from measured numbers: every name's
+   length is measured once (the probe spans, laid as the names are, padding to the icon included); on a change the leaving
+   item's name-space shrinks and the arriving one's grows on a spring (so the items between slide), and the pill travels on
+   the same spring to where the new item will end up. The pill is the selected item itself, drawn over the list: it
+   carries the icon (at its head) and the name (at its foot), the items underneath only keeping the space — so during the
+   travel the name is always inside the pill, the pill hides whatever it passes, and what it uncovers is plain. The old
+   name goes out quickly, then the new one comes in; a name longer than the pill has grown to is clipped at the icon. */
+const NAV_SPRING = { type: 'spring', stiffness: 400, damping: 38, mass: 1 } as const;
+function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
+  const reduce = useReducedMotion();
+  const ulRef = useRef<HTMLUListElement>(null);
+  const [geo, setGeo] = useState<{ base: number; gap: number; top0: number; w: number; lens: Record<string, number> } | null>(null);
+  useLayoutEffect(() => {
+    const ul = ulRef.current; if (!ul) return;
+    const measure = () => {
+      const lens: Record<string, number> = {};
+      ul.querySelectorAll<HTMLElement>('.probe4 span').forEach(el => { lens[el.dataset.id!] = el.offsetHeight; });
+      const lis = [...ul.querySelectorAll<HTMLElement>('li:not(.probe4)')]; const first = lis[0];
+      const inactive = lis.find(li => !li.querySelector('button.on'))?.querySelector('button') as HTMLElement;
+      const gap = parseFloat(getComputedStyle(ul).rowGap) || 0;
+      setGeo({ base: inactive.offsetHeight, gap, top0: first.offsetTop, w: inactive.offsetWidth, lens });
+    };
+    measure();
+    const ro = new ResizeObserver(measure); ro.observe(ul); return () => ro.disconnect();
+  }, []);
+  const i = NAV.findIndex(n => n.id === tab);
+  const pill = geo ? { top: geo.top0 + i * (geo.base + geo.gap), height: geo.base + (geo.lens[tab] ?? 0), width: geo.w } : null;
+  const tr = reduce ? { duration: 0 } : NAV_SPRING;
+  const out = reduce ? { duration: 0 } : { duration: .1, ease: 'easeOut' as const }; /* the old name goes quickly … */
+  const inn = reduce ? { duration: 0 } : { duration: .22, ease: 'easeOut' as const }; /* … the new one comes in while the pill is still arriving */
+  const ico = reduce ? { duration: 0 } : { duration: .15, ease: 'easeOut' as const }; /* the icons cross-fade in place */
+  return (
+    <nav className="nav4" aria-label="Sections">
+      <ul ref={ulRef}>
+        {pill && (
+          <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
+            <AnimatePresence initial={false}>
+              <motion.span key={tab} className="hico4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={ico}><Icon d={ICONS[tab]} /></motion.span>
+            </AnimatePresence>
+            <span className="hnm4">
+              <AnimatePresence initial={false} mode="wait">
+                <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
+                  <span className="lbl4"><span className="ltx4"><span>{NAV[i].label}</span></span></span>
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </motion.i>
+        )}
+        {NAV.map(n => {
+          const on = n.id === tab;
+          return (
+            <li key={n.id}>
+              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} aria-label={n.label} onClick={() => go(n.id)}>
+                <span className="lbl4">
+                  {/* the space the name takes; the name itself is drawn in the pill */}
+                  <motion.span className="ltx4 gh4" initial={false} animate={{ height: on && geo ? geo.lens[n.id] : 0 }} transition={tr} aria-hidden="true" />
+                  <Icon d={ICONS[n.id]} />
+                </span>
+              </button>
+            </li>
+          );
+        })}
+        {/* the names, laid as they will be, for measuring their lengths once */}
+        <li className="probe4" aria-hidden="true">{NAV.map(n => <span key={n.id} data-id={n.id}>{n.label}</span>)}</li>
+      </ul>
+    </nav>
+  );
+}
+
 export default function Iteration04() {
   const { view } = useParams();
   const navigate = useNavigate();
   const { toggle } = useTheme();
   const tab: Tab = (NAV.some(n => n.id === view) ? view : 'home') as Tab;
   const go = (v: ViewName, pid?: string) => { if (v === 'project' && pid) { navigate(`/lab/04-profile/projects`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
-  const reduce = useReducedMotion();
   const [ask, setAsk] = useState(0);
   /* after the button's own click has finished bubbling — the island closes on any click outside itself */
   useEffect(() => { if (!ask) return; const id = window.setTimeout(() => document.querySelector<HTMLButtonElement>('.it04 .island-pill')?.click(), 0); return () => window.clearTimeout(id); }, [ask]);
@@ -128,23 +198,12 @@ export default function Iteration04() {
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${illustration})` }} />
       <div className="frame4">
         {/* nav: icons only, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
-        {/* nav: icons along the bar; the selected one shows its name before the icon, reading bottom to top as 01's side
-            nav, inside a travelling pill — 01's highlight, inverted for the light bar (Nitish, 13 Oct) */}
-        <nav className="nav4" aria-label="Sections">
-          <ul>
-            {NAV.map(n => (
-              <motion.li key={n.id} layout transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .1, visualDuration: .36 }}>
-                <motion.button layout type="button" className={n.id === tab ? 'on' : ''} aria-current={n.id === tab ? 'page' : undefined} onClick={() => go(n.id)} transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .1, visualDuration: .36 }}>
-                  {n.id === tab && <motion.i className="hl4" layoutId="hl4" transition={reduce ? { duration: 0 } : { type: 'spring', bounce: .1, visualDuration: .36 }} />}
-                  <motion.span layout="position" className="lbl4">{n.id === tab && <span>{n.label}</span>}<Icon d={ICONS[n.id]} /></motion.span>
-                </motion.button>
-              </motion.li>
-            ))}
-          </ul>
+        <div className="navcol4">
+          <Nav tab={tab} go={go} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14 9l6.5 2L14 13l-2 6.5L10 13l-6.5-2L10 9z" fill="currentColor" /></svg>
           </button>
-        </nav>
+        </div>
 
         {/* the picture, with the notch hanging in from the top, the cutout at the bottom-left, the name box at the bottom-right */}
         <section className="pic4">

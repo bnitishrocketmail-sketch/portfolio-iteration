@@ -20,26 +20,30 @@
   box-shadow: 0 40px 80px -40px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .06); }
 
 /* ---- nav: icons, a travelling highlighter on the right edge (the reference's yellow bar, grey here), the assistant below ---- */
-/* the nav: a bar in the assistant button's colour with round tips, the column's full height; the section names run along
-   it reading bottom to top (01's side nav), each with its icon after it; the selected one sits in a travelling pill in the
-   frame's colour — 01's highlight inverted for the light bar; the assistant's button at the foot, inverted too */
-.nav4 { display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: 1.6cqh 0 .9cqh; border-radius: 999px; background: var(--g6); }
-.nav4 ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: .5cqh; width: 100%; }
+/* the nav column: a bar in the assistant button's colour with round tips, the column's full height; the section names run
+   along it reading bottom to top (01's side nav), only the selected one shown, before its icon, in a pill in the frame's
+   colour that travels between items; the assistant's button at the foot, inverted. Fixed sizes inside the bar (13px label,
+   16px icon, 8px between, 10px at the pill's ends) so the geometry holds at every width. */
+.navcol4 { display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: 1.6cqh 0 .9cqh; border-radius: 999px; background: var(--g6); }
+.nav4 { width: 100%; }
+.nav4 ul { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: .5cqh; width: 100%; }
 .nav4 li { display: flex; justify-content: center; width: 100%; }
-/* the button stays unrotated so the pill measures in normal space; only the label turns (01) */
-/* the pill hugs its content: 10px at both ends and 10px either side of the line; fixed sizes inside the bar (13px label,
-   16px icon, 8px between) so the geometry is the same at every width. Sideways text sits off its line box's centre by
-   about a pixel and its ink stops short of the box's end, so the label is nudged and the text end's padding trimmed
-   (Nitish, 13 Oct: the selected state's alignment) */
-.nav4 ul button { position: relative; padding: 10px 10px 8px; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 999px; font: 500 13px/1 var(--body); letter-spacing: .01em; transition: color .3s; }
+.nav4 ul button { padding: 9px 10px 10px; } /* visibly 11px at both ends of the pill: the icon's glyph sits 2px inside its box, the name's first letter ~1px */
+.nav4 ul button { position: relative; display: grid; place-items: center; border: 0; background: none; color: var(--g4); cursor: pointer; border-radius: 999px; font: 500 13px/1 var(--body); letter-spacing: .01em; transition: color .2s; }
 .nav4 ul button:hover { color: var(--frame); }
-.nav4 ul button.on { color: var(--g6); }
-.lbl4 { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; writing-mode: vertical-rl; transform: rotate(180deg); }
-.lbl4 > span { position: relative; left: 1.5px; }
-/* the icon turns with the label: the glyphs end up a quarter-turn anticlockwise (sideways, then the half-turn); a replaced
-   element only gets the half-turn, so it takes the remaining quarter itself */
-.lbl4 svg { width: 16px; height: 16px; transform: rotate(90deg); }
-.hl4 { position: absolute; inset: 0; border-radius: 999px; background: var(--frame); z-index: 0; }
+.lbl4 { position: relative; display: inline-flex; align-items: center; writing-mode: vertical-rl; transform: rotate(180deg); }
+.ltx4 { overflow: hidden; display: block; } /* the name's length; the gap to the icon is inside it */
+.gh4 { visibility: hidden; } /* in the items: the space only */
+.ltx4 > span, .probe4 span { padding-bottom: 8.5px; } /* visibly 11px between the name and the icon's glyph, the same as the pill's ends */
+.ltx4 > span { display: block; position: relative; left: 1.5px; white-space: nowrap; } /* sideways text sits a pixel off its box's centre */
+.lbl4 svg { width: 16px; height: 16px; transform: rotate(90deg); } /* turned with the letters */
+.hl4 { position: absolute; left: 50%; transform: translateX(-50%); box-sizing: border-box; border-radius: 999px; background: var(--frame); color: var(--g6); z-index: 1; pointer-events: none; overflow: hidden; font: 500 13px/1 var(--body); letter-spacing: .01em; }
+.hico4 { position: absolute; top: 9px; left: 0; right: 0; display: grid; place-items: center; } /* the icon at the pill's head, where the item's is */
+.hico4 svg { width: 16px; height: 16px; transform: rotate(-90deg); } /* turned as the items' (90° inside their 180° label) */
+.hnm4 { position: absolute; top: 25px; bottom: 10px; left: 0; right: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; } /* the name at the pill's foot, below the icon; while the pill grows, its far end is clipped at the icon */
+.hltx4 { display: grid; place-items: center; }
+.nav4 li.probe4 { position: absolute; visibility: hidden; pointer-events: none; top: 0; left: 0; display: block; width: auto; }
+.probe4 span { display: block; writing-mode: vertical-rl; inline-size: max-content; font: 500 13px/1 var(--body); letter-spacing: .01em; white-space: nowrap; }
 .ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: var(--frame); color: var(--g6); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
 .ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
 
@@ -121,7 +125,7 @@
   .it04 { position: static; display: block; padding: 14px 14px 40px; overflow: visible; }
   .bg4 { position: fixed; }
   .frame4 { height: auto; aspect-ratio: auto; width: 100%; display: flex; flex-direction: column; gap: 14px; padding: 14px; border-radius: 22px; }
-  .nav4 { flex-direction: row; padding: 6px 8px; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 ul button { width: auto; padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; } .lbl4 svg { transform: none; } .ai4 { margin: 0 0 0 auto; width: 40px; }
+  .navcol4 { flex-direction: row; padding: 6px 8px; } .nav4 { width: auto; flex: 1; min-width: 0; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 ul button { padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; flex-direction: row; } .ltx4 { display: none; } .lbl4 svg { transform: none; } .hl4 { display: none; } .nav4 ul button.on { color: var(--frame); } .ai4 { margin: 0 0 0 auto; width: 40px; }
   .pic4 { display: flex; flex-direction: column; }
   .pic4-img { position: relative; aspect-ratio: 1; height: auto; }
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
