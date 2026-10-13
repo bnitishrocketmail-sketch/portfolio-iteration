@@ -60,9 +60,10 @@
 .links4 a svg { width: 15px; height: 15px; }
 .notch4 .island-wrap { position: absolute; }
 .notch4 .island:not(.open) { opacity: 0; pointer-events: none; } /* the assistant shows only when asked for, from the nav's button */
-/* the cut-out at the bottom-left: the frame showing through (painted in its colour against seams), its top-right corner
-   rounded — the tile's clip path follows this box; the name, the title, the line, the CV and the photo sit in it */
-.cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: var(--frame); border-radius: 0 var(--r) 0 0; z-index: 3;
+/* the cut-out at the bottom-left: no background of its own — the frame shows through, and the tile's shadow falls onto it
+   (Nitish, 13 Oct: a painted box hid the shadow and read as a card behind the name); its top-right radius is only what the
+   tile's clip path reads for its inner corner. The name, the title, the line, the CV and the photo sit in it. */
+.cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: none; border-radius: 0 var(--r) 0 0; z-index: 3;
   display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name me" "role me" "sub sub" "cv cv"; column-gap: 1cqw; row-gap: .5cqw; align-items: start; }
 .nm4 { grid-area: name; } .role4 { grid-area: role; } .sub4 { grid-area: sub; } .cv4 { grid-area: cv; justify-self: end; }
 /* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
