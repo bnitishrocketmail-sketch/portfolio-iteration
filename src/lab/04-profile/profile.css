@@ -8,7 +8,7 @@
   --r: clamp(16px, 2.1cqw, 28px);
   /* the colours under the temporary controls (Nitish, 13 Oct) — each piece reads its own token, the defaults the greys above */
   --nav-bg: var(--g6); --nav-ink: var(--g4); --nav-hl: var(--frame); --nav-hl-ink: var(--g6); --ai-bg: var(--frame); --ai-ink: var(--g6); --glass-bg: #18181b; --glass-a: .55;
-  --glass-ink: #c9c9cc; --name-ink: #fff; --title-ink: var(--ink); --line-ink: #d6d6d8; --social-ink: var(--g6);
+  --glass-ink: #c9c9cc; --name-ink: #fff; --title-ink: var(--ink); --line-ink: #d6d6d8; --social-ink: var(--g6); --cv-bg: var(--g6); --cv-ink: var(--frame);
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
   --shadow-el: 0 1px 1px rgba(0, 0, 0, .16), 0 4px 10px -2px rgba(0, 0, 0, .18), 0 14px 28px -10px rgba(0, 0, 0, .26);
@@ -80,7 +80,7 @@
 .nm4 b { font-weight: 700; letter-spacing: .06em; }
 /* the title under the name, as decided (02 v29): the first word rolls Product → Interaction → Motion, "designer" stays */
 .role4 { display: block; margin-top: .5cqw; font: 500 clamp(12px, 1.35cqw, 15.5px)/1.3 var(--body); color: var(--muted); white-space: nowrap; }
-.cv4 { margin-top: .9cqw; display: inline-flex; align-items: center; gap: 6px; padding: .55em 1em; border-radius: 999px; background: var(--g6); color: var(--frame); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); text-decoration: none; transition: transform .2s; }
+.cv4 { margin-top: .9cqw; display: inline-flex; align-items: center; gap: 6px; padding: .55em 1em; border-radius: 999px; background: var(--cv-bg); color: var(--cv-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); text-decoration: none; transition: transform .2s; }
 .cv4:hover { transform: translateY(-1px); }
 .rw4 { display: inline-block; position: relative; overflow: hidden; vertical-align: bottom; color: var(--title-ink); padding: .1em .04em .08em; margin: -.1em -.04em -.08em; }
 .rw4-w { display: inline-block; }

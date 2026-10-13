@@ -202,6 +202,8 @@ const TOKENS: { key: string; label: string; def: string }[] = [
   { key: '--title-ink', label: 'Title', def: '#f2f2f4' },
   { key: '--line-ink', label: 'Line about me', def: '#d6d6d8' },
   { key: '--social-ink', label: 'Social icons', def: '#d6d6db' },
+  { key: '--cv-bg', label: 'View CV button', def: '#d6d6db' },
+  { key: '--cv-ink', label: 'View CV text & arrow', def: '#2b2b2e' },
   { key: '--ink', label: 'Other text', def: '#f2f2f4' },
   { key: '--muted', label: 'Secondary text', def: '#a7a7ae' },
 ];
