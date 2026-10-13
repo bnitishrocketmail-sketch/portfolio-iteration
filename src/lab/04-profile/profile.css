@@ -89,6 +89,9 @@
 .cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: none; border-radius: 0 var(--r) 0 0; z-index: 3;
   display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name me" "role me" "sub sub" "cv cv"; column-gap: 1cqw; row-gap: .5cqw; align-items: start; }
 .nm4 { grid-area: name; } .role4 { grid-area: role; } .sub4 { grid-area: sub; } .cv4 { grid-area: cv; justify-self: end; }
+/* the corner bracket: a short stroke along the blank area's bottom and left edges — where the tile's corner would be —
+   turning the corner with the tile's radius; its legs run 12px past the curve, no further */
+.corner4 { position: absolute; left: 0; bottom: 0; width: calc(var(--r) + 12px); height: calc(var(--r) + 12px); border: 1.5px solid var(--g5); border-top: 0; border-right: 0; border-bottom-left-radius: var(--r); pointer-events: none; }
 /* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
 .me4 { grid-area: me; align-self: start; width: clamp(60px, 7cqw, 96px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; background: var(--g2); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18); }
 .me4 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transform: scale(2.2); transform-origin: 50% 60%; display: block; } /* the stand-in desk photo, zoomed to his face */
@@ -168,7 +171,7 @@
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 20px 20px !important; max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
-  .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 16px 16px 12px; }
+  .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 16px 16px 12px; } .corner4 { display: none; }
   .name4 { position: static; width: auto; margin: 0 14px 14px; }
   .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 10px 16px; } .stack4 { flex: none; } .off4 { flex: none; min-height: 240px; }
 }

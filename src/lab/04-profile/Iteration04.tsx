@@ -268,6 +268,7 @@ export default function Iteration04() {
           </div>
           {/* the cut-out: the name, the title, the line, the CV, the photo */}
           <div className="cut4" ref={cutRef}>
+            <i className="corner4" aria-hidden="true" /> {/* a small bracket on the blank area's bottom-left corner — the tile's corner, with its radius (Nitish, 13 Oct) */}
             <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
             {/* his photo in a disc beside the name (Nitish, 13 Oct); the desk photo stands in until he sends the one he means */}
             <span className="me4"><img src={desk} alt="" /></span>
