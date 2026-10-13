@@ -8,6 +8,7 @@
   --r: clamp(16px, 2.1cqw, 28px);
   /* the colours under the temporary controls (Nitish, 13 Oct) — each piece reads its own token, the defaults the greys above */
   --nav-bg: var(--g6); --nav-ink: var(--g4); --nav-hl: var(--frame); --nav-hl-ink: var(--g6); --ai-bg: var(--frame); --ai-ink: var(--g6); --glass-bg: #18181b; --glass-a: .55;
+  --glass-ink: #c9c9cc; --name-ink: #fff; --title-ink: var(--ink); --line-ink: #d6d6d8; --social-ink: var(--g6);
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
   --shadow-el: 0 1px 1px rgba(0, 0, 0, .16), 0 4px 10px -2px rgba(0, 0, 0, .18), 0 14px 28px -10px rgba(0, 0, 0, .26);
@@ -50,12 +51,11 @@
 .pic4 { position: absolute; inset: 0; filter: var(--shadow-pic); } /* the shadow follows the tile's clipped shape */
 .pic4-in { position: absolute; inset: 0; border-radius: var(--r); overflow: hidden; background: var(--g1); } /* the clip path, set from the boxes, replaces the radius */
 .pic4-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; } /* the picture's bottom edge on the container's bottom edge; what doesn't fit is cut from above (Nitish, 13 Oct) */
-/* the notch: the assistant hangs into the picture from the top, in the frame's colour, as the reference's tab does (half its height) */
+/* the notch: the links sit on the frame in a cut-out at the tile's top-centre (its shape follows this box, the radius being
+   the notch's inner corners); no background of their own (Nitish, 13 Oct). The assistant opens here, from the nav's button. */
 .notch4 { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: flex; justify-content: center; }
-.links4 { display: flex; gap: 2px; padding: 4px 10px 6px; background: var(--frame); border-radius: 0 0 16px 16px; position: relative; }
-.links4::before, .links4::after { content: ""; position: absolute; top: 0; width: 14px; height: 14px; background: radial-gradient(circle at 0 100%, transparent 13.4px, var(--frame) 14px); } /* the flares that join it to the frame, as the island's */
-.links4::before { left: -14px; } .links4::after { right: -14px; transform: scaleX(-1); }
-.links4 a { width: 30px; height: 26px; display: grid; place-items: center; color: var(--g6); border-radius: 8px; transition: background .2s; }
+.links4 { display: flex; gap: 2px; padding: 4px 10px 6px; border-radius: 0 0 16px 16px; position: relative; }
+.links4 a { width: 30px; height: 26px; display: grid; place-items: center; color: var(--social-ink); border-radius: 8px; transition: background .2s; }
 .links4 a:hover { background: rgba(255, 255, 255, .1); }
 .links4 a svg { width: 15px; height: 15px; }
 .notch4 .island-wrap { position: absolute; }
@@ -69,20 +69,20 @@
 /* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
 .me4 { grid-area: me; align-self: start; width: clamp(60px, 7cqw, 96px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; background: var(--g2); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18); }
 .me4 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transform: scale(2.2); transform-origin: 50% 60%; display: block; } /* the stand-in desk photo, zoomed to his face */
-.lede4 { color: rgba(255, 255, 255, .78); font-size: clamp(11.5px, 1.2cqw, 14px); line-height: 1.45; max-width: 36ch; }
+.lede4 { color: var(--glass-ink); font-size: clamp(11.5px, 1.2cqw, 14px); line-height: 1.45; max-width: 36ch; }
 /* the name box: the reference's glass box at the bottom-right, the name in the marker lettering (ref 6) */
 .name4 { position: absolute; right: 1.8cqw; bottom: 7.2cqw; width: 36%; min-width: 230px; padding: 1.4cqw 1.6cqw 1.5cqw; border-radius: calc(var(--r) * .8); z-index: 3; display: flex; flex-direction: column; gap: .5cqw; /* lifted: four times its earlier clearance from the bottom (Nitish, 13 Oct) */
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 18px 40px -18px rgba(0, 0, 0, .6); }
 /* the name, in a Deco face for now (Nitish, 13 Oct — "something as minimal as deco"; the font iterations come later):
    Josefin Sans, the first name light and the surname bold, uppercase with air between the letters */
-.nm4 { display: block; font: 300 clamp(20px, 2.8cqw, 32px)/1.08 'Josefin Sans', 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: .1em; color: #fff; text-shadow: 0 2px 10px rgba(0, 0, 0, .35); }
-.sub4 { margin-top: .5cqw; font-size: clamp(12px, 1.25cqw, 14.5px); line-height: 1.4; color: rgba(255, 255, 255, .8); max-width: 30ch; } /* the subheading, his words (13 Oct) */
+.nm4 { display: block; font: 300 clamp(20px, 2.8cqw, 32px)/1.08 'Josefin Sans', 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: .1em; color: var(--name-ink); }
+.sub4 { margin-top: .5cqw; font-size: clamp(12px, 1.25cqw, 14.5px); line-height: 1.4; color: var(--line-ink); max-width: 30ch; } /* the subheading, his words (13 Oct) */
 .nm4 b { font-weight: 700; letter-spacing: .06em; }
 /* the title under the name, as decided (02 v29): the first word rolls Product → Interaction → Motion, "designer" stays */
 .role4 { display: block; margin-top: .5cqw; font: 500 clamp(12px, 1.35cqw, 15.5px)/1.3 var(--body); color: var(--muted); white-space: nowrap; }
 .cv4 { margin-top: .9cqw; display: inline-flex; align-items: center; gap: 6px; padding: .55em 1em; border-radius: 999px; background: var(--g6); color: var(--frame); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); text-decoration: none; transition: transform .2s; }
 .cv4:hover { transform: translateY(-1px); }
-.rw4 { display: inline-block; position: relative; overflow: hidden; vertical-align: bottom; color: var(--ink); padding: .1em .04em .08em; margin: -.1em -.04em -.08em; }
+.rw4 { display: inline-block; position: relative; overflow: hidden; vertical-align: bottom; color: var(--title-ink); padding: .1em .04em .08em; margin: -.1em -.04em -.08em; }
 .rw4-w { display: inline-block; }
 
 /* ---- the right column ---- */
