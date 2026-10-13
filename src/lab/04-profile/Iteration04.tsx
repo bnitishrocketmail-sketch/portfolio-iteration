@@ -158,6 +158,43 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
   );
 }
 
+/* ---- temporary colour controls (Nitish, 13 Oct): a panel at the page's corner with a picker per token; the values go on
+   the screen as custom properties and are kept in this browser between reloads; "Copy" puts them on the clipboard to send
+   over. To go when the colours are settled. ---- */
+const TOKENS: { key: string; label: string; def: string }[] = [
+  { key: '--frame', label: 'Main container', def: '#2b2b2e' },
+  { key: '--nav-bg', label: 'Nav background', def: '#d6d6db' },
+  { key: '--nav-ink', label: 'Nav names', def: '#5a5a61' },
+  { key: '--nav-hl', label: 'Nav highlight', def: '#2b2b2e' },
+  { key: '--nav-hl-ink', label: 'Highlight name', def: '#d6d6db' },
+  { key: '--ai-bg', label: 'AI button', def: '#2b2b2e' },
+  { key: '--ai-ink', label: 'AI icon', def: '#d6d6db' },
+  { key: '--glass-bg', label: 'Glass box', def: '#18181b' },
+];
+const TWEAK_KEY = 'it04-colours';
+function readTweaks(): Record<string, string> { try { return JSON.parse(localStorage.getItem(TWEAK_KEY) || '{}'); } catch { return {}; } }
+function Tweaks({ values, onChange }: { values: Record<string, string>; onChange: (v: Record<string, string>) => void }) {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const set = (k: string, v: string) => { const next = { ...values, [k]: v }; onChange(next); try { localStorage.setItem(TWEAK_KEY, JSON.stringify(next)); } catch { /* fine */ } };
+  const reset = () => { onChange({}); try { localStorage.removeItem(TWEAK_KEY); } catch { /* fine */ } };
+  const copy = () => { const out = Object.fromEntries(TOKENS.map(t => [t.label, values[t.key] ?? t.def]).concat([['Glass opacity', values['--glass-a'] ?? '.55']])); navigator.clipboard?.writeText(JSON.stringify(out, null, 2)).then(() => { setCopied(true); window.setTimeout(() => setCopied(false), 1400); }); };
+  return (
+    <div className={`tweaks4${open ? ' open' : ''}`}>
+      <button type="button" className="tw-toggle" onClick={() => setOpen(o => !o)}>{open ? 'Close' : 'Colours'}</button>
+      {open && (
+        <div className="tw-panel">
+          {TOKENS.map(t => (
+            <label key={t.key}><span>{t.label}</span><input type="color" value={values[t.key] ?? t.def} onChange={e => set(t.key, e.target.value)} /></label>
+          ))}
+          <label><span>Glass opacity</span><input type="range" min="0" max="1" step=".05" value={values['--glass-a'] ?? '.55'} onChange={e => set('--glass-a', e.target.value)} /></label>
+          <div className="tw-row"><button type="button" onClick={copy}>{copied ? 'Copied' : 'Copy values'}</button><button type="button" onClick={reset}>Reset</button></div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Iteration04() {
   const { view } = useParams();
   const navigate = useNavigate();
@@ -165,11 +202,12 @@ export default function Iteration04() {
   const tab: Tab = (NAV.some(n => n.id === view) ? view : 'home') as Tab;
   const go = (v: ViewName, pid?: string) => { if (v === 'project' && pid) { navigate(`/lab/04-profile/projects`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
   const [ask, setAsk] = useState(0);
+  const [tweaks, setTweaks] = useState<Record<string, string>>(readTweaks);
   /* after the button's own click has finished bubbling — the island closes on any click outside itself */
   useEffect(() => { if (!ask) return; const id = window.setTimeout(() => document.querySelector<HTMLButtonElement>('.it04 .island-pill')?.click(), 0); return () => window.clearTimeout(id); }, [ask]);
 
   return (
-    <div className="it04">
+    <div className="it04" style={tweaks as React.CSSProperties}>
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${illustration})` }} />
       <div className="frame4">
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
@@ -200,7 +238,7 @@ export default function Iteration04() {
             <a className="cv4" href={LINKS.cv}>View CV <span aria-hidden="true">↗</span></a>
           </div>
           <div className="name4">
-            <p className="st4"><strong>I make UI move.</strong></p>
+            {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}
             <p className="lede4">{COPY.lede}</p>
           </div>
         </section>
@@ -212,6 +250,7 @@ export default function Iteration04() {
           <section className="off4"><PhotoStack fan tints={GREYS} /></section>
         </aside>
       </div>
+      <Tweaks values={tweaks} onChange={setTweaks} />
       <Link className="labtag" to="/lab">Lab · 04 Profile</Link>
     </div>
   );
