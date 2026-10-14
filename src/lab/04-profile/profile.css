@@ -9,7 +9,7 @@
   /* the colours under the temporary controls (Nitish, 13 Oct) — each piece reads its own token, the defaults the greys above */
   --nav-bg: #e0e0e0; --nav-ink: #2f2e30; --nav-hl: #2f2e30; --nav-hl-ink: #c9c9c9; --ai-bg: #2f2e30; --ai-ink: #c9c9c9; --glass-bg: #000000; --glass-a: 0.2;
   --glass-ink: #c9c9cc; --name-ink: #dfdfdf; --title-ink: #e0e0e0; --line-ink: #e0e0e0; --social-ink: #a6a6a6; --cv-bg: #d6d6d6; --cv-ink: #2b2b2e;
-  --card-back: #6f6f74; --card-mid: #84848a; --card-front: #c3c3c8; --card-tab: #a5a5aa; /* the stack's greys as ref 4 has them (112, 132, 196 and 167 of 255), in the page's cool tint */
+  --card-back: #6f6f74; --card-mid: #84848a; --card-front: #c3c3c8; --card-tab: #a5a5aa; --card-front-ink: var(--frame); /* the stack's greys as ref 4 has them (112, 132, 196 and 167 of 255), in the page's cool tint; the front card's text in the frame's colour (dark) */
   --corner-ink: #bababa; --name-font: 'Outfit'; --name-w1: 800; --name-w2: 300; --copy-font: 'Outfit'; --copy-w: 300; --h2-w: 300; --title-w: 500; --role-w2: 800; --role-ink2: #59575b;
   /* the type scale (14 Oct), for this page and the pages after it — two faces: the name's for headings, the copy's for
      everything else. H1 the name; H2 the sections' headings (Projects, Off duty): the name's face, upper case, spaced;
@@ -28,6 +28,13 @@
   --shadow-pic: drop-shadow(0 1px 1px rgba(0, 0, 0, .16)) drop-shadow(0 6px 10px rgba(0, 0, 0, .18)) drop-shadow(0 16px 24px rgba(0, 0, 0, .22)); /* the tile's, following its cut-out shape */
   position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden;
 }
+/* light mode (Nitish, 14 Oct: his second set of values); the dark set above is the default */
+.it04.light {
+  --frame: #b5b5b5; --nav-bg: #e0e0e0; --nav-ink: #2f2e30; --nav-hl: #2f2e30; --nav-hl-ink: #c9c9c9; --ai-bg: #2f2e30; --ai-ink: #c9c9c9; --glass-bg: #000000; --glass-a: 0.2; --glass-ink: #c9c9cc; --name-ink: #2f2e30; --title-ink: #2f2e30; --line-ink: #2f2e30; --social-ink: #2f2e30; --cv-bg: #2f2e30; --cv-ink: #b5b5b5; --corner-ink: #2f2e30; --pcard-open: #e0e0e0; --pcard-open-ink: #121212; --pcard-fold: #2f2e30; --pcard-fold-ink: #e0e0e0; --ink: #dbdbdb; --muted: #e0e0e0; --role-ink2: #2f2e30; --h2-w: 600; --bg: #d4d4d7;
+  --h2-w: 600; --card-front-ink: #2f2e30; /* the frame is light here, so the front card's text takes the dark grey */
+}
+.it04.light .bg4 { filter: blur(44px) brightness(1.02); }
+
 .bg4 { position: absolute; inset: -10%; background-size: cover; background-position: center 30%; filter: blur(44px) brightness(.45); }
 /* the frame takes 01's device sizing (ref 1's 1000 × 590, at most 1320 wide, 24px + 10px clear of the viewport's edges, so
    there is air above and below) — Nitish, 13 Oct. Inside, ref 5's split: the nav at its 9.7% less a quarter, the right
@@ -161,7 +168,7 @@
    mid grey on every card; centred on the front card, 28% from the top on the ones behind (whole above the card in front). */
 .stack4 { position: relative; min-height: 0; aspect-ratio: 165 / 274; width: 100%; }
 .deck4 { position: absolute; inset: 0; }
-.pcard4 { position: absolute; left: 0; width: 100%; aspect-ratio: 165 / 127; display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--frame); font: inherit; text-align: left; cursor: pointer; overflow: visible;
+.pcard4 { position: absolute; left: 0; width: 100%; aspect-ratio: 165 / 127; display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--card-front-ink); font: inherit; text-align: left; cursor: pointer; overflow: visible;
   box-shadow: 0 0 16px rgba(0, 0, 0, .3); } /* ref 4's: a soft halo about 16px out, darkest at the edge, seen on the card behind above each card's top (Nitish, 13 Oct — copied as it is, spill above included) */
 .pcard4.back { color: var(--ink); }
 .tab4 { position: absolute; left: 3.6%; top: 50%; transform: translateY(-50%); width: 12.1%; height: 25.2%; border-radius: 999px; background: var(--card-tab); z-index: 1; }
@@ -211,7 +218,7 @@
   background: color-mix(in srgb, var(--pcard-open-ink) 7%, transparent); border: 1px solid color-mix(in srgb, var(--pcard-open-ink) 10%, transparent); } /* a panel of the card's own ink, faint */
 .pp4-chips li { padding: .45em .9em; border-radius: 999px; background: color-mix(in srgb, var(--pcard-open-ink) 10%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); color: var(--pcard-open-ink); } /* meta */
 .pp4-meta { position: absolute; left: 2cqw; bottom: calc(2cqw + 1cqw * 2 + 2.6em + 1.3cqw); font: 500 var(--t-meta)/1.3 var(--f-copy); color: var(--pcard-open-ink); opacity: .7; } /* meta, above the chips */
-.pp4-arrow { position: absolute; right: 1.4cqw; bottom: 1.4cqw; width: clamp(40px, 4cqw, 56px); height: clamp(40px, 4cqw, 56px); border-radius: 50%; border: 0; background: var(--frame); color: var(--g6); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-el); transition: transform .2s; }
+.pp4-arrow { position: absolute; right: 1.4cqw; bottom: 1.4cqw; width: clamp(40px, 4cqw, 56px); height: clamp(40px, 4cqw, 56px); border-radius: 50%; border: 0; background: var(--pcard-open-ink); color: var(--pcard-open); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-el); transition: transform .2s; } /* inverted within the card */
 .pp4-arrow:hover { transform: translateY(-1px); } .pp4-arrow svg { width: 44%; height: 44%; }
 /* the folded layout: the lines set vertically, reading bottom to top, at the bottom-left */
 .pp4-fold { position: absolute; left: 1.2cqw; bottom: 1.4cqw; display: flex; flex-direction: row-reverse; gap: .5cqw; align-items: flex-end; }
