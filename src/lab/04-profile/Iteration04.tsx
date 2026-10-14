@@ -60,15 +60,30 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   );
 }
 
+/* the title's rolling first word: Product → Interaction → Motion (02 v29). The box's width is animated outright, on a
+   spring, to the next word's measured width — so "designer" travels, quickly but not in a jump (Nitish, 14 Oct; a layout
+   animation on an inline box had made it abrupt) — while the words themselves slide up through the clip. The widths come
+   from hidden copies set in the same type, re-measured when the type changes. */
 function RollingWord() {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
+  const probe = useRef<HTMLSpanElement>(null);
+  const [widths, setWidths] = useState<number[] | null>(null);
   useEffect(() => { if (reduce) return; const id = setInterval(() => setI(n => (n + 1) % WORDS.length), 2400); return () => clearInterval(id); }, [reduce]);
+  useLayoutEffect(() => {
+    const p = probe.current; if (!p) return;
+    const measure = () => setWidths([...p.children].map(c => (c as HTMLElement).getBoundingClientRect().width));
+    measure(); const ro = new ResizeObserver(measure); ro.observe(p); document.fonts?.addEventListener?.('loadingdone', measure);
+    return () => { ro.disconnect(); document.fonts?.removeEventListener?.('loadingdone', measure); };
+  }, []);
+  const w = widths?.[i];
   return (
-    <motion.span className="rw4" layout transition={{ duration: .45, ease: [.3, 1, .4, 1] }}>
-      <AnimatePresence initial={false} mode="popLayout">
-        <motion.span key={WORDS[i]} className="rw4-w" initial={{ y: '110%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '-110%', opacity: 0 }} transition={{ duration: .45, ease: [.3, 1, .4, 1] }}>{WORDS[i]}</motion.span>
+    <motion.span className="rw4" initial={false} animate={w != null ? { width: w } : undefined} transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34, mass: 1 }}>
+      {'\u00a0'}
+      <AnimatePresence initial={false}>
+        <motion.span key={WORDS[i]} className="rw4-w" initial={{ y: '110%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '-110%', opacity: 0 }} transition={reduce ? { duration: 0 } : { duration: .42, ease: [.3, 1, .4, 1] }}>{WORDS[i]}</motion.span>
       </AnimatePresence>
+      <span className="rw4-probe" ref={probe} aria-hidden="true">{WORDS.map(x => <span key={x}>{x}</span>)}</span>
     </motion.span>
   );
 }
@@ -156,7 +171,9 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
    the copy's type, the floating cards' places and layers; every value goes on the screen as a custom property, stays in
    this browser between reloads, and "Copy values" puts them on the clipboard to send over. To go once settled. ---- */
 type Control = { key: string; label: string; def: string; group: string } & ({ kind: 'color' } | { kind: 'range'; min: number; max: number; step: number; unit?: string } | { kind: 'select'; options: [string, string][] });
-const FONTS: [string, string][] = [['Josefin Sans', "'Josefin Sans'"], ['Outfit', "'Outfit'"], ['Poiret One', "'Poiret One'"], ['Limelight', "'Limelight'"], ['Marcellus', "'Marcellus'"], ['Marcellus SC', "'Marcellus SC'"], ['Bodoni Moda', "'Bodoni Moda'"], ['Krona One', "'Krona One'"], ['Instrument Sans', "'Instrument Sans'"]];
+/* the faces on offer: the ones already in use, a few display faces, and the sans-serifs product UI leans on now (all
+   variable-weight from Google Fonts, fetched only when picked) */
+const FONTS: [string, string][] = ['Josefin Sans', 'Outfit', 'Inter', 'Geist', 'Manrope', 'DM Sans', 'Plus Jakarta Sans', 'Figtree', 'Onest', 'Albert Sans', 'Urbanist', 'Sora', 'Space Grotesk', 'Bricolage Grotesque', 'Syne', 'Unbounded', 'Instrument Sans', 'Krona One', 'Poiret One', 'Limelight', 'Marcellus', 'Marcellus SC', 'Bodoni Moda'].map(f => [f, `'${f}'`]);
 const CONTROLS: Control[] = [
   { group: 'Colours', kind: 'color', key: '--frame', label: 'Main container', def: '#2b2b2e' },
   { group: 'Colours', kind: 'color', key: '--nav-bg', label: 'Nav background', def: '#d6d6db' },
@@ -180,8 +197,12 @@ const CONTROLS: Control[] = [
   { group: 'Type', kind: 'select', key: '--name-font', label: 'Name font', def: "'Josefin Sans'", options: FONTS },
   { group: 'Type', kind: 'range', key: '--name-w1', label: 'First name weight', def: '300', min: 100, max: 900, step: 100 },
   { group: 'Type', kind: 'range', key: '--name-w2', label: 'Surname weight', def: '700', min: 100, max: 900, step: 100 },
+  { group: 'Type', kind: 'range', key: '--h2-w', label: 'Headings weight', def: '700', min: 100, max: 900, step: 100 },
   { group: 'Type', kind: 'select', key: '--copy-font', label: 'Copy font', def: "'Outfit'", options: FONTS },
   { group: 'Type', kind: 'range', key: '--copy-w', label: 'Copy weight', def: '400', min: 100, max: 900, step: 100 },
+  { group: 'Type', kind: 'range', key: '--title-w', label: 'Title word weight', def: '500', min: 100, max: 900, step: 100 },
+  { group: 'Type', kind: 'range', key: '--role-w2', label: '"designer" weight', def: '500', min: 100, max: 900, step: 100 },
+  { group: 'Colours', kind: 'color', key: '--role-ink2', label: '"designer"', def: '#a7a7ae' },
   { group: 'Cards', kind: 'range', key: '--c-ai-x', label: 'Assistant · x', def: '19%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'range', key: '--c-ai-y', label: 'Assistant · y', def: '25%', min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Cards', kind: 'select', key: '--c-ai-z', label: 'Assistant · layer', def: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
@@ -341,7 +362,7 @@ export default function Iteration04() {
 
         {/* the right column: the lo-fi's widgets — a pill, the three stacked cards, Off duty fanned */}
         <aside className="col4">
-          <div className="pill4"><span>Projects</span></div>
+          <h2 className="h2-4 pill4">Projects</h2>
           <ProjectStack onOpen={id => go('project', id)} />
           <section className="off4"><PhotoStack fan tints={GREYS} /></section>
         </aside>
