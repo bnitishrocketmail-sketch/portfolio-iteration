@@ -17,7 +17,11 @@ import type { AnimationItem } from 'lottie-web';
    - `drop` removes top-level layers (by a test on name/type) before playing, and `viewBox` crops the canvas to a region
      ("x y w h", in the file's own pixels) — so a hosted file can be trimmed without editing it. Image assets of dropped
      layers are removed too. */
-const player = (effects: boolean) => (effects ? import('lottie-web/build/player/lottie_svg') : import('lottie-web/build/player/lottie_light')).then(m => m.default);
+/* Two builds can be on one page (light for most files, full for one with effects). Each numbers the ids of its filters,
+   masks and clip paths from zero, so without a prefix the two players' svgs carry the same ids and a `url(#…)` resolves to
+   whichever element the document meets first — a mask or blur from another card, or none (seen on 04 as a pill clipped at
+   the right, a glow gone solid or a text mask failing, at random with load order). Each build gets its own prefix. */
+const player = (effects: boolean) => (effects ? import('lottie-web/build/player/lottie_svg') : import('lottie-web/build/player/lottie_light')).then(m => { m.default.setIDPrefix(effects ? 'lf' : 'll'); return m.default; });
 
 async function animationData(src: string): Promise<unknown> {
   const res = await fetch(src); if (!res.ok) throw new Error(`Lottie ${res.status}: ${src}`);
