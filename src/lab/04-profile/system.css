@@ -1,0 +1,61 @@
+/* 04's design-system page (System04.tsx): the sheets of specimens, one per mode, drawn with the same classes and tokens
+   as the profile, laid on a 1320-wide frame and zoomed to fit; the controls in a column at the right. */
+/* the document is locked for the lab's fixed frames (base.css); this page scrolls on its own */
+.sys { position: fixed; inset: 0; overflow: auto; scrollbar-width: thin; background: #0f0f10; color: #e6e6ea; font-family: var(--body); padding: 28px clamp(16px, 3vw, 44px) 80px; }
+.sys-head { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+.sys-head h1 { margin: 0; font: 500 clamp(18px, 2vw, 24px)/1.2 var(--body); letter-spacing: -.01em; }
+.sys-head p { margin: 4px 0 0; color: #9a9aa2; font-size: 13px; max-width: 70ch; }
+.sys-back { color: #c9c9cf; font: 500 12px var(--body); text-decoration: none; padding: 8px 14px; border-radius: 999px; background: #1e1e22; }
+.sys-body { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: start; }
+.sys-sheets { display: grid; gap: 28px; min-width: 0; }
+/* a sheet: the page's background around the frame, the frame at 1320 wide, zoomed to the column */
+.sys-sheet { border-radius: 22px; overflow: hidden; }
+.sys-sheet h2 { margin: 0 0 10px; font: 600 11px var(--body); letter-spacing: .1em; text-transform: uppercase; color: #8e8e96; }
+.sys-page { background: var(--bg); padding: 28px; zoom: var(--z, .6); border-radius: 22px; overflow: hidden; } /* --z: the column's width over the frame's 1320 (System04.tsx) */
+.it04.sys { position: relative; inset: auto; display: block; overflow: visible; width: 1320px; height: auto; container-type: inline-size; padding: 36px 40px 40px; border-radius: 36px; background: var(--frame); box-shadow: var(--shadow-frame), 0 0 0 1px rgba(255, 255, 255, .06); color: var(--ink); }
+.sys-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px 48px; }
+.sys-block { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.sys-block > h3 { margin: 0 0 4px; font: 600 11px var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); opacity: .7; }
+.sys-row { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+.sys-cap { font: 500 10.5px/1.3 var(--body); color: var(--muted); opacity: .65; letter-spacing: .04em; }
+/* the type specimens carry the page's own classes; here each sits with its label */
+.sys-type > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
+.sys-type .nm4 { text-transform: uppercase; }
+.sys-type .nm4, .sys-type .role4, .sys-type .sub4 { grid-area: auto; margin: 0; } /* the cut-out's grid areas mean nothing here */
+/* the elements: the same classes as on the profile, given a box where the profile's layout gave one */
+.sys-nav { display: flex; align-items: center; gap: 14px; }
+.sys-nav .navcol4 { width: 70px; height: 300px; padding: 14px 0 10px; gap: 10px; }
+.sys-nav .nav4 ul { gap: 4px; }
+.sys-nav .hl4 { position: absolute; left: 50%; transform: translateX(-50%); top: 0; width: 33px; height: 68px; }
+.sys-nav .nav4 ul button.on { color: var(--nav-hl-ink); }
+.sys-nav .ai4 { width: 53px; }
+.sys-glass { position: relative; width: 322px; }
+.sys-glass .name4 { position: relative; right: auto; bottom: auto; width: 100%; min-width: 0; }
+.sys .fl4-in { animation: none; }
+.sys .fl4-in .sys-lottie { width: 6.8cqw; aspect-ratio: 1; border-radius: calc(var(--r) * .5); background: color-mix(in srgb, var(--glass-ink) 18%, transparent); }
+.sys-wide { grid-column: 1 / -1; }
+.sys-pcards { display: flex; gap: 18px; height: 380px; }
+.sys-pcards .pp4-card { position: relative; bottom: auto; width: 640px; height: 100%; }
+.sys-pcards .pp4-card.fold { width: 170px; }
+.sys-stack { position: relative; width: 277px; aspect-ratio: 165 / 274; }
+.sys-corner { position: relative; width: 120px; height: 90px; }
+.sys-corner .corner4 { left: 0; bottom: 0; }
+.sys .links4 { background: color-mix(in srgb, var(--ink) 6%, transparent); border-radius: 12px; }
+/* the controls */
+.sys-controls { position: sticky; top: 0; display: grid; gap: 14px; padding: 16px 18px 18px; border-radius: 18px; background: #17171a; box-shadow: 0 0 0 1px rgba(255, 255, 255, .07); max-height: calc(100vh - 40px); overflow: auto; scrollbar-width: thin; }
+.sys-mode { display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: #0f0f10; }
+.sys-mode button { flex: 1; border: 0; border-radius: 999px; padding: 7px 10px; background: none; color: #9a9aa2; font: 500 12px var(--body); cursor: pointer; }
+.sys-mode button.on { background: #2a2a2f; color: #f0f0f3; }
+.sys-controls details { border-top: 1px solid rgba(255, 255, 255, .07); padding-top: 10px; }
+.sys-controls summary { cursor: pointer; font: 600 11px var(--body); letter-spacing: .1em; text-transform: uppercase; color: #a9a9b1; list-style: none; display: flex; justify-content: space-between; }
+.sys-controls summary::after { content: "+"; color: #6c6c74; } .sys-controls details[open] summary::after { content: "–"; }
+.sys-controls h5 { margin: 12px 0 6px; font: 500 10.5px var(--body); letter-spacing: .06em; text-transform: uppercase; color: #6c6c74; }
+.sys-controls label { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 3px 0; font: 500 11.5px var(--body); color: #c9c9cf; }
+.sys-controls label > span:first-child { min-width: 0; }
+.sys-controls input[type="color"] { width: 34px; height: 22px; padding: 0; border: 0; background: none; cursor: pointer; flex: none; }
+.sys-controls .tw-range { display: inline-flex; align-items: center; gap: 6px; flex: none; } .sys-controls .tw-range output { width: 36px; text-align: right; font: 500 10.5px var(--body); color: #8e8e96; }
+.sys-controls input[type="range"] { width: 84px; accent-color: #d6d6db; }
+.sys-controls select { max-width: 132px; padding: 3px 4px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, .12); background: #222226; color: #f0f0f3; font: 500 11px var(--body); }
+.sys-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.sys-actions button { border: 0; border-radius: 999px; padding: 6px 12px; background: #2a2a2f; color: #f0f0f3; font: 500 11.5px var(--body); cursor: pointer; }
+@media (max-width: 1100px) { .sys-body { grid-template-columns: 1fr; } .sys-controls { position: static; max-height: none; } }

@@ -1,0 +1,66 @@
+/* 04's design tokens under control (Nitish, 13–14 Oct): every value here is a custom property the screen reads. Two value
+   sets — dark (`def`) and light (`light`; the dark one when none is given) — each kept apart in the browser as well, so
+   edits on the design-system page carry to the profile and back. Grouped as the system page lays them out. */
+export type Control = { key: string; label: string; def: string; light?: string; group: string; sub: string } &
+  ({ kind: 'color' } | { kind: 'range'; min: number; max: number; step: number; unit?: string } | { kind: 'select'; options: [string, string][] });
+
+/* the faces on offer: the ones already in use, a few display faces, and the sans-serifs product UI leans on now (all
+   variable-weight from Google Fonts, fetched only when picked) */
+export const FONTS: [string, string][] = ['Josefin Sans', 'Outfit', 'Inter', 'Geist', 'Manrope', 'DM Sans', 'Plus Jakarta Sans', 'Figtree', 'Onest', 'Albert Sans', 'Urbanist', 'Sora', 'Space Grotesk', 'Bricolage Grotesque', 'Syne', 'Unbounded', 'Instrument Sans', 'Krona One', 'Poiret One', 'Limelight', 'Marcellus', 'Marcellus SC', 'Bodoni Moda'].map(f => [f, `'${f}'`]);
+
+const w = (key: string, label: string, def: string, light = def, sub = 'Weights'): Control => ({ group: 'Type', sub, kind: 'range', key, label, def, light, min: 100, max: 900, step: 100 });
+const size = (key: string, label: string, def: string): Control => ({ group: 'Type', sub: 'Sizes (of the frame’s width, %)', kind: 'range', key, label, def, light: def, min: .6, max: 4, step: .05 });
+const col = (sub: string, key: string, label: string, def: string, light = def): Control => ({ group: 'Colours', sub, kind: 'color', key, label, def, light });
+const layer: [string, string][] = [['In front of me', '3'], ['Behind me', '1']];
+const shown: [string, string][] = [['Shown', 'block'], ['Hidden', 'none']];
+const card = (id: string, name: string, x: string, y: string, z: string, v: string): Control[] => [
+  { group: 'Intro cards', sub: name, kind: 'range', key: `--c-${id}-x`, label: 'x', def: x, light: x, min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Intro cards', sub: name, kind: 'range', key: `--c-${id}-y`, label: 'y', def: y, light: y, min: -20, max: 90, step: 1, unit: '%' },
+  { group: 'Intro cards', sub: name, kind: 'select', key: `--c-${id}-z`, label: 'Layer', def: z, light: z, options: layer },
+  { group: 'Intro cards', sub: name, kind: 'select', key: `--c-${id}-v`, label: 'Shown', def: v, light: v, options: shown },
+];
+
+export const CONTROLS: Control[] = [
+  /* type */
+  { group: 'Type', sub: 'Faces', kind: 'select', key: '--name-font', label: 'Headings (the name’s face)', def: "'Outfit'", light: "'Outfit'", options: FONTS },
+  { group: 'Type', sub: 'Faces', kind: 'select', key: '--copy-font', label: 'Copy', def: "'Outfit'", light: "'Outfit'", options: FONTS },
+  w('--name-w1', 'First name', '800'), w('--name-w2', 'Surname', '300'), w('--h2-w', 'Headings', '300', '600'),
+  w('--copy-w', 'Copy', '300'), w('--title-w', 'Title word (Product / Interaction / Motion)', '500'), w('--role-w2', '“designer”', '800'),
+  size('--s-h1', 'H1 — the name, section headings', '2.8'), size('--s-title', 'Title — a card’s name', '1.35'), size('--s-body', 'Body', '1.25'), size('--s-meta', 'Meta', '1.05'),
+  /* colours: surfaces */
+  col('Surfaces', '--bg', 'Page background', '#141416', '#d4d4d7'),
+  col('Surfaces', '--frame', 'Main container', '#121212', '#b5b5b5'),
+  col('Surfaces', '--nav-bg', 'Nav bar', '#e0e0e0'),
+  col('Surfaces', '--glass-bg', 'Glass', '#000000'),
+  { group: 'Colours', sub: 'Surfaces', kind: 'range', key: '--glass-a', label: 'Glass opacity', def: '0.2', light: '0.2', min: 0, max: 1, step: .05 },
+  col('Surfaces', '--pcard-open', 'Project card, open', '#e0e0e0'),
+  col('Surfaces', '--pcard-fold', 'Project card, folded', '#2f2e30'),
+  /* colours: text */
+  col('Text', '--name-ink', 'Name', '#dfdfdf', '#2f2e30'),
+  col('Text', '--title-ink', 'Title word', '#e0e0e0', '#2f2e30'),
+  col('Text', '--role-ink2', '“designer”', '#59575b', '#2f2e30'),
+  col('Text', '--line-ink', 'Line about me', '#e0e0e0', '#2f2e30'),
+  col('Text', '--glass-ink', 'Glass text', '#c9c9cc'),
+  col('Text', '--ink', 'Headings and other text', '#f5f5f5', '#dbdbdb'),
+  col('Text', '--muted', 'Secondary text', '#d1d1d6', '#e0e0e0'),
+  col('Text', '--nav-ink', 'Nav names', '#2f2e30'),
+  col('Text', '--nav-hl-ink', 'Nav name, highlighted', '#c9c9c9'),
+  col('Text', '--pcard-open-ink', 'Project card, open', '#121212'),
+  col('Text', '--pcard-fold-ink', 'Project card, folded', '#e0e0e0'),
+  /* colours: controls and marks */
+  col('Controls and marks', '--nav-hl', 'Nav highlight', '#2f2e30'),
+  col('Controls and marks', '--ai-bg', 'Assistant button', '#2f2e30'),
+  col('Controls and marks', '--ai-ink', 'Assistant icon', '#c9c9c9'),
+  col('Controls and marks', '--cv-bg', 'View CV button', '#d6d6d6', '#2f2e30'),
+  col('Controls and marks', '--cv-ink', 'View CV text and arrow', '#2b2b2e', '#b5b5b5'),
+  col('Controls and marks', '--social-ink', 'Social icons', '#a6a6a6', '#2f2e30'),
+  col('Controls and marks', '--corner-ink', 'Corner bracket', '#bababa', '#2f2e30'),
+  /* the intro's floating cards */
+  ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'block'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
+  ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '3', 'block'), ...card('loader', 'Loader', '60%', '59%', '1', 'block'),
+];
+
+export const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;
+export function readTweaks(dark: boolean): Record<string, string> { try { return JSON.parse(localStorage.getItem(tweakKey(dark)) || '{}'); } catch { return {}; } }
+export function writeTweaks(dark: boolean, v: Record<string, string>) { try { if (Object.keys(v).length) localStorage.setItem(tweakKey(dark), JSON.stringify(v)); else localStorage.removeItem(tweakKey(dark)); } catch { /* fine */ } }
+export const defOf = (c: Control, dark: boolean) => (dark ? c.def : (c.light ?? c.def));

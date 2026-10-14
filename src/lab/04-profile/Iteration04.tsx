@@ -11,6 +11,7 @@ import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.web
 import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
+import { readTweaks, tweakKey } from './tokens';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { siLottiefiles } from 'simple-icons';
 import './profile.css';
@@ -168,125 +169,17 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
   return clip;
 }
 
-/* ---- temporary controls (Nitish, 13 Oct): an "Edit" pill at the page's corner opens a panel — colours, the name's and
-   the copy's type, the floating cards' places and layers; every value goes on the screen as a custom property, stays in
-   this browser between reloads, and "Copy values" puts them on the clipboard to send over. To go once settled. ---- */
-type Control = { key: string; label: string; def: string; light?: string; group: string } & ({ kind: 'color' } | { kind: 'range'; min: number; max: number; step: number; unit?: string } | { kind: 'select'; options: [string, string][] });
-/* each control has a dark default (`def`) and a light one (`light`; the dark one when none is given) — two value sets,
-   kept apart in the browser too (Nitish, 14 Oct: his first set is the dark mode's, the second the light mode's) */
-/* the faces on offer: the ones already in use, a few display faces, and the sans-serifs product UI leans on now (all
-   variable-weight from Google Fonts, fetched only when picked) */
-const FONTS: [string, string][] = ['Josefin Sans', 'Outfit', 'Inter', 'Geist', 'Manrope', 'DM Sans', 'Plus Jakarta Sans', 'Figtree', 'Onest', 'Albert Sans', 'Urbanist', 'Sora', 'Space Grotesk', 'Bricolage Grotesque', 'Syne', 'Unbounded', 'Instrument Sans', 'Krona One', 'Poiret One', 'Limelight', 'Marcellus', 'Marcellus SC', 'Bodoni Moda'].map(f => [f, `'${f}'`]);
-const CONTROLS: Control[] = [
-  { group: 'Colours', kind: 'color', key: '--bg', label: 'Page background', def: '#141416', light: '#d4d4d7' },
-  { group: 'Colours', kind: 'color', key: '--frame', label: 'Main container', def: '#121212', light: '#b5b5b5' },
-  { group: 'Colours', kind: 'color', key: '--nav-bg', label: 'Nav background', def: '#e0e0e0', light: '#e0e0e0' },
-  { group: 'Colours', kind: 'color', key: '--nav-ink', label: 'Nav names', def: '#2f2e30', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--nav-hl', label: 'Nav highlight', def: '#2f2e30', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--nav-hl-ink', label: 'Highlight name', def: '#c9c9c9', light: '#c9c9c9' },
-  { group: 'Colours', kind: 'color', key: '--ai-bg', label: 'AI button', def: '#2f2e30', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--ai-ink', label: 'AI icon', def: '#c9c9c9', light: '#c9c9c9' },
-  { group: 'Colours', kind: 'color', key: '--glass-bg', label: 'Glass box', def: '#000000', light: '#000000' },
-  { group: 'Colours', kind: 'range', key: '--glass-a', label: 'Glass opacity', def: '0.2', light: '0.2', min: 0, max: 1, step: .05 },
-  { group: 'Colours', kind: 'color', key: '--glass-ink', label: 'Glass text', def: '#c9c9cc', light: '#c9c9cc' },
-  { group: 'Colours', kind: 'color', key: '--name-ink', label: 'Name', def: '#dfdfdf', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--title-ink', label: 'Title', def: '#e0e0e0', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--line-ink', label: 'Line about me', def: '#e0e0e0', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--social-ink', label: 'Social icons', def: '#a6a6a6', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--cv-bg', label: 'View CV button', def: '#d6d6d6', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--cv-ink', label: 'View CV text & arrow', def: '#2b2b2e', light: '#b5b5b5' },
-  { group: 'Colours', kind: 'color', key: '--corner-ink', label: 'Corner bracket', def: '#bababa', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--pcard-open', label: 'Project card · open', def: '#e0e0e0', light: '#e0e0e0' },
-  { group: 'Colours', kind: 'color', key: '--pcard-open-ink', label: 'Project card · open text', def: '#121212', light: '#121212' },
-  { group: 'Colours', kind: 'color', key: '--pcard-fold', label: 'Project card · folded', def: '#2f2e30', light: '#2f2e30' },
-  { group: 'Colours', kind: 'color', key: '--pcard-fold-ink', label: 'Project card · folded text', def: '#e0e0e0', light: '#e0e0e0' },
-  { group: 'Colours', kind: 'color', key: '--ink', label: 'Other text', def: '#f5f5f5', light: '#dbdbdb' },
-  { group: 'Colours', kind: 'color', key: '--muted', label: 'Secondary text', def: '#d1d1d6', light: '#e0e0e0' },
-  { group: 'Type', kind: 'select', key: '--name-font', label: 'Name font', def: "'Outfit'", light: "'Outfit'", options: FONTS },
-  { group: 'Type', kind: 'range', key: '--name-w1', label: 'First name weight', def: '800', light: '800', min: 100, max: 900, step: 100 },
-  { group: 'Type', kind: 'range', key: '--name-w2', label: 'Surname weight', def: '300', light: '300', min: 100, max: 900, step: 100 },
-  { group: 'Type', kind: 'range', key: '--h2-w', label: 'Headings weight', def: '300', light: '600', min: 100, max: 900, step: 100 },
-  { group: 'Type', kind: 'select', key: '--copy-font', label: 'Copy font', def: "'Outfit'", light: "'Outfit'", options: FONTS },
-  { group: 'Type', kind: 'range', key: '--copy-w', label: 'Copy weight', def: '300', light: '300', min: 100, max: 900, step: 100 },
-  { group: 'Type', kind: 'range', key: '--title-w', label: 'Title word weight', def: '500', light: '500', min: 100, max: 900, step: 100 },
-  { group: 'Type', kind: 'range', key: '--role-w2', label: '"designer" weight', def: '800', light: '800', min: 100, max: 900, step: 100 },
-  { group: 'Colours', kind: 'color', key: '--role-ink2', label: '"designer"', def: '#59575b', light: '#2f2e30' },
-  { group: 'Cards', kind: 'range', key: '--c-ai-x', label: 'Assistant · x', def: '11%', light: '11%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'range', key: '--c-ai-y', label: 'Assistant · y', def: '38%', light: '38%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'select', key: '--c-ai-z', label: 'Assistant · layer', def: '3', light: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
-  { group: 'Cards', kind: 'select', key: '--c-ai-v', label: 'Assistant · shown', def: 'block', light: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
-  { group: 'Cards', kind: 'range', key: '--c-coin-x', label: 'Coin · x', def: '59%', light: '59%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'range', key: '--c-coin-y', label: 'Coin · y', def: '10%', light: '10%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'select', key: '--c-coin-z', label: 'Coin · layer', def: '1', light: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
-  { group: 'Cards', kind: 'select', key: '--c-coin-v', label: 'Coin · shown', def: 'block', light: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
-  { group: 'Cards', kind: 'range', key: '--c-micro-x', label: 'Micro · x', def: '3%', light: '3%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'range', key: '--c-micro-y', label: 'Micro · y', def: '51%', light: '51%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'select', key: '--c-micro-z', label: 'Micro · layer', def: '3', light: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
-  { group: 'Cards', kind: 'select', key: '--c-micro-v', label: 'Micro · shown', def: 'none', light: 'none', options: [['Shown', 'block'], ['Hidden', 'none']] },
-  { group: 'Cards', kind: 'range', key: '--c-gold-x', label: 'Success · x', def: '18%', light: '18%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'range', key: '--c-gold-y', label: 'Success · y', def: '12%', light: '12%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'select', key: '--c-gold-z', label: 'Success · layer', def: '3', light: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
-  { group: 'Cards', kind: 'select', key: '--c-gold-v', label: 'Success · shown', def: 'block', light: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
-  { group: 'Cards', kind: 'range', key: '--c-pers-x', label: 'Persuasion · x', def: '68%', light: '68%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'range', key: '--c-pers-y', label: 'Persuasion · y', def: '40%', light: '40%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'select', key: '--c-pers-z', label: 'Persuasion · layer', def: '3', light: '3', options: [['In front of me', '3'], ['Behind me', '1']] },
-  { group: 'Cards', kind: 'select', key: '--c-pers-v', label: 'Persuasion · shown', def: 'block', light: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
-  { group: 'Cards', kind: 'range', key: '--c-loader-x', label: 'Loader · x', def: '60%', light: '60%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'range', key: '--c-loader-y', label: 'Loader · y', def: '59%', light: '59%', min: -20, max: 90, step: 1, unit: '%' },
-  { group: 'Cards', kind: 'select', key: '--c-loader-z', label: 'Loader · layer', def: '1', light: '1', options: [['In front of me', '3'], ['Behind me', '1']] },
-  { group: 'Cards', kind: 'select', key: '--c-loader-v', label: 'Loader · shown', def: 'block', light: 'block', options: [['Shown', 'block'], ['Hidden', 'none']] },
-];
-const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;
-function readTweaks(dark: boolean): Record<string, string> { try { return JSON.parse(localStorage.getItem(tweakKey(dark)) || '{}'); } catch { return {}; } }
-const defOf = (c: Control, dark: boolean) => (dark ? c.def : (c.light ?? c.def));
-function Tweaks({ values, onChange, dark, setDark }: { values: Record<string, string>; onChange: (v: Record<string, string>) => void; dark: boolean; setDark: (d: boolean) => void }) {
-  const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const set = (k: string, v: string) => { const next = { ...values, [k]: v }; onChange(next); try { localStorage.setItem(tweakKey(dark), JSON.stringify(next)); } catch { /* fine */ } };
-  const reset = () => { onChange({}); try { localStorage.removeItem(tweakKey(dark)); } catch { /* fine */ } };
-  const copy = () => { const out = Object.fromEntries([[`Mode`, dark ? 'dark' : 'light'] as [string, string]].concat(CONTROLS.map(c => [`${c.group} · ${c.label}`, values[c.key] ?? defOf(c, dark)]))); navigator.clipboard?.writeText(JSON.stringify(out, null, 2)).then(() => { setCopied(true); window.setTimeout(() => setCopied(false), 1400); }); };
-  const groups = [...new Set(CONTROLS.map(c => c.group))];
-  return (
-    <div className={`tweaks4${open ? ' open' : ''}`}>
-      <button type="button" className="tw-toggle" onClick={() => setOpen(o => !o)}>{open ? 'Close' : 'Edit'}</button>
-      {open && (
-        <div className="tw-panel">
-          <section>
-            <h4>Mode</h4>
-            <label><span>Dark or light</span><select value={dark ? 'dark' : 'light'} onChange={e => setDark(e.target.value === 'dark')}><option value="dark">Dark</option><option value="light">Light</option></select></label>
-          </section>
-          {groups.map(g => (
-            <section key={g}>
-              <h4>{g}</h4>
-              {CONTROLS.filter(c => c.group === g).map(c => {
-                const v = values[c.key] ?? defOf(c, dark);
-                return (
-                  <label key={c.key}><span>{c.label}</span>
-                    {c.kind === 'color' && <input type="color" value={v} onChange={e => set(c.key, e.target.value)} />}
-                    {c.kind === 'range' && <span className="tw-range"><input type="range" min={c.min} max={c.max} step={c.step} value={parseFloat(v)} onChange={e => set(c.key, e.target.value + (c.unit ?? ''))} /><output>{v}</output></span>}
-                    {c.kind === 'select' && <select value={v} onChange={e => set(c.key, e.target.value)}>{c.options.map(([l, val]) => <option key={val} value={val}>{l}</option>)}</select>}
-                  </label>
-                );
-              })}
-            </section>
-          ))}
-          <div className="tw-row"><button type="button" onClick={copy}>{copied ? 'Copied' : 'Copy values'}</button><button type="button" onClick={reset}>Reset</button></div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function Iteration04() {
   const { view } = useParams();
   const navigate = useNavigate();
   const { isDark, toggle } = useTheme();
-  const setDark = (d: boolean) => { if (d !== isDark) toggle(); };
   const tab: Tab = (NAV.some(n => n.id === view) ? view : 'home') as Tab;
   const go = (v: ViewName, pid?: string) => { if (v === 'project' && pid) { navigate(`/lab/04-profile/projects`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
   const [ask, setAsk] = useState(0);
+  /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
+     mode change, and when the system page writes them from another tab */
   const [tweaks, setTweaks] = useState<Record<string, string>>(() => readTweaks(isDark));
-  useEffect(() => { setTweaks(readTweaks(isDark)); }, [isDark]); /* each mode keeps its own values */
+  useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
   const reduce = useReducedMotion();
@@ -389,7 +282,8 @@ export default function Iteration04() {
         </aside>
         </>)}
       </div>
-      <Tweaks values={tweaks} onChange={setTweaks} dark={isDark} setDark={setDark} />
+      {/* the design system — the type, the colours, the cards' places, in both modes, with their controls — is its own page */}
+      <Link className="tweaks4 tw-toggle" to="/lab/04-system">Design system</Link>
       <Link className="labtag" to="/lab">Lab · 04 Profile</Link>
     </div>
   );
