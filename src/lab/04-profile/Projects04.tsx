@@ -7,7 +7,8 @@ import { LINKS, PROJECTS } from '../../lib/data';
    the title and blurb at the top-left, the tags in a panel at the bottom-left, a round arrow at the bottom-right corner),
    the others folded narrow to its right in their order, each with its title, client and year, and tags set vertically at
    its bottom-left (01's card's information, turned). The rules (Nitish, 14 Oct): the cards keep their sequence; the
-   selected one opens in place and the one that was open folds. With the first card open, the two after it show whole
+   selected one opens in place and the one that was open folds — the open card in the theme's light grey with dark text,
+   the folded ones in its dark grey with light text (no pictures or colours yet). With the first card open, the two after it show whole
    and the third half, fading under the mask at the right end — three and a half cards in view; so the folded width
    follows from the viewport: open + 2½ folded + 3 gaps = the width. The row stays put for the first two cards; from the
    third, the card two before the open one goes half into the left edge (see `shift`). The
@@ -49,8 +50,7 @@ export default function Projects04() {
       </header>
       <div className="pp4-row" ref={rowRef}>
         {geo && place.map(({ p, open, x, w }) => (
-          <motion.article key={p.id} className={`pp4-card${open ? ' open' : ''}`} style={{ '--m1': p.m1, '--m2': p.m2 } as React.CSSProperties}
-            initial={false} animate={{ x, width: w }} transition={tr}>
+          <motion.article key={p.id} className={`pp4-card${open ? ' open' : ''}`} initial={false} animate={{ x, width: w }} transition={tr}>
             <div className="pp4-cover" aria-hidden="true"><span className="pletter">{p.letter}</span></div>
             {/* the open layout: ref 7's wide card */}
             <motion.div className="pp4-open" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }} style={{ pointerEvents: open ? 'auto' : 'none' }}>
