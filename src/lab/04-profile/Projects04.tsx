@@ -7,10 +7,10 @@ import { LINKS, PROJECTS } from '../../lib/data';
    the title and blurb at the top-left, the tags in a panel at the bottom-left, a round arrow at the bottom-right corner),
    the others folded narrow to its right in their order, each with its title, client and year, and tags set vertically at
    its bottom-left (01's card's information, turned). The rules (Nitish, 14 Oct): the cards keep their sequence; the
-   selected one opens in place and the one that was open folds; the row is placed so the open card sits at the viewport's
-   left edge, with the two after it whole and the third after it half shown, fading out under the mask at the right end —
-   three and a half cards in view — and the cards before the open one are off to the left, clipped at that edge (they
-   slide out through it). So the folded width follows from the viewport: open + 2½ folded + 3 gaps = the width. The
+   selected one opens in place and the one that was open folds. With the first card open, the two after it show whole
+   and the third half, fading under the mask at the right end — three and a half cards in view; so the folded width
+   follows from the viewport: open + 2½ folded + 3 gaps = the width. The row stays put for the first two cards; from the
+   third, the card two before the open one goes half into the left edge (see `shift`). The
    geometry is explicit — the row is measured, each card's x and width are animated on a spring — so nothing scales:
    covers are cropped by their cards and reveal as they widen. The arrow is to open the case study; where that goes is next. */
 const OPEN = .58; /* the open card, of the viewport's width (ref 7: 66% with two folded; five here) */
@@ -32,7 +32,11 @@ export default function Projects04() {
   const E = geo ? Math.round(geo.w * OPEN) : 0, C = geo ? Math.round((geo.w - E - 3 * geo.gap) / 2.5) : 0;
   let x = 0; const k = PROJECTS.findIndex(p => p.id === sel);
   const laid = PROJECTS.map((p, i) => { const open = i === k; const w = open ? E : C; const at = x; x += w + (geo?.gap ?? 0); return { p, open, x: at, w }; });
-  const shift = laid[k]?.x ?? 0; /* the open card to the viewport's left edge */
+  /* where the row sits (Nitish, 14 Oct, second rule): with the first or second card open the row stays at its start;
+     from the third on, the card two before the open one goes half into the left edge — so the one before it shows whole,
+     then the open one, then what follows — and never further than the row's end (the last cards back-fill from the left) */
+  const total = x - (geo?.gap ?? 0);
+  const shift = geo ? Math.max(0, Math.min(k < 2 ? 0 : laid[k - 2].x + C / 2, total - geo.w)) : 0;
   const place = laid.map(c => ({ ...c, x: c.x - shift }));
   return (
     <section className="pp4" aria-label="Projects">
