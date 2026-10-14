@@ -9,6 +9,7 @@ import illustration from '../../assets/nitish-desk-illustration.webp';
 import desk from '../../assets/nitish-desk.webp';
 import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.webp';
 import { Lottie } from '../../components/micro/Lottie';
+import Projects04 from './Projects04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { siLottiefiles } from 'simple-icons';
@@ -144,9 +145,9 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
    notch at the top-centre to the links' — every convex corner rounded with the tile's radius (the notch's top ends with
    the notch's smaller one) and the inner corners rounded the other way; measured from the boxes, as a clip path, so the
    tile and its shadow follow it. On the phone the cut-out sits below the picture, so there is none. */
-function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.RefObject<HTMLDivElement | null>, links: React.RefObject<HTMLDivElement | null>) {
+function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.RefObject<HTMLDivElement | null>, links: React.RefObject<HTMLDivElement | null>, key: string) {
   const [clip, setClip] = useState<string | null>(null);
-  useLayoutEffect(() => {
+  useLayoutEffect(() => { /* re-run when the tile comes back after another tab (key) */
     const w = wrap.current, c = cut.current, l = links.current; if (!w || !c || !l) return;
     const measure = () => {
       if (getComputedStyle(c).position !== 'absolute') { setClip(null); return; }
@@ -163,7 +164,7 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
     };
     measure();
     const ro = new ResizeObserver(measure); ro.observe(w); ro.observe(c); ro.observe(l); return () => ro.disconnect();
-  }, [wrap, cut, links]);
+  }, [wrap, cut, links, key]);
   return clip;
 }
 
@@ -273,7 +274,7 @@ export default function Iteration04() {
   const [ask, setAsk] = useState(0);
   const [tweaks, setTweaks] = useState<Record<string, string>>(readTweaks);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
-  const clip = useNotchClip(wrapRef, cutRef, linksRef);
+  const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
   const reduce = useReducedMotion();
   /* the cards lean with the pointer by their depth (the hero's chips) */
   const lean = (e: React.PointerEvent) => {
@@ -301,6 +302,12 @@ export default function Iteration04() {
             area at its bottom-left — the name, the title, the line, the CV, the photo — is not part of it but the frame
             showing through a corner cut out of the tile (Nitish, 13 Oct). So the tile is clipped to that shape and casts its
             shadow as that shape — onto the frame around it and onto the cut-out area — and the cut-out sits beside it. */}
+        {tab === 'projects' ? (
+          /* the project page takes the picture's and the column's place (Projects04.tsx); the nav stays */
+          <motion.div key="projects" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+            <Projects04 />
+          </motion.div>
+        ) : (<>
         <div className="picwrap4" ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean}>
           <section className="pic4">
             <div className="pic4-in" style={clip ? { clipPath: clip } : undefined}>
@@ -366,6 +373,7 @@ export default function Iteration04() {
           <ProjectStack onOpen={id => go('project', id)} />
           <section className="off4"><PhotoStack fan tints={GREYS} /></section>
         </aside>
+        </>)}
       </div>
       <Tweaks values={tweaks} onChange={setTweaks} />
       <Link className="labtag" to="/lab">Lab · 04 Profile</Link>

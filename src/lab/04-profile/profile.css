@@ -186,6 +186,40 @@
 .off4 { overflow: hidden; }
 .off4 .hint { display: none; }
 
+/* ---- the project page (Projects04.tsx), in the picture's and the column's place ---- */
+.page4 { grid-column: 2 / 4; min-width: 0; min-height: 0; display: flex; }
+.pp4 { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 1.6cqw; padding: .6cqw .2cqw 0; }
+.pp4-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 2cqw; padding: 0 .4cqw; }
+.pp4-right { display: flex; flex-direction: column; align-items: flex-start; gap: .8cqw; max-width: 34ch; }
+.pp4-note { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: var(--line-ink); } /* body */
+/* the row: every card the row's height; what runs past the end fades out under a mask (Nitish, 14 Oct) */
+.pp4-row { position: relative; flex: 1; min-height: 0; column-gap: 1.4cqw; overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 86%, transparent); mask-image: linear-gradient(to right, #000 86%, transparent); }
+.pp4-card { position: absolute; top: 0; left: 0; height: 100%; border-radius: var(--r); overflow: hidden; background: var(--g2); box-shadow: var(--shadow-el); color: #fff; }
+/* the cover: 01's project media — the project's two colours, its letter, a soft light from the corner */
+.pp4-cover { position: absolute; inset: 0; background: linear-gradient(135deg, var(--m1), var(--m2)); }
+.pp4-cover::after { content: ""; position: absolute; inset: 0; background: radial-gradient(90% 70% at 100% 100%, rgba(255, 255, 255, .28), transparent 60%); }
+.pp4-cover .pletter { position: absolute; right: 4%; bottom: -5%; font: 800 clamp(120px, 18cqw, 260px)/1 var(--display); letter-spacing: -.04em; opacity: .22; color: #fff; }
+.pp4-card.open .pp4-cover::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .34), transparent 48%); } /* so the title reads */
+/* the open layout */
+.pp4-open { position: absolute; inset: 0; }
+.pp4-top { position: absolute; left: 2cqw; top: 1.8cqw; right: 34%; display: flex; flex-direction: column; gap: .7cqw; }
+.pp4-title { margin: 0; font: var(--h2-w) clamp(18px, 2.2cqw, 28px)/1.15 var(--f-head); letter-spacing: -.01em; color: #fff; } /* a display title, the name's face */
+.pp4-blurb { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: rgba(255, 255, 255, .86); max-width: 36ch; }
+.pp4-chips { position: absolute; left: 2cqw; bottom: 2cqw; margin: 0; padding: 1cqw; list-style: none; display: flex; flex-wrap: wrap; gap: .6cqw; max-width: 50%; border-radius: calc(var(--r) * .7);
+  background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18); }
+.pp4-chips li { padding: .45em .9em; border-radius: 999px; background: rgba(255, 255, 255, .14); font: 500 var(--t-meta)/1.2 var(--f-copy); color: #fff; } /* meta */
+.pp4-meta { position: absolute; left: 2cqw; bottom: calc(2cqw + 1cqw * 2 + 2.6em + 1.3cqw); font: 500 var(--t-meta)/1.3 var(--f-copy); color: rgba(255, 255, 255, .72); } /* meta, above the chips */
+.pp4-arrow { position: absolute; right: 1.4cqw; bottom: 1.4cqw; width: clamp(40px, 4cqw, 56px); height: clamp(40px, 4cqw, 56px); border-radius: 50%; border: 0; background: var(--frame); color: var(--g6); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-el); transition: transform .2s; }
+.pp4-arrow:hover { transform: translateY(-1px); } .pp4-arrow svg { width: 44%; height: 44%; }
+/* the folded layout: the lines set vertically, reading bottom to top, at the bottom-left */
+.pp4-fold { position: absolute; left: 1.2cqw; bottom: 1.4cqw; display: flex; flex-direction: row-reverse; gap: .5cqw; align-items: flex-end; }
+.pp4-fold > span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; max-height: 60cqh; overflow: hidden; text-overflow: ellipsis; }
+.pp4-vt { font: 600 var(--t-title)/1.2 var(--f-copy); color: #fff; } /* title */
+.pp4-vm { font: 500 var(--t-meta)/1.3 var(--f-copy); color: rgba(255, 255, 255, .78); } /* meta */
+.pp4-vm.dim { color: rgba(255, 255, 255, .55); }
+.pp4-hit { position: absolute; inset: 0; border: 0; background: none; cursor: pointer; border-radius: inherit; }
+.pp4-hit:focus-visible { outline: 2px solid var(--g6); outline-offset: -4px; }
+
 /* the temporary colour controls: a pill at the page's bottom-left; open, a small panel of pickers */
 .tweaks4 { position: fixed; left: 18px; bottom: 10px; z-index: 60; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
 .tw-toggle, .tw-row button { border: 0; border-radius: 999px; padding: 6px 12px; background: var(--g2); color: var(--ink); font: 500 11.5px var(--body); cursor: pointer; letter-spacing: .02em; }
@@ -215,5 +249,6 @@
   .it04 .island::before, .it04 .island::after { display: block; }
   .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 16px 16px 12px; } .corner4 { display: none; }
   .name4 { position: static; width: auto; margin: 0 14px 14px; }
+  .page4 { display: block; } .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; } .pp4-row { overflow: visible; -webkit-mask-image: none; mask-image: none; display: flex; flex-direction: column; gap: 12px; } .pp4-card { position: static !important; transform: none !important; width: 100% !important; height: 240px; } .pp4-fold { display: none; } .pp4-open { opacity: 1 !important; pointer-events: auto !important; } .pp4-hit { display: none; }
   .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 6px 4px; } .stack4 { flex: none; } .off4 { flex: none; min-height: 240px; }
 }
