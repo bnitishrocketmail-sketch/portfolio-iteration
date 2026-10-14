@@ -192,7 +192,8 @@
 .pp4-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 2cqw; padding: 0 .4cqw; }
 .pp4-right { display: flex; flex-direction: column; align-items: flex-start; gap: .8cqw; max-width: 34ch; }
 .pp4-note { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: var(--line-ink); } /* body */
-/* the row: every card the row's height; what runs past the end fades out under a mask (Nitish, 14 Oct) */
+/* the row: every card the row's height; the half card at the end fades out under the mask there; the cards before the
+   open one are clipped at the left edge (a fade there would dim the open card's own edge) (Nitish, 14 Oct) */
 .pp4-row { position: relative; flex: 1; min-height: 0; column-gap: 1.4cqw; overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 86%, transparent); mask-image: linear-gradient(to right, #000 86%, transparent); }
 .pp4-card { position: absolute; top: 0; left: 0; height: 100%; border-radius: var(--r); overflow: hidden; background: var(--g2); box-shadow: var(--shadow-el); color: #fff; }
 /* the cover: 01's project media — the project's two colours, its letter, a soft light from the corner */

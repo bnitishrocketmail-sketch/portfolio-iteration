@@ -6,12 +6,14 @@ import { LINKS, PROJECTS } from '../../lib/data';
    right; below, every project in one row — the selected one open wide, laid out as the reference's wide card (the cover,
    the title and blurb at the top-left, the tags in a panel at the bottom-left, a round arrow at the bottom-right corner),
    the others folded narrow to its right in their order, each with its title, client and year, and tags set vertically at
-   its bottom-left (01's card's information, turned). What runs past the row's end goes under a fade. A selection brings
-   that card to the front of the row and opens it; the others slide right and fold. The geometry is explicit — the row is
-   measured, each card's x and width are animated on a spring — so nothing scales: covers are cropped by their cards and
-   reveal as they widen. The arrow is to open the case study; where that goes is next. */
-const OPEN = .58; /* the open card, of the row's width (ref 7: 66% with two folded; five here) */
-const FOLD = .15; /* a folded card */
+   its bottom-left (01's card's information, turned). The rules (Nitish, 14 Oct): the cards keep their sequence; the
+   selected one opens in place and the one that was open folds; the row is placed so the open card sits at the viewport's
+   left edge, with the two after it whole and the third after it half shown, fading out under the mask at the right end —
+   three and a half cards in view — and the cards before the open one are off to the left, clipped at that edge (they
+   slide out through it). So the folded width follows from the viewport: open + 2½ folded + 3 gaps = the width. The
+   geometry is explicit — the row is measured, each card's x and width are animated on a spring — so nothing scales:
+   covers are cropped by their cards and reveal as they widen. The arrow is to open the case study; where that goes is next. */
+const OPEN = .58; /* the open card, of the viewport's width (ref 7: 66% with two folded; five here) */
 const SPRING = { type: 'spring', stiffness: 260, damping: 32, mass: 1 } as const;
 
 export default function Projects04() {
@@ -24,11 +26,14 @@ export default function Projects04() {
     const measure = () => setGeo({ w: row.clientWidth, gap: parseFloat(getComputedStyle(row).columnGap) || 0 });
     measure(); const ro = new ResizeObserver(measure); ro.observe(row); return () => ro.disconnect();
   }, []);
-  const order = [PROJECTS.find(p => p.id === sel)!, ...PROJECTS.filter(p => p.id !== sel)];
   const tr = reduce ? { duration: 0 } : SPRING;
   const fade = reduce ? { duration: 0 } : { duration: .28, ease: 'easeOut' as const };
-  let x = 0;
-  const place = order.map(p => { const open = p.id === sel; const w = geo ? Math.round(geo.w * (open ? OPEN : FOLD)) : 0; const at = x; x += w + (geo?.gap ?? 0); return { p, open, x: at, w }; });
+  /* widths from the rule: open + 2.5 folded + 3 gaps = the viewport */
+  const E = geo ? Math.round(geo.w * OPEN) : 0, C = geo ? Math.round((geo.w - E - 3 * geo.gap) / 2.5) : 0;
+  let x = 0; const k = PROJECTS.findIndex(p => p.id === sel);
+  const laid = PROJECTS.map((p, i) => { const open = i === k; const w = open ? E : C; const at = x; x += w + (geo?.gap ?? 0); return { p, open, x: at, w }; });
+  const shift = laid[k]?.x ?? 0; /* the open card to the viewport's left edge */
+  const place = laid.map(c => ({ ...c, x: c.x - shift }));
   return (
     <section className="pp4" aria-label="Projects">
       <header className="pp4-head">
