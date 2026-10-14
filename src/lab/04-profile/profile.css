@@ -2,24 +2,24 @@
    lo-fi's right column (ref 4). Sizes are fractions of the frame (cqw / cqh of .frame4). Dark only for now. */
 
 .it04 {
-  --bg: #141416; --frame: #2b2b2e; --ink: #f2f2f4; --muted: #a7a7ae;
+  --bg: #141416; --frame: #121212; --ink: #f5f5f5; --muted: #d1d1d6;
   --g1: #1f1f22; --g2: #35353a; --g3: #47474d; --g4: #5a5a61; --g5: #8a8a92; --g6: #d6d6db;
   --island: var(--frame); --on-island: var(--ink); --peri: var(--g4); --sheet: var(--g2); --sheet2: var(--g3); --line: rgba(255, 255, 255, .08); --line2: rgba(255, 255, 255, .18);
   --r: clamp(16px, 2.1cqw, 28px);
   /* the colours under the temporary controls (Nitish, 13 Oct) — each piece reads its own token, the defaults the greys above */
-  --nav-bg: var(--g6); --nav-ink: var(--g4); --nav-hl: var(--frame); --nav-hl-ink: var(--g6); --ai-bg: var(--frame); --ai-ink: var(--g6); --glass-bg: #18181b; --glass-a: .55;
-  --glass-ink: #c9c9cc; --name-ink: #fff; --title-ink: var(--ink); --line-ink: #d6d6d8; --social-ink: var(--g6); --cv-bg: var(--g6); --cv-ink: var(--frame);
+  --nav-bg: #e0e0e0; --nav-ink: #2f2e30; --nav-hl: #2f2e30; --nav-hl-ink: #c9c9c9; --ai-bg: #2f2e30; --ai-ink: #c9c9c9; --glass-bg: #000000; --glass-a: 0.2;
+  --glass-ink: #c9c9cc; --name-ink: #dfdfdf; --title-ink: #e0e0e0; --line-ink: #e0e0e0; --social-ink: #a6a6a6; --cv-bg: #d6d6d6; --cv-ink: #2b2b2e;
   --card-back: #6f6f74; --card-mid: #84848a; --card-front: #c3c3c8; --card-tab: #a5a5aa; /* the stack's greys as ref 4 has them (112, 132, 196 and 167 of 255), in the page's cool tint */
-  --corner-ink: var(--g5); --name-font: 'Josefin Sans'; --name-w1: 300; --name-w2: 700; --copy-font: 'Outfit'; --copy-w: 400; --h2-w: 700; --title-w: 500; --role-w2: 500; --role-ink2: var(--muted);
+  --corner-ink: #bababa; --name-font: 'Outfit'; --name-w1: 800; --name-w2: 300; --copy-font: 'Outfit'; --copy-w: 300; --h2-w: 300; --title-w: 500; --role-w2: 800; --role-ink2: #59575b;
   /* the type scale (14 Oct), for this page and the pages after it — two faces: the name's for headings, the copy's for
      everything else. H1 the name; H2 the sections' headings (Projects, Off duty): the name's face, upper case, spaced;
      titles — a card's name, a floating card's caption — the copy face, 600; body — the lines about him, the one-liner —
      the copy face at its weight; meta — a card's client and year, counts, the nav's names — the copy face, 500, smaller */
   --t-h1: clamp(20px, 2.8cqw, 32px); --t-h2: clamp(13px, 1.4cqw, 17px); --t-title: clamp(12px, 1.35cqw, 15px); --t-body: clamp(12px, 1.25cqw, 14.5px); --t-meta: clamp(10px, 1.05cqw, 12px);
   --f-head: var(--name-font), 'Outfit', sans-serif; --f-copy: var(--copy-font), 'Outfit', sans-serif;
-  --c-ai-x: 19%; --c-ai-y: 25%; --c-ai-z: 3; --c-coin-x: 64%; --c-coin-y: 18%; --c-coin-z: 1; --c-loader-x: 6%; --c-loader-y: 44%; --c-loader-z: 1; --c-micro-x: 68%; --c-micro-y: 44%; --c-micro-z: 3; --c-gold-x: 38%; --c-gold-y: 6%; --c-gold-z: 3;
-  --c-pers-x: 22%; --c-pers-y: 52%; --c-pers-z: 3;
-  --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: block; --c-gold-v: block; --c-pers-v: block; /* each card shown or hidden */
+  --c-ai-x: 11%; --c-ai-y: 38%; --c-ai-z: 3; --c-coin-x: 59%; --c-coin-y: 10%; --c-coin-z: 1; --c-loader-x: 60%; --c-loader-y: 59%; --c-loader-z: 1; --c-micro-x: 3%; --c-micro-y: 51%; --c-micro-z: 3; --c-gold-x: 18%; --c-gold-y: 12%; --c-gold-z: 3;
+  --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 3;
+  --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: none; --c-gold-v: block; --c-pers-v: block; /* each card shown or hidden */
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
   --shadow-el: 0 1px 1px rgba(0, 0, 0, .16), 0 4px 10px -2px rgba(0, 0, 0, .18), 0 14px 28px -10px rgba(0, 0, 0, .26);
