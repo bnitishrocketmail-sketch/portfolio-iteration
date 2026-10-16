@@ -1,0 +1,39 @@
+/* ---- the Motion system tab (Motion04.tsx): three panels, read left to right; in the page's tokens ---- */
+.ms4-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 1.2cqw; }
+.ms4-panel { --pane: color-mix(in srgb, var(--line-ink) 5%, transparent); position: relative; min-height: 0; display: flex; flex-direction: column; gap: 1.2cqw; padding: 1.4cqw 1.5cqw; border-radius: var(--r); background: var(--pane); border: 1px solid color-mix(in srgb, var(--line-ink) 9%, transparent); color: var(--line-ink); overflow: hidden; }
+.ms4-panel.soon { border-style: dashed; background: none; }
+.ms4-ph h3 { margin: 0 0 .35em; font: 600 var(--t-title)/1.2 var(--f-copy); } /* title */
+.ms4-ph p { margin: 0; font: var(--copy-w) var(--t-meta)/1.45 var(--f-copy); opacity: .7; max-width: 46ch; } /* meta */
+.ms4-next { margin: auto; font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .45; }
+
+/* the primitives: two columns of groups, each group a list of tokens, each token shown moving */
+.ms4-groups { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2.2cqw; overflow: auto; }
+.ms4-col { display: flex; flex-direction: column; gap: 1.6cqw; min-width: 0; }
+.ms4-g { display: flex; flex-direction: column; gap: .35cqw; }
+.ms4-g h4 { margin: 0 0 .3cqw; font: 600 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
+.ms4-g h4 span { font-weight: 500; text-transform: none; letter-spacing: 0; opacity: .8; margin-left: .4em; }
+.ms4-row { --blk: 10px; display: grid; grid-template-columns: 6.8em minmax(0, 1fr); align-items: center; gap: 1em; min-height: 40px; font: 500 var(--t-meta)/1.2 var(--f-copy); }
+.ms4-row.ease { grid-template-columns: 6.8em 32px minmax(0, 1fr); }
+/* the token: its name, its value under it */
+.ms4-k { display: flex; flex-direction: column; gap: .2em; min-width: 0; }
+.ms4-k b { font-weight: 600; white-space: nowrap; }
+.ms4-v { opacity: .55; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: .92em; }
+/* the track: a hairline the block runs along */
+.ms4-trk { position: relative; height: var(--blk); }
+.ms4-trk::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: color-mix(in srgb, var(--line-ink) 16%, transparent); }
+.ms4-blk { position: absolute; top: 0; width: var(--blk); height: var(--blk); border-radius: 3px; background: var(--line-ink); }
+.ms4-end { position: absolute; top: -3px; bottom: -3px; width: 1px; background: color-mix(in srgb, var(--line-ink) 40%, transparent); }
+/* an easing's curve, with time's dot riding it */
+.ms4-curve { width: 32px; height: 32px; overflow: visible; }
+.ms4-curve .ax { fill: none; stroke: color-mix(in srgb, var(--line-ink) 14%, transparent); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.ms4-curve polyline { fill: none; stroke: var(--line-ink); stroke-width: 1.4; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: .75; }
+.ms4-curve circle { fill: var(--line-ink); }
+/* a stagger: six dots, in on one beat and out on the next, each after the one before */
+.ms4-dots { display: flex; gap: 6px; align-items: center; }
+.ms4-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line-ink); opacity: .15; }
+
+@media (max-width: 700px) {
+  .ms4-grid { grid-template-columns: 1fr; }
+  .ms4-groups { grid-template-columns: 1fr; overflow: visible; }
+  .ms4-panel { padding: 16px; gap: 14px; }
+}

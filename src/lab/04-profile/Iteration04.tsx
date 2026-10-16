@@ -12,6 +12,7 @@ import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
 import Soon04 from './Soon04';
+import Motion04 from './Motion04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { readTweaks, tweakKey } from './tokens';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
@@ -217,7 +218,12 @@ export default function Iteration04() {
           <motion.div key="projects" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
             <Projects04 />
           </motion.div>
-        ) : tab === 'motion' || tab === 'lab' || tab === 'articles' ? (
+        ) : tab === 'motion' ? (
+          /* the motion system (Motion04.tsx), in the same place */
+          <motion.div key="motion" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+            <Motion04 />
+          </motion.div>
+        ) : tab === 'lab' || tab === 'articles' ? (
           <motion.div key={tab} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
             <Soon04 id={tab} label={NAV.find(n => n.id === tab)!.label} />
           </motion.div>
