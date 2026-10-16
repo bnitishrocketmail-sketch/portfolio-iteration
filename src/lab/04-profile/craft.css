@@ -10,7 +10,7 @@
 /* the nodes: pills, centred on their point; four weights */
 .cn4 { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; border: 0; border-radius: 999px; font-family: var(--f-copy); line-height: 1; cursor: pointer; transition: opacity .15s, translate .2s; }
 .cn4:hover { translate: 0 -1px; }
-.cn4.on { opacity: 0; pointer-events: none; } /* the card has grown out of it */
+.cn4.on { opacity: 0; } /* the card has grown out of it; it stays a target, so a tap's click lands on it (a no-op) and not on the floor */
 .cn4.core { padding: .95em 1.35em; background: var(--pcard-open); color: var(--pcard-open-ink); font-size: var(--t-title); font-weight: var(--title-w); box-shadow: var(--shadow-el); }
 .cn4.flow { padding: .8em 1.15em; background: var(--pcard-fold); color: var(--pcard-fold-ink); font-size: var(--t-body); font-weight: 500; box-shadow: var(--shadow-el); }
 .cn4.tool { padding: .6em 1em; border: 1px solid color-mix(in srgb, var(--line-ink) 38%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); }

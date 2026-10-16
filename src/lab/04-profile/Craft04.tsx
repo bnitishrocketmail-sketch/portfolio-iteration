@@ -5,7 +5,7 @@ import './craft.css';
 /* 04's Craft page (Nitish, 15–16 Oct): "how I work" as a map of connected nodes with little text — the crafts at the
    centre, the roots small beside them, the tools as satellites of the craft each serves, the workflows chained to the
    right, and the model as a ring around all of it (brief → build → review), drawn lighter. A node opens into a card
-   beside it (his choice, 15 Oct): the pill itself grows into the card — anchored at the node's edge nearest the map's
+   beside it (his choice, 15 Oct; on hover, 16 Oct): the pill itself grows into the card — anchored at the node's edge nearest the map's
    centre so it grows inward, the open card's grey, the standard radius — and shrinks back on close; one open at a time;
    the map does not move. The cards hold a line or two each for now and, where a live demo is to go, its stage marked.
    Positions are percentages of the map's box, hand-laid; the lines join the nodes' centres under them. */
@@ -26,7 +26,7 @@ export const NODES: Node[] = [
   { id: 'lottie', label: 'Lottie', kind: 'tool', x: 61, y: 30, text: 'Delivery: animation as data. Coin Rig — a rig as a Creator plugin, on the LottieFiles Bazaar.' },
   { id: 'rive', label: 'Rive', kind: 'tool', x: 26, y: 31, text: 'State machines, drawn and run.' },
   { id: 'protopie', label: 'Protopie', kind: 'tool', x: 17, y: 40, text: 'Prototypes with real triggers and variables.' },
-  { id: 'figma', label: 'Figma', kind: 'tool', x: 66, y: 70, text: 'Where the product work is designed.' },
+  { id: 'figma', label: 'Figma', kind: 'tool', x: 62, y: 69, text: 'Where the product work is designed.' },
   { id: 'code', label: 'Code', kind: 'tool', x: 46, y: 78, text: 'This site is the sample.' },
   /* the workflows */
   { id: 'script', label: 'Script-based motion', kind: 'flow', x: 74, y: 23, text: 'A Lottie built by script: change a parameter and the animation follows — it stays a Lottie, not a video.', demo: 'a parameter and the Lottie that follows it' },
@@ -58,9 +58,14 @@ export default function Craft04() {
   const mapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<Open | null>(null);
   const reduce = useReducedMotion();
+  /* hover opens (Nitish, 16 Oct: a click has no nudge); a short wait so a sweep across the map does not open everything,
+     and a short grace on leaving so the edge does not flicker. Touch has no hover, so a tap opens there; focus opens too. */
+  const enterT = useRef(0), leaveT = useRef(0);
+  const hold = () => window.clearTimeout(leaveT.current);
+  const letGo = () => { hold(); leaveT.current = window.setTimeout(() => setOpen(null), 120); };
   const show = (id: string) => {
     const map = mapRef.current; const el = map?.querySelector<HTMLElement>(`[data-id="${id}"]`); if (!map || !el) return;
-    if (open?.id === id) { setOpen(null); return; }
+    hold(); if (open?.id === id) return;
     const m = map.getBoundingClientRect(), b = el.getBoundingClientRect(), cs = getComputedStyle(el), ms = getComputedStyle(map);
     setOpen({
       id, left: b.left - m.left, top: b.top - m.top, right: m.right - b.right, bottom: m.bottom - b.bottom, w: b.width, h: b.height,
@@ -69,6 +74,7 @@ export default function Craft04() {
     });
   };
   useEffect(() => { if (!open) return; const on = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(null); }; addEventListener('keydown', on); return () => removeEventListener('keydown', on); }, [open]);
+  useEffect(() => () => { window.clearTimeout(enterT.current); window.clearTimeout(leaveT.current); }, []);
   const tr = reduce ? { duration: 0 } : SPRING;
   const node = open ? at[open.id] : null;
   return (
@@ -78,21 +84,27 @@ export default function Craft04() {
         <div className="pp4-right"><p className="pp4-note">How I work — the crafts, the tools that serve them, the workflows, and where the model fits.</p></div>
       </header>
       <div className="cm4-wrap">
-        {/* a click on the map's floor closes the card */}
-        <div className="cm4" ref={mapRef} onClick={e => { if (e.target === e.currentTarget || (e.target as HTMLElement).closest('svg')) setOpen(null); }}>
+        {/* a click on the map's floor closes the card. A tap's click can arrive with the floor as its target even though it
+            landed on a node — the node opened its card on the tap's focus, so the tap's down and up targets differ and the
+            click goes to their common ancestor — so the point is checked, not the target. */}
+        <div className="cm4" ref={mapRef} onClick={e => { if (!document.elementFromPoint(e.clientX, e.clientY)?.closest('.cc4, .cn4')) setOpen(null); }}>
           <svg className="cm4-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             <ellipse className="ring" cx={RING.cx} cy={RING.cy} rx={RING.rx} ry={RING.ry} />
             {EDGES.map(([a, b, k]) => <line key={a + b} className={k} x1={at[a].x} y1={at[a].y} x2={at[b].x} y2={at[b].y} />)}
           </svg>
           <span className="cm4-cap" style={{ left: `${RING.cx}%`, top: `${RING.cy - RING.ry}%` }}>With AI</span>
           {NODES.map(n => (
-            <button key={n.id} type="button" data-id={n.id} className={`cn4 ${n.kind}${open?.id === n.id ? ' on' : ''}`} style={{ left: `${n.x}%`, top: `${n.y}%` }} aria-expanded={open?.id === n.id} onClick={() => show(n.id)}>{n.label}</button>
+            <button key={n.id} type="button" data-id={n.id} className={`cn4 ${n.kind}${open?.id === n.id ? ' on' : ''}`} style={{ left: `${n.x}%`, top: `${n.y}%` }} aria-expanded={open?.id === n.id}
+              onPointerEnter={e => { if (e.pointerType === 'touch') return; hold(); window.clearTimeout(enterT.current); enterT.current = window.setTimeout(() => show(n.id), 70); }}
+              onPointerLeave={e => { if (e.pointerType === 'touch') return; window.clearTimeout(enterT.current); letGo(); }}
+              onFocus={() => show(n.id)} onClick={() => show(n.id)}>{n.label}</button>
           ))}
           {/* the card: grows out of the node's box, anchored at the edges nearest the map's centre, and shrinks back — the
               node shows again as soon as it closes, and the card fades out over it in the last stretch of the shrink */}
           <AnimatePresence>
             {open && node && (
               <motion.div key={open.id} className="cc4" style={{ [open.toRight ? 'left' : 'right']: open.toRight ? open.left : open.right, [open.down ? 'top' : 'bottom']: open.down ? open.top : open.bottom }}
+                onPointerEnter={hold} onPointerLeave={e => { if (e.pointerType !== 'touch') letGo(); }}
                 initial={{ width: open.w, height: open.h, borderRadius: open.h / 2, backgroundColor: open.bg, borderColor: open.border }}
                 animate={{ width: CARD_W, height: 'auto', borderRadius: open.r, backgroundColor: open.openBg, borderColor: 'rgba(0,0,0,0)', transition: tr }}
                 exit={{ width: open.w, height: open.h, borderRadius: open.h / 2, backgroundColor: open.bg, borderColor: open.border, opacity: 0, transition: reduce ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 36, opacity: { delay: .18, duration: .14 } } }}>
