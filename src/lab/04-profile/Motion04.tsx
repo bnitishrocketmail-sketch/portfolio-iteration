@@ -2,9 +2,10 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
 import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
 import { useSearchParams } from 'react-router-dom';
 import Phone04, { type PhoneHandle } from './Phone04';
-import MotionMap04 from './MotionMap04';
+import MotionDoc04 from './MotionDoc04';
+import Timeline04 from './Timeline04';
 import { CONTRACT, ContractPanel, NAMES, type ContractStatus, type Scenario } from './Contract04';
-import { FAMILY, MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Dev, type Mapping, type Moment, type MomentId, type Phase, type Prim } from './motionTokens';
+import { FAMILY, MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Mapping, type Moment, type MomentId, type Phase, type Prim } from './motionTokens';
 import './motion.css';
 
 /* 04's Motion system tab (Nitish, 16 Oct; reframed the same evening: "hard to understand in relevance of the product …
@@ -100,36 +101,11 @@ function TokenLine({ x, label, live }: { x: Mapping; label: string; live: boolea
   );
 }
 
-/* ---- the developer's view of a moment: its tracks on a time axis, interruption, reduced motion, what can be checked ---- */
-function Timeline({ dev, pulse, reduce }: { dev: Dev; pulse: number; reduce: boolean }) {
-  const end = Math.max(...dev.tracks.map(t => t.start + t.dur), 1);
-  const span = Math.ceil(end / 100) * 100;
-  const head = useMotionValue(0);
-  useEffect(() => { if (reduce || pulse < 1) return; head.set(0); const c = animate(head, 1, { duration: span / 1000, ease: 'linear' }); return () => c.stop(); }, [pulse]); // eslint-disable-line react-hooks/exhaustive-deps
-  const left = useTransform(head, v => `calc(${v} * (100% - 9.5em - 12.4em - 1.6em))`), op = useTransform(head, v => (v > 0 && v < 1 ? 1 : 0)); /* across the lane's width only */
-  const ticks = Array.from({ length: 5 }, (_, i) => Math.round(span * i / 4));
-  return (
-    <div className="dv4-tl">
-      <div className="dv4-rows">
-        {dev.tracks.map(t => (
-          <div key={t.name} className="dv4-row">
-            <span className="dv4-name"><b>{t.name}</b><small>{t.owns}</small></span>
-            <span className="dv4-lane"><i className={`dv4-bar${t.dur === 0 ? ' zero' : ''}`} style={{ left: `${t.start / span * 100}%`, width: t.dur ? `${t.dur / span * 100}%` : undefined }}><em>{t.dur ? `${Math.round(t.start)}–${Math.round(t.start + t.dur)} ms` : 'on change'}</em></i></span>
-            <code className="dv4-ref">{t.ref}</code>
-          </div>
-        ))}
-        <span className="dv4-axis" aria-hidden="true">{ticks.map(x => <i key={x} style={{ left: `${x / span * 100}%` }}>{x}</i>)}</span>
-        <motion.i className="dv4-head" style={{ left, opacity: op }} aria-hidden="true" />
-      </div>
-      {dev.note && <p className="dv4-note">{dev.note}</p>}
-    </div>
-  );
-}
 function DevView({ m, pulse, reduce, extra, reduced }: { m: Moment; pulse: number; reduce: boolean; extra?: ReactNode; reduced: boolean }) {
   return (
     <div className="ms4-prims dv4">
       <div className="ms4-ph"><h3>Tracks <span>who owns what, when, on which token</span></h3></div>
-      <Timeline dev={m.dev} pulse={pulse} reduce={reduce} />
+      <Timeline04 dev={m.dev} pulse={pulse} reduce={reduce} />
       {extra}
       <dl className="dv4-dl">
         <dt>Interrupted</dt><dd>{m.dev.interrupt}</dd>
@@ -180,7 +156,7 @@ export default function Motion04() {
         </div>
         <div className="pp4-right"><p className="pp4-note">{view === 'product' ? 'How motion lives in a product: each component maps to a shared role, and each role is made of a few shared values.' : 'A reusable framework for how everyday digital products respond, change and guide. Clarity in the interaction; consistency in the implementation.'}</p></div>
       </header>
-      {view === 'system' ? <MotionMap04 toProduct={id => { if (id) setSel({ id, phase: 'enter' }); setView('product'); }} /> : <div className="ms4-grid">
+      {view === 'system' ? <MotionDoc04 toProduct={id => { if (id) setSel({ id, phase: 'enter' }); setView('product'); }} /> : <div className="ms4-grid">
         {/* the product's moments */}
         <div className="ms4-panel ms4-moments">
           <div className="ms4-ph"><h3>Moments</h3><p>One app, one journey; each moment answers a user’s question.</p></div>
