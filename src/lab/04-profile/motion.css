@@ -23,7 +23,9 @@
 .ms4-flow svg { width: 1.1em; height: 1.1em; }
 
 /* the product: the phone, scaled to the stage's height */
-.ms4-stage { min-height: 0; display: grid; place-items: center; }
+.ms4-stage { min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.ms4-ex { font: 500 calc(var(--t-meta) * .9)/1 var(--f-copy); letter-spacing: .05em; text-transform: uppercase; color: var(--line-ink); opacity: .45; }
+.ms4-tag { margin: 0; font: 600 calc(var(--t-meta) * .9)/1 var(--f-copy); letter-spacing: .05em; text-transform: uppercase; opacity: .45; }
 .ms4-phone { position: relative; }
 
 /* the cascade */
@@ -35,11 +37,15 @@
 .ms4-tl { display: grid; grid-template-columns: 5.2em minmax(0, 1fr); align-items: center; gap: .45em .7em; padding: .6em .8em; border-radius: calc(var(--r) * .5); border: 1px solid color-mix(in srgb, var(--line-ink) 12%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); opacity: .55; transition: opacity .25s, background-color .25s; }
 .ms4-tl.live { opacity: 1; background: color-mix(in srgb, var(--line-ink) 7%, transparent); }
 .ms4-ph-l { font-weight: 600; }
-.ms4-tl code { font: 600 var(--t-meta)/1.2 ui-monospace, 'SF Mono', Menlo, monospace; white-space: nowrap; }
+.ms4-tl code { font: 600 calc(var(--t-meta) * .95)/1.2 ui-monospace, 'SF Mono', Menlo, monospace; white-space: nowrap; }
+.ms4-chain { display: flex; flex-wrap: wrap; align-items: center; gap: .45em; min-width: 0; }
+.ms4-tl code.role { padding: .2em .5em; border-radius: 6px; background: color-mix(in srgb, var(--line-ink) 10%, transparent); } /* the role, the middle of the chain */
+.ms4-also { grid-column: 2; font: 500 calc(var(--t-meta) * .92)/1.4 var(--f-copy); opacity: .7; } .ms4-also code { margin-left: .4em; font-weight: 500; }
 .ms4-arr { opacity: .5; margin-right: 2px; }
 .ms4-chips { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; } /* the primitives, under the token */
 .ms4-chips > span { display: inline-flex; gap: .4em; align-items: baseline; padding: .35em .6em; border-radius: 999px; background: color-mix(in srgb, var(--line-ink) 8%, transparent); white-space: nowrap; }
-.ms4-chips small { font-size: .85em; opacity: .55; }
+.ms4-chips small { font-size: .88em; opacity: .6; }
+.ms4-chips > .ms4-arr { padding: 0; background: none; }
 .ms4-chips .note { background: none; border: 1px dashed color-mix(in srgb, var(--line-ink) 25%, transparent); }
 .ms4-why { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); max-width: 52ch; }
 .ms4-prims { display: flex; flex-direction: column; gap: .6cqw; padding-top: .9cqw; border-top: 1px solid color-mix(in srgb, var(--line-ink) 10%, transparent); }
@@ -50,9 +56,9 @@
 .ms4-g { display: flex; flex-direction: column; gap: 0; }
 .ms4-g h4 { margin: 0 0 .3cqw; font: 600 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
 .ms4-g h4 span { font-weight: 500; text-transform: none; letter-spacing: 0; opacity: .8; margin-left: .4em; }
-.ms4-row { --blk: 9px; display: grid; grid-template-columns: 6.4em 4.2em minmax(0, 1fr); align-items: center; gap: .8em; min-height: 23px; font: 500 var(--t-meta)/1.15 var(--f-copy); opacity: .38; transition: opacity .25s; }
+.ms4-row { --blk: 9px; display: grid; grid-template-columns: 8.2em 4.6em minmax(0, 1fr); align-items: center; gap: .8em; min-height: 23px; font: 500 var(--t-meta)/1.15 var(--f-copy); opacity: .38; transition: opacity .25s; }
 .ms4-row.on { opacity: 1; } /* the tokens the moment used */
-.ms4-row.ease { grid-template-columns: 6.4em 22px minmax(0, 1fr); min-height: 25px; } /* the curve says the value; it is in the title */
+.ms4-row.ease { grid-template-columns: 8.2em 22px minmax(0, 1fr); min-height: 25px; } /* the curve says the value; it is in the title */
 .ms4-n { font-weight: 600; white-space: nowrap; }
 .ms4-v { opacity: .6; font-variant-numeric: tabular-nums; white-space: nowrap; }
 /* the track: a hairline the block runs along */
@@ -66,6 +72,7 @@
 .ms4-curve polyline { fill: none; stroke: var(--line-ink); stroke-width: 1.4; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: .75; }
 .ms4-curve circle { fill: var(--line-ink); }
 /* a stagger: six dots, in on one beat and out on the next, each after the one before */
+.ms4-trk.sc { height: 14px; } .ms4-sq { position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-radius: 3px; background: var(--line-ink); } /* a scale: the square shrinks or grows */
 .ms4-dots { display: flex; gap: 6px; align-items: center; }
 .ms4-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line-ink); opacity: .15; }
 

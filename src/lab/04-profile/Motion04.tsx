@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
 import Phone04, { type PhoneHandle } from './Phone04';
-import { DISTANCE, DURATION, EASING, MOMENTS, STAGGER, easeFn, moment, ms, px, type EaseName, type MomentId, type Phase, type Sem } from './motionTokens';
+import { MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Mapping, type MomentId, type Phase, type Prim } from './motionTokens';
 import './motion.css';
 
 /* 04's Motion system tab (Nitish, 16 Oct; reframed the same evening: "hard to understand in relevance of the product …
@@ -31,57 +31,67 @@ function Track({ p, reach }: { p: MotionValue<number>; reach?: number }) {
 }
 const Key = ({ name, value }: { name: string; value: string }) => <><b className="ms4-n">{name}</b><span className="ms4-v">{value}</span></>;
 
-type Lit = { duration?: string; easing?: string; distance?: string; use?: Sem['use'] };
+/* the primitives the playing mapping's role references: they light up, and move in its time and on its curve */
+type Lit = { ids: string[]; ms: number; ease: string };
 function Palette({ lit, pulse }: { lit: Lit; pulse: number }) {
-  const durMs = lit.use ? ms(lit.use.duration) : 240, f = easeFn((lit.use?.easing ?? 'standard') as EaseName);
+  const f = easeFn(lit.ease), on = (id: string) => lit.ids.includes(id);
+  const of = (k: Prim['kind']) => PRIMS.filter(p => p.kind === k);
   return (
     <div className="ms4-groups">
       <div className="ms4-col">
-        <div className="ms4-g"><h4>Duration</h4>{DURATION.map(d => <DurRow key={d.name} name={d.name} msv={d.ms} on={lit.duration === d.name} pulse={pulse} f={f} />)}</div>
-        <div className="ms4-g"><h4>Distance</h4>{DISTANCE.map(d => <DistRow key={d.name} name={d.name} pxv={d.px} on={lit.distance === d.name} pulse={pulse} f={f} durMs={durMs} />)}</div>
+        <div className="ms4-g"><h4>Duration</h4>{of('duration').map(d => <DurRow key={d.id} p={d} on={on(d.id)} pulse={pulse} f={f} />)}</div>
+        <div className="ms4-g"><h4>Distance</h4>{of('distance').map(d => <DistRow key={d.id} p={d} on={on(d.id)} pulse={pulse} f={f} durMs={lit.ms} />)}</div>
       </div>
       <div className="ms4-col">
-        <div className="ms4-g"><h4>Easing</h4>{EASING.map(e => <EaseRow key={e.name} name={e.name} value={e.value} on={lit.easing === e.name} pulse={pulse} durMs={durMs} />)}</div>
-        <div className="ms4-g"><h4>Stagger</h4>{STAGGER.map(s => <div key={s.name} className="ms4-row" title={s.use}><Key name={s.name} value={`${s.ms} ms`} /><span className="ms4-dots">{Array.from({ length: 6 }, (_, i) => <i key={i} />)}</span></div>)}</div>
+        <div className="ms4-g"><h4>Easing</h4>{of('easing').map(e => <EaseRow key={e.id} p={e} on={on(e.id)} pulse={pulse} durMs={lit.ms} />)}</div>
+        <div className="ms4-g"><h4>Scale</h4>{of('scale').map(d => <ScaleRow key={d.id} p={d} on={on(d.id)} pulse={pulse} f={f} durMs={lit.ms} />)}</div>
       </div>
     </div>
   );
 }
-function DurRow({ name, msv, on, pulse, f }: { name: string; msv: number; on: boolean; pulse: number; f: (t: number) => number }) {
-  const p = useShuttle(pulse, on, msv, f);
-  return <div className={`ms4-row${on ? ' on' : ''}`}><Key name={name} value={`${msv} ms`} /><Track p={p} /></div>;
+function DurRow({ p, on, pulse, f }: { p: Prim; on: boolean; pulse: number; f: (t: number) => number }) {
+  const v = useShuttle(pulse, on, p.ms!, f);
+  return <div className={`ms4-row${on ? ' on' : ''}`}><Key name={p.id} value={p.label} /><Track p={v} /></div>;
 }
-function DistRow({ name, pxv, on, pulse, f, durMs }: { name: string; pxv: number; on: boolean; pulse: number; f: (t: number) => number; durMs: number }) {
-  const p = useShuttle(pulse, on, durMs, f);
-  return <div className={`ms4-row${on ? ' on' : ''}`}><Key name={name} value={`${pxv} px`} /><Track p={p} reach={pxv} /></div>;
+function DistRow({ p, on, pulse, f, durMs }: { p: Prim; on: boolean; pulse: number; f: (t: number) => number; durMs: number }) {
+  const v = useShuttle(pulse, on, durMs, f);
+  return <div className={`ms4-row${on ? ' on' : ''}`}><Key name={p.id} value={p.label} /><Track p={v} reach={p.px} /></div>;
 }
-function EaseRow({ name, value, on, pulse, durMs }: { name: EaseName; value: string; on: boolean; pulse: number; durMs: number }) {
-  const f = easeFn(name), p = useShuttle(pulse, on, durMs, f), t = useClock(pulse, on, durMs);
-  const X = (v: number) => 4 + v * 32, Y = (v: number) => 33 - v * 26;
+function ScaleRow({ p, on, pulse, f, durMs }: { p: Prim; on: boolean; pulse: number; f: (t: number) => number; durMs: number }) {
+  /* a press scales down (1 → v); an arriving view scales up (v → 1) */
+  const v = useShuttle(pulse, on, durMs, f), down = p.id === 'scale.98';
+  const scale = useTransform(v, x => (down ? 1 - (1 - p.v!) * x : p.v! + (1 - p.v!) * x));
+  return <div className={`ms4-row${on ? ' on' : ''}`}><Key name={p.id} value={p.label} /><span className="ms4-trk sc"><motion.i className="ms4-sq" style={{ scale }} /></span></div>;
+}
+function EaseRow({ p, on, pulse, durMs }: { p: Prim; on: boolean; pulse: number; durMs: number }) {
+  const f = easeFn(p.id), v = useShuttle(pulse, on, durMs, f), t = useClock(pulse, on, durMs);
+  const X = (q: number) => 4 + q * 32, Y = (q: number) => 33 - q * 26;
   const pts = Array.from({ length: 41 }, (_, i) => `${X(i / 40).toFixed(2)},${Y(f(i / 40)).toFixed(2)}`).join(' ');
-  const cx = useTransform(t, X), cy = useTransform(t, v => Y(f(v)));
+  const cx = useTransform(t, X), cy = useTransform(t, q => Y(f(q)));
   return (
-    <div className={`ms4-row ease${on ? ' on' : ''}`} title={value}>
-      <b className="ms4-n">{name}</b>
+    <div className={`ms4-row ease${on ? ' on' : ''}`} title={p.label}>
+      <b className="ms4-n">{p.id}</b>
       <svg className="ms4-curve" viewBox="0 0 40 40" aria-hidden="true"><path className="ax" d="M4 33H36M4 7H36" /><polyline points={pts} /><motion.circle r="2.2" cx={cx} cy={cy} /></svg>
-      <Track p={p} />
+      <Track p={v} />
     </div>
   );
 }
 
-/* ---- the cascade for the moment that just played ---- */
-function TokenLine({ s, label, live }: { s: Sem; label: string; live: boolean }) {
-  const u = s.use;
+/* ---- the cascade for the moment that just played: component mapping → role → primitives ---- */
+function TokenLine({ x, label, live }: { x: Mapping; label: string; live: boolean }) {
+  const R = role(x.role), others = usersOf(R.id).filter(u => u !== x.id);
+  const chips = [R.duration, R.easing, R.distance, R.scale].filter(Boolean) as string[];
   return (
     <div className={`ms4-tl${live ? ' live' : ''}`}>
       <span className="ms4-ph-l">{label}</span>
-      <code>{s.token}</code>
-      <span className="ms4-chips"><span className="ms4-arr" aria-hidden="true">→</span>
-        <span><small>duration</small>{u.duration} · {ms(u.duration)} ms</span>
-        <span><small>easing</small>{u.easing}</span>
-        {u.distance && <span><small>distance</small>{u.distance} · {px(u.distance)} px</span>}
-        {u.note && <span className="note">{u.note}</span>}
+      <span className="ms4-chain"><code>{x.id}</code><span className="ms4-arr" aria-hidden="true">→</span><code className="role">{R.id}</code></span>
+      <span className="ms4-chips">
+        <span className="ms4-arr" aria-hidden="true">→</span>
+        {chips.map(c => <span key={c}>{c}<small>{prim(c).label}</small></span>)}
+        {R.opacity && <span>opacity<small>0 ↔ 1</small></span>}
+        {x.adjust && <span className="note">{x.adjust}</span>}
       </span>
+      {others.length > 0 && <span className="ms4-also">Also uses this role: {others.map(o => <code key={o}>{o}</code>)}</span>}
     </div>
   );
 }
@@ -96,18 +106,18 @@ export default function Motion04() {
   const flow = () => { if (flowing) { phone.current?.stop(); setFlowing(false); } else { setFlowing(true); phone.current?.flow(); } };
   const playOne = (id: MomentId) => { setFlowing(false); phone.current?.play(id); };
   const m = moment(sel.id);
-  const s = sel.phase === 'exit' && m.exit ? m.exit : m.enter;
-  const lit: Lit = { duration: s.use.duration, easing: s.use.easing, distance: s.use.distance, use: s.use };
+  const R = role(mappingOf(sel.id, sel.phase).role);
+  const lit: Lit = { ids: [R.duration, R.easing, R.distance, R.scale].filter(Boolean) as string[], ms: prim(R.duration).ms!, ease: R.easing };
   /* the phone fits the stage's height */
   const stage = useRef<HTMLDivElement>(null);
   const [k, setK] = useState(1);
-  useLayoutEffect(() => { const el = stage.current; if (!el) return; const fit = () => setK(Math.min(1, el.clientHeight / 582, el.clientWidth / 282)); fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
+  useLayoutEffect(() => { const el = stage.current; if (!el) return; const fit = () => setK(Math.min(1, (el.clientHeight - 22) / 582, el.clientWidth / 282)); fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
   const groups = [...new Set(MOMENTS.map(x => x.group))];
   return (
     <section className="pp4 ms4" aria-label="Motion system">
       <header className="pp4-head">
         <h2 className="h2-4">Motion system</h2>
-        <div className="pp4-right"><p className="pp4-note">How motion lives in a product: every moment uses a named token, and every token is made of a few shared values.</p></div>
+        <div className="pp4-right"><p className="pp4-note">How motion lives in a product: each component maps to a shared role, and each role is made of a few shared values.</p></div>
       </header>
       <div className="ms4-grid">
         {/* the product's moments */}
@@ -130,14 +140,15 @@ export default function Motion04() {
           ))}
         </div>
         {/* the product */}
-        <div className="ms4-stage" ref={stage}><div className="ms4-phone" style={{ width: 282 * k, height: 582 * k }}><Phone04 ref={phone} onMoment={onMoment} onFlowEnd={() => setFlowing(false)} scale={k} /></div></div>
+        <div className="ms4-stage" ref={stage}><div className="ms4-phone" style={{ width: 282 * k, height: 582 * k }}><Phone04 ref={phone} onMoment={onMoment} onFlowEnd={() => setFlowing(false)} scale={k} /></div><span className="ms4-ex">Example implementation</span></div>
         {/* its tokens */}
         <div className="ms4-panel ms4-spec">
           <div className="ms4-sel">
+            <p className="ms4-tag">Illustrative values · Framework v0.1</p>
             <h3>{m.name} <span>{m.pattern}</span></h3>
             <div className="ms4-tls">
-              <TokenLine s={m.enter} label={m.labels[0]} live={sel.phase === 'enter'} />
-              {m.exit && <TokenLine s={m.exit} label={m.labels[1] ?? 'Exit'} live={sel.phase === 'exit'} />}
+              <TokenLine x={m.enter} label={m.labels[0]} live={sel.phase === 'enter'} />
+              {m.exit && <TokenLine x={m.exit} label={m.labels[1] ?? 'Exit'} live={sel.phase === 'exit'} />}
             </div>
             <p className="ms4-why">{m.why}</p>
           </div>

@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react';
-import { moment, ms, px, tr, type MomentId, type Phase } from './motionTokens';
+import { mappingOf, moment, msOf, pxOf, role, scaleOf, tr, type MomentId, type Phase } from './motionTokens';
 
 /* The motion system's product (Nitish, 16 Oct): a small generic shop on a phone, moved only by the system's semantic
    tokens — a grid of cards that open into their page (container transform), a checkout page forward and back (shared
@@ -31,9 +31,11 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
   const lastM = useRef<MomentId | null>(null);
   const onMoment = (id: MomentId, phase: Phase) => { lastM.current = id; report(id, phase); };
   const reduce = !!useReducedMotion();
-  const T = (id: keyof typeof M, phase: Phase = 'enter') => tr(phase === 'exit' && M[id].exit ? M[id].exit! : M[id].enter, reduce);
-  const dur = (id: keyof typeof M, phase: Phase = 'enter') => (reduce ? 0 : ms((phase === 'exit' && M[id].exit ? M[id].exit! : M[id].enter).use.duration) / 1000);
-  const press = { whileTap: { scale: .96 }, transition: T('press') };
+  const T = (id: keyof typeof M, phase: Phase = 'enter') => tr(mappingOf(id, phase), reduce);
+  const dur = (id: keyof typeof M, phase: Phase = 'enter') => (reduce ? 0 : msOf(mappingOf(id, phase)) / 1000);
+  const ms = (id: keyof typeof M, phase: Phase = 'enter') => msOf(mappingOf(id, phase));
+  const PRESS = scaleOf(role('motion.feedback.press').scale!);
+  const press = { whileTap: { scale: PRESS }, transition: T('press') };
 
   const screen = useRef<HTMLDivElement>(null);
   const cardEls = useRef<(HTMLElement | null)[]>([]);
@@ -73,29 +75,29 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
     setToast(k => k + 1); onMoment('toast', 'enter');
     window.clearTimeout(toastT.current); toastT.current = window.setTimeout(() => { setToast(0); if (lastM.current === 'toast') onMoment('toast', 'exit'); }, 1700);
   };
-  const addToBag = () => { const c = S.current.card; closeSheet(); if (c != null) setBag(b => [...b, c]); later(showToast, ms('quick')); };
+  const addToBag = () => { const c = S.current.card; closeSheet(); if (c != null) setBag(b => [...b, c]); later(showToast, ms('sheet', 'exit')); };
   const pressOn = (el: HTMLElement | null) => {
     onMoment('press', 'enter'); if (!el || reduce) return;
-    animate(el, { scale: [1, .96, 1] }, { duration: 2 * ms('instant') / 1000, ease: [.2, 0, 0, 1], times: [0, .5, 1] });
+    animate(el, { scale: [1, PRESS, 1] }, { duration: 2 * ms('press') / 1000, ease: [.2, 0, 0, 1], times: [0, .5, 1] });
   };
 
   /* what each moment needs first, from wherever the app is: the card's page on Home, no sheet over it, no page over it */
-  const fade = ms('quick') + ms('moderate') + 60; /* a fade through: the old tab out, then the new one in */
+  const fade = ms('tab', 'exit') + ms('tab') + 60; /* a fade through: the old tab out, then the new one in */
   const toHome = (f: () => void) => { if (S.current.tab !== 'home') { switchTab('home'); later(f, fade); } else f(); };
   const toPage = (f: () => void) => toHome(() => {
-    if (S.current.card == null) { openCard(0); later(f, ms('slow') + 120); }
-    else if (S.current.page2) { back(); later(f, ms('moderate') + 120); }
+    if (S.current.card == null) { openCard(0); later(f, ms('card') + 120); }
+    else if (S.current.page2) { back(); later(f, ms('page', 'exit') + 120); }
     else f();
   });
-  const unSheet = (f: () => void) => { if (S.current.sheet) { closeSheet(); later(f, ms('moderate') + 90); } else f(); };
+  const unSheet = (f: () => void) => { if (S.current.sheet) { closeSheet(); later(f, ms('sheet', 'exit') + 90); } else f(); };
 
   useImperativeHandle(ref, () => ({
     play(id) {
       clear();
       if (id === 'card') unSheet(() => toHome(() => (S.current.card == null ? openCard(0) : closeCard())));
       if (id === 'sheet') { if (S.current.sheet) closeSheet(); else toPage(openSheet); }
-      if (id === 'toast') { if (S.current.sheet) addToBag(); else toPage(() => { openSheet(); later(addToBag, ms('slow') + 450); }); }
-      if (id === 'page') unSheet(() => toHome(() => { if (S.current.card == null) { openCard(0); later(forward, ms('slow') + 120); } else if (S.current.page2) back(); else forward(); }));
+      if (id === 'toast') { if (S.current.sheet) addToBag(); else toPage(() => { openSheet(); later(addToBag, ms('sheet') + 450); }); }
+      if (id === 'page') unSheet(() => toHome(() => { if (S.current.card == null) { openCard(0); later(forward, ms('card') + 120); } else if (S.current.page2) back(); else forward(); }));
       if (id === 'tab') unSheet(() => switchTab(TABS[(TABS.findIndex(t => t.id === S.current.tab) + 1) % TABS.length].id));
       if (id === 'press') {
         const { tab: t, card: c, page2: p } = S.current;
@@ -112,14 +114,14 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
       ];
       const run = (i: number) => { if (i >= steps.length) { onFlowEnd(); return; } steps[i][0](); later(() => run(i + 1), steps[i][1]); };
       /* from the start: Home, nothing open */
-      const reset = (f: () => void) => unSheet(() => toHome(() => { if (S.current.card != null) { if (S.current.page2) back(); closeCard(); later(f, ms('moderate') + 300); } else f(); }));
+      const reset = (f: () => void) => unSheet(() => toHome(() => { if (S.current.card != null) { if (S.current.page2) back(); closeCard(); later(f, ms('card', 'exit') + 300); } else f(); }));
       reset(() => run(0));
     },
     stop() { clear(); },
   }));
 
   const pageT = T('page', page2 ? 'enter' : 'exit');
-  const dist = px('large');
+  const dist = pxOf(role('motion.navigation.forward').distance!);
   const total = bag.reduce((s, i) => s + CARDS[i].p, 0);
 
   return (
@@ -129,7 +131,7 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
 
         {/* the tabs, faded through; each keeps its place (Home its open card) */}
         <AnimatePresence initial={false} mode="wait">
-          <motion.div key={tab} className="ph4-view" initial={{ opacity: 0, scale: .92 }} animate={{ opacity: 1, scale: 1, transition: T('tab') }} exit={{ opacity: 0, transition: T('tab', 'exit') }}>
+          <motion.div key={tab} className="ph4-view" initial={{ opacity: 0, scale: scaleOf(role('motion.view.arrive').scale!) }} animate={{ opacity: 1, scale: 1, transition: T('tab') }} exit={{ opacity: 0, transition: T('tab', 'exit') }}>
             {tab === 'home' && <>
               <div className="ph4-pad">
                 <h4 className="ph4-h">Discover</h4>
@@ -223,7 +225,7 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
         {/* the toast, over everything */}
         <AnimatePresence>
           {toast > 0 && (
-            <motion.div key={toast} className="ph4-toast" initial={{ opacity: 0, y: px('medium') }} animate={{ opacity: 1, y: 0, transition: T('toast') }} exit={{ opacity: 0, y: px('small'), transition: T('toast', 'exit') }}>
+            <motion.div key={toast} className="ph4-toast" initial={{ opacity: 0, y: pxOf(role('motion.surface.enter').distance!) }} animate={{ opacity: 1, y: 0, transition: T('toast') }} exit={{ opacity: 0, y: pxOf(role('motion.surface.exit').distance!), transition: T('toast', 'exit') }}>
               <Icon d={ICON.check} />Added to bag
             </motion.div>
           )}
