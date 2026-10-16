@@ -1,6 +1,6 @@
 /* Content. Everything marked PLACEHOLDER is to be replaced with real material. */
 
-export type ViewName = 'home' | 'projects' | 'project' | 'workflow' | 'micro' | 'campaign' | 'writing' | 'experience';
+export type ViewName = 'home' | 'projects' | 'project' | 'workflow' | 'motion' | 'lab' | 'articles' | 'micro' | 'campaign' | 'writing' | 'experience';
 export const VIEW_ORDER: ViewName[] = ['home', 'projects', 'project', 'micro', 'campaign', 'writing', 'experience'];
 
 export type Project = {
@@ -79,9 +79,11 @@ export const NAV: { id: Exclude<ViewName, 'project'>; label: string }[] = [
   { id: 'writing', label: 'Writing' },
   { id: 'experience', label: 'Experience' },
 ];
-/* 04's nav: the same names with Workflow after Projects — the "how I work" map (Nitish, 15–16 Oct; Craft until 16 Oct);
-   04 only, for now */
-export const NAV04: typeof NAV = [NAV[0], NAV[1], { id: 'workflow', label: 'Workflow' }, ...NAV.slice(2)];
+/* 04's nav (Nitish, 16 Oct): Intro, Projects, Workflow (the how-I-work map), Motion system (in Micro's place — the
+   micro-interactions are its components), Lab (experiments, the plugin, explorations you can play with) and Articles
+   (what he wrote and what was written about him; was Writing). Campaign and Experience are off for now — the CV may
+   open a page of where he has worked later. 04 only; the other iterations keep NAV. */
+export const NAV04: typeof NAV = [NAV[0], NAV[1], { id: 'workflow', label: 'Workflow' }, { id: 'motion', label: 'Motion system' }, { id: 'lab', label: 'Lab' }, { id: 'articles', label: 'Articles' }];
 
 export function contextFor(view: ViewName, pid?: string): string {
   if (view === 'project') { const p = PROJECTS.find(p => p.id === pid); return 'Project · ' + (p ? p.title : ''); }

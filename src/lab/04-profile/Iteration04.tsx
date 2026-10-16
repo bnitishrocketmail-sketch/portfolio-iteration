@@ -11,6 +11,7 @@ import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.web
 import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
+import Soon04 from './Soon04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { readTweaks, tweakKey } from './tokens';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
@@ -215,6 +216,10 @@ export default function Iteration04() {
           /* the project page takes the picture's and the column's place (Projects04.tsx); the nav stays */
           <motion.div key="projects" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
             <Projects04 />
+          </motion.div>
+        ) : tab === 'motion' || tab === 'lab' || tab === 'articles' ? (
+          <motion.div key={tab} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+            <Soon04 id={tab} label={NAV.find(n => n.id === tab)!.label} />
           </motion.div>
         ) : tab === 'workflow' ? (
           /* the "how I work" map (Workflow04.tsx), in the same place */

@@ -206,6 +206,7 @@
 .pp4-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 2cqw; padding: 0 .4cqw; }
 .pp4-right { display: flex; flex-direction: column; align-items: flex-start; gap: .8cqw; max-width: 34ch; }
 .pp4-note { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: var(--line-ink); } /* body */
+.soon4 { flex: 1; min-height: 0; display: grid; place-items: center; border-radius: var(--r); border: 1px dashed color-mix(in srgb, var(--line-ink) 22%, transparent); font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; color: var(--line-ink); opacity: .5; } /* a tab not built yet */
 /* the row: every card the row's height; the half card at the end fades out under the mask there; the cards before the
    open one are clipped at the left edge (a fade there would dim the open card's own edge) (Nitish, 14 Oct). The clip box
    runs 40px below the cards so their shadows are not cut (the shadows fall downward; sideways they reach 4px at most). */
