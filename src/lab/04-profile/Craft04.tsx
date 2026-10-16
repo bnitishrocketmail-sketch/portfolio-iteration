@@ -3,50 +3,47 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import './craft.css';
 
 /* 04's Craft page (Nitish, 15–16 Oct): "how I work" as a map of connected nodes with little text — the crafts at the
-   centre, the roots small beside them, the tools as satellites of the craft each serves, the workflows chained to the
-   right, and the model as a ring around all of it (brief → build → review), drawn lighter. A node opens into a card
+   centre, the tools as satellites of the craft each serves, the workflows chained to the right, and the model as a ring
+   around all of it (brief → build → review), drawn lighter. The roots (photography, cinematography, editing) came off
+   on 16 Oct: the page is about the current crafts and the workflow that joins them; the earlier career may get a tab
+   of its own. A node opens into a card
    beside it (his choice, 15 Oct; on hover, 16 Oct): the pill itself grows into the card — anchored at the node's edge nearest the map's
    centre so it grows inward, the open card's grey, the standard radius — and shrinks back on close; one open at a time;
    the map does not move. The cards hold a line or two each for now and, where a live demo is to go, its stage marked.
    Positions are percentages of the map's box, hand-laid; the lines join the nodes' centres under them. */
-type Kind = 'core' | 'root' | 'tool' | 'flow' | 'ai';
+type Kind = 'core' | 'tool' | 'flow' | 'ai';
 type Node = { id: string; label: string; kind: Kind; x: number; y: number; text: string; demo?: string };
 
 export const NODES: Node[] = [
   /* the crafts */
-  { id: 'motion', label: 'Motion design', kind: 'core', x: 45, y: 37, text: 'One animation playing, with its timing drawn as a strip underneath — where the holds and the overshoot are.', demo: 'an animation and its timing strip' },
-  { id: 'interaction', label: 'Interaction design', kind: 'core', x: 30, y: 52, text: 'Two or three micro-interactions running live, the trigger named under each.', demo: 'micro-interactions, live' },
-  { id: 'product', label: 'Product & UX design', kind: 'core', x: 53, y: 61, text: 'The product work — Lenskart’s B, Swiggy’s navigation, RideQuest — as tiles that jump to their project.' },
-  /* the roots: content production, where the eye for timing came from */
-  { id: 'photo', label: 'Photography', kind: 'root', x: 11, y: 77, text: 'Composition and light — where the eye came from.' },
-  { id: 'cine', label: 'Cinematography', kind: 'root', x: 20, y: 88, text: 'The hold and the cut — where the sense of timing came from.' },
-  { id: 'edit', label: 'Video & photo editing', kind: 'root', x: 33, y: 91, text: 'Rhythm: when a cut lands.' },
+  { id: 'motion', label: 'Motion design', kind: 'core', x: 45, y: 40, text: 'One animation playing, with its timing drawn as a strip underneath — where the holds and the overshoot are.', demo: 'an animation and its timing strip' },
+  { id: 'interaction', label: 'Interaction design', kind: 'core', x: 30, y: 59, text: 'Two or three micro-interactions running live, the trigger named under each.', demo: 'micro-interactions, live' },
+  { id: 'product', label: 'Product & UX design', kind: 'core', x: 53, y: 64, text: 'The product work — Lenskart’s B, Swiggy’s navigation, RideQuest — as tiles that jump to their project.' },
   /* the tools, each beside the craft it serves */
-  { id: 'ae', label: 'After Effects', kind: 'tool', x: 52, y: 20, text: 'Where the motion is made.' },
-  { id: 'lottie', label: 'Lottie', kind: 'tool', x: 61, y: 30, text: 'Delivery: animation as data. Coin Rig — a rig as a Creator plugin, on the LottieFiles Bazaar.' },
-  { id: 'rive', label: 'Rive', kind: 'tool', x: 26, y: 31, text: 'State machines, drawn and run.' },
-  { id: 'protopie', label: 'Protopie', kind: 'tool', x: 17, y: 40, text: 'Prototypes with real triggers and variables.' },
-  { id: 'figma', label: 'Figma', kind: 'tool', x: 62, y: 69, text: 'Where the product work is designed.' },
-  { id: 'code', label: 'Code', kind: 'tool', x: 46, y: 78, text: 'This site is the sample.' },
+  { id: 'ae', label: 'After Effects', kind: 'tool', x: 52, y: 23, text: 'Where the motion is made.' },
+  { id: 'lottie', label: 'Lottie', kind: 'tool', x: 61, y: 33, text: 'Delivery: animation as data. Coin Rig — a rig as a Creator plugin, on the LottieFiles Bazaar.' },
+  { id: 'rive', label: 'Rive', kind: 'tool', x: 24, y: 36, text: 'State machines, drawn and run.' },
+  { id: 'protopie', label: 'Protopie', kind: 'tool', x: 16, y: 49, text: 'Prototypes with real triggers and variables.' },
+  { id: 'figma', label: 'Figma', kind: 'tool', x: 62, y: 72, text: 'Where the product work is designed.' },
+  { id: 'code', label: 'Code', kind: 'tool', x: 42, y: 83, text: 'This site is the sample.' },
   /* the workflows */
-  { id: 'script', label: 'Script-based motion', kind: 'flow', x: 74, y: 23, text: 'A Lottie built by script: change a parameter and the animation follows — it stays a Lottie, not a video.', demo: 'a parameter and the Lottie that follows it' },
-  { id: 'sm', label: 'State-machine design', kind: 'flow', x: 80, y: 46, text: 'States, transitions, triggers: one system that holds for every variable. Press a trigger and the component changes state in step.', demo: 'a state machine, live' },
-  { id: 'handoff', label: 'Prototype & handoff', kind: 'flow', x: 75, y: 74, text: 'The sheet of what moves, when, on what trigger, on which curve — beside the prototype it describes.', demo: 'the handoff sheet and its prototype' },
-  { id: 'msys', label: 'Motion design system', kind: 'flow', x: 89, y: 61, text: 'Durations, easings and choreography as tokens a design system can hold. The system has its own page; the story, a project card.', demo: 'the tokens, moving' },
+  { id: 'script', label: 'Script-based motion', kind: 'flow', x: 74, y: 26, text: 'A Lottie built by script: change a parameter and the animation follows — it stays a Lottie, not a video.', demo: 'a parameter and the Lottie that follows it' },
+  { id: 'sm', label: 'State-machine design', kind: 'flow', x: 80, y: 49, text: 'States, transitions, triggers: one system that holds for every variable. Press a trigger and the component changes state in step.', demo: 'a state machine, live' },
+  { id: 'handoff', label: 'Prototype & handoff', kind: 'flow', x: 75, y: 77, text: 'The sheet of what moves, when, on what trigger, on which curve — beside the prototype it describes.', demo: 'the handoff sheet and its prototype' },
+  { id: 'msys', label: 'Motion design system', kind: 'flow', x: 89, y: 64, text: 'Durations, easings and choreography as tokens a design system can hold. The system has its own page; the story, a project card.', demo: 'the tokens, moving' },
   /* the ring: with the model */
-  { id: 'brief', label: 'Brief', kind: 'ai', x: 23.6, y: 16, text: 'The craft becomes the brief: the states, the timing, the curve, in its own terms.' },
-  { id: 'build', label: 'Build', kind: 'ai', x: 76.4, y: 16, text: 'The model does the labour: the code, the Lottie JSON, the variants.' },
-  { id: 'review', label: 'Review', kind: 'ai', x: 96, y: 52, text: 'The hand checks: the timing by eye, the states by walking them.' },
+  { id: 'brief', label: 'Brief', kind: 'ai', x: 23.6, y: 20.5, text: 'The craft becomes the brief: the states, the timing, the curve, in its own terms.' },
+  { id: 'build', label: 'Build', kind: 'ai', x: 76.4, y: 20.5, text: 'The model does the labour: the code, the Lottie JSON, the variants.' },
+  { id: 'review', label: 'Review', kind: 'ai', x: 96, y: 50, text: 'The hand checks: the timing by eye, the states by walking them.' },
 ];
 
 /* who joins whom; the third value marks the ring's lines, drawn lighter */
 const EDGES: [string, string, 'ai'?][] = [
-  ['photo', 'product'], ['cine', 'interaction'], ['edit', 'motion'],
   ['ae', 'motion'], ['lottie', 'motion'], ['rive', 'interaction'], ['protopie', 'interaction'], ['figma', 'product'], ['code', 'product'], ['code', 'interaction'],
   ['script', 'lottie'], ['script', 'ae'], ['sm', 'interaction'], ['sm', 'lottie'], ['sm', 'msys'], ['handoff', 'figma'], ['handoff', 'code'], ['msys', 'handoff'], ['msys', 'motion'],
   ['brief', 'motion', 'ai'], ['brief', 'interaction', 'ai'], ['brief', 'product', 'ai'], ['build', 'script', 'ai'], ['review', 'product', 'ai'],
 ];
-const RING = { cx: 50, cy: 52, rx: 46, ry: 44 };
+const RING = { cx: 50, cy: 50, rx: 46, ry: 36 }; /* tightened when the roots came off */
 const CARD_W = 320;
 const SPRING = { type: 'spring', stiffness: 320, damping: 34, mass: 1 } as const;
 
