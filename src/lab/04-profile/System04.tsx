@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { siLottiefiles } from 'simple-icons';
-import { COPY, LINKS, NAV, PROJECTS } from '../../lib/data';
+import { COPY, LINKS, NAV04 as NAV, PROJECTS } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import { CONTROLS, defOf, readTweaks, tweakKey, writeTweaks, type Control } from './tokens';
 import './profile.css';

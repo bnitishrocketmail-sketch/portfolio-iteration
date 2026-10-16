@@ -1,0 +1,21 @@
+/* ---- the Craft page (Craft04.tsx): the "how I work" map, in the page's tokens ---- */
+.cm4-wrap { flex: 1; min-height: 0; position: relative; }
+.cm4 { position: absolute; inset: 0; }
+/* the lines, under the nodes: percentages of the box, the stroke unscaled */
+.cm4-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.cm4-lines line, .cm4-lines ellipse { fill: none; stroke: var(--line-ink); stroke-width: 1px; vector-effect: non-scaling-stroke; opacity: .28; }
+.cm4-lines .ai { opacity: .16; stroke-dasharray: 3 4; }
+.cm4-lines .ring { opacity: .14; stroke-dasharray: 2 5; }
+.cm4-cap { position: absolute; transform: translate(-50%, -50%); padding: 0 .8em; background: var(--frame); font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; color: var(--line-ink); opacity: .5; }
+/* the nodes: pills, centred on their point; four weights */
+.cn4 { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; border-radius: 999px; font-family: var(--f-copy); line-height: 1; }
+.cn4.core { padding: .95em 1.35em; background: var(--pcard-open); color: var(--pcard-open-ink); font-size: var(--t-title); font-weight: var(--title-w); box-shadow: var(--shadow-el); }
+.cn4.flow { padding: .8em 1.15em; background: var(--pcard-fold); color: var(--pcard-fold-ink); font-size: var(--t-body); font-weight: 500; box-shadow: var(--shadow-el); }
+.cn4.tool { padding: .6em 1em; border: 1px solid color-mix(in srgb, var(--line-ink) 38%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); }
+.cn4.root { padding: .6em 1em; border: 1px solid color-mix(in srgb, var(--line-ink) 24%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); opacity: .72; }
+.cn4.ai { padding: .6em 1em; border: 1px dashed color-mix(in srgb, var(--line-ink) 40%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); opacity: .8; }
+@media (max-width: 700px) {
+  /* the phone: the map keeps a size it is legible at and scrolls sideways — a first pass */
+  .cm4-wrap { overflow: auto; height: 420px; }
+  .cm4 { position: relative; inset: auto; width: 760px; height: 400px; }
+}

@@ -1,6 +1,6 @@
 /* Content. Everything marked PLACEHOLDER is to be replaced with real material. */
 
-export type ViewName = 'home' | 'projects' | 'project' | 'micro' | 'campaign' | 'writing' | 'experience';
+export type ViewName = 'home' | 'projects' | 'project' | 'craft' | 'micro' | 'campaign' | 'writing' | 'experience';
 export const VIEW_ORDER: ViewName[] = ['home', 'projects', 'project', 'micro', 'campaign', 'writing', 'experience'];
 
 export type Project = {
@@ -79,6 +79,8 @@ export const NAV: { id: Exclude<ViewName, 'project'>; label: string }[] = [
   { id: 'writing', label: 'Writing' },
   { id: 'experience', label: 'Experience' },
 ];
+/* 04's nav: the same names with Craft after Projects — the "how I work" map (Nitish, 15–16 Oct); 04 only, for now */
+export const NAV04: typeof NAV = [NAV[0], NAV[1], { id: 'craft', label: 'Craft' }, ...NAV.slice(2)];
 
 export function contextFor(view: ViewName, pid?: string): string {
   if (view === 'project') { const p = PROJECTS.find(p => p.id === pid); return 'Project · ' + (p ? p.title : ''); }

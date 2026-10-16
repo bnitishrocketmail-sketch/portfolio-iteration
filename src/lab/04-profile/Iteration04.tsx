@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { COPY, LINKS, NAV, PROJECTS, type ViewName } from '../../lib/data';
+import { COPY, LINKS, NAV04 as NAV, PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import Island from '../../components/island/Island';
 import { PhotoStack } from '../../components/tiles/Tiles';
@@ -10,6 +10,7 @@ import desk from '../../assets/nitish-desk.webp';
 import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.webp';
 import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
+import Craft04 from './Craft04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { readTweaks, tweakKey } from './tokens';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
@@ -213,6 +214,11 @@ export default function Iteration04() {
           /* the project page takes the picture's and the column's place (Projects04.tsx); the nav stays */
           <motion.div key="projects" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
             <Projects04 />
+          </motion.div>
+        ) : tab === 'craft' ? (
+          /* the "how I work" map (Craft04.tsx), in the same place */
+          <motion.div key="craft" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+            <Craft04 />
           </motion.div>
         ) : (<>
         <div className="picwrap4" ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean}>
