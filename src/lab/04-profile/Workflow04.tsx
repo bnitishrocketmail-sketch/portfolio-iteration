@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import './craft.css';
+import './workflow.css';
 
-/* 04's Craft page (Nitish, 15–16 Oct): "how I work" as a map of connected nodes with little text — the crafts at the
+/* 04's Workflow page (Nitish, 15–16 Oct; named Craft until 16 Oct): "how I work" as a map of connected nodes with little text — the crafts at the
    centre, the tools as satellites of the craft each serves, the workflows chained to the right, and the model as a ring
    around all of it (brief → build → review), drawn lighter. The roots (photography, cinematography, editing) came off
    on 16 Oct: the page is about the current crafts and the workflow that joins them; the earlier career may get a tab
@@ -50,7 +50,7 @@ const SPRING = { type: 'spring', stiffness: 320, damping: 34, mass: 1 } as const
 /* the open card's anchor: the node's box in the map, and which edges it grows from */
 type Open = { id: string; left: number; top: number; right: number; bottom: number; w: number; h: number; toRight: boolean; down: boolean; bg: string; border: string; r: number; openBg: string };
 
-export default function Craft04() {
+export default function Workflow04() {
   const at = Object.fromEntries(NODES.map(n => [n.id, n]));
   const mapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<Open | null>(null);
@@ -75,10 +75,10 @@ export default function Craft04() {
   const tr = reduce ? { duration: 0 } : SPRING;
   const node = open ? at[open.id] : null;
   return (
-    <section className="pp4 cr4" aria-label="Craft">
+    <section className="pp4 cr4" aria-label="Workflow">
       <header className="pp4-head">
-        <h2 className="h2-4">Craft</h2>
-        <div className="pp4-right"><p className="pp4-note">How I work — the crafts, the tools that serve them, the workflows, and where the model fits.</p></div>
+        <h2 className="h2-4">Workflow</h2>
+        <div className="pp4-right"><p className="pp4-note">How I work — the skills, the tools that serve them, the workflows that join them, and where the model fits.</p></div>
       </header>
       <div className="cm4-wrap">
         {/* a click on the map's floor closes the card. A tap's click can arrive with the floor as its target even though it

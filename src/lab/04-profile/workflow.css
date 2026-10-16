@@ -1,4 +1,4 @@
-/* ---- the Craft page (Craft04.tsx): the "how I work" map, in the page's tokens ---- */
+/* ---- the Workflow page (Workflow04.tsx): the "how I work" map, in the page's tokens ---- */
 .cm4-wrap { flex: 1; min-height: 0; position: relative; }
 .cm4 { position: absolute; inset: 0; }
 /* the lines, under the nodes: percentages of the box, the stroke unscaled */
@@ -15,7 +15,7 @@
 .cn4.flow { padding: .8em 1.15em; background: var(--pcard-fold); color: var(--pcard-fold-ink); font-size: var(--t-body); font-weight: 500; box-shadow: var(--shadow-el); }
 .cn4.tool { padding: .6em 1em; border: 1px solid color-mix(in srgb, var(--line-ink) 38%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); }
 .cn4.ai { padding: .6em 1em; border: 1px dashed color-mix(in srgb, var(--line-ink) 40%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); opacity: .8; }
-/* the card a node opens into: the open card's grey, the standard radius; its box is animated (Craft04.tsx), the content
+/* the card a node opens into: the open card's grey, the standard radius; its box is animated (Workflow04.tsx), the content
    is laid out at the card's full width from the start so nothing reflows while it grows */
 .cc4 { position: absolute; z-index: 5; overflow: hidden; border: 1px solid transparent; color: var(--pcard-open-ink); box-shadow: var(--shadow-el); }
 .cc4-in { position: relative; width: 320px; box-sizing: border-box; padding: 1.1em 1.2em 1.2em; display: flex; flex-direction: column; gap: .7em; font-size: var(--t-body); }
