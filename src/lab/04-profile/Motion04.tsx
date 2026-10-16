@@ -3,6 +3,7 @@ import { animate, motion, useMotionValue, useReducedMotion, useTransform, type M
 import { useSearchParams } from 'react-router-dom';
 import Phone04, { type PhoneHandle } from './Phone04';
 import MotionDoc04 from './MotionDoc04';
+import MotionV2_04 from './MotionV2_04';
 import Timeline04 from './Timeline04';
 import { CONTRACT, ContractPanel, NAMES, type ContractStatus, type Scenario } from './Contract04';
 import { FAMILY, MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Mapping, type Moment, type MomentId, type Phase, type Prim } from './motionTokens';
@@ -116,12 +117,26 @@ function DevView({ m, pulse, reduce, extra, reduced }: { m: Moment; pulse: numbe
   );
 }
 
+/* two variants of the tab (Nitish, 17 Oct: "keep this whole motion system version aside as variant 1 and let's build
+   variant 2"): 1 is everything built before (In a product · The system); 2 is the Drivetrain page without Cars24
+   (MotionV2_04.tsx). 2 opens first; ?v=1 keeps 1 in the address. */
 export default function Motion04() {
+  const [params, setParams] = useSearchParams();
+  const v = params.get('v') === '1' ? 1 : 2;
+  const sw = (
+    <div className="ms4-views sm" role="tablist" aria-label="Variant">
+      {([1, 2] as const).map(n => <button key={n} type="button" role="tab" aria-selected={v === n} className={v === n ? 'on' : ''} onClick={() => setParams(n === 1 ? { v: '1' } : {}, { replace: true })}>Variant {n}</button>)}
+    </div>
+  );
+  return v === 1 ? <MotionV1 variantSwitch={sw} /> : <MotionV2_04 variantSwitch={sw} />;
+}
+
+function MotionV1({ variantSwitch }: { variantSwitch: ReactNode }) {
   const reduce = !!useReducedMotion();
   /* two views of one system (Nitish, 16 Oct): the product first, its structure a switch away; kept in the address */
   const [params, setParams] = useSearchParams();
   const view = params.get('view') === 'system' ? 'system' : 'product';
-  const setView = (v: 'system' | 'product') => setParams(v === 'system' ? { view: 'system' } : {}, { replace: true });
+  const setView = (v: 'system' | 'product') => setParams(v === 'system' ? { v: '1', view: 'system' } : { v: '1' }, { replace: true });
   const phone = useRef<PhoneHandle>(null);
   const [sel, setSel] = useState<{ id: MomentId; phase: Phase }>({ id: 'sheet', phase: 'enter' });
   const [pulse, setPulse] = useState(0);
@@ -154,7 +169,7 @@ export default function Motion04() {
             <button type="button" role="tab" aria-selected={view === 'system'} className={view === 'system' ? 'on' : ''} onClick={() => setView('system')}>The system</button>
           </div>
         </div>
-        <div className="pp4-right"><p className="pp4-note">{view === 'product' ? 'How motion lives in a product: each component maps to a shared role, and each role is made of a few shared values.' : 'A reusable framework for how everyday digital products respond, change and guide. Clarity in the interaction; consistency in the implementation.'}</p></div>
+        <div className="pp4-right">{variantSwitch}<p className="pp4-note">{view === 'product' ? 'How motion lives in a product: each component maps to a shared role, and each role is made of a few shared values.' : 'A reusable framework for how everyday digital products respond, change and guide. Clarity in the interaction; consistency in the implementation.'}</p></div>
       </header>
       {view === 'system' ? <MotionDoc04 toProduct={id => { if (id) setSel({ id, phase: 'enter' }); setView('product'); }} /> : <div className="ms4-grid">
         {/* the product's moments */}
