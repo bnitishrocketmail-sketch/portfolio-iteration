@@ -92,6 +92,9 @@ export default function Motion04() {
   const [sel, setSel] = useState<{ id: MomentId; phase: Phase }>({ id: 'sheet', phase: 'enter' });
   const [pulse, setPulse] = useState(0);
   const onMoment = (id: MomentId, phase: Phase) => { setSel({ id, phase }); setPulse(p => p + 1); };
+  const [flowing, setFlowing] = useState(false);
+  const flow = () => { if (flowing) { phone.current?.stop(); setFlowing(false); } else { setFlowing(true); phone.current?.flow(); } };
+  const playOne = (id: MomentId) => { setFlowing(false); phone.current?.play(id); };
   const m = moment(sel.id);
   const s = sel.phase === 'exit' && m.exit ? m.exit : m.enter;
   const lit: Lit = { duration: s.use.duration, easing: s.use.easing, distance: s.use.distance, use: s.use };
@@ -109,20 +112,25 @@ export default function Motion04() {
       <div className="ms4-grid">
         {/* the product's moments */}
         <div className="ms4-panel ms4-moments">
-          <div className="ms4-ph"><h3>Moments</h3><p>What the product does, by the pattern it uses. Tap one, or use the phone.</p></div>
+          <div className="ms4-ph"><h3>Moments</h3><p>One app, one journey. Play it through, tap a moment, or use the phone.</p></div>
+          <button type="button" className={`ms4-flow${flowing ? ' on' : ''}`} onClick={flow}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">{flowing ? <path d="M7 6h3v12H7zM14 6h3v12h-3z" fill="currentColor" /> : <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />}</svg>
+            {flowing ? 'Stop' : 'Play the journey'}
+          </button>
           {groups.map(g => (
-            <div key={g} className="ms4-mg">
+            <div key={g} className={`ms4-mg${g === 'The flow' ? ' steps' : ''}`}>
               <h4>{g}</h4>
-              {MOMENTS.filter(x => x.group === g).map(x => (
-                <button key={x.id} type="button" className={`ms4-m${sel.id === x.id ? ' on' : ''}`} onClick={() => phone.current?.play(x.id)}>
-                  <b>{x.name}</b><span>{x.pattern}</span>
+              {MOMENTS.filter(x => x.group === g).map((x, i) => (
+                <button key={x.id} type="button" className={`ms4-m${sel.id === x.id ? ' on' : ''}`} onClick={() => playOne(x.id)}>
+                  {g === 'The flow' && <i className="ms4-num">{i + 1}</i>}
+                  <b>{x.name}</b><span>{x.pattern} · {x.trigger}</span>
                 </button>
               ))}
             </div>
           ))}
         </div>
         {/* the product */}
-        <div className="ms4-stage" ref={stage}><div className="ms4-phone" style={{ width: 282 * k, height: 582 * k }}><Phone04 ref={phone} onMoment={onMoment} scale={k} /></div></div>
+        <div className="ms4-stage" ref={stage}><div className="ms4-phone" style={{ width: 282 * k, height: 582 * k }}><Phone04 ref={phone} onMoment={onMoment} onFlowEnd={() => setFlowing(false)} scale={k} /></div></div>
         {/* its tokens */}
         <div className="ms4-panel ms4-spec">
           <div className="ms4-sel">
