@@ -1,10 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
 import { useSearchParams } from 'react-router-dom';
 import Phone04, { type PhoneHandle } from './Phone04';
 import MotionMap04 from './MotionMap04';
-import { ContractPanel, type ContractStatus, type Scenario } from './Contract04';
-import { FAMILY, MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Mapping, type MomentId, type Phase, type Prim } from './motionTokens';
+import { CONTRACT, ContractPanel, NAMES, type ContractStatus, type Scenario } from './Contract04';
+import { FAMILY, MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Dev, type Mapping, type Moment, type MomentId, type Phase, type Prim } from './motionTokens';
 import './motion.css';
 
 /* 04's Motion system tab (Nitish, 16 Oct; reframed the same evening: "hard to understand in relevance of the product …
@@ -100,6 +100,46 @@ function TokenLine({ x, label, live }: { x: Mapping; label: string; live: boolea
   );
 }
 
+/* ---- the developer's view of a moment: its tracks on a time axis, interruption, reduced motion, what can be checked ---- */
+function Timeline({ dev, pulse, reduce }: { dev: Dev; pulse: number; reduce: boolean }) {
+  const end = Math.max(...dev.tracks.map(t => t.start + t.dur), 1);
+  const span = Math.ceil(end / 100) * 100;
+  const head = useMotionValue(0);
+  useEffect(() => { if (reduce || pulse < 1) return; head.set(0); const c = animate(head, 1, { duration: span / 1000, ease: 'linear' }); return () => c.stop(); }, [pulse]); // eslint-disable-line react-hooks/exhaustive-deps
+  const left = useTransform(head, v => `calc(${v} * (100% - 9.5em - 12.4em - 1.6em))`), op = useTransform(head, v => (v > 0 && v < 1 ? 1 : 0)); /* across the lane's width only */
+  const ticks = Array.from({ length: 5 }, (_, i) => Math.round(span * i / 4));
+  return (
+    <div className="dv4-tl">
+      <div className="dv4-rows">
+        {dev.tracks.map(t => (
+          <div key={t.name} className="dv4-row">
+            <span className="dv4-name"><b>{t.name}</b><small>{t.owns}</small></span>
+            <span className="dv4-lane"><i className={`dv4-bar${t.dur === 0 ? ' zero' : ''}`} style={{ left: `${t.start / span * 100}%`, width: t.dur ? `${t.dur / span * 100}%` : undefined }}><em>{t.dur ? `${Math.round(t.start)}–${Math.round(t.start + t.dur)} ms` : 'on change'}</em></i></span>
+            <code className="dv4-ref">{t.ref}</code>
+          </div>
+        ))}
+        <span className="dv4-axis" aria-hidden="true">{ticks.map(x => <i key={x} style={{ left: `${x / span * 100}%` }}>{x}</i>)}</span>
+        <motion.i className="dv4-head" style={{ left, opacity: op }} aria-hidden="true" />
+      </div>
+      {dev.note && <p className="dv4-note">{dev.note}</p>}
+    </div>
+  );
+}
+function DevView({ m, pulse, reduce, extra }: { m: Moment; pulse: number; reduce: boolean; extra?: ReactNode }) {
+  return (
+    <div className="ms4-prims dv4">
+      <div className="ms4-ph"><h3>Tracks <span>who owns what, when, on which token</span></h3></div>
+      <Timeline dev={m.dev} pulse={pulse} reduce={reduce} />
+      {extra}
+      <dl className="dv4-dl">
+        <dt>Interrupted</dt><dd>{m.dev.interrupt}</dd>
+        <dt>Reduced motion</dt><dd>{m.dev.reduced}</dd>
+        <dt>Acceptance</dt><dd><ul>{m.dev.accept.map(x => <li key={x}>{x}</li>)}</ul></dd>
+      </dl>
+    </div>
+  );
+}
+
 export default function Motion04() {
   const reduce = !!useReducedMotion();
   /* two views of one system (Nitish, 16 Oct): the product first, its structure a switch away; kept in the address */
@@ -111,6 +151,8 @@ export default function Motion04() {
   const [pulse, setPulse] = useState(0);
   const onMoment = (id: MomentId, phase: Phase) => { setSel({ id, phase }); setPulse(p => p + 1); };
   const [flowing, setFlowing] = useState(false);
+  /* whose view the right column takes (brief: both the designer's and the developer's) */
+  const [persp, setPersp] = useState<'designer' | 'developer'>('designer');
   /* the Pay contract: what the server will answer (the viewer's choice), and where the contract is */
   const [scenario, setScenario] = useState<Scenario>('unclear-done');
   const [contract, setContract] = useState<ContractStatus>({ state: 'ready', last: null, n: 0, ignored: 0 });
@@ -161,17 +203,21 @@ export default function Motion04() {
         {/* its tokens */}
         <div className="ms4-panel ms4-spec">
           <div className="ms4-sel">
-            <p className="ms4-tag">Illustrative values · Framework v0.1</p>
+            <div className="ms4-top"><p className="ms4-tag">Illustrative values · Framework v0.1</p>
+              <div className="ms4-views sm" role="tablist" aria-label="Perspective">{(['designer', 'developer'] as const).map(p => <button key={p} type="button" role="tab" aria-selected={persp === p} className={persp === p ? 'on' : ''} onClick={() => setPersp(p)}>{p === 'designer' ? 'Designer' : 'Developer'}</button>)}</div>
+            </div>
             <h3>{m.name} <span>{m.pattern} · {m.trigger}</span></h3>
             <p className="ms4-q"><b>{FAMILY[m.family].q}</b><span>{FAMILY[m.family].name}</span></p>
             {/* a contract's tokens are in its rules (the press, the label), so the contract takes the room */}
-            {sel.id !== 'pay' && <div className="ms4-tls">
+            {sel.id !== 'pay' && persp === 'designer' && <div className="ms4-tls">
               <TokenLine x={m.enter} label={m.labels[0]} live={sel.phase === 'enter'} />
               {m.exit && <TokenLine x={m.exit} label={m.labels[1] ?? 'Exit'} live={sel.phase === 'exit'} />}
             </div>}
-            <p className="ms4-why">{m.why}</p>
+            {persp === 'designer' && <p className="ms4-why">{m.why}</p>}
           </div>
-          {sel.id === 'pay'
+          {persp === 'developer'
+            ? <DevView m={m} pulse={pulse} reduce={reduce} extra={sel.id === 'pay' ? <table className="dv4-ct"><thead><tr><th>Current state</th><th>Event</th><th>Next state</th></tr></thead><tbody>{CONTRACT.map(([a, e, b, label]) => <tr key={e} className={contract.state === a ? 'live' : ''}><td><code>{NAMES[a]}</code></td><td>{label}</td><td><code>{NAMES[b]}</code></td></tr>)}</tbody></table> : undefined} />
+            : sel.id === 'pay'
             ? <div className="ms4-prims"><div className="ms4-ph"><h3>The contract <span>states and the events that move them</span></h3></div><ContractPanel status={contract} scenario={scenario} setScenario={setScenario} /></div>
             : <div className="ms4-prims"><div className="ms4-ph"><h3>Primitives <span>the shared values; this moment’s light up</span></h3></div><Palette lit={lit} pulse={reduce ? 0 : pulse} /></div>}
         </div>

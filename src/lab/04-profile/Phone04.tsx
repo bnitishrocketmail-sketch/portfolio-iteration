@@ -97,6 +97,13 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
   const back = () => { setPage2(false); onMoment('page', 'exit'); };
   const switchTab = (t: Tab) => { if (t === S.current.tab) return; setTab(t); onMoment('tab', 'enter'); };
   const openSheet = () => { setSheet(true); onMoment('sheet', 'enter'); };
+  /* focus: into the sheet when it was opened by hand (Options), back to Options when it closes */
+  const sheetEl = useRef<HTMLDivElement>(null), byHand = useRef(false);
+  useEffect(() => {
+    if (!byHand.current) return;
+    if (sheet) requestAnimationFrame(() => sheetEl.current?.focus({ preventScroll: true }));
+    else { optionsRef.current?.focus({ preventScroll: true }); byHand.current = false; }
+  }, [sheet]);
   const closeSheet = () => { setSheet(false); onMoment('sheet', 'exit'); };
   /* the toast leaves on its own; its timer is its own, so a moment played meanwhile does not cancel it */
   const toastT = useRef(0);
@@ -195,7 +202,7 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
                           <p className="ph4-copy">Washed soft, cut loose. Three sizes, two colours, made to order in a week.</p>
                         </div>
                         <div className="ph4-cta">
-                          <motion.button ref={optionsRef} type="button" className="ph4-btn ghost" {...press} onClick={openSheet}>Options</motion.button>
+                          <motion.button ref={optionsRef} type="button" className="ph4-btn ghost" {...press} onClick={() => { byHand.current = true; openSheet(); }}>Options</motion.button>
                           <motion.button type="button" className="ph4-btn" {...press} onClick={forward}>Continue</motion.button>
                         </div>
                       </motion.div>
@@ -257,15 +264,21 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
           ))}
         </nav>
 
-        {/* the sheet, over everything below it (the tab bar too: it asks for an answer first) */}
+        {/* the sheet, over everything below it (the tab bar too: it asks for an answer first). His choreography
+            (brief, layer 6): the scrim, the surface and its content start together and overlap — scrim 160 ms, surface
+            24 px up and in on motion.surface.enter, content opacity only on motion.content.change (it inherits the
+            surface's movement, so nothing travels twice). Focus moves in when it was opened by hand, and returns. */}
         <AnimatePresence>
-          {sheet && <motion.i key="scrim" className="ph4-scrim" onClick={closeSheet} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: dur('sheet') * .7 } }} exit={{ opacity: 0, transition: { duration: dur('sheet', 'exit') } }} />}
+          {sheet && <motion.i key="scrim" className="ph4-scrim" onClick={closeSheet} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: reduce ? 0 : .16, ease: [.2, 0, 0, 1] } }} exit={{ opacity: 0, transition: { duration: reduce ? 0 : .16 } }} />}
           {sheet && (
-            <motion.div key="sheet" className="ph4-sheet" initial={{ y: '100%' }} animate={{ y: 0, transition: T('sheet') }} exit={{ y: '100%', transition: T('sheet', 'exit') }}>
-              <i className="ph4-handle" />
-              <h4>Choose a size</h4>
-              {['Small', 'Medium', 'Large'].map((s, i) => <motion.div key={s} className={`ph4-opt${i === 1 ? ' on' : ''}`} {...press}><i />{s}</motion.div>)}
-              <motion.button type="button" className="ph4-btn wide" {...press} onClick={addToBag}>Add to bag</motion.button>
+            <motion.div key="sheet" ref={sheetEl} tabIndex={-1} role="dialog" aria-label="Choose a size" className="ph4-sheet" onKeyDown={e => { if (e.key === 'Escape') closeSheet(); }}
+              initial={{ y: reduce ? 0 : pxOf(role('motion.surface.enter').distance!), opacity: 0 }} animate={{ y: 0, opacity: 1, transition: T('sheet') }} exit={{ y: reduce ? 0 : pxOf(role('motion.surface.exit').distance!), opacity: 0, transition: T('sheet', 'exit') }}>
+              <motion.div className="ph4-sheet-in" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: reduce ? 0 : msOf('motion.content.change') / 1000 } }}>
+                <i className="ph4-handle" />
+                <h4>Choose a size</h4>
+                {['Small', 'Medium', 'Large'].map((s, i) => <motion.div key={s} className={`ph4-opt${i === 1 ? ' on' : ''}`} {...press}><i />{s}</motion.div>)}
+                <motion.button type="button" className="ph4-btn wide" {...press} onClick={addToBag}>Add to bag</motion.button>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

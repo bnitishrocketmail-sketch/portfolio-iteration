@@ -61,36 +61,73 @@ export const FAMILY = {
   attention: { name: 'Attention and expression', q: 'What deserves attention?' },
 } as const;
 export type Family = keyof typeof FAMILY;
-export type Moment = { id: MomentId; group: string; family: Family; name: string; pattern: string; trigger: string; why: string; enter: Mapping; exit?: Mapping; labels: [string, string?] };
+/* the developer's view of a moment (brief, layers 5–7): the tracks — which element owns which properties, when each
+   starts and how long it runs, on which token — what happens when it is interrupted, its reduced-motion version, and
+   what can be checked */
+export type Track = { name: string; owns: string; start: number; dur: number; ref: string };
+export type Dev = { tracks: Track[]; note?: string; interrupt: string; reduced: string; accept: string[] };
+export type Moment = { id: MomentId; group: string; family: Family; name: string; pattern: string; trigger: string; why: string; enter: Mapping; exit?: Mapping; labels: [string, string?]; dev: Dev };
+const D = (r: string) => prim(role(r).duration).ms!;
 
 export const MOMENTS: Moment[] = [
   { id: 'card', group: 'The flow', family: 'navigation', name: 'Open a card', pattern: 'Container transform', trigger: 'Tap a card', labels: ['Open', 'Close'],
     why: 'The card becomes the page, so where you came from is never lost.',
     enter: { id: 'card.open', role: 'motion.container.expand', adjust: 'from the card’s own box' },
-    exit: { id: 'card.close', role: 'motion.container.collapse', adjust: 'back to the card’s box' } },
+    exit: { id: 'card.close', role: 'motion.container.collapse', adjust: 'back to the card’s box' },
+    dev: { tracks: [
+      { name: 'Container', owns: 'position, size, corner radius', start: 0, dur: D('motion.container.expand'), ref: 'motion.container.expand' },
+      { name: 'Page content', owns: 'opacity', start: D('motion.container.expand') * .4, dur: D('motion.container.expand') * .5, ref: 'duration.300 × 0.4–0.9' },
+    ], interrupt: 'Closed while opening: it shrinks back from wherever it has grown to.', reduced: 'The page appears in place; the card does not grow.', accept: ['The page grows from the tapped card’s own box, and returns to it.', 'That card stays hidden until its page has fully returned.', 'Back is usable as soon as the page appears.'] } },
   { id: 'sheet', group: 'The flow', family: 'visibility', name: 'Bottom sheet', pattern: 'Slide from its edge', trigger: 'Options', labels: ['Open', 'Close'],
-    why: 'It arrives and settles; it leaves faster, getting out of the way.',
-    enter: { id: 'sheet.open', role: 'motion.surface.enter', adjust: 'its full height, from the bottom edge' },
-    exit: { id: 'sheet.close', role: 'motion.surface.exit', adjust: 'its full height, to the bottom edge' } },
+    why: 'It arrives and settles; it leaves faster, getting out of the way. The same roles as the toast — a surface is a surface.',
+    enter: { id: 'sheet.open', role: 'motion.surface.enter' },
+    exit: { id: 'sheet.close', role: 'motion.surface.exit' },
+    dev: { tracks: [
+      { name: 'Scrim', owns: 'opacity 0 → 0.38', start: 0, dur: 160, ref: 'duration.160' },
+      { name: 'Surface', owns: 'translate 24 px → 0, opacity 0 → 1', start: 0, dur: D('motion.surface.enter'), ref: 'motion.surface.enter' },
+      { name: 'Content', owns: 'opacity only', start: 0, dur: D('motion.content.change'), ref: 'motion.content.change' },
+    ], note: 'All three start on the trigger and overlap. The content sits inside the surface: it owns only its opacity and inherits the movement, so nothing is translated twice; its fade multiplies with the surface’s, so it finishes first.',
+    interrupt: 'Dismissed while entering: it leaves from where it is, not from its resting place.', reduced: 'Appears in place with no travel; the scrim and content fade.', accept: ['Focus moves into the sheet, and back to Options when it closes; Escape closes it.', 'Its controls work from the first frame — nothing waits for the motion.', 'A tap on the scrim closes it.'] } },
   { id: 'toast', group: 'The flow', family: 'outcome', name: 'Toast', pattern: 'Rise and fade', trigger: 'Add to bag', labels: ['Show', 'Hide'],
     why: 'The same roles as the sheet, unadjusted: a short rise in, a shorter fall out.',
     enter: { id: 'toast.show', role: 'motion.surface.enter' },
-    exit: { id: 'toast.hide', role: 'motion.surface.exit' } },
+    exit: { id: 'toast.hide', role: 'motion.surface.exit' },
+    dev: { tracks: [
+      { name: 'Toast', owns: 'translate 24 px → 0, opacity 0 → 1', start: 0, dur: D('motion.surface.enter'), ref: 'motion.surface.enter' },
+      { name: 'Held', owns: 'nothing moves', start: D('motion.surface.enter'), dur: 1700 - D('motion.surface.enter'), ref: '1.7 s on screen' },
+      { name: 'Toast leaves', owns: 'translate 0 → 8 px, opacity 1 → 0', start: 1700, dur: D('motion.surface.exit'), ref: 'motion.surface.exit' },
+    ], interrupt: 'A second toast replaces the first; it does not queue behind it.', reduced: 'Appears and leaves without rising.', accept: ['It is announced politely, once.', 'It never covers the action that caused it.', 'The outcome stays visible elsewhere — the count on Bag.'] } },
   { id: 'page', group: 'The flow', family: 'navigation', name: 'Go forward, go back', pattern: 'Shared axis — the page shift', trigger: 'Continue · back', labels: ['Forward', 'Back'],
     why: 'Forward comes in from the right and back from the left: the direction is the hierarchy.',
     enter: { id: 'page.forward', role: 'motion.navigation.forward' },
-    exit: { id: 'page.back', role: 'motion.navigation.back' } },
+    exit: { id: 'page.back', role: 'motion.navigation.back' },
+    dev: { tracks: [
+      { name: 'Leaving page', owns: 'translate 0 → −24 px; opacity out early', start: 0, dur: D('motion.navigation.forward'), ref: 'motion.navigation.forward' },
+      { name: 'Arriving page', owns: 'translate 24 px → 0; opacity in late', start: 0, dur: D('motion.navigation.forward'), ref: 'motion.navigation.forward' },
+    ], note: 'Both move together along one axis; the leaving page fades in the first third, the arriving one after it, so they never compete.',
+    interrupt: 'Back while going forward reverses from the current position.', reduced: 'A cross-fade, with no travel.', accept: ['Forward arrives from the right, back from the left.', 'Back is available from the first frame.', 'Each page keeps its place when returned to.'] } },
   { id: 'pay', group: 'The flow', family: 'outcome', name: 'Pay', pattern: 'A component contract', trigger: 'Pay', labels: ['Press', 'Label'],
     why: 'Application events drive the state; motion only says what the state is.',
     enter: { id: 'pay.press', role: 'motion.feedback.press', adjust: 'returns to 1 on release' },
-    exit: { id: 'pay.label', role: 'motion.content.change', adjust: 'opacity only; width and hit area stay' } },
+    exit: { id: 'pay.label', role: 'motion.content.change', adjust: 'opacity only; width and hit area stay' },
+    dev: { tracks: [
+      { name: 'Button', owns: 'scale 1 → 0.98, back on release', start: 0, dur: D('motion.feedback.press'), ref: 'motion.feedback.press' },
+      { name: 'Label', owns: 'opacity, old out and new in', start: 0, dur: D('motion.content.change'), ref: 'motion.content.change' },
+    ], interrupt: 'Taps while paying or checking are ignored; leaving stops the animation, not the payment.', reduced: 'No scale, no spinner loop; the label and the announced status line still change.', accept: ['Each state change matches an application event — never an animation ending.', 'An unclear outcome shows as checking, never as failed.'] } },
   { id: 'tab', group: 'Anywhere', family: 'navigation', name: 'Switch tabs', pattern: 'Fade through', trigger: 'Tap a tab', labels: ['Arrive', 'Leave'],
     why: 'Tabs are siblings, not a path, so nothing slides: the old one fades out, the new one fades in — and each keeps its place.',
     enter: { id: 'tabs.arrive', role: 'motion.view.arrive' },
-    exit: { id: 'tabs.leave', role: 'motion.content.change', adjust: 'fade only, before the next arrives' } },
+    exit: { id: 'tabs.leave', role: 'motion.content.change', adjust: 'fade only, before the next arrives' },
+    dev: { tracks: [
+      { name: 'Leaving tab', owns: 'opacity 1 → 0', start: 0, dur: D('motion.content.change'), ref: 'motion.content.change' },
+      { name: 'Arriving tab', owns: 'opacity 0 → 1, scale 0.92 → 1', start: D('motion.content.change'), dur: D('motion.view.arrive'), ref: 'motion.view.arrive' },
+    ], interrupt: 'Another tab chosen mid-switch replaces the arriving one.', reduced: 'Switches at once.', accept: ['Each tab keeps its place — an open card is still open on return.', 'The tab bar stays; the selected tab is marked and announced.'] } },
   { id: 'press', group: 'Anywhere', family: 'input', name: 'Press', pattern: 'Scale down', trigger: 'Any tap', labels: ['Press'],
     why: 'The fastest role in the system: it answers the finger before anything else happens.',
-    enter: { id: 'button.press', role: 'motion.feedback.press', adjust: 'returns to 1 on release' } },
+    enter: { id: 'button.press', role: 'motion.feedback.press', adjust: 'returns to 1 on release' },
+    dev: { tracks: [
+      { name: 'Pressed element', owns: 'scale 1 → 0.98, back on release', start: 0, dur: D('motion.feedback.press'), ref: 'motion.feedback.press' },
+    ], interrupt: 'Released early: it returns from its current scale.', reduced: 'No scale; the action still responds at once.', accept: ['Feedback starts on touch, before anything else.', 'The hit area does not change.'] } },
 ];
 export const moment = (id: MomentId) => MOMENTS.find(m => m.id === id)!;
 export const mappingOf = (id: MomentId, phase: Phase) => { const m = moment(id); return phase === 'exit' && m.exit ? m.exit : m.enter; };

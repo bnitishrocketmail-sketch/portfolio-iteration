@@ -229,3 +229,29 @@
 @keyframes ph4-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .ph4-spin { animation: none; border-right-color: currentColor; opacity: .5; } }
 .ph4-edit { font: 600 12.5px/1 var(--f-copy) !important; text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---- the perspective switch, and the developer's view (Motion04.tsx) ---- */
+.ms4-top { display: flex; align-items: center; justify-content: space-between; gap: 1em; }
+.ms4-views.sm button { padding: .45em .8em; font-size: calc(var(--t-meta) * .92); }
+.dv4 { gap: .7cqw; }
+.dv4-tl { display: flex; flex-direction: column; gap: .5em; }
+.dv4-rows { position: relative; display: flex; flex-direction: column; gap: 6px; padding-bottom: 18px; }
+.dv4-row { display: grid; grid-template-columns: 9.5em minmax(0, 1fr) 12.4em; align-items: center; gap: .8em; font: 500 var(--t-meta)/1.2 var(--f-copy); }
+.dv4-name { display: flex; flex-direction: column; gap: .15em; min-width: 0; } .dv4-name small { font-size: .88em; opacity: .6; line-height: 1.25; }
+.dv4-lane { position: relative; height: 22px; border-radius: 6px; background: color-mix(in srgb, var(--line-ink) 6%, transparent); }
+.dv4-bar { position: absolute; top: 3px; bottom: 3px; min-width: 3px; border-radius: 4px; background: color-mix(in srgb, var(--line-ink) 30%, transparent); display: flex; align-items: center; overflow: visible; }
+.dv4-bar.zero { width: 3px; background: var(--line-ink); }
+.dv4-bar em { position: absolute; left: 6px; font: 600 calc(var(--t-meta) * .85)/1 var(--f-copy); font-style: normal; white-space: nowrap; }
+.dv4-ref { font: 600 calc(var(--t-meta) * .85)/1.2 ui-monospace, 'SF Mono', Menlo, monospace; opacity: .75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* a fixed column, so every lane is the same length and the times line up */
+.dv4-axis { position: absolute; left: calc(9.5em + .8em); right: calc(12.4em + .8em); bottom: 0; height: 14px; font: 500 calc(var(--t-meta) * .8)/1 var(--f-copy); opacity: .5; pointer-events: none; }
+.dv4-axis i { position: absolute; transform: translateX(-50%); font-style: normal; } .dv4-axis i:first-child { transform: none; } .dv4-axis i:last-child { transform: translateX(-100%); }
+.dv4-head { position: absolute; top: 0; bottom: 16px; width: 1.5px; margin-left: calc(9.5em + .8em); background: var(--line-ink); pointer-events: none; }
+.dv4-note { margin: 0; font: var(--copy-w) var(--t-meta)/1.45 var(--f-copy); opacity: .75; }
+.dv4-dl { margin: 0; display: grid; grid-template-columns: 7.6em 1fr; gap: .45em .9em; font: var(--copy-w) var(--t-meta)/1.45 var(--f-copy); }
+.dv4-dl dt { font-weight: 600; } .dv4-dl dd { margin: 0; } .dv4-dl ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: .2em; }
+.dv4-ct { width: 100%; border-collapse: collapse; font: 500 calc(var(--t-meta) * .9)/1.2 var(--f-copy); }
+.dv4-ct th { text-align: left; font-weight: 600; opacity: .55; padding: 0 .5em .2em 0; } .dv4-ct td { padding: .15em .5em .15em 0; border-top: 1px solid color-mix(in srgb, var(--line-ink) 10%, transparent); }
+.dv4-ct code { font: 600 .95em/1 ui-monospace, 'SF Mono', Menlo, monospace; } .dv4-ct tr.live td { background: color-mix(in srgb, var(--line-ink) 7%, transparent); }
+/* the sheet's content, its own track */
+.ph4-sheet-in { display: flex; flex-direction: column; gap: 8px; }
+.ph4-sheet:focus { outline: none; }
