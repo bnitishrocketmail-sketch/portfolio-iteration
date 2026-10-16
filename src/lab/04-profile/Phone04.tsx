@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react';
 import { mappingOf, moment, msOf, pxOf, role, scaleOf, tr, type MomentId, type Phase } from './motionTokens';
+import { CONTRACT, type CEvent, type ContractStatus, type Scenario } from './Contract04';
 
 /* The motion system's product (Nitish, 16 Oct): a small generic shop on a phone, moved only by the system's semantic
    tokens — a grid of cards that open into their page (container transform), a checkout page forward and back (shared
@@ -12,21 +13,23 @@ import { mappingOf, moment, msOf, pxOf, role, scaleOf, tr, type MomentId, type P
    first (a sheet needs its card's page); `flow` plays the whole journey in order. Every transition is reported
    (`onMoment`). The screen is a fixed 262 × 562 and the whole phone is scaled to fit; geometry is read in its units. */
 export type PhoneHandle = { play: (id: MomentId) => void; flow: () => void; stop: () => void };
-type Props = { onMoment: (id: MomentId, phase: Phase) => void; onFlowEnd: () => void; scale: number };
+type Props = { onMoment: (id: MomentId, phase: Phase) => void; onFlowEnd: () => void; scale: number; scenario: Scenario; onContract: (s: ContractStatus) => void };
 
 const SW = 262, BAR = 58, VH = 562 - BAR; /* the screen, the tab bar, the area above it */
 const CARDS = [{ t: 'Linen shirt', p: 1490 }, { t: 'Canvas tote', p: 890 }, { t: 'Desk lamp', p: 2350 }, { t: 'Field notes', p: 340 }];
 const rs = (n: number) => '₹' + n.toLocaleString('en-IN');
+/* what the status line says in each state: readable, and announced, whatever the motion */
+const STATUS: Record<ContractStatus['state'], string> = { ready: '', processing: 'Contacting your bank…', checking: 'Confirming with your bank — you won’t be charged twice.', done: 'Order placed. Receipt on its way.', failed: 'Payment failed. You were not charged.' };
 const TABS = [{ id: 'home', label: 'Home' }, { id: 'search', label: 'Search' }, { id: 'bag', label: 'Bag' }] as const;
 type Tab = typeof TABS[number]['id'];
 type Box = { top: number; left: number; width: number; height: number };
 
-const M = { card: moment('card'), page: moment('page'), tab: moment('tab'), sheet: moment('sheet'), toast: moment('toast'), press: moment('press') };
+const M = { card: moment('card'), page: moment('page'), pay: moment('pay'), tab: moment('tab'), sheet: moment('sheet'), toast: moment('toast'), press: moment('press') };
 
 const Icon = ({ d }: { d: string }) => <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 const ICON = { home: 'M4 11l8-6 8 6v8h-5v-5H9v5H4z', search: 'M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm5-2 4 4', bag: 'M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2', back: 'M15 5l-7 7 7 7', check: 'M5 12.5l4.2 4.2L19 7' };
 
-const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: report, onFlowEnd, scale }, ref) {
+const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: report, onFlowEnd, scale, scenario, onContract }, ref) {
   /* the last moment reported — so the toast leaving on its own does not take the page from a moment played since */
   const lastM = useRef<MomentId | null>(null);
   const onMoment = (id: MomentId, phase: Phase) => { lastM.current = id; report(id, phase); };
@@ -47,6 +50,33 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
   const [sheet, setSheet] = useState(false);
   const [toast, setToast] = useState(0);
   const [bag, setBag] = useState<number[]>([]);
+  /* Pay runs the component contract (Contract04.tsx): the application's events move it, on their own timers — a moment
+     played meanwhile, or leaving the page, does not stop them */
+  const [pay, setPay] = useState<ContractStatus>({ state: 'ready', last: null, n: 0, ignored: 0 });
+  const payRef2 = useRef(pay); payRef2.current = pay;
+  const scnRef = useRef(scenario); scnRef.current = scenario;
+  const appT = useRef<number[]>([]);
+  const appLater = (f: () => void, t: number) => { appT.current.push(window.setTimeout(f, t)); };
+  const appClear = () => { appT.current.forEach(clearTimeout); appT.current = []; };
+  useEffect(() => appClear, []);
+  useEffect(() => { onContract(pay); }, [pay]); // eslint-disable-line react-hooks/exhaustive-deps
+  const fire = (e: CEvent) => setPay(p => { const row = CONTRACT.find(([from, ev]) => from === p.state && ev === e); return row ? { ...p, state: row[2], last: e, n: p.n + 1 } : p; });
+  /* the server's answer, as the viewer chose it */
+  const respond = () => {
+    const s = scnRef.current;
+    appLater(() => {
+      if (s === 'confirmed') fire('confirmed'); else if (s === 'rejected') fire('rejected');
+      else { fire('unclear'); appLater(() => fire(s === 'unclear-done' ? 'reconciled-done' : 'reconciled-failed'), 1800); }
+    }, 1300);
+  };
+  const payTap = () => {
+    const st = payRef2.current.state;
+    if (st === 'processing' || st === 'checking') { setPay(p => ({ ...p, ignored: p.ignored + 1 })); return; } /* no duplicate submission */
+    onMoment('pay', 'enter');
+    if (st === 'ready') { fire('submit'); respond(); }
+    else if (st === 'failed') { fire('retry'); respond(); }
+  };
+  const payEdit = () => { if (payRef2.current.state === 'done') { fire('edit'); onMoment('pay', 'exit'); } };
 
   /* a live copy of the state, for the played sequences, which run across renders */
   const S = useRef({ tab, card, page2, sheet }); S.current = { tab, card, page2, sheet };
@@ -61,7 +91,7 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
     const s = screen.current!.getBoundingClientRect(), c = cardEls.current[i]!.getBoundingClientRect();
     return { top: (c.top - s.top) / scale, left: (c.left - s.left) / scale, width: c.width / scale, height: c.height / scale };
   };
-  const openCard = (i: number) => { setFrom(boxOf(i)); setCard(i); setPage2(false); onMoment('card', 'enter'); };
+  const openCard = (i: number) => { setFrom(boxOf(i)); setCard(i); setPage2(false); appClear(); setPay({ state: 'ready', last: null, n: 0, ignored: 0 }); onMoment('card', 'enter'); };
   const closeCard = () => { if (S.current.card == null) return; setClosing(S.current.card); setPage2(false); setCard(null); onMoment('card', 'exit'); };
   const forward = () => { setPage2(true); onMoment('page', 'enter'); };
   const back = () => { setPage2(false); onMoment('page', 'exit'); };
@@ -98,6 +128,11 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
       if (id === 'sheet') { if (S.current.sheet) closeSheet(); else toPage(openSheet); }
       if (id === 'toast') { if (S.current.sheet) addToBag(); else toPage(() => { openSheet(); later(addToBag, ms('sheet') + 450); }); }
       if (id === 'page') unSheet(() => toHome(() => { if (S.current.card == null) { openCard(0); later(forward, ms('card') + 120); } else if (S.current.page2) back(); else forward(); }));
+      if (id === 'pay') unSheet(() => toHome(() => {
+        const go = () => { if (payRef2.current.state === 'done') { payEdit(); later(payTap, 400); } else payTap(); };
+        if (S.current.card == null) { openCard(0); later(() => { forward(); later(go, ms('page') + 200); }, ms('card') + 120); }
+        else if (!S.current.page2) { forward(); later(go, ms('page') + 200); } else go();
+      }));
       if (id === 'tab') unSheet(() => switchTab(TABS[(TABS.findIndex(t => t.id === S.current.tab) + 1) % TABS.length].id));
       if (id === 'press') {
         const { tab: t, card: c, page2: p } = S.current;
@@ -109,7 +144,7 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
     flow() {
       clear();
       const steps: [() => void, number][] = [
-        [() => openCard(1), 1100], [openSheet, 1000], [addToBag, 1500], [forward, 1100], [back, 1000],
+        [() => openCard(1), 1100], [openSheet, 1000], [addToBag, 1500], [forward, 1100], [payTap, scnRef.current.startsWith('unclear') ? 4300 : 2500], [back, 1000],
         [() => switchTab('bag'), 1300], [() => switchTab('home'), 1200], [closeCard, 900],
       ];
       const run = (i: number) => { if (i >= steps.length) { onFlowEnd(); return; } steps[i][0](); later(() => run(i + 1), steps[i][1]); };
@@ -170,9 +205,22 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
                             <div className="ph4-top"><motion.button type="button" className="ph4-back" aria-label="Back" {...press} onClick={back}><Icon d={ICON.back} /></motion.button><b>Checkout</b></div>
                             <div className="ph4-body">
                               <div className="ph4-steps"><i className="on" /><i className="on" /><i /></div>
-                              {[['Item', CARDS[card].t], ['Size', 'M'], ['Delivery', 'Tomorrow'], ['Total', rs(CARDS[card].p)]].map(([a, b]) => <div key={a} className="ph4-line"><span>{a}</span><b>{b}</b></div>)}
+                              {[['Item', CARDS[card].t], ['Size', 'M'], ['Delivery', 'Tomorrow'], ['Total', rs(CARDS[card].p)]].map(([a, b]) => <div key={a} className="ph4-line"><span>{a}</span>{a === 'Size' && pay.state === 'done' ? <button type="button" className="ph4-edit" onClick={payEdit}>M · Edit</button> : <b>{b}</b>}</div>)}
                             </div>
-                            <div className="ph4-cta"><motion.button ref={payRef} type="button" className="ph4-btn wide" {...press}>Pay {rs(CARDS[card].p)}</motion.button></div>
+                            <div className="ph4-cta col">
+                              <p className="ph4-stat" role="status" aria-live="polite">{STATUS[pay.state]}</p>
+                              <motion.button ref={payRef} type="button" className={`ph4-btn wide pay ${pay.state}`} aria-disabled={pay.state === 'processing' || pay.state === 'checking' || pay.state === 'done'} {...(pay.state === 'ready' || pay.state === 'failed' ? press : {})} onClick={payTap}>
+                                <AnimatePresence initial={false} mode="popLayout">
+                                  <motion.span key={pay.state} className="ph4-pl" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: T('pay', 'exit') }} exit={{ opacity: 0, transition: T('pay', 'exit') }}>
+                                    {pay.state === 'ready' && `Pay ${rs(CARDS[card].p)}`}
+                                    {pay.state === 'processing' && <><i className="ph4-spin" aria-hidden="true" />Paying…</>}
+                                    {pay.state === 'checking' && <><i className="ph4-spin slow" aria-hidden="true" />Checking status…</>}
+                                    {pay.state === 'done' && <><Icon d={ICON.check} />Paid</>}
+                                    {pay.state === 'failed' && 'Retry payment'}
+                                  </motion.span>
+                                </AnimatePresence>
+                              </motion.button>
+                            </div>
                           </motion.div>
                         )}
                       </AnimatePresence>

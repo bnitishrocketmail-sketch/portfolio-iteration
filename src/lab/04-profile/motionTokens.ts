@@ -48,7 +48,7 @@ export const role = (id: string) => ROLES.find(r => r.id === id)!;
 
 /* a component mapping: the component's transition, the role it uses, and any documented adjustment */
 export type Mapping = { id: string; role: string; adjust?: string };
-export type MomentId = 'card' | 'page' | 'tab' | 'sheet' | 'toast' | 'press';
+export type MomentId = 'card' | 'page' | 'pay' | 'tab' | 'sheet' | 'toast' | 'press';
 export type Phase = 'enter' | 'exit';
 /* his pattern families, organised by the user's question (brief, layer 4) */
 export const FAMILY = {
@@ -70,8 +70,8 @@ export const MOMENTS: Moment[] = [
     exit: { id: 'card.close', role: 'motion.container.collapse', adjust: 'back to the card’s box' } },
   { id: 'sheet', group: 'The flow', family: 'visibility', name: 'Bottom sheet', pattern: 'Slide from its edge', trigger: 'Options', labels: ['Open', 'Close'],
     why: 'It arrives and settles; it leaves faster, getting out of the way.',
-    enter: { id: 'sheet.open', role: 'motion.surface.enter', adjust: 'travels its full height, from the bottom edge' },
-    exit: { id: 'sheet.close', role: 'motion.surface.exit', adjust: 'travels its full height, to the bottom edge' } },
+    enter: { id: 'sheet.open', role: 'motion.surface.enter', adjust: 'its full height, from the bottom edge' },
+    exit: { id: 'sheet.close', role: 'motion.surface.exit', adjust: 'its full height, to the bottom edge' } },
   { id: 'toast', group: 'The flow', family: 'outcome', name: 'Toast', pattern: 'Rise and fade', trigger: 'Add to bag', labels: ['Show', 'Hide'],
     why: 'The same roles as the sheet, unadjusted: a short rise in, a shorter fall out.',
     enter: { id: 'toast.show', role: 'motion.surface.enter' },
@@ -80,6 +80,10 @@ export const MOMENTS: Moment[] = [
     why: 'Forward comes in from the right and back from the left: the direction is the hierarchy.',
     enter: { id: 'page.forward', role: 'motion.navigation.forward' },
     exit: { id: 'page.back', role: 'motion.navigation.back' } },
+  { id: 'pay', group: 'The flow', family: 'outcome', name: 'Pay', pattern: 'A component contract', trigger: 'Pay', labels: ['Press', 'Label'],
+    why: 'Application events drive the state; motion only says what the state is.',
+    enter: { id: 'pay.press', role: 'motion.feedback.press', adjust: 'returns to 1 on release' },
+    exit: { id: 'pay.label', role: 'motion.content.change', adjust: 'opacity only; width and hit area stay' } },
   { id: 'tab', group: 'Anywhere', family: 'navigation', name: 'Switch tabs', pattern: 'Fade through', trigger: 'Tap a tab', labels: ['Arrive', 'Leave'],
     why: 'Tabs are siblings, not a path, so nothing slides: the old one fades out, the new one fades in — and each keeps its place.',
     enter: { id: 'tabs.arrive', role: 'motion.view.arrive' },

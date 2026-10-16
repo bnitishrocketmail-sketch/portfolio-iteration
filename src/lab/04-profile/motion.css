@@ -7,7 +7,7 @@
 /* the moments: grouped, each a button that plays it */
 .ms4-mg { display: flex; flex-direction: column; gap: 4px; }
 .ms4-mg h4, .ms4-g h4 { margin: 0 0 .3cqw; font: 600 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
-.ms4-m { position: relative; display: flex; flex-direction: column; gap: .3em; text-align: left; padding: .6em .85em; border-radius: calc(var(--r) * .55); border: 1px solid transparent; background: transparent; color: inherit; cursor: pointer; font-family: var(--f-copy); transition: background-color .2s, border-color .2s; }
+.ms4-m { position: relative; display: flex; flex-direction: column; gap: .25em; text-align: left; padding: .5em .85em; border-radius: calc(var(--r) * .55); border: 1px solid transparent; background: transparent; color: inherit; cursor: pointer; font-family: var(--f-copy); transition: background-color .2s, border-color .2s; }
 .ms4-m b { font: 600 var(--t-body)/1.2 var(--f-copy); }
 .ms4-m span { font: 500 var(--t-meta)/1.25 var(--f-copy); opacity: .6; }
 .ms4-m:hover { background: color-mix(in srgb, var(--line-ink) 6%, transparent); }
@@ -15,8 +15,8 @@
 .ms4-m.on span { opacity: .7; }
 /* the journey's steps: numbered, joined by a line */
 .ms4-mg.steps .ms4-m { padding-left: 2.6em; }
-.ms4-mg.steps .ms4-num { position: absolute; left: .7em; top: .62em; width: 1.45em; height: 1.45em; border-radius: 50%; display: grid; place-items: center; font: 600 calc(var(--t-meta) * .9)/1 var(--f-copy); font-style: normal; background: color-mix(in srgb, var(--line-ink) 12%, transparent); }
-.ms4-mg.steps .ms4-m:not(:last-child)::after { content: ''; position: absolute; left: calc(.7em + .725em - .5px); top: calc(.62em + 1.6em); bottom: -.55em; width: 1px; background: color-mix(in srgb, var(--line-ink) 18%, transparent); }
+.ms4-mg.steps .ms4-num { position: absolute; left: .7em; top: .52em; width: 1.45em; height: 1.45em; border-radius: 50%; display: grid; place-items: center; font: 600 calc(var(--t-meta) * .9)/1 var(--f-copy); font-style: normal; background: color-mix(in srgb, var(--line-ink) 12%, transparent); }
+.ms4-mg.steps .ms4-m:not(:last-child)::after { content: ''; position: absolute; left: calc(.7em + .725em - .5px); top: calc(.52em + 1.6em); bottom: -.45em; width: 1px; background: color-mix(in srgb, var(--line-ink) 18%, transparent); }
 .ms4-m.on .ms4-num { background: var(--pcard-open-ink); color: var(--pcard-open); }
 .ms4-flow { align-self: flex-start; display: inline-flex; align-items: center; gap: .5em; padding: .6em 1.05em .6em .85em; border-radius: 999px; border: 0; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 600 var(--t-meta)/1 var(--f-copy); cursor: pointer; box-shadow: var(--shadow-el); }
 .it04.light .ms4-flow { background: var(--pcard-fold); }
@@ -60,7 +60,7 @@
 .ms4-g { display: flex; flex-direction: column; gap: 0; }
 .ms4-g h4 { margin: 0 0 .3cqw; font: 600 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
 .ms4-g h4 span { font-weight: 500; text-transform: none; letter-spacing: 0; opacity: .8; margin-left: .4em; }
-.ms4-row { --blk: 9px; display: grid; grid-template-columns: 8.2em 4.6em minmax(0, 1fr); align-items: center; gap: .8em; min-height: 23px; font: 500 var(--t-meta)/1.15 var(--f-copy); opacity: .38; transition: opacity .25s; }
+.ms4-row { --blk: 9px; display: grid; grid-template-columns: 8.2em 4.6em minmax(0, 1fr); align-items: center; gap: .8em; min-height: 22px; font: 500 var(--t-meta)/1.15 var(--f-copy); opacity: .38; transition: opacity .25s; }
 .ms4-row.on { opacity: 1; } /* the tokens the moment used */
 .ms4-row.ease { grid-template-columns: 8.2em 22px minmax(0, 1fr); min-height: 25px; } /* the curve says the value; it is in the title */
 .ms4-n { font-weight: 600; white-space: nowrap; }
@@ -197,3 +197,35 @@
   .mm4-chainrow { grid-template-columns: 1fr; gap: 6px; } .mm4-arrow { width: auto; flex-direction: row; } .mm4-link { flex-direction: column; }
   .mm4-band { flex-direction: column; align-items: stretch; } .mm4-band .mm4-node.wide { width: auto; } .mm4-pair, .mm4-concerns > div { grid-template-columns: 1fr; }
 }
+
+/* ---- the Pay contract (Contract04.tsx), in the right column ---- */
+.ct4 { display: flex; flex-direction: column; gap: .55cqw; }
+.ct4-scn { display: flex; flex-wrap: wrap; align-items: center; gap: .45em .7em; font: 500 var(--t-meta)/1.2 var(--f-copy); }
+.ct4-scn > span { opacity: .6; }
+.ct4-scn > div { display: flex; flex-wrap: wrap; gap: 4px; }
+.ct4-scn button { padding: .45em .8em; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--line-ink) 22%, transparent); background: transparent; color: var(--line-ink); font: 600 calc(var(--t-meta) * .95)/1 var(--f-copy); cursor: pointer; }
+.ct4-scn button.on { background: var(--pcard-open); color: var(--pcard-open-ink); border-color: transparent; }
+.ct4-graph { display: block; width: 100%; max-width: 440px; height: auto; margin: 2px auto 0; overflow: visible; font-family: var(--f-copy); }
+.ct4-e path { fill: none; stroke: var(--line-ink); stroke-width: 1; opacity: .26; transition: opacity .2s; }
+.ct4-e text { font-size: 10.5px; font-weight: 500; fill: var(--line-ink); opacity: .45; text-anchor: middle; paint-order: stroke; stroke: var(--frame); stroke-width: 4px; stroke-linejoin: round; }
+.ct4-e.live path { opacity: .75; } .ct4-e.live text { opacity: .9; } /* the ways out of the current state */
+.ct4-head { fill: var(--line-ink); }
+.ct4-took { fill: none; stroke: var(--line-ink); stroke-width: 2.2; stroke-linecap: round; }
+.ct4-s rect { fill: var(--frame); stroke: color-mix(in srgb, var(--line-ink) 38%, transparent); stroke-width: 1; transition: fill .2s; }
+.ct4-s.unk rect { stroke-dasharray: 3 3; } /* the unknown outcome, drawn as its own kind of state */
+.ct4-s text { font-size: 11.5px; font-weight: 600; fill: var(--line-ink); }
+.ct4-s.on rect { fill: var(--pcard-open); stroke: var(--pcard-open); } .ct4-s.on text { fill: var(--pcard-open-ink); }
+.ct4-rules { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: .35em; font: var(--copy-w) var(--t-meta)/1.4 var(--f-copy); }
+.ct4-rules li { opacity: .72; transition: opacity .2s; } .ct4-rules li.hit { opacity: 1; } .ct4-rules code { font: 600 .92em/1 ui-monospace, 'SF Mono', Menlo, monospace; }
+/* the phone's Pay */
+.ph4-cta.col { flex-direction: column; gap: 8px; }
+.ph4-stat { margin: 0; min-height: 30px; font: 500 11.5px/1.35 var(--f-copy); text-align: center; opacity: .75; }
+.ph4-btn.pay { position: relative; overflow: hidden; }
+.ph4-btn.pay[aria-disabled="true"] { cursor: default; }
+.ph4-btn.pay.done { background: color-mix(in srgb, var(--pcard-fold) 82%, var(--scr)) !important; }
+.ph4-pl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 7px; }
+.ph4-spin { width: 13px; height: 13px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: ph4-spin .7s linear infinite; }
+.ph4-spin.slow { animation-duration: 1.4s; }
+@keyframes ph4-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ph4-spin { animation: none; border-right-color: currentColor; opacity: .5; } }
+.ph4-edit { font: 600 12.5px/1 var(--f-copy) !important; text-decoration: underline; text-underline-offset: 2px; }

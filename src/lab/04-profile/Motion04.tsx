@@ -3,6 +3,7 @@ import { animate, motion, useMotionValue, useReducedMotion, useTransform, type M
 import { useSearchParams } from 'react-router-dom';
 import Phone04, { type PhoneHandle } from './Phone04';
 import MotionMap04 from './MotionMap04';
+import { ContractPanel, type ContractStatus, type Scenario } from './Contract04';
 import { FAMILY, MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Mapping, type MomentId, type Phase, type Prim } from './motionTokens';
 import './motion.css';
 
@@ -87,13 +88,14 @@ function TokenLine({ x, label, live }: { x: Mapping; label: string; live: boolea
     <div className={`ms4-tl${live ? ' live' : ''}`}>
       <span className="ms4-ph-l">{label}</span>
       <span className="ms4-chain"><code>{x.id}</code><span className="ms4-arr" aria-hidden="true">→</span><code className="role">{R.id}</code></span>
-      <span className="ms4-chips">
+      {/* the phase that just played shows its primitives; the other stays one line */}
+      {live && <span className="ms4-chips">
         <span className="ms4-arr" aria-hidden="true">→</span>
         {chips.map(c => <span key={c}>{c}<small>{prim(c).label}</small></span>)}
         {R.opacity && <span>opacity<small>0 ↔ 1</small></span>}
         {x.adjust && <span className="note">{x.adjust}</span>}
-      </span>
-      {others.length > 0 && <span className="ms4-also">Also uses this role: {others.map(o => <code key={o}>{o}</code>)}</span>}
+      </span>}
+      {live && others.length > 0 && <span className="ms4-also">Also uses this role: {others.map(o => <code key={o}>{o}</code>)}</span>}
     </div>
   );
 }
@@ -109,6 +111,9 @@ export default function Motion04() {
   const [pulse, setPulse] = useState(0);
   const onMoment = (id: MomentId, phase: Phase) => { setSel({ id, phase }); setPulse(p => p + 1); };
   const [flowing, setFlowing] = useState(false);
+  /* the Pay contract: what the server will answer (the viewer's choice), and where the contract is */
+  const [scenario, setScenario] = useState<Scenario>('unclear-done');
+  const [contract, setContract] = useState<ContractStatus>({ state: 'ready', last: null, n: 0, ignored: 0 });
   const flow = () => { if (flowing) { phone.current?.stop(); setFlowing(false); } else { setFlowing(true); phone.current?.flow(); } };
   const playOne = (id: MomentId) => { setFlowing(false); phone.current?.play(id); };
   const m = moment(sel.id);
@@ -131,10 +136,10 @@ export default function Motion04() {
         </div>
         <div className="pp4-right"><p className="pp4-note">{view === 'product' ? 'How motion lives in a product: each component maps to a shared role, and each role is made of a few shared values.' : 'A reusable framework for how everyday digital products respond, change and guide. Clarity in the interaction; consistency in the implementation.'}</p></div>
       </header>
-      {view === 'system' ? <MotionMap04 toProduct={() => setView('product')} /> : <div className="ms4-grid">
+      {view === 'system' ? <MotionMap04 toProduct={id => { if (id) setSel({ id, phase: 'enter' }); setView('product'); }} /> : <div className="ms4-grid">
         {/* the product's moments */}
         <div className="ms4-panel ms4-moments">
-          <div className="ms4-ph"><h3>Moments</h3><p>One app, one journey; each moment answers a question the user has. Play it through, tap one, or use the phone.</p></div>
+          <div className="ms4-ph"><h3>Moments</h3><p>One app, one journey; each moment answers a user’s question.</p></div>
           <button type="button" className={`ms4-flow${flowing ? ' on' : ''}`} onClick={flow}>
             <svg viewBox="0 0 24 24" aria-hidden="true">{flowing ? <path d="M7 6h3v12H7zM14 6h3v12h-3z" fill="currentColor" /> : <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />}</svg>
             {flowing ? 'Stop' : 'Play the journey'}
@@ -152,23 +157,23 @@ export default function Motion04() {
           ))}
         </div>
         {/* the product */}
-        <div className="ms4-stage" ref={stage}><div className="ms4-phone" style={{ width: 282 * k, height: 582 * k }}><Phone04 ref={phone} onMoment={onMoment} onFlowEnd={() => setFlowing(false)} scale={k} /></div><span className="ms4-ex">Example implementation</span></div>
+        <div className="ms4-stage" ref={stage}><div className="ms4-phone" style={{ width: 282 * k, height: 582 * k }}><Phone04 ref={phone} onMoment={onMoment} onFlowEnd={() => setFlowing(false)} scale={k} scenario={scenario} onContract={setContract} /></div><span className="ms4-ex">Example implementation</span></div>
         {/* its tokens */}
         <div className="ms4-panel ms4-spec">
           <div className="ms4-sel">
             <p className="ms4-tag">Illustrative values · Framework v0.1</p>
             <h3>{m.name} <span>{m.pattern} · {m.trigger}</span></h3>
             <p className="ms4-q"><b>{FAMILY[m.family].q}</b><span>{FAMILY[m.family].name}</span></p>
-            <div className="ms4-tls">
+            {/* a contract's tokens are in its rules (the press, the label), so the contract takes the room */}
+            {sel.id !== 'pay' && <div className="ms4-tls">
               <TokenLine x={m.enter} label={m.labels[0]} live={sel.phase === 'enter'} />
               {m.exit && <TokenLine x={m.exit} label={m.labels[1] ?? 'Exit'} live={sel.phase === 'exit'} />}
-            </div>
+            </div>}
             <p className="ms4-why">{m.why}</p>
           </div>
-          <div className="ms4-prims">
-            <div className="ms4-ph"><h3>Primitives <span>the shared values; this moment’s light up</span></h3></div>
-            <Palette lit={lit} pulse={reduce ? 0 : pulse} />
-          </div>
+          {sel.id === 'pay'
+            ? <div className="ms4-prims"><div className="ms4-ph"><h3>The contract <span>states and the events that move them</span></h3></div><ContractPanel status={contract} scenario={scenario} setScenario={setScenario} /></div>
+            : <div className="ms4-prims"><div className="ms4-ph"><h3>Primitives <span>the shared values; this moment’s light up</span></h3></div><Palette lit={lit} pulse={reduce ? 0 : pulse} /></div>}
         </div>
       </div>}
     </section>

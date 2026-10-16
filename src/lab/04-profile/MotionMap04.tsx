@@ -1,6 +1,6 @@
 import { Fragment, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { FAMILY, ROLES, prim } from './motionTokens';
+import { FAMILY, ROLES, prim, type MomentId } from './motionTokens';
 
 /* The Motion system tab's second view, "The system" (Nitish, 16 Oct): his framework's architecture
    (docs/motion-system-brief.md) at a glance — the eight layers and how they relate, without needing to play anything.
@@ -12,7 +12,7 @@ import { FAMILY, ROLES, prim } from './motionTokens';
    card on hover (focus, tap) with its substance from the brief; where the product view shows it working, the card says
    so and switches there. No relationship depends on colour or position alone: every one is written. */
 type LayerId = 'principles' | 'personality' | 'tokens' | 'patterns' | 'components' | 'choreography' | 'access' | 'delivery';
-type Layer = { id: LayerId; n: number; name: string; line: string; eg: string; body: () => ReactNode; product?: string };
+type Layer = { id: LayerId; n: number; name: string; line: string; eg: string; body: () => ReactNode; product?: string; moment?: MomentId };
 
 const L: Record<LayerId, Layer> = {
   principles: { id: 'principles', n: 1, name: 'Principles and purpose', line: 'Consistent behaviour begins with clear intent.', eg: 'Acknowledge input · Preserve continuity · Represent real state · Keep people in control · Use attention deliberately', body: () => <>
@@ -30,19 +30,19 @@ const L: Record<LayerId, Layer> = {
     <dl className="mm4-dl"><dt>Response</dt><dd>how quickly feedback starts, how it settles</dd><dt>Elasticity</dt><dd>where overshoot is allowed, and how much</dd><dt>Travel</dt><dd>how compact or expansive movement is</dd><dt>Emphasis</dt><dd>which events deserve stronger expression</dd><dt>Frequency</dt><dd>how often expressive moments appear</dd></dl>
     <p className="mm4-note"><b>Everyday</b> — focused, efficient, familiar, for repeated tasks. <b>Expressive</b> — selective and memorable, for milestones. Both live in one product: processing restrained, confirmation clear, a reward more expressive.</p>
   </> },
-  tokens: { id: 'tokens', n: 3, name: 'Foundations and tokens', line: 'From intent to reusable values.', eg: 'duration.240 → motion.surface.enter → sheet.open', product: 'Every moment in the product view shows its chain.', body: () => <>
+  tokens: { id: 'tokens', n: 3, name: 'Foundations and tokens', line: 'From intent to reusable values.', eg: 'duration.240 → motion.surface.enter → sheet.open', product: 'Every moment in the product view shows its chain.', moment: 'sheet', body: () => <>
     <p>A dependency hierarchy, not three animations:</p>
     <div className="mm4-chain"><span><small>primitive</small><code>duration.240</code></span><i>→</i><span><small>semantic role</small><code>motion.surface.enter</code></span><i>→</i><span><small>component mapping</small><code>sheet.open</code></span></div>
     <table className="mm4-t"><tbody>{ROLES.slice(0, 4).map(r => <tr key={r.id}><td><code>{r.id}</code></td><td>{prim(r.duration).label}</td><td>{r.purpose}</td></tr>)}</tbody></table>
     <p className="mm4-note">Timed transitions set duration and easing; springs set response and settling, so their length varies with the motion. Illustrative values, not production defaults.</p>
   </> },
-  patterns: { id: 'patterns', n: 4, name: 'Behaviour patterns', line: 'A library organised by user need.', eg: 'Seven families, each a user question', product: 'Each moment in the product view is named by its question.', body: () => <>
+  patterns: { id: 'patterns', n: 4, name: 'Behaviour patterns', line: 'A library organised by user need.', eg: 'Seven families, each a user question', product: 'Each moment in the product view is named by its question.', moment: 'card', body: () => <>
     <dl className="mm4-dl q">{Object.values(FAMILY).map(f => <Fragment key={f.name}><dt>{f.name}</dt><dd>{f.q}</dd></Fragment>)}</dl>
     <p className="mm4-note">Fade, slide and scale are techniques. A pattern says which one serves an interaction, when not to use it, how it is interrupted, and its reduced-motion alternative.</p>
   </> },
-  components: { id: 'components', n: 5, name: 'Component behaviour', line: 'Every transition has a contract.', eg: 'Save changes · five states', body: () => <>
+  components: { id: 'components', n: 5, name: 'Component behaviour', line: 'Every transition has a contract.', eg: 'Save changes · five states', product: 'The product’s Pay runs this contract, live.', moment: 'pay', body: () => <>
     <p>A component's specification makes explicit: its purpose and states; the events that change them; what animates, from where; the tokens; coordination with others; repeated input, interruption, cancellation; loading, failure, uncertain outcomes, recovery; reduced motion; and acceptance criteria.</p>
-    <p className="mm4-note">The example — <b>Save changes</b>: ready → saving → saved, or failed, or <b>checking status</b>, where an unknown outcome stays distinct from a failure. Live next.</p>
+    <p className="mm4-note">The example — <b>Save changes</b>: ready → saving → saved, or failed, or <b>checking status</b>, where an unknown outcome stays distinct from a failure. The same contract runs any submit — in the product, Pay.</p>
   </> },
   choreography: { id: 'choreography', n: 6, name: 'Screen and flow choreography', line: 'A screen moves as one system.', eg: 'Bottom sheet · three overlapping tracks', body: () => <>
     <p>How related behaviours work together: grouping, origins, overlap, sequence, interruption and focus.</p>
@@ -65,7 +65,7 @@ const CONCERNS: { name: string; line: string; covers: LayerId[] }[] = [
   { name: 'Platform delivery', line: 'Components, presets, accessibility behaviour and verification, per platform.', covers: ['components', 'access', 'delivery'] },
 ];
 
-export default function MotionMap04({ toProduct }: { toProduct: () => void }) {
+export default function MotionMap04({ toProduct }: { toProduct: (m?: MomentId) => void }) {
   const reduce = useReducedMotion();
   const mapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<{ id: LayerId; box: DOMRect } | null>(null);
@@ -111,7 +111,7 @@ export default function MotionMap04({ toProduct }: { toProduct: () => void }) {
 }
 
 /* a layer's card, beside its node and kept inside the map: placed before it is painted */
-function Card({ layer, box, map, reduce, onEnter, onLeave, toProduct }: { layer: Layer; box: DOMRect; map: React.RefObject<HTMLDivElement | null>; reduce: boolean; onEnter: () => void; onLeave: () => void; toProduct: () => void }) {
+function Card({ layer, box, map, reduce, onEnter, onLeave, toProduct }: { layer: Layer; box: DOMRect; map: React.RefObject<HTMLDivElement | null>; reduce: boolean; onEnter: () => void; onLeave: () => void; toProduct: (m?: MomentId) => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
   useLayoutEffect(() => {
@@ -131,7 +131,7 @@ function Card({ layer, box, map, reduce, onEnter, onLeave, toProduct }: { layer:
       <h4>{layer.name}</h4>
       <p className="mm4-line">{layer.line}</p>
       <div className="mm4-body">{layer.body()}</div>
-      {layer.product && <button type="button" className="mm4-go" onClick={toProduct}>{layer.product} <span aria-hidden="true">→</span></button>}
+      {layer.product && <button type="button" className="mm4-go" onClick={() => toProduct(layer.moment)}>{layer.product} <span aria-hidden="true">→</span></button>}
     </motion.div>
   );
 }
