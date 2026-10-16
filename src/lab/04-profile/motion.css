@@ -24,6 +24,10 @@
 
 /* the product: the phone, scaled to the stage's height */
 .ms4-stage { min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.ms4-under { display: flex; align-items: center; justify-content: center; gap: .8em; flex-wrap: wrap; }
+.ms4-red { margin: 0; display: flex; flex-direction: column; gap: .2em; padding: .6em .8em; border-radius: calc(var(--r) * .5); border: 1px dashed color-mix(in srgb, var(--line-ink) 30%, transparent); font: var(--copy-w) var(--t-meta)/1.4 var(--f-copy); } .ms4-red b { font-weight: 600; }
+.dv4-dl .hit { font-weight: 600; }
+.ph4.still .ph4-spin { animation: none; border-right-color: currentColor; opacity: .5; } /* reduced: loops stop */
 .ms4-ex { font: 500 calc(var(--t-meta) * .9)/1 var(--f-copy); letter-spacing: .05em; text-transform: uppercase; color: var(--line-ink); opacity: .45; }
 .ms4-tag { margin: 0; font: 600 calc(var(--t-meta) * .9)/1 var(--f-copy); letter-spacing: .05em; text-transform: uppercase; opacity: .45; }
 .ms4-phone { position: relative; }
@@ -205,7 +209,7 @@
 .ct4-scn > div { display: flex; flex-wrap: wrap; gap: 4px; }
 .ct4-scn button { padding: .45em .8em; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--line-ink) 22%, transparent); background: transparent; color: var(--line-ink); font: 600 calc(var(--t-meta) * .95)/1 var(--f-copy); cursor: pointer; }
 .ct4-scn button.on { background: var(--pcard-open); color: var(--pcard-open-ink); border-color: transparent; }
-.ct4-graph { display: block; width: 100%; max-width: 440px; height: auto; margin: 2px auto 0; overflow: visible; font-family: var(--f-copy); }
+.ct4-graph { display: block; width: 100%; max-width: 420px; height: auto; margin: 2px auto 0; overflow: visible; font-family: var(--f-copy); }
 .ct4-e path { fill: none; stroke: var(--line-ink); stroke-width: 1; opacity: .26; transition: opacity .2s; }
 .ct4-e text { font-size: 10.5px; font-weight: 500; fill: var(--line-ink); opacity: .45; text-anchor: middle; paint-order: stroke; stroke: var(--frame); stroke-width: 4px; stroke-linejoin: round; }
 .ct4-e.live path { opacity: .75; } .ct4-e.live text { opacity: .9; } /* the ways out of the current state */

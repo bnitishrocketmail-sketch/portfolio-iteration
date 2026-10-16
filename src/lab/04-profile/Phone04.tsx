@@ -13,7 +13,7 @@ import { CONTRACT, type CEvent, type ContractStatus, type Scenario } from './Con
    first (a sheet needs its card's page); `flow` plays the whole journey in order. Every transition is reported
    (`onMoment`). The screen is a fixed 262 × 562 and the whole phone is scaled to fit; geometry is read in its units. */
 export type PhoneHandle = { play: (id: MomentId) => void; flow: () => void; stop: () => void };
-type Props = { onMoment: (id: MomentId, phase: Phase) => void; onFlowEnd: () => void; scale: number; scenario: Scenario; onContract: (s: ContractStatus) => void };
+type Props = { onMoment: (id: MomentId, phase: Phase) => void; onFlowEnd: () => void; scale: number; scenario: Scenario; onContract: (s: ContractStatus) => void; reduced: boolean };
 
 const SW = 262, BAR = 58, VH = 562 - BAR; /* the screen, the tab bar, the area above it */
 const CARDS = [{ t: 'Linen shirt', p: 1490 }, { t: 'Canvas tote', p: 890 }, { t: 'Desk lamp', p: 2350 }, { t: 'Field notes', p: 340 }];
@@ -29,16 +29,19 @@ const M = { card: moment('card'), page: moment('page'), pay: moment('pay'), tab:
 const Icon = ({ d }: { d: string }) => <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 const ICON = { home: 'M4 11l8-6 8 6v8h-5v-5H9v5H4z', search: 'M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm5-2 4 4', bag: 'M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2', back: 'M15 5l-7 7 7 7', check: 'M5 12.5l4.2 4.2L19 7' };
 
-const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: report, onFlowEnd, scale, scenario, onContract }, ref) {
+const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: report, onFlowEnd, scale, scenario, onContract, reduced }, ref) {
   /* the last moment reported — so the toast leaving on its own does not take the page from a moment played since */
   const lastM = useRef<MomentId | null>(null);
   const onMoment = (id: MomentId, phase: Phase) => { lastM.current = id; report(id, phase); };
-  const reduce = !!useReducedMotion();
-  const T = (id: keyof typeof M, phase: Phase = 'enter') => tr(mappingOf(id, phase), reduce);
-  const dur = (id: keyof typeof M, phase: Phase = 'enter') => (reduce ? 0 : msOf(mappingOf(id, phase)) / 1000);
+  /* reduced motion (the system's switch, or the viewer's setting): his rule — not faster, but the same states, outcomes
+     and next actions without travel. Nothing moves or scales or grows; fades stay, in the same time; loops stop. */
+  const osReduce = !!useReducedMotion(); /* called every render: hooks keep their order */
+  const reduce = reduced || osReduce;
+  const T = (id: keyof typeof M, phase: Phase = 'enter') => tr(mappingOf(id, phase));
+  const dur = (id: keyof typeof M, phase: Phase = 'enter') => msOf(mappingOf(id, phase)) / 1000;
   const ms = (id: keyof typeof M, phase: Phase = 'enter') => msOf(mappingOf(id, phase));
   const PRESS = scaleOf(role('motion.feedback.press').scale!);
-  const press = { whileTap: { scale: PRESS }, transition: T('press') };
+  const press = reduce ? {} : { whileTap: { scale: PRESS }, transition: T('press') };
 
   const screen = useRef<HTMLDivElement>(null);
   const cardEls = useRef<(HTMLElement | null)[]>([]);
@@ -81,7 +84,7 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
   /* a live copy of the state, for the played sequences, which run across renders */
   const S = useRef({ tab, card, page2, sheet }); S.current = { tab, card, page2, sheet };
   const timers = useRef<number[]>([]);
-  const later = (f: () => void, t: number) => { timers.current.push(window.setTimeout(f, reduce ? 0 : t)); };
+  const later = (f: () => void, t: number) => { timers.current.push(window.setTimeout(f, t)); };
   const clear = () => { timers.current.forEach(clearTimeout); timers.current = []; };
   useEffect(() => clear, []);
   const optionsRef = useRef<HTMLButtonElement>(null), payRef = useRef<HTMLButtonElement>(null), tabEls = useRef<(HTMLElement | null)[]>([]);
@@ -163,17 +166,17 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
   }));
 
   const pageT = T('page', page2 ? 'enter' : 'exit');
-  const dist = pxOf(role('motion.navigation.forward').distance!);
+  const dist = reduce ? 0 : pxOf(role('motion.navigation.forward').distance!);
   const total = bag.reduce((s, i) => s + CARDS[i].p, 0);
 
   return (
-    <div className="ph4" style={{ transform: `scale(${scale})` }}>
+    <div className={`ph4${reduce ? ' still' : ''}`} style={{ transform: `scale(${scale})` }}>
       <div className="ph4-screen" ref={screen}>
         <div className="ph4-status"><span>9:41</span><i /></div>
 
         {/* the tabs, faded through; each keeps its place (Home its open card) */}
         <AnimatePresence initial={false} mode="wait">
-          <motion.div key={tab} className="ph4-view" initial={{ opacity: 0, scale: scaleOf(role('motion.view.arrive').scale!) }} animate={{ opacity: 1, scale: 1, transition: T('tab') }} exit={{ opacity: 0, transition: T('tab', 'exit') }}>
+          <motion.div key={tab} className="ph4-view" initial={{ opacity: 0, scale: reduce ? 1 : scaleOf(role('motion.view.arrive').scale!) }} animate={{ opacity: 1, scale: 1, transition: T('tab') }} exit={{ opacity: 0, transition: T('tab', 'exit') }}>
             {tab === 'home' && <>
               <div className="ph4-pad">
                 <h4 className="ph4-h">Discover</h4>
@@ -190,9 +193,9 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
               {/* the card's page, grown out of the card; already open when Home comes back */}
               <AnimatePresence initial={false} onExitComplete={() => setClosing(null)}>
                 {card != null && from && (
-                  <motion.div key="detail" className="ph4-detail" initial={{ ...from, borderRadius: 14 }} animate={{ top: 0, left: 0, width: SW, height: VH, borderRadius: 0, transition: T('card') }} exit={{ ...from, borderRadius: 14, transition: T('card', 'exit') }}>
+                  <motion.div key="detail" className="ph4-detail" initial={reduce ? { top: 0, left: 0, width: SW, height: VH, borderRadius: 0, opacity: 0 } : { ...from, borderRadius: 14 }} animate={{ top: 0, left: 0, width: SW, height: VH, borderRadius: 0, opacity: 1, transition: T('card') }} exit={reduce ? { opacity: 0, transition: T('card', 'exit') } : { ...from, borderRadius: 14, transition: T('card', 'exit') }}>
                     {/* its content comes in once the container has grown, and goes first when it shrinks */}
-                    <motion.div className="ph4-in" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: dur('card') * .5, delay: dur('card') * .4 } }} exit={{ opacity: 0, transition: { duration: dur('card', 'exit') * .4 } }}>
+                    <motion.div className="ph4-in" initial={{ opacity: reduce ? 1 : 0 }} animate={{ opacity: 1, transition: { duration: dur('card') * .5, delay: dur('card') * .4 } }} exit={{ opacity: 0, transition: { duration: dur('card', 'exit') * .4 } }}>
                       {/* the page itself, and the next page — the shared axis */}
                       <motion.div className="ph4-page" initial={false} animate={{ x: page2 ? -dist : 0, opacity: page2 ? 0 : 1 }} transition={{ x: pageT, opacity: { duration: dur('page', page2 ? 'enter' : 'exit') * (page2 ? .35 : .7), delay: page2 ? 0 : dur('page', 'exit') * .3 } }}>
                         <div className="ph4-top"><motion.button type="button" className="ph4-back" aria-label="Back" {...press} onClick={closeCard}><Icon d={ICON.back} /></motion.button></div>
@@ -269,11 +272,11 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
             24 px up and in on motion.surface.enter, content opacity only on motion.content.change (it inherits the
             surface's movement, so nothing travels twice). Focus moves in when it was opened by hand, and returns. */}
         <AnimatePresence>
-          {sheet && <motion.i key="scrim" className="ph4-scrim" onClick={closeSheet} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: reduce ? 0 : .16, ease: [.2, 0, 0, 1] } }} exit={{ opacity: 0, transition: { duration: reduce ? 0 : .16 } }} />}
+          {sheet && <motion.i key="scrim" className="ph4-scrim" onClick={closeSheet} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: .16, ease: [.2, 0, 0, 1] } }} exit={{ opacity: 0, transition: { duration: .16 } }} />}
           {sheet && (
             <motion.div key="sheet" ref={sheetEl} tabIndex={-1} role="dialog" aria-label="Choose a size" className="ph4-sheet" onKeyDown={e => { if (e.key === 'Escape') closeSheet(); }}
               initial={{ y: reduce ? 0 : pxOf(role('motion.surface.enter').distance!), opacity: 0 }} animate={{ y: 0, opacity: 1, transition: T('sheet') }} exit={{ y: reduce ? 0 : pxOf(role('motion.surface.exit').distance!), opacity: 0, transition: T('sheet', 'exit') }}>
-              <motion.div className="ph4-sheet-in" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: reduce ? 0 : msOf('motion.content.change') / 1000 } }}>
+              <motion.div className="ph4-sheet-in" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: msOf('motion.content.change') / 1000 } }}>
                 <i className="ph4-handle" />
                 <h4>Choose a size</h4>
                 {['Small', 'Medium', 'Large'].map((s, i) => <motion.div key={s} className={`ph4-opt${i === 1 ? ' on' : ''}`} {...press}><i />{s}</motion.div>)}
@@ -286,7 +289,7 @@ const Phone04 = forwardRef<PhoneHandle, Props>(function Phone04({ onMoment: repo
         {/* the toast, over everything */}
         <AnimatePresence>
           {toast > 0 && (
-            <motion.div key={toast} className="ph4-toast" initial={{ opacity: 0, y: pxOf(role('motion.surface.enter').distance!) }} animate={{ opacity: 1, y: 0, transition: T('toast') }} exit={{ opacity: 0, y: pxOf(role('motion.surface.exit').distance!), transition: T('toast', 'exit') }}>
+            <motion.div key={toast} className="ph4-toast" initial={{ opacity: 0, y: reduce ? 0 : pxOf(role('motion.surface.enter').distance!) }} animate={{ opacity: 1, y: 0, transition: T('toast') }} exit={{ opacity: 0, y: reduce ? 0 : pxOf(role('motion.surface.exit').distance!), transition: T('toast', 'exit') }}>
               <Icon d={ICON.check} />Added to bag
             </motion.div>
           )}

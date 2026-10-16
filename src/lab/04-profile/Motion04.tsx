@@ -125,7 +125,7 @@ function Timeline({ dev, pulse, reduce }: { dev: Dev; pulse: number; reduce: boo
     </div>
   );
 }
-function DevView({ m, pulse, reduce, extra }: { m: Moment; pulse: number; reduce: boolean; extra?: ReactNode }) {
+function DevView({ m, pulse, reduce, extra, reduced }: { m: Moment; pulse: number; reduce: boolean; extra?: ReactNode; reduced: boolean }) {
   return (
     <div className="ms4-prims dv4">
       <div className="ms4-ph"><h3>Tracks <span>who owns what, when, on which token</span></h3></div>
@@ -133,7 +133,7 @@ function DevView({ m, pulse, reduce, extra }: { m: Moment; pulse: number; reduce
       {extra}
       <dl className="dv4-dl">
         <dt>Interrupted</dt><dd>{m.dev.interrupt}</dd>
-        <dt>Reduced motion</dt><dd>{m.dev.reduced}</dd>
+        <dt className={reduced ? 'hit' : ''}>Reduced motion{reduced ? ' · on' : ''}</dt><dd className={reduced ? 'hit' : ''}>{m.dev.reduced}</dd>
         <dt>Acceptance</dt><dd><ul>{m.dev.accept.map(x => <li key={x}>{x}</li>)}</ul></dd>
       </dl>
     </div>
@@ -153,6 +153,8 @@ export default function Motion04() {
   const [flowing, setFlowing] = useState(false);
   /* whose view the right column takes (brief: both the designer's and the developer's) */
   const [persp, setPersp] = useState<'designer' | 'developer'>('designer');
+  /* the phone's motion setting (brief, layer 7): default, or reduced — the same meaning without travel */
+  const [reduced, setReduced] = useState(false);
   /* the Pay contract: what the server will answer (the viewer's choice), and where the contract is */
   const [scenario, setScenario] = useState<Scenario>('unclear-done');
   const [contract, setContract] = useState<ContractStatus>({ state: 'ready', last: null, n: 0, ignored: 0 });
@@ -164,7 +166,7 @@ export default function Motion04() {
   /* the phone fits the stage's height */
   const stage = useRef<HTMLDivElement>(null);
   const [k, setK] = useState(1);
-  useLayoutEffect(() => { const el = stage.current; if (!el) return; const fit = () => setK(Math.min(1, (el.clientHeight - 22) / 582, el.clientWidth / 282)); fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
+  useLayoutEffect(() => { const el = stage.current; if (!el) return; const fit = () => setK(Math.min(1, (el.clientHeight - 44) / 582, el.clientWidth / 282)); fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
   const groups = [...new Set(MOMENTS.map(x => x.group))];
   return (
     <section className="pp4 ms4" aria-label="Motion system">
@@ -199,7 +201,8 @@ export default function Motion04() {
           ))}
         </div>
         {/* the product */}
-        <div className="ms4-stage" ref={stage}><div className="ms4-phone" style={{ width: 282 * k, height: 582 * k }}><Phone04 ref={phone} onMoment={onMoment} onFlowEnd={() => setFlowing(false)} scale={k} scenario={scenario} onContract={setContract} /></div><span className="ms4-ex">Example implementation</span></div>
+        <div className="ms4-stage" ref={stage}><div className="ms4-phone" style={{ width: 282 * k, height: 582 * k }}><Phone04 ref={phone} onMoment={onMoment} onFlowEnd={() => setFlowing(false)} scale={k} scenario={scenario} onContract={setContract} reduced={reduced} /></div><div className="ms4-under"><span className="ms4-ex">Example implementation</span>
+          <div className="ms4-views sm" role="group" aria-label="The phone’s motion">{([false, true] as const).map(r => <button key={String(r)} type="button" aria-pressed={reduced === r} className={reduced === r ? 'on' : ''} onClick={() => setReduced(r)}>{r ? 'Reduced motion' : 'Default'}</button>)}</div></div></div>
         {/* its tokens */}
         <div className="ms4-panel ms4-spec">
           <div className="ms4-sel">
@@ -213,10 +216,11 @@ export default function Motion04() {
               <TokenLine x={m.enter} label={m.labels[0]} live={sel.phase === 'enter'} />
               {m.exit && <TokenLine x={m.exit} label={m.labels[1] ?? 'Exit'} live={sel.phase === 'exit'} />}
             </div>}
-            {persp === 'designer' && <p className="ms4-why">{m.why}</p>}
+            {persp === 'designer' && sel.id !== 'pay' && <p className="ms4-why">{m.why}</p>}
+            {reduced && persp === 'designer' && <p className="ms4-red"><b>Reduced motion</b>{m.dev.reduced}</p>}
           </div>
           {persp === 'developer'
-            ? <DevView m={m} pulse={pulse} reduce={reduce} extra={sel.id === 'pay' ? <table className="dv4-ct"><thead><tr><th>Current state</th><th>Event</th><th>Next state</th></tr></thead><tbody>{CONTRACT.map(([a, e, b, label]) => <tr key={e} className={contract.state === a ? 'live' : ''}><td><code>{NAMES[a]}</code></td><td>{label}</td><td><code>{NAMES[b]}</code></td></tr>)}</tbody></table> : undefined} />
+            ? <DevView m={m} pulse={pulse} reduce={reduce} reduced={reduced} extra={sel.id === 'pay' ? <table className="dv4-ct"><thead><tr><th>Current state</th><th>Event</th><th>Next state</th></tr></thead><tbody>{CONTRACT.map(([a, e, b, label]) => <tr key={e} className={contract.state === a ? 'live' : ''}><td><code>{NAMES[a]}</code></td><td>{label}</td><td><code>{NAMES[b]}</code></td></tr>)}</tbody></table> : undefined} />
             : sel.id === 'pay'
             ? <div className="ms4-prims"><div className="ms4-ph"><h3>The contract <span>states and the events that move them</span></h3></div><ContractPanel status={contract} scenario={scenario} setScenario={setScenario} /></div>
             : <div className="ms4-prims"><div className="ms4-ph"><h3>Primitives <span>the shared values; this moment’s light up</span></h3></div><Palette lit={lit} pulse={reduce ? 0 : pulse} /></div>}

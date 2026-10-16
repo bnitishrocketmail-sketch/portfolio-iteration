@@ -65,7 +65,7 @@ export function ContractPanel({ status, scenario, setScenario }: { status: Contr
       </svg>
       <ul className="ct4-rules">
         <li className={status.ignored ? 'hit' : ''}>Repeat taps while it is pending are ignored — no duplicate payment{status.ignored ? <b> · {status.ignored} ignored so far</b> : null}.</li>
-        <li className={status.state === 'checking' ? 'hit' : ''}>An unclear outcome is its own state, not a failure: a timeout alone is not proof it failed.</li>
+        <li className={status.state === 'checking' ? 'hit' : ''}>Application events drive the state. An unclear outcome is its own state, not a failure: a timeout alone is not proof it failed.</li>
         <li>Press on <code>motion.feedback.press</code>; the label changes on <code>motion.content.change</code>; width and hit area stay.</li>
         <li>Leave the page mid-payment: the animation stops, the status carries on. Success comes from the application’s event, never from an animation finishing.</li>
         <li>Reduced motion: no scaling or spinner loop; the status stays readable and is announced.</li>
