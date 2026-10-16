@@ -1,30 +1,59 @@
-/* ---- the Motion system tab (Motion04.tsx): three panels, read left to right; in the page's tokens ---- */
-.ms4-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 1.2cqw; }
-.ms4-panel { --pane: color-mix(in srgb, var(--line-ink) 5%, transparent); position: relative; min-height: 0; display: flex; flex-direction: column; gap: 1.2cqw; padding: 1.4cqw 1.5cqw; border-radius: var(--r); background: var(--pane); border: 1px solid color-mix(in srgb, var(--line-ink) 9%, transparent); color: var(--line-ink); overflow: hidden; }
-.ms4-panel.soon { border-style: dashed; background: none; }
+/* ---- the Motion system tab (Motion04.tsx, Phone04.tsx): the moments, the product, its tokens; in the page's tokens ---- */
+.ms4-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, .82fr) auto minmax(0, 1.55fr); gap: 1.3cqw; }
+.ms4-panel { --pane: color-mix(in srgb, var(--line-ink) 5%, transparent); position: relative; min-height: 0; display: flex; flex-direction: column; gap: 1.1cqw; padding: 1.3cqw 1.4cqw; border-radius: var(--r); background: var(--pane); border: 1px solid color-mix(in srgb, var(--line-ink) 9%, transparent); color: var(--line-ink); overflow: auto; scrollbar-width: thin; }
 .ms4-ph h3 { margin: 0 0 .35em; font: 600 var(--t-title)/1.2 var(--f-copy); } /* title */
 .ms4-ph p { margin: 0; font: var(--copy-w) var(--t-meta)/1.45 var(--f-copy); opacity: .7; max-width: 46ch; } /* meta */
-.ms4-next { margin: auto; font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .45; }
+
+/* the moments: grouped, each a button that plays it */
+.ms4-mg { display: flex; flex-direction: column; gap: 4px; }
+.ms4-mg h4, .ms4-g h4 { margin: 0 0 .3cqw; font: 600 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
+.ms4-m { display: flex; flex-direction: column; gap: .3em; text-align: left; padding: .7em .85em; border-radius: calc(var(--r) * .55); border: 1px solid transparent; background: transparent; color: inherit; cursor: pointer; font-family: var(--f-copy); transition: background-color .2s, border-color .2s; }
+.ms4-m b { font: 600 var(--t-body)/1.2 var(--f-copy); }
+.ms4-m span { font: 500 var(--t-meta)/1.25 var(--f-copy); opacity: .6; }
+.ms4-m:hover { background: color-mix(in srgb, var(--line-ink) 6%, transparent); }
+.ms4-m.on { background: var(--pcard-open); color: var(--pcard-open-ink); }
+.ms4-m.on span { opacity: .7; }
+
+/* the product: the phone, scaled to the stage's height */
+.ms4-stage { min-height: 0; display: grid; place-items: center; }
+.ms4-phone { position: relative; }
+
+/* the cascade */
+.ms4-sel { display: flex; flex-direction: column; gap: .65cqw; }
+.ms4-kicker { margin: 0; font: 600 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
+.ms4-sel h3, .ms4-prims h3 { margin: 0; font: 600 var(--t-title)/1.2 var(--f-copy); }
+.ms4-sel h3 span, .ms4-prims h3 span { margin-left: .5em; font: 500 var(--t-meta)/1 var(--f-copy); opacity: .55; } /* the pattern, beside the name */
+.ms4-tls { display: flex; flex-direction: column; gap: 6px; }
+.ms4-tl { display: grid; grid-template-columns: 5.2em minmax(0, 1fr); align-items: center; gap: .45em .7em; padding: .6em .8em; border-radius: calc(var(--r) * .5); border: 1px solid color-mix(in srgb, var(--line-ink) 12%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); opacity: .55; transition: opacity .25s, background-color .25s; }
+.ms4-tl.live { opacity: 1; background: color-mix(in srgb, var(--line-ink) 7%, transparent); }
+.ms4-ph-l { font-weight: 600; }
+.ms4-tl code { font: 600 var(--t-meta)/1.2 ui-monospace, 'SF Mono', Menlo, monospace; white-space: nowrap; }
+.ms4-arr { opacity: .5; margin-right: 2px; }
+.ms4-chips { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; } /* the primitives, under the token */
+.ms4-chips > span { display: inline-flex; gap: .4em; align-items: baseline; padding: .35em .6em; border-radius: 999px; background: color-mix(in srgb, var(--line-ink) 8%, transparent); white-space: nowrap; }
+.ms4-chips small { font-size: .85em; opacity: .55; }
+.ms4-chips .note { background: none; border: 1px dashed color-mix(in srgb, var(--line-ink) 25%, transparent); }
+.ms4-why { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); max-width: 52ch; }
+.ms4-prims { display: flex; flex-direction: column; gap: .6cqw; padding-top: .9cqw; border-top: 1px solid color-mix(in srgb, var(--line-ink) 10%, transparent); }
 
 /* the primitives: two columns of groups, each group a list of tokens, each token shown moving */
-.ms4-groups { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2.2cqw; overflow: auto; }
-.ms4-col { display: flex; flex-direction: column; gap: 1.6cqw; min-width: 0; }
-.ms4-g { display: flex; flex-direction: column; gap: .35cqw; }
+.ms4-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8cqw; }
+.ms4-col { display: flex; flex-direction: column; gap: .8cqw; min-width: 0; }
+.ms4-g { display: flex; flex-direction: column; gap: 0; }
 .ms4-g h4 { margin: 0 0 .3cqw; font: 600 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .55; }
 .ms4-g h4 span { font-weight: 500; text-transform: none; letter-spacing: 0; opacity: .8; margin-left: .4em; }
-.ms4-row { --blk: 10px; display: grid; grid-template-columns: 6.8em minmax(0, 1fr); align-items: center; gap: 1em; min-height: 40px; font: 500 var(--t-meta)/1.2 var(--f-copy); }
-.ms4-row.ease { grid-template-columns: 6.8em 32px minmax(0, 1fr); }
-/* the token: its name, its value under it */
-.ms4-k { display: flex; flex-direction: column; gap: .2em; min-width: 0; }
-.ms4-k b { font-weight: 600; white-space: nowrap; }
-.ms4-v { opacity: .55; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: .92em; }
+.ms4-row { --blk: 9px; display: grid; grid-template-columns: 6.4em 4.2em minmax(0, 1fr); align-items: center; gap: .8em; min-height: 23px; font: 500 var(--t-meta)/1.15 var(--f-copy); opacity: .38; transition: opacity .25s; }
+.ms4-row.on { opacity: 1; } /* the tokens the moment used */
+.ms4-row.ease { grid-template-columns: 6.4em 22px minmax(0, 1fr); min-height: 25px; } /* the curve says the value; it is in the title */
+.ms4-n { font-weight: 600; white-space: nowrap; }
+.ms4-v { opacity: .6; font-variant-numeric: tabular-nums; white-space: nowrap; }
 /* the track: a hairline the block runs along */
 .ms4-trk { position: relative; height: var(--blk); }
 .ms4-trk::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: color-mix(in srgb, var(--line-ink) 16%, transparent); }
 .ms4-blk { position: absolute; top: 0; width: var(--blk); height: var(--blk); border-radius: 3px; background: var(--line-ink); }
 .ms4-end { position: absolute; top: -3px; bottom: -3px; width: 1px; background: color-mix(in srgb, var(--line-ink) 40%, transparent); }
 /* an easing's curve, with time's dot riding it */
-.ms4-curve { width: 32px; height: 32px; overflow: visible; }
+.ms4-curve { width: 22px; height: 22px; overflow: visible; }
 .ms4-curve .ax { fill: none; stroke: color-mix(in srgb, var(--line-ink) 14%, transparent); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .ms4-curve polyline { fill: none; stroke: var(--line-ink); stroke-width: 1.4; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: .75; }
 .ms4-curve circle { fill: var(--line-ink); }
@@ -33,7 +62,62 @@
 .ms4-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line-ink); opacity: .15; }
 
 @media (max-width: 700px) {
-  .ms4-grid { grid-template-columns: 1fr; }
-  .ms4-groups { grid-template-columns: 1fr; overflow: visible; }
-  .ms4-panel { padding: 16px; gap: 14px; }
+  .ms4-grid { grid-template-columns: 1fr; overflow: visible; }
+  .ms4-stage { height: 560px; }
+  .ms4-groups { grid-template-columns: 1fr; }
+  .ms4-panel { padding: 16px; gap: 14px; overflow: visible; }
 }
+
+/* ---- the phone (Phone04.tsx): a fixed 282 × 582 body, scaled as a whole; the app in the open card's greys ---- */
+.ph4 { --ink: var(--pcard-open-ink); --scr: var(--pcard-open); --soft: color-mix(in srgb, var(--ink) 6%, var(--scr)); --img: color-mix(in srgb, var(--ink) 13%, var(--scr));
+  position: absolute; left: 0; top: 0; width: 282px; height: 582px; transform-origin: 0 0; padding: 10px; box-sizing: border-box; border-radius: 44px; background: var(--pcard-fold); box-shadow: var(--shadow-el), inset 0 0 0 1px color-mix(in srgb, #fff 8%, transparent); }
+.ph4-screen { position: relative; width: 262px; height: 562px; border-radius: 34px; overflow: hidden; background: var(--scr); color: var(--ink); font-family: var(--f-copy); isolation: isolate; }
+.ph4 button { font-family: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+.ph4 svg { width: 16px; height: 16px; flex: none; }
+.ph4-status { position: absolute; z-index: 9; left: 0; right: 0; top: 0; height: 30px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font: 600 11px/1 var(--f-copy); pointer-events: none; }
+.ph4-status i { width: 54px; height: 16px; border-radius: 10px; background: #0d0d0e; position: absolute; left: 50%; top: 7px; transform: translateX(-50%); }
+.ph4-tabs { position: absolute; inset: 0; }
+.ph4-view { position: absolute; left: 0; right: 0; top: 30px; bottom: 58px; padding: 6px 14px 0; overflow: hidden; display: flex; flex-direction: column; gap: 8px; transform-origin: 50% 40%; }
+.ph4-h { margin: 6px 0 2px; font: 700 20px/1.1 var(--f-copy); }
+.ph4-search { display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 17px; background: var(--soft); font: 500 12px/1 var(--f-copy); opacity: .9; }
+.ph4-search.on { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.ph4-label { margin: 6px 0 0; font: 600 11px/1 var(--f-copy); opacity: .55; letter-spacing: .04em; text-transform: uppercase; }
+.ph4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ph4-card { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 6px 6px 9px !important; border-radius: 14px; background: var(--soft) !important; text-align: left; }
+.ph4-img { display: block; width: 100%; height: 92px; border-radius: 10px; background: var(--img); margin-bottom: 4px; }
+.ph4-card b { font: 600 12px/1.2 var(--f-copy); padding: 0 3px; } .ph4-card span { font: 500 11px/1 var(--f-copy); opacity: .6; padding: 0 3px; }
+.ph4-chips { display: flex; flex-wrap: wrap; gap: 6px; } .ph4-chips span { padding: 7px 11px; border-radius: 999px; background: var(--soft); font: 500 11.5px/1 var(--f-copy); }
+.ph4-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); font: 500 12.5px/1.2 var(--f-copy); }
+.ph4-row span { display: flex; flex-direction: column; gap: 3px; } .ph4-row small { font-size: 11px; opacity: .55; }
+.ph4-thumb { width: 40px; height: 40px; border-radius: 10px; background: var(--img); flex: none; }
+.ph4-tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 58px; display: flex; justify-content: space-around; align-items: flex-start; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); background: var(--scr); }
+.ph4-tabbar button { display: flex; flex-direction: column; align-items: center; gap: 3px; font: 600 10px/1 var(--f-copy); opacity: .45; width: 64px; }
+.ph4-tabbar button.on { opacity: 1; }
+/* the card's page and the next one */
+.ph4-detail { position: absolute; z-index: 4; overflow: hidden; background: var(--soft); }
+.ph4-in { position: absolute; left: 0; top: 0; width: 262px; height: 562px; background: var(--scr); }
+.ph4-page { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--scr); }
+.ph4-page.two { z-index: 2; }
+.ph4-top { position: absolute; z-index: 3; left: 12px; right: 12px; top: 36px; display: flex; align-items: center; gap: 10px; font: 700 15px/1 var(--f-copy); }
+.ph4-page.two .ph4-top { position: static; margin: 36px 12px 0; }
+.ph4-back { width: 32px; height: 32px; border-radius: 50% !important; display: grid !important; place-items: center; background: color-mix(in srgb, var(--scr) 82%, transparent) !important; }
+.ph4-hero { display: block; height: 250px; background: var(--img); flex: none; }
+.ph4-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.ph4-body h4 { margin: 0; font: 700 19px/1.15 var(--f-copy); }
+.ph4-price { margin: 0; font: 600 14px/1 var(--f-copy); opacity: .7; }
+.ph4-copy { margin: 4px 0 0; font: 400 12.5px/1.5 var(--f-copy); opacity: .75; }
+.ph4-cta { margin-top: auto; display: flex; gap: 8px; padding: 12px 14px 22px; }
+.ph4-btn { flex: 1; height: 42px; border-radius: 21px !important; background: var(--pcard-fold) !important; color: var(--pcard-fold-ink) !important; font: 600 13px/1 var(--f-copy) !important; }
+.ph4-btn.ghost { background: transparent !important; color: var(--ink) !important; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.ph4-btn.wide { width: 100%; flex: none; }
+.ph4-steps { display: flex; gap: 6px; margin: 8px 0 10px; } .ph4-steps i { flex: 1; height: 4px; border-radius: 2px; background: var(--img); } .ph4-steps i.on { background: var(--ink); }
+.ph4-line { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); font: 500 12.5px/1 var(--f-copy); } .ph4-line span { opacity: .6; }
+/* the sheet, the toast */
+.ph4-scrim { position: absolute; inset: 0; z-index: 5; background: rgba(0, 0, 0, .38); }
+.ph4-sheet { position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; padding: 8px 16px 22px; border-radius: 24px 24px 0 0; background: var(--scr); display: flex; flex-direction: column; gap: 8px; box-shadow: 0 -8px 24px rgba(0, 0, 0, .12); }
+.ph4-sheet h4 { margin: 4px 0 4px; font: 700 15px/1.2 var(--f-copy); }
+.ph4-handle { width: 36px; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--ink) 20%, transparent); align-self: center; }
+.ph4-opt { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 12px; background: var(--soft); font: 500 13px/1 var(--f-copy); cursor: pointer; }
+.ph4-opt i { width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); } .ph4-opt.on i { box-shadow: inset 0 0 0 4.5px var(--ink); }
+.ph4-sheet .ph4-btn { margin-top: 6px; }
+.ph4-toast { position: absolute; z-index: 8; left: 50%; bottom: 86px; margin-left: -72px; width: 144px; height: 38px; border-radius: 19px; display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 600 12px/1 var(--f-copy); box-shadow: 0 6px 18px rgba(0, 0, 0, .2); }
