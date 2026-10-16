@@ -27,7 +27,7 @@ export const NODES: Node[] = [
   { id: 'figma', label: 'Figma', kind: 'tool', x: 62, y: 72, text: 'Where the product work is designed.' },
   { id: 'code', label: 'Code', kind: 'tool', x: 42, y: 83, text: 'This site is the sample.' },
   /* the workflows */
-  { id: 'script', label: 'Script-based motion', kind: 'flow', x: 74, y: 26, text: 'A Lottie built by script: change a parameter and the animation follows — it stays a Lottie, not a video.', demo: 'a parameter and the Lottie that follows it' },
+  { id: 'script', label: 'Script-based motion', kind: 'flow', x: 75, y: 31, text: 'A Lottie built by script: change a parameter and the animation follows — it stays a Lottie, not a video.', demo: 'a parameter and the Lottie that follows it' },
   { id: 'sm', label: 'State-machine design', kind: 'flow', x: 80, y: 49, text: 'States, transitions, triggers: one system that holds for every variable. Press a trigger and the component changes state in step.', demo: 'a state machine, live' },
   { id: 'handoff', label: 'Prototype & handoff', kind: 'flow', x: 75, y: 77, text: 'The sheet of what moves, when, on what trigger, on which curve — beside the prototype it describes.', demo: 'the handoff sheet and its prototype' },
   { id: 'msys', label: 'Motion design system', kind: 'flow', x: 89, y: 64, text: 'Durations, easings and choreography as tokens a design system can hold. The system has its own page; the story, a project card.', demo: 'the tokens, moving' },
