@@ -53,10 +53,15 @@
    colour that travels between them; the assistant's button at the foot, inverted. Fixed sizes inside the bar (13px names,
    10px at the pill's ends — 11px as the eye sees it, the letters' ink stopping a pixel short of their box) so the geometry
    holds at every width. */
-.navcol4 { display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: 1.6cqh 0 .9cqh; border-radius: 999px; background: var(--nav-bg); box-shadow: var(--shadow-el); }
+/* the bar's spacing, one rule (Nitish, 16 Oct: "spacing hygiene"): the selected pill keeps the same clearance on every side —
+   to the bar's sides, to its rounded top (the pill's cap concentric with the bar's) and to the names before and after it —
+   and the assistant's circle sits concentric in the bar's foot. The clearance is (bar − pill) / 2; padding and margins in
+   % resolve against the bar's width, so it holds at every size. */
+.navcol4 { --pill-w: 33px; /* a name's line (13px) and its button's sides (10px each) */ display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: calc(50% - var(--pill-w) / 2) 0 12%; border-radius: 999px; background: var(--nav-bg); box-shadow: var(--shadow-el); }
 .nav4 { width: 100%; }
-.nav4 ul { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: .4cqh; width: 100%; }
+.nav4 ul { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; width: 100%; }
 .nav4 li { display: flex; justify-content: center; width: 100%; }
+.nav4 li + li { margin-top: max(0px, calc(50% - var(--pill-w) / 2 - 10.5px)); } /* the clearance, less the next button's own top padding */
 .nav4 ul button { position: relative; padding: 10.5px 10px 10px; display: grid; place-items: center; border: 0; background: none; color: var(--nav-ink); cursor: pointer; border-radius: 999px; font: 500 13px/1 var(--f-copy); letter-spacing: .01em; transition: color .2s; } /* meta, at a fixed size (the bar's geometry) */
 .nav4 ul button:hover { color: var(--nav-hl); }
 .lbl4 { position: relative; display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
@@ -249,7 +254,7 @@
   .it04 { position: static; display: block; padding: 14px 14px 40px; overflow: visible; }
   .bg4 { position: fixed; }
   .frame4 { height: auto; aspect-ratio: auto; width: 100%; display: flex; flex-direction: column; gap: 14px; padding: 14px; border-radius: 22px; }
-  .navcol4 { flex-direction: row; padding: 6px 8px; } .nav4 { width: auto; flex: 1; min-width: 0; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 li { width: auto; } .nav4 ul button { padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; } .lbl4 > span { left: 0; } .hl4 { display: none; } .nav4 ul button.on { color: var(--frame); } .ai4 { margin: 0 0 0 auto; width: 40px; }
+  .navcol4 { flex-direction: row; padding: 6px 8px; } .nav4 { width: auto; flex: 1; min-width: 0; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 li { width: auto; } .nav4 li + li { margin-top: 0; } .nav4 ul button { padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; } .lbl4 > span { left: 0; } .hl4 { display: none; } .nav4 ul button.on { color: var(--frame); } .ai4 { margin: 0 0 0 auto; width: 40px; }
   .picwrap4 { display: flex; flex-direction: column; } .pic4, .pic4-in { display: contents; } /* the tile's pieces become the column's: picture, cut-out, name box */
   .pic4-img { position: relative; aspect-ratio: 1; height: auto; border-radius: var(--r) var(--r) 0 0; }
   .pic4-me, .fl4 { display: none !important; } /* the cards and the cutout need the picture's box, which the column has not got; later */

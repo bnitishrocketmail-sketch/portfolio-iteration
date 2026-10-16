@@ -105,7 +105,8 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
     const ul = ulRef.current; if (!ul) return;
     const measure = () => {
       const b: Record<string, { top: number; height: number; width: number }> = {};
-      ul.querySelectorAll<HTMLElement>('li[data-id]').forEach(li => { const btn = li.querySelector('button')!; b[li.dataset.id!] = { top: li.offsetTop, height: btn.offsetHeight, width: btn.offsetWidth }; });
+      const u = ul.getBoundingClientRect(); /* sub-pixel boxes, so the pill sits exactly on its name (offsetTop rounds) */
+      ul.querySelectorAll<HTMLElement>('li[data-id]').forEach(li => { const r = li.querySelector('button')!.getBoundingClientRect(); b[li.dataset.id!] = { top: r.top - u.top, height: r.height, width: r.width }; });
       setBoxes(b);
     };
     measure();
