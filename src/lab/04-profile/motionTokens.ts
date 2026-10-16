@@ -50,30 +50,41 @@ export const role = (id: string) => ROLES.find(r => r.id === id)!;
 export type Mapping = { id: string; role: string; adjust?: string };
 export type MomentId = 'card' | 'page' | 'tab' | 'sheet' | 'toast' | 'press';
 export type Phase = 'enter' | 'exit';
-export type Moment = { id: MomentId; group: string; name: string; pattern: string; trigger: string; why: string; enter: Mapping; exit?: Mapping; labels: [string, string?] };
+/* his pattern families, organised by the user's question (brief, layer 4) */
+export const FAMILY = {
+  input: { name: 'Input and feedback', q: 'Did my action register?' },
+  visibility: { name: 'Visibility and disclosure', q: 'What became available?' },
+  navigation: { name: 'Navigation and continuity', q: 'Where did I go?' },
+  content: { name: 'Content and layout', q: 'What changed on this screen?' },
+  progress: { name: 'Progress and waiting', q: 'Is something happening?' },
+  outcome: { name: 'Outcomes and recovery', q: 'What happened? What next?' },
+  attention: { name: 'Attention and expression', q: 'What deserves attention?' },
+} as const;
+export type Family = keyof typeof FAMILY;
+export type Moment = { id: MomentId; group: string; family: Family; name: string; pattern: string; trigger: string; why: string; enter: Mapping; exit?: Mapping; labels: [string, string?] };
 
 export const MOMENTS: Moment[] = [
-  { id: 'card', group: 'The flow', name: 'Open a card', pattern: 'Container transform', trigger: 'Tap a card', labels: ['Open', 'Close'],
+  { id: 'card', group: 'The flow', family: 'navigation', name: 'Open a card', pattern: 'Container transform', trigger: 'Tap a card', labels: ['Open', 'Close'],
     why: 'The card becomes the page, so where you came from is never lost.',
     enter: { id: 'card.open', role: 'motion.container.expand', adjust: 'from the card’s own box' },
     exit: { id: 'card.close', role: 'motion.container.collapse', adjust: 'back to the card’s box' } },
-  { id: 'sheet', group: 'The flow', name: 'Bottom sheet', pattern: 'Slide from its edge', trigger: 'Options', labels: ['Open', 'Close'],
+  { id: 'sheet', group: 'The flow', family: 'visibility', name: 'Bottom sheet', pattern: 'Slide from its edge', trigger: 'Options', labels: ['Open', 'Close'],
     why: 'It arrives and settles; it leaves faster, getting out of the way.',
     enter: { id: 'sheet.open', role: 'motion.surface.enter', adjust: 'travels its full height, from the bottom edge' },
     exit: { id: 'sheet.close', role: 'motion.surface.exit', adjust: 'travels its full height, to the bottom edge' } },
-  { id: 'toast', group: 'The flow', name: 'Toast', pattern: 'Rise and fade', trigger: 'Add to bag', labels: ['Show', 'Hide'],
+  { id: 'toast', group: 'The flow', family: 'outcome', name: 'Toast', pattern: 'Rise and fade', trigger: 'Add to bag', labels: ['Show', 'Hide'],
     why: 'The same roles as the sheet, unadjusted: a short rise in, a shorter fall out.',
     enter: { id: 'toast.show', role: 'motion.surface.enter' },
     exit: { id: 'toast.hide', role: 'motion.surface.exit' } },
-  { id: 'page', group: 'The flow', name: 'Go forward, go back', pattern: 'Shared axis — the page shift', trigger: 'Continue · back', labels: ['Forward', 'Back'],
+  { id: 'page', group: 'The flow', family: 'navigation', name: 'Go forward, go back', pattern: 'Shared axis — the page shift', trigger: 'Continue · back', labels: ['Forward', 'Back'],
     why: 'Forward comes in from the right and back from the left: the direction is the hierarchy.',
     enter: { id: 'page.forward', role: 'motion.navigation.forward' },
     exit: { id: 'page.back', role: 'motion.navigation.back' } },
-  { id: 'tab', group: 'Anywhere', name: 'Switch tabs', pattern: 'Fade through', trigger: 'Tap a tab', labels: ['Arrive', 'Leave'],
+  { id: 'tab', group: 'Anywhere', family: 'navigation', name: 'Switch tabs', pattern: 'Fade through', trigger: 'Tap a tab', labels: ['Arrive', 'Leave'],
     why: 'Tabs are siblings, not a path, so nothing slides: the old one fades out, the new one fades in — and each keeps its place.',
     enter: { id: 'tabs.arrive', role: 'motion.view.arrive' },
     exit: { id: 'tabs.leave', role: 'motion.content.change', adjust: 'fade only, before the next arrives' } },
-  { id: 'press', group: 'Anywhere', name: 'Press', pattern: 'Scale down', trigger: 'Any tap', labels: ['Press'],
+  { id: 'press', group: 'Anywhere', family: 'input', name: 'Press', pattern: 'Scale down', trigger: 'Any tap', labels: ['Press'],
     why: 'The fastest role in the system: it answers the finger before anything else happens.',
     enter: { id: 'button.press', role: 'motion.feedback.press', adjust: 'returns to 1 on release' } },
 ];

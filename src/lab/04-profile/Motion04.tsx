@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
 import Phone04, { type PhoneHandle } from './Phone04';
-import { MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Mapping, type MomentId, type Phase, type Prim } from './motionTokens';
+import { FAMILY, MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Mapping, type MomentId, type Phase, type Prim } from './motionTokens';
 import './motion.css';
 
 /* 04's Motion system tab (Nitish, 16 Oct; reframed the same evening: "hard to understand in relevance of the product …
@@ -122,7 +122,7 @@ export default function Motion04() {
       <div className="ms4-grid">
         {/* the product's moments */}
         <div className="ms4-panel ms4-moments">
-          <div className="ms4-ph"><h3>Moments</h3><p>One app, one journey. Play it through, tap a moment, or use the phone.</p></div>
+          <div className="ms4-ph"><h3>Moments</h3><p>One app, one journey; each moment answers a question the user has. Play it through, tap one, or use the phone.</p></div>
           <button type="button" className={`ms4-flow${flowing ? ' on' : ''}`} onClick={flow}>
             <svg viewBox="0 0 24 24" aria-hidden="true">{flowing ? <path d="M7 6h3v12H7zM14 6h3v12h-3z" fill="currentColor" /> : <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />}</svg>
             {flowing ? 'Stop' : 'Play the journey'}
@@ -133,7 +133,7 @@ export default function Motion04() {
               {MOMENTS.filter(x => x.group === g).map((x, i) => (
                 <button key={x.id} type="button" className={`ms4-m${sel.id === x.id ? ' on' : ''}`} onClick={() => playOne(x.id)}>
                   {g === 'The flow' && <i className="ms4-num">{i + 1}</i>}
-                  <b>{x.name}</b><span>{x.pattern} · {x.trigger}</span>
+                  <b>{x.name}</b><span>{FAMILY[x.family].q}</span>
                 </button>
               ))}
             </div>
@@ -145,7 +145,8 @@ export default function Motion04() {
         <div className="ms4-panel ms4-spec">
           <div className="ms4-sel">
             <p className="ms4-tag">Illustrative values · Framework v0.1</p>
-            <h3>{m.name} <span>{m.pattern}</span></h3>
+            <h3>{m.name} <span>{m.pattern} · {m.trigger}</span></h3>
+            <p className="ms4-q"><b>{FAMILY[m.family].q}</b><span>{FAMILY[m.family].name}</span></p>
             <div className="ms4-tls">
               <TokenLine x={m.enter} label={m.labels[0]} live={sel.phase === 'enter'} />
               {m.exit && <TokenLine x={m.exit} label={m.labels[1] ?? 'Exit'} live={sel.phase === 'exit'} />}

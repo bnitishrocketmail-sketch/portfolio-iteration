@@ -47,6 +47,10 @@
 .ms4-chips small { font-size: .88em; opacity: .6; }
 .ms4-chips > .ms4-arr { padding: 0; background: none; }
 .ms4-chips .note { background: none; border: 1px dashed color-mix(in srgb, var(--line-ink) 25%, transparent); }
+/* the user's question this moment answers, and its pattern family */
+.ms4-q { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .3em .7em; }
+.ms4-q b { font: 600 var(--t-body)/1.25 var(--f-copy); }
+.ms4-q span { font: 500 var(--t-meta)/1.2 var(--f-copy); opacity: .55; }
 .ms4-why { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); max-width: 52ch; }
 .ms4-prims { display: flex; flex-direction: column; gap: .6cqw; padding-top: .9cqw; border-top: 1px solid color-mix(in srgb, var(--line-ink) 10%, transparent); }
 
