@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import StateMachine04 from './StateMachine04';
 import './workflow.css';
 
 /* 04's Workflow page (Nitish, 15–16 Oct; named Craft until 16 Oct): "how I work" as a map of connected nodes with little text — the crafts at the
@@ -9,10 +10,12 @@ import './workflow.css';
    of its own. A node opens into a card
    beside it (his choice, 15 Oct; on hover, 16 Oct): the pill itself grows into the card — anchored at the node's edge nearest the map's
    centre so it grows inward, the open card's grey, the standard radius — and shrinks back on close; one open at a time;
-   the map does not move. The cards hold a line or two each for now and, where a live demo is to go, its stage marked.
+   the map does not move. The cards hold a line or two each and, where a live demo is to go, its stage — marked until
+   it is built (the state machine is live, 16 Oct). Each card's height is measured ahead, off-screen, so it can grow to
+   its exact size and be kept inside the map (pushed up or in from an edge when the node sits near one).
    Positions are percentages of the map's box, hand-laid; the lines join the nodes' centres under them. */
 type Kind = 'core' | 'tool' | 'flow' | 'ai';
-type Node = { id: string; label: string; kind: Kind; x: number; y: number; text: string; demo?: string };
+type Node = { id: string; label: string; kind: Kind; x: number; y: number; text: string; demo?: string; live?: () => React.ReactNode };
 
 export const NODES: Node[] = [
   /* the crafts */
@@ -28,7 +31,7 @@ export const NODES: Node[] = [
   { id: 'code', label: 'Code', kind: 'tool', x: 42, y: 83, text: 'This site is the sample.' },
   /* the workflows */
   { id: 'script', label: 'Script-based motion', kind: 'flow', x: 75, y: 31, text: 'A Lottie built by script: change a parameter and the animation follows — it stays a Lottie, not a video.', demo: 'a parameter and the Lottie that follows it' },
-  { id: 'sm', label: 'State-machine design', kind: 'flow', x: 80, y: 49, text: 'States, transitions, triggers: one system that holds for every variable. Press a trigger and the component changes state in step.', demo: 'a state machine, live' },
+  { id: 'sm', label: 'State-machine design', kind: 'flow', x: 80, y: 49, text: 'States, transitions, triggers: one system that holds for every case. Press the button or fire a trigger — the machine only allows what the state allows.', live: () => <StateMachine04 /> },
   { id: 'handoff', label: 'Prototype & handoff', kind: 'flow', x: 75, y: 77, text: 'The sheet of what moves, when, on what trigger, on which curve — beside the prototype it describes.', demo: 'the handoff sheet and its prototype' },
   { id: 'msys', label: 'Motion design system', kind: 'flow', x: 89, y: 64, text: 'Durations, easings and choreography as tokens a design system can hold. The system has its own page; the story, a project card.', demo: 'the tokens, moving' },
   /* the ring: with the model */
@@ -44,17 +47,37 @@ const EDGES: [string, string, 'ai'?][] = [
   ['brief', 'motion', 'ai'], ['brief', 'interaction', 'ai'], ['brief', 'product', 'ai'], ['build', 'script', 'ai'], ['review', 'product', 'ai'],
 ];
 const RING = { cx: 50, cy: 50, rx: 46, ry: 36 }; /* tightened when the roots came off */
-const CARD_W = 320;
+const CARD_W = 320, CARD_W_LIVE = 440; /* a card with a live demo is wider */
 const SPRING = { type: 'spring', stiffness: 320, damping: 34, mass: 1 } as const;
 
-/* the open card's anchor: the node's box in the map, and which edges it grows from */
-type Open = { id: string; left: number; top: number; right: number; bottom: number; w: number; h: number; toRight: boolean; down: boolean; bg: string; border: string; r: number; openBg: string };
+/* the open card: the node's box in the map (where it grows from and shrinks back to) and the card's own box */
+type Box = { left: number; top: number; width: number; height: number };
+type Open = { id: string; from: Box; to: Box; bg: string; border: string; r: number; openBg: string };
+const widthOf = (n: Node) => (n.live ? CARD_W_LIVE : CARD_W);
+
+/* a card's content — the same for the open card and for the off-screen copy that measures it */
+function CardBody({ node, onClose }: { node: Node; onClose?: () => void }) {
+  return (<>
+    <h3 className="cc4-title">{node.label}</h3>
+    {node.live ? node.live() : node.demo && <div className="cc4-stage" aria-hidden="true"><span>{node.demo} — next</span></div>}
+    <p className="cc4-text">{node.text}</p>
+    <button type="button" className="cc4-x" aria-label="Close" onClick={onClose} tabIndex={onClose ? 0 : -1}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg></button>
+  </>);
+}
 
 export default function Workflow04() {
   const at = Object.fromEntries(NODES.map(n => [n.id, n]));
   const mapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<Open | null>(null);
   const reduce = useReducedMotion();
+  /* every card's height, measured off-screen at its width */
+  const measureRef = useRef<HTMLDivElement>(null);
+  const heights = useRef<Record<string, number>>({});
+  useLayoutEffect(() => {
+    const el = measureRef.current; if (!el) return;
+    const read = () => el.querySelectorAll<HTMLElement>('[data-m]').forEach(c => { heights.current[c.dataset.m!] = c.offsetHeight; });
+    read(); const ro = new ResizeObserver(read); ro.observe(el); return () => ro.disconnect();
+  }, []);
   /* hover opens (Nitish, 16 Oct: a click has no nudge); a short wait so a sweep across the map does not open everything,
      and a short grace on leaving so the edge does not flicker. Touch has no hover, so a tap opens there; focus opens too. */
   const enterT = useRef(0), leaveT = useRef(0);
@@ -64,11 +87,13 @@ export default function Workflow04() {
     const map = mapRef.current; const el = map?.querySelector<HTMLElement>(`[data-id="${id}"]`); if (!map || !el) return;
     hold(); if (open?.id === id) return;
     const m = map.getBoundingClientRect(), b = el.getBoundingClientRect(), cs = getComputedStyle(el), ms = getComputedStyle(map);
-    setOpen({
-      id, left: b.left - m.left, top: b.top - m.top, right: m.right - b.right, bottom: m.bottom - b.bottom, w: b.width, h: b.height,
-      toRight: (b.left + b.right) / 2 - m.left < m.width / 2, down: (b.top + b.bottom) / 2 - m.top < m.height / 2,
-      bg: cs.backgroundColor, border: cs.borderColor, r: parseFloat(ms.getPropertyValue('--r')) || 20, openBg: ms.getPropertyValue('--pcard-open').trim() || '#e0e0e0',
-    });
+    const from = { left: b.left - m.left, top: b.top - m.top, width: b.width, height: b.height };
+    const W = widthOf(at[id]), H = heights.current[id] ?? 200;
+    /* it grows toward the map's centre from the node's nearer corner, and is kept inside the map */
+    const toRight = from.left + from.width / 2 < m.width / 2, down = from.top + from.height / 2 < m.height / 2;
+    const clamp = (v: number, hi: number) => Math.max(0, Math.min(v, Math.max(0, hi)));
+    const to = { left: clamp(toRight ? from.left : from.left + from.width - W, m.width - W), top: clamp(down ? from.top : from.top + from.height - H, m.height - H), width: W, height: H };
+    setOpen({ id, from, to, bg: cs.backgroundColor, border: cs.borderColor, r: parseFloat(ms.getPropertyValue('--r')) || 20, openBg: ms.getPropertyValue('--pcard-open').trim() || '#e0e0e0' });
   };
   useEffect(() => { if (!open) return; const on = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(null); }; addEventListener('keydown', on); return () => removeEventListener('keydown', on); }, [open]);
   useEffect(() => () => { window.clearTimeout(enterT.current); window.clearTimeout(leaveT.current); }, []);
@@ -100,20 +125,21 @@ export default function Workflow04() {
               node shows again as soon as it closes, and the card fades out over it in the last stretch of the shrink */}
           <AnimatePresence>
             {open && node && (
-              <motion.div key={open.id} className="cc4" style={{ [open.toRight ? 'left' : 'right']: open.toRight ? open.left : open.right, [open.down ? 'top' : 'bottom']: open.down ? open.top : open.bottom }}
+              <motion.div key={open.id} className="cc4"
                 onPointerEnter={hold} onPointerLeave={e => { if (e.pointerType !== 'touch') letGo(); }}
-                initial={{ width: open.w, height: open.h, borderRadius: open.h / 2, backgroundColor: open.bg, borderColor: open.border }}
-                animate={{ width: CARD_W, height: 'auto', borderRadius: open.r, backgroundColor: open.openBg, borderColor: 'rgba(0,0,0,0)', transition: tr }}
-                exit={{ width: open.w, height: open.h, borderRadius: open.h / 2, backgroundColor: open.bg, borderColor: open.border, opacity: 0, transition: reduce ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 36, opacity: { delay: .18, duration: .14 } } }}>
-                <motion.div className="cc4-in" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: reduce ? 0 : .1, duration: reduce ? 0 : .22 } }} exit={{ opacity: 0, transition: { duration: reduce ? 0 : .08 } }}>
-                  <h3 className="cc4-title">{node.label}</h3>
-                  {node.demo && <div className="cc4-stage" aria-hidden="true"><span>{node.demo} — next</span></div>}
-                  <p className="cc4-text">{node.text}</p>
-                  <button type="button" className="cc4-x" aria-label="Close" onClick={() => setOpen(null)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg></button>
+                initial={{ ...open.from, borderRadius: open.from.height / 2, backgroundColor: open.bg, borderColor: open.border }}
+                animate={{ ...open.to, borderRadius: open.r, backgroundColor: open.openBg, borderColor: 'rgba(0,0,0,0)', transition: tr }}
+                exit={{ ...open.from, borderRadius: open.from.height / 2, backgroundColor: open.bg, borderColor: open.border, opacity: 0, transition: reduce ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 36, opacity: { delay: .18, duration: .14 } } }}>
+                <motion.div className="cc4-in" style={{ width: open.to.width }} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: reduce ? 0 : .1, duration: reduce ? 0 : .22 } }} exit={{ opacity: 0, transition: { duration: reduce ? 0 : .08 } }}>
+                  <CardBody node={node} onClose={() => setOpen(null)} />
                 </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
+        {/* the cards, off-screen, to be measured */}
+        <div className="cc4-measure" ref={measureRef} aria-hidden="true" inert>
+          {NODES.map(n => <div key={n.id} data-m={n.id} className="cc4-in" style={{ width: widthOf(n) }}><CardBody node={n} /></div>)}
         </div>
       </div>
     </section>
