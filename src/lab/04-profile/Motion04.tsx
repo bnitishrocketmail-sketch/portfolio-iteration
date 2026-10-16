@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
+import { useSearchParams } from 'react-router-dom';
 import Phone04, { type PhoneHandle } from './Phone04';
+import MotionMap04 from './MotionMap04';
 import { FAMILY, MOMENTS, PRIMS, easeFn, mappingOf, moment, prim, role, usersOf, type Mapping, type MomentId, type Phase, type Prim } from './motionTokens';
 import './motion.css';
 
@@ -98,6 +100,10 @@ function TokenLine({ x, label, live }: { x: Mapping; label: string; live: boolea
 
 export default function Motion04() {
   const reduce = !!useReducedMotion();
+  /* two views of one system (Nitish, 16 Oct): the product first, its structure a switch away; kept in the address */
+  const [params, setParams] = useSearchParams();
+  const view = params.get('view') === 'system' ? 'system' : 'product';
+  const setView = (v: 'system' | 'product') => setParams(v === 'system' ? { view: 'system' } : {}, { replace: true });
   const phone = useRef<PhoneHandle>(null);
   const [sel, setSel] = useState<{ id: MomentId; phase: Phase }>({ id: 'sheet', phase: 'enter' });
   const [pulse, setPulse] = useState(0);
@@ -116,10 +122,16 @@ export default function Motion04() {
   return (
     <section className="pp4 ms4" aria-label="Motion system">
       <header className="pp4-head">
-        <h2 className="h2-4">Motion system</h2>
-        <div className="pp4-right"><p className="pp4-note">How motion lives in a product: each component maps to a shared role, and each role is made of a few shared values.</p></div>
+        <div className="ms4-title">
+          <h2 className="h2-4">Motion system</h2>
+          <div className="ms4-views" role="tablist" aria-label="View">
+            <button type="button" role="tab" aria-selected={view === 'product'} className={view === 'product' ? 'on' : ''} onClick={() => setView('product')}>In a product</button>
+            <button type="button" role="tab" aria-selected={view === 'system'} className={view === 'system' ? 'on' : ''} onClick={() => setView('system')}>The system</button>
+          </div>
+        </div>
+        <div className="pp4-right"><p className="pp4-note">{view === 'product' ? 'How motion lives in a product: each component maps to a shared role, and each role is made of a few shared values.' : 'A reusable framework for how everyday digital products respond, change and guide. Clarity in the interaction; consistency in the implementation.'}</p></div>
       </header>
-      <div className="ms4-grid">
+      {view === 'system' ? <MotionMap04 toProduct={() => setView('product')} /> : <div className="ms4-grid">
         {/* the product's moments */}
         <div className="ms4-panel ms4-moments">
           <div className="ms4-ph"><h3>Moments</h3><p>One app, one journey; each moment answers a question the user has. Play it through, tap one, or use the phone.</p></div>
@@ -158,7 +170,7 @@ export default function Motion04() {
             <Palette lit={lit} pulse={reduce ? 0 : pulse} />
           </div>
         </div>
-      </div>
+      </div>}
     </section>
   );
 }

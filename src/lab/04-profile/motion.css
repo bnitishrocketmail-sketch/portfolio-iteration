@@ -143,3 +143,57 @@
 .ph4-opt i { width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); } .ph4-opt.on i { box-shadow: inset 0 0 0 4.5px var(--ink); }
 .ph4-sheet .ph4-btn { margin-top: 6px; }
 .ph4-toast { position: absolute; z-index: 8; left: 50%; bottom: 72px; margin-left: -72px; width: 144px; height: 38px; border-radius: 19px; display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 600 12px/1 var(--f-copy); box-shadow: 0 6px 18px rgba(0, 0, 0, .2); }
+
+/* ---- the view switch, beside the heading ---- */
+.ms4-title { display: flex; align-items: center; gap: 1.4cqw; flex-wrap: wrap; }
+.ms4-views { display: inline-flex; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--line-ink) 9%, transparent); }
+.ms4-views button { padding: .55em 1em; border: 0; border-radius: 999px; background: transparent; color: var(--line-ink); font: 600 var(--t-meta)/1 var(--f-copy); cursor: pointer; opacity: .65; transition: background-color .2s, color .2s, opacity .2s; }
+.ms4-views button.on { background: var(--pcard-open); color: var(--pcard-open-ink); opacity: 1; }
+
+/* ---- "The system" (MotionMap04.tsx): the eight layers and how they relate ---- */
+.mm4 { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 1cqw; color: var(--line-ink); }
+.mm4-rel { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .6; } /* a relationship, written */
+.mm4-node { position: relative; display: flex; flex-direction: column; gap: .35em; text-align: left; padding: .95em 1em 1em 2.8em; border-radius: calc(var(--r) * .6); border: 1px solid color-mix(in srgb, var(--line-ink) 14%, transparent); background: color-mix(in srgb, var(--line-ink) 5%, transparent); color: inherit; font-family: var(--f-copy); cursor: pointer; transition: background-color .2s, border-color .2s, opacity .25s, color .2s; }
+.mm4-node b { font: 600 var(--t-body)/1.2 var(--f-copy); }
+.mm4-node span { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .65; }
+.mm4-eg { margin-top: auto; padding-top: .6em; font: 500 calc(var(--t-meta) * .92)/1.35 var(--f-copy); font-style: normal; opacity: .8; } /* an example, at the node's foot */
+.mm4-chainrow .mm4-eg { font-family: var(--f-copy); }
+.mm4-n { position: absolute; left: .9em; top: .95em; width: 1.5em; height: 1.5em; border-radius: 50%; display: grid; place-items: center; font: 600 calc(var(--t-meta) * .9)/1 var(--f-copy); font-style: normal; background: color-mix(in srgb, var(--line-ink) 12%, transparent); }
+.mm4-node:hover, .mm4-node.on { border-color: color-mix(in srgb, var(--line-ink) 35%, transparent); }
+.mm4-node.on, .mm4-node.lit { background: var(--pcard-open); color: var(--pcard-open-ink); border-color: transparent; }
+.mm4-node.on .mm4-n, .mm4-node.lit .mm4-n { background: var(--pcard-open-ink); color: var(--pcard-open); }
+.mm4-node.dim { opacity: .3; }
+.mm4-band { display: flex; align-items: center; gap: 1.2cqw; }
+.mm4-band .mm4-node.wide { flex: 0 0 auto; width: 62%; }
+.mm4-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2cqw; }
+.mm4-cell { display: flex; flex-direction: column; gap: .4cqw; } .mm4-cell .mm4-rel { padding-left: 1em; }
+.mm4-chainrow { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; }
+.mm4-link { display: flex; align-items: stretch; min-width: 0; }
+.mm4-link .mm4-node { flex: 1; min-width: 0; }
+.mm4-arrow { flex: 0 0 auto; width: 6em; padding: 0 .3em; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .1em; font: 500 calc(var(--t-meta) * .9)/1.1 var(--f-copy); opacity: .6; text-align: center; }
+.mm4-arrow i { font-style: normal; font-size: 1.3em; }
+.mm4-link:last-child { padding-right: 0; }
+.mm4-concerns { display: flex; flex-direction: column; gap: .6cqw; }
+.mm4-concerns > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1cqw; }
+.mm4-concern { display: flex; flex-direction: column; gap: .3em; padding: .85em 1em; border-radius: calc(var(--r) * .6); border: 1px dashed color-mix(in srgb, var(--line-ink) 25%, transparent); cursor: default; outline: none; transition: border-color .2s, background-color .2s; }
+.mm4-concern:hover, .mm4-concern:focus-visible { border-style: solid; border-color: color-mix(in srgb, var(--line-ink) 45%, transparent); background: color-mix(in srgb, var(--line-ink) 5%, transparent); }
+.mm4-concern b { font: 600 var(--t-body)/1.2 var(--f-copy); } .mm4-concern span { font: 500 var(--t-meta)/1.35 var(--f-copy); opacity: .7; } .mm4-concern small { font: 600 calc(var(--t-meta) * .9)/1 var(--f-copy); opacity: .5; letter-spacing: .03em; }
+/* a layer's card */
+.mm4-card { position: absolute; z-index: 6; width: min(440px, 92%); max-height: 100%; overflow: auto; padding: 1.1em 1.2em 1.2em; box-sizing: border-box; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); font: var(--copy-w) var(--t-meta)/1.45 var(--f-copy); scrollbar-width: thin; }
+.mm4-card h4 { margin: .15em 0 .2em; font: 600 var(--t-title)/1.2 var(--f-copy); }
+.mm4-k { margin: 0; font: 600 calc(var(--t-meta) * .9)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; opacity: .5; }
+.mm4-line { margin: 0 0 .7em; font: 500 var(--t-body)/1.35 var(--f-copy); }
+.mm4-body p { margin: 0 0 .6em; }
+.mm4-note { opacity: .75; }
+.mm4-list { margin: 0 0 .7em; padding-left: 1.2em; display: flex; flex-direction: column; gap: .35em; }
+.mm4-dl { margin: 0 0 .7em; display: grid; grid-template-columns: auto 1fr; gap: .3em .8em; } .mm4-dl dt { font-weight: 600; } .mm4-dl dd { margin: 0; opacity: .8; }
+.mm4-chain { display: flex; flex-wrap: wrap; align-items: center; gap: .4em; margin: 0 0 .7em; }
+.mm4-chain span { display: inline-flex; flex-direction: column; gap: .15em; padding: .4em .6em; border-radius: 8px; background: color-mix(in srgb, var(--pcard-open-ink) 7%, transparent); }
+.mm4-chain small { font-size: .82em; opacity: .55; } .mm4-chain code { font: 600 .95em/1.2 ui-monospace, 'SF Mono', Menlo, monospace; } .mm4-chain i { font-style: normal; opacity: .5; }
+.mm4-chain.steps span { flex-direction: row; gap: .4em; font-weight: 600; }
+.mm4-t { width: 100%; border-collapse: collapse; margin: 0 0 .7em; } .mm4-t td { padding: .35em .4em .35em 0; border-bottom: 1px solid color-mix(in srgb, var(--pcard-open-ink) 10%, transparent); vertical-align: top; } .mm4-t code { font: 600 .92em/1.2 ui-monospace, 'SF Mono', Menlo, monospace; white-space: nowrap; } .mm4-t td:nth-child(2) { white-space: nowrap; }
+.mm4-go { margin-top: .3em; padding: .6em .9em; border: 0; border-radius: 999px; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 600 var(--t-meta)/1.2 var(--f-copy); cursor: pointer; text-align: left; }
+@media (max-width: 700px) {
+  .mm4-chainrow { grid-template-columns: 1fr; gap: 6px; } .mm4-arrow { width: auto; flex-direction: row; } .mm4-link { flex-direction: column; }
+  .mm4-band { flex-direction: column; align-items: stretch; } .mm4-band .mm4-node.wide { width: auto; } .mm4-pair, .mm4-concerns > div { grid-template-columns: 1fr; }
+}
