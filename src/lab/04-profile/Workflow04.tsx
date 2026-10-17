@@ -54,15 +54,18 @@ const EDGES: [string, string, 'ai'?][] = [
    (Product & UX design, Figma, Code, Prototype & handoff), the motion design system and Review at the right, Brief at
    the top left. Re-laid on the second pass so Variant 1's lines (EDGES, kept) don't run under other pills; lines that
    cross the middle pass behind the orb. Hand-laid against a map of about 1185 × 620 (1440 wide), clear of the orb at its
-   default size. Only the skills (WIRED) are wired to the orb. */
+   default size. Code sits left of Product & UX design so its wire to the orb doesn't run under it (third pass). */
 const POS2: Record<string, { x: number; y: number }> = {
   motion: { x: 31, y: 29 }, ae: { x: 44.5, y: 12.5 }, lottie: { x: 60, y: 22 }, script: { x: 73.5, y: 12.5 }, build: { x: 89, y: 21 }, brief: { x: 14.5, y: 14 },
   interaction: { x: 21.5, y: 57 }, rive: { x: 9.5, y: 38 }, protopie: { x: 11, y: 75 }, sm: { x: 31, y: 85 },
-  product: { x: 54, y: 82.5 }, figma: { x: 71, y: 90 }, code: { x: 44.5, y: 94 }, handoff: { x: 76.5, y: 71 },
+  product: { x: 54, y: 82.5 }, figma: { x: 71, y: 90 }, code: { x: 40, y: 94 }, handoff: { x: 76.5, y: 71 },
   msys: { x: 79, y: 44 }, review: { x: 91, y: 52 },
 };
 const PINS = NODES.map(n => ({ id: n.id, ...POS2[n.id] }));
-const WIRED = ['motion', 'interaction', 'script', 'sm', 'msys', 'handoff']; /* the skills (17 Oct) */
+/* who is wired to the orb: the tools (17 Oct, third pass — "let's do the opposite … the tools will now have the
+   connections, shifted from one dot to the other"; the skills, wired on the second pass, keep only their lines to the
+   tools) */
+const WIRED = NODES.filter(n => n.kind === 'tool').map(n => n.id);
 const RING = { cx: 50, cy: 50, rx: 46, ry: 36 }; /* tightened when the roots came off */
 const CARD_W = 320, CARD_W_LIVE = 440; /* a card with a live demo is wider */
 const SPRING = { type: 'spring', stiffness: 320, damping: 34, mass: 1 } as const;

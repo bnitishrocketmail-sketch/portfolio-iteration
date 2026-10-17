@@ -8,9 +8,9 @@ import './orb.css';
    middle and the skills and tools are wired into it. The orb (80 faces) turns in the centre with "AI" inside it — the
    orb's far half drawn behind the word, its near half in front, so the word is in the orb.
    (17 Oct, second pass) The pills keep Variant 1's connections to each other — tools to their crafts, the workflows,
-   Brief / Build / Review — drawn as before (solid, the model's dashed) and passing behind the orb, not across it. Only
-   the skills are wired to the orb: Animation, Interaction design, Script-based motion, State-machine design, Motion
-   design system, Prototype & handoff. Their wires never let go: each holds a dot on the side of the orb facing its
+   Brief / Build / Review — drawn as before (solid, the model's dashed) and bending round the orb, not across it.
+   (Third pass) Only the tools are wired to the orb — After Effects, Lottie, Rive, Protopie, Figma, Code (the skills
+   were, on the second pass); which pills are wired is the page's `wired` list. The wires never let go: each holds a dot on the side of the orb facing its
    pill for a few seconds, then its end slides across to another dot — each on its own random clock, so the field
    never rewires all at once. A wire whose dot turns round to the back slides on early, which keeps the wiring tied to
    the orb's turning. On first sight the wires reach out one by one. The pills drift slowly, their lines with them.
