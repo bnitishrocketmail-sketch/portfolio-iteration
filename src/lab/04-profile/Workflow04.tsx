@@ -21,7 +21,7 @@ type Node = { id: string; label: string; kind: Kind; x: number; y: number; text:
 
 export const NODES: Node[] = [
   /* the crafts */
-  { id: 'motion', label: 'Motion design', kind: 'core', x: 45, y: 40, text: 'One animation playing, with its timing drawn as a strip underneath — where the holds and the overshoot are.', demo: 'an animation and its timing strip' },
+  { id: 'motion', label: 'Animation', kind: 'core', x: 45, y: 40, text: 'One animation playing, with its timing drawn as a strip underneath — where the holds and the overshoot are.', demo: 'an animation and its timing strip' },
   { id: 'interaction', label: 'Interaction design', kind: 'core', x: 30, y: 59, text: 'Two or three micro-interactions running live, the trigger named under each.', demo: 'micro-interactions, live' },
   { id: 'product', label: 'Product & UX design', kind: 'core', x: 53, y: 64, text: 'The product work — Lenskart’s B, Swiggy’s navigation, RideQuest — as tiles that jump to their project.' },
   /* the tools, each beside the craft it serves */
@@ -49,17 +49,20 @@ const EDGES: [string, string, 'ai'?][] = [
   ['brief', 'motion', 'ai'], ['brief', 'interaction', 'ai'], ['brief', 'product', 'ai'], ['build', 'script', 'ai'], ['review', 'product', 'ai'],
 ];
 /* Variant 2 (Nitish, 17 Oct; WorkflowOrb04.tsx): the assistant's orb takes the centre, so the pills are laid out around
-   it, by group — motion at the top left (Motion design, After Effects, Lottie, Script-based motion), interaction at the
-   left (Interaction design, Rive, Protopie, State-machine design), product at the bottom (Product & UX design, Figma,
-   Code, Prototype & handoff), and at the right the motion design system and the model's steps (Brief, Build, Review).
-   Hand-laid against a map of about 1185 × 620 (1440 wide), clear of the orb at its default size. */
+   it, by group — Animation with After Effects and Lottie at the top left, Script-based motion and Build at the top
+   right, interaction at the left (Interaction design, Rive, Protopie, State-machine design), product at the bottom
+   (Product & UX design, Figma, Code, Prototype & handoff), the motion design system and Review at the right, Brief at
+   the top left. Re-laid on the second pass so Variant 1's lines (EDGES, kept) don't run under other pills; lines that
+   cross the middle pass behind the orb. Hand-laid against a map of about 1185 × 620 (1440 wide), clear of the orb at its
+   default size. Only the skills (WIRED) are wired to the orb. */
 const POS2: Record<string, { x: number; y: number }> = {
-  motion: { x: 29.7, y: 29 }, ae: { x: 44.9, y: 12.1 }, lottie: { x: 59.3, y: 15.3 }, script: { x: 16.2, y: 13.7 },
-  interaction: { x: 22.2, y: 56.5 }, rive: { x: 10.3, y: 37.1 }, protopie: { x: 12, y: 74.2 }, sm: { x: 30.6, y: 84.7 },
-  product: { x: 53.4, y: 83.1 }, figma: { x: 71.1, y: 90.3 }, code: { x: 44.9, y: 93.5 }, handoff: { x: 75.3, y: 71 },
-  msys: { x: 77.8, y: 43.5 }, brief: { x: 72.8, y: 24.2 }, build: { x: 88, y: 16.1 }, review: { x: 89.7, y: 59.7 },
+  motion: { x: 31, y: 29 }, ae: { x: 44.5, y: 12.5 }, lottie: { x: 60, y: 22 }, script: { x: 73.5, y: 12.5 }, build: { x: 89, y: 21 }, brief: { x: 14.5, y: 14 },
+  interaction: { x: 21.5, y: 57 }, rive: { x: 9.5, y: 38 }, protopie: { x: 11, y: 75 }, sm: { x: 31, y: 85 },
+  product: { x: 54, y: 82.5 }, figma: { x: 71, y: 90 }, code: { x: 44.5, y: 94 }, handoff: { x: 76.5, y: 71 },
+  msys: { x: 79, y: 44 }, review: { x: 91, y: 52 },
 };
 const PINS = NODES.map(n => ({ id: n.id, ...POS2[n.id] }));
+const WIRED = ['motion', 'interaction', 'script', 'sm', 'msys', 'handoff']; /* the skills (17 Oct) */
 const RING = { cx: 50, cy: 50, rx: 46, ry: 36 }; /* tightened when the roots came off */
 const CARD_W = 320, CARD_W_LIVE = 440; /* a card with a live demo is wider */
 const SPRING = { type: 'spring', stiffness: 320, damping: 34, mass: 1 } as const;
@@ -133,7 +136,7 @@ export default function Workflow04() {
             landed on a node — the node opened its card on the tap's focus, so the tap's down and up targets differ and the
             click goes to their common ancestor — so the point is checked, not the target. */}
         <div className={`cm4${v2 ? ' v2' : ''}`} ref={mapRef} onClick={e => { if (!document.elementFromPoint(e.clientX, e.clientY)?.closest('.cc4, .cn4')) setOpen(null); }}>
-          {v2 ? <OrbField key="orb" pins={PINS} mapRef={mapRef} openId={open?.id ?? null} tune={tune} /> : <>
+          {v2 ? <OrbField key="orb" pins={PINS} links={EDGES} wired={WIRED} mapRef={mapRef} openId={open?.id ?? null} tune={tune} /> : <>
             <svg className="cm4-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               <ellipse className="ring" cx={RING.cx} cy={RING.cy} rx={RING.rx} ry={RING.ry} />
               {EDGES.map(([a, b, k]) => <line key={a + b} className={k} x1={at[a].x} y1={at[a].y} x2={at[b].x} y2={at[b].y} />)}
