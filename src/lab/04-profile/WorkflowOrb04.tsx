@@ -14,11 +14,12 @@ import './orb.css';
    pill for a few seconds, then its end slides across to another dot — each on its own random clock, so the field
    never rewires all at once. A wire whose dot turns round to the back slides on early, which keeps the wiring tied to
    the orb's turning. On first sight the wires reach out one by one. The pills drift slowly, their lines with them.
-   (Fourth pass, "to look a little cleaner") The orb's wires come and go in small groups, from tools and skills alike:
-   a pair reaches out, a trio just after; a little later a new pair arrives as the first pair fades, and a new trio
-   just after it as the first trio fades — so two to five wires show at once, the pills chosen at random each time. A
-   wire grows out of its pill to a dot facing it, holds it (sliding on only if the dot turns round to the back), and
-   fades. Reduced motion: the orb holds still, four wires to the dots facing them, no drift.
+   (Fourth pass, "to look a little cleaner"; corrected the same afternoon — it had been pairs and trios, five at once)
+   The orb's wires come and go in a fixed rhythm, at most three at a time, from tools and skills alike: two connect
+   together and a third just after; then the two disconnect and two new ones connect; while those are connecting the
+   third disconnects, and just after, a new third connects — and again. The pills are chosen at random each time (not
+   the ones that just let go). A wire grows out of its pill to a dot facing it, holds it (sliding on only if the dot
+   turns round to the back), and fades. Reduced motion: the orb holds still, three wires to the dots facing them.
    The panel (OrbTuner) is for tuning while we decide, at the side of the page; it goes once the values are settled. */
 
 export type OrbTune = { size: number; freq: number; speedX: number; speedY: number; dot: number; line: number; fade: number; pace: number; float: boolean };
@@ -53,8 +54,10 @@ export function OrbField({ pins, links, wired, mapRef, openId, tune }: { pins: P
     const drift = ps.map(() => ({ ax: rand(2.5, 4.5), ay: rand(3, 5), px: rand(7, 12), py: rand(8, 13), fx: rand(0, 6.28), fy: rand(0, 6.28), x: 0, y: 0 }));
     /* one wire per wired pill, idle until its pill is chosen for a group */
     const wires: Wire[] = wiredR.current.filter(id => id in idx).map(id => ({ i: idx[id], v: -1, from: -1, phase: 'idle', t0: 0, dur: 0 }));
-    const groups: number[][] = []; let nextAt = .4, gi = 0;
-    const step = Math.ceil(wires.length / 4), stillSet = new Set(wires.map((_, j) => j).filter(j => j % step === 0)); // reduced motion's fixed few
+    /* the rhythm, as a queue of timed steps: the pair, the third, and each cycle's swaps */
+    let pair: number[] = [], third = -1, recent = new Set<number>();
+    const queue: { at: number; run: () => void }[] = [];
+    const step = Math.ceil(wires.length / 3), stillSet = new Set(wires.map((_, j) => j).filter(j => j % step === 0)); // reduced motion's three
     const el = (id: string) => mapRef.current?.querySelector<HTMLElement>(`[data-id="${id}"]`);
     const fit = () => {
       const r = cv.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -83,19 +86,26 @@ export function OrbField({ pins, links, wired, mapRef, openId, tune }: { pins: P
         if (w.v < 0 || w.phase !== 'hold') { w.v = pick(P, w.i, cx, cy, R, true); w.from = -1; w.phase = 'hold'; }
       });
       else {
-        /* the choreography: a pair, a trio just after; then, a little later, a new pair as the oldest group fades and a
-           new trio just after it as the next fades — pairs and trios alternating, two groups showing at a time */
-        if (t >= nextAt) {
-          const n = gi % 2 ? 3 : 2;
-          if (groups.length >= 2) for (const j of groups.shift()!) { const w = wires[j]; if (w.phase !== 'idle') { w.phase = 'fade'; w.t0 = t; w.dur = .5; } }
+        /* the rhythm — never more than three: two connect together and a third just after; each cycle the two let go
+           and two new ones connect, the third lets go while they are connecting, and a new third connects just after */
+        const choose = (n: number) => {
           const free = wires.map((_, j) => j).filter(j => wires[j].phase === 'idle' && openR.current !== ps[wires[j].i].id);
-          for (let a = free.length - 1; a > 0; a--) { const b = Math.floor(Math.random() * (a + 1)); [free[a], free[b]] = [free[b], free[a]]; }
-          const g = free.slice(0, n);
-          g.forEach((j, q) => { const w = wires[j]; w.v = -1; w.from = -1; w.phase = 'reach'; w.t0 = t + q * rand(.08, .22); w.dur = .6; });
-          groups.push(g);
-          nextAt = t + (gi % 2 ? rand(1.8, 2.8) * o.pace : rand(.5, 1));
-          gi++;
-        }
+          const fresh = free.filter(j => !recent.has(j)), from = fresh.length >= n ? fresh : free;
+          for (let a = from.length - 1; a > 0; a--) { const b = Math.floor(Math.random() * (a + 1)); [from[a], from[b]] = [from[b], from[a]]; }
+          return from.slice(0, n);
+        };
+        const grow = (js: number[]) => js.forEach((j, q) => { const w = wires[j]; w.v = -1; w.from = -1; w.phase = 'reach'; w.t0 = t + q * .06; w.dur = .6; });
+        const letGo = (js: number[]) => js.forEach(j => { const w = wires[j]; if (w.phase !== 'idle') { w.phase = 'fade'; w.t0 = t; w.dur = .45; } });
+        const cycle = (c: number) => queue.push(
+          { at: c, run: () => { recent = new Set([...pair, third]); letGo(pair); } },             // the two let go
+          { at: c + .45, run: () => { pair = choose(2); grow(pair); } },                          // two new ones connect
+          { at: c + .75, run: () => { if (third >= 0) letGo([third]); } },                        // the third lets go, while they connect
+          { at: c + 1.2, run: () => { third = choose(1)[0] ?? -1; if (third >= 0) grow([third]); if (!queue.length) cycle(t + rand(2.2, 3.2) * tuneR.current.pace); } },
+        );
+        if (!queue.length && !pair.length) queue.push(                                           // the start: two, then the third
+          { at: t + .4, run: () => { pair = choose(2); grow(pair); } },
+          { at: t + 1, run: () => { third = choose(1)[0] ?? -1; if (third >= 0) grow([third]); cycle(t + rand(2.2, 3.2) * tuneR.current.pace); } },
+        );
         for (const w of wires) {
           const e = t - w.t0;
           if (w.phase === 'reach') {
@@ -105,6 +115,7 @@ export function OrbField({ pins, links, wired, mapRef, openId, tune }: { pins: P
           else if (w.phase === 'shift' && e >= w.dur) { w.phase = 'hold'; w.from = -1; }
           else if (w.phase === 'fade' && e >= w.dur) { w.phase = 'idle'; w.v = -1; w.from = -1; }
         }
+        while (queue.length && queue[0].at <= t) queue.shift()!.run(); // after the wires settle, so a wire that has faded is gone before its successor starts
       }
       /* the pills' drift, written to the pills (the open one holds where it is, under its card) */
       amp = still ? 0 : amp + ((o.float ? 1 : 0) - amp) * Math.min(1, dt * 2.5);
@@ -141,8 +152,10 @@ export function OrbField({ pins, links, wired, mapRef, openId, tune }: { pins: P
       /* the wires, from the pill (under it — the canvas is below the pills) to the dot it holds, growing out, sliding
          between two dots (both moving with the orb) or fading */
       ctx.strokeStyle = ink; ctx.lineWidth = 1; ctx.lineCap = 'round';
+      let shown = 0;
       for (const w of wires) {
         if (w.v < 0 || w.phase === 'idle' || openR.current === ps[w.i].id || t < w.t0) continue;
+        shown++;
         const k = Math.min(1, (t - w.t0) / w.dur), [bx, by] = at(w.i);
         let [ex, ey, ez] = P[w.v];
         if (!still && w.phase === 'shift' && w.from >= 0) { const f = easeInOut(k), [fx, fy, fz] = P[w.from]; ex = fx + (ex - fx) * f; ey = fy + (ey - fy) * f; ez = fz + (ez - fz) * f; }
@@ -151,6 +164,7 @@ export function OrbField({ pins, links, wired, mapRef, openId, tune }: { pins: P
         ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + (ex - bx) * r, by + (ey - by) * r); ctx.stroke();
       }
       ctx.globalAlpha = 1;
+      if (cv.dataset.wires !== String(shown)) cv.dataset.wires = String(shown); // how many orb wires show (for checking the rhythm)
     }
     const tick = (now: number) => {
       const dt = last ? Math.min(.05, (now - last) / 1000) : 0; last = now; t += dt;
@@ -196,7 +210,7 @@ export function OrbTuner({ tune, setTune, anchor }: { tune: OrbTune; setTune: (t
         <div className="orbl-seg" role="group" aria-label="Pills drift">
           {[true, false].map(f => <button key={String(f)} type="button" aria-pressed={tune.float === f} className={tune.float === f ? 'on' : ''} onClick={() => set('float', f)}>{f ? 'Pills drift' : 'Pills still'}</button>)}
         </div>
-        <p className="ot4-note">Size is the orb’s diameter as a share of the map’s height; dots and wires scale with it. Rewiring: how long each group of wires stays before the next replaces it (×1 ≈ 3 s).</p>
+        <p className="ot4-note">Size is the orb’s diameter as a share of the map’s height; dots and wires scale with it. Rewiring: how long the three hold before the next swap (×1 ≈ 2.2–3.2 s).</p>
       </div>
     ) : <button type="button" className="ot4-chip" onClick={() => setOpen(true)}>Tune orb</button>,
     host,
