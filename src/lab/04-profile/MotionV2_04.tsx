@@ -260,13 +260,13 @@ const Card = ({ k, h, children }: { k: string; h: string; children: ReactNode })
 const Step = ({ n, h, children }: { n: string; h: string; children: ReactNode }) => <div className="fstep"><div className="fnum">{n}</div><h4>{h}</h4><p>{children}</p></div>;
 const Arrow = () => <div className="farrow" aria-hidden="true">→</div>;
 
-export default function MotionV2_04({ variantSwitch }: { variantSwitch: ReactNode }) {
+export default function MotionV2_04() {
   const scroller = useRef<HTMLDivElement>(null);
   return (
     <section className="pp4 ms4" aria-label="Motion system">
       <header className="pp4-head">
-        <div className="ms4-title"><h2 className="h2-4">Motion system</h2></div>
-        <div className="pp4-right">{variantSwitch}<p className="pp4-note">One set of motion decisions, defined once and inherited by every screen.</p></div>
+        <h2 className="h2-4">Motion system</h2>
+        <div className="pp4-right"><p className="pp4-note">One set of motion decisions, defined once and inherited by every screen.</p></div>
       </header>
       <div className="dt4" ref={scroller}>
         {/* 1 · title */}
