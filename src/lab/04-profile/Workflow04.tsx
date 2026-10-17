@@ -54,18 +54,21 @@ const EDGES: [string, string, 'ai'?][] = [
    (Product & UX design, Figma, Code, Prototype & handoff), the motion design system and Review at the right, Brief at
    the top left. Re-laid on the second pass so Variant 1's lines (EDGES, kept) don't run under other pills; lines that
    cross the middle pass behind the orb. Hand-laid against a map of about 1185 × 620 (1440 wide), clear of the orb at its
-   default size. Code sits left of Product & UX design so its wire to the orb doesn't run under it (third pass). */
+   default size. Fourth pass (Nitish: Lottie and Rive "near animation, interaction, state machine … not a curve all the
+   way to state machine … till script-based motion a straight line"; the orb at about 21%): found by a small search
+   from his moves — no pill on another or on the orb, no line or orb wire under another pill (with room for the drift),
+   no line bending round the orb, at 1440 and at 1280 (scratchpad layout_opt.py). */
 const POS2: Record<string, { x: number; y: number }> = {
-  motion: { x: 31, y: 29 }, ae: { x: 44.5, y: 12.5 }, lottie: { x: 60, y: 22 }, script: { x: 73.5, y: 12.5 }, build: { x: 89, y: 21 }, brief: { x: 14.5, y: 14 },
-  interaction: { x: 21.5, y: 57 }, rive: { x: 9.5, y: 38 }, protopie: { x: 11, y: 75 }, sm: { x: 31, y: 85 },
-  product: { x: 54, y: 82.5 }, figma: { x: 71, y: 90 }, code: { x: 40, y: 94 }, handoff: { x: 76.5, y: 71 },
-  msys: { x: 79, y: 44 }, review: { x: 91, y: 52 },
+  motion: { x: 33, y: 26.8 }, ae: { x: 44.3, y: 12.9 }, lottie: { x: 35.3, y: 39.1 }, script: { x: 72.5, y: 14.6 }, build: { x: 89.4, y: 21.9 }, brief: { x: 15.1, y: 15.2 },
+  interaction: { x: 22.3, y: 56.7 }, rive: { x: 24.8, y: 44.9 }, protopie: { x: 11.7, y: 74.8 }, sm: { x: 28.4, y: 83.9 },
+  product: { x: 53.3, y: 88 }, figma: { x: 71.4, y: 90.9 }, code: { x: 40.6, y: 82.8 }, handoff: { x: 82.6, y: 73.1 },
+  msys: { x: 78.7, y: 43.2 }, review: { x: 91.2, y: 51 },
 };
 const PINS = NODES.map(n => ({ id: n.id, ...POS2[n.id] }));
 /* who is wired to the orb: the tools (17 Oct, third pass — "let's do the opposite … the tools will now have the
    connections, shifted from one dot to the other"; the skills, wired on the second pass, keep only their lines to the
    tools) */
-const WIRED = NODES.filter(n => n.kind === 'tool').map(n => n.id);
+const WIRED = [...NODES.filter(n => n.kind === 'tool').map(n => n.id), 'motion', 'interaction', 'script', 'sm', 'msys', 'handoff']; /* fourth pass: tools and skills alike, in groups */
 const RING = { cx: 50, cy: 50, rx: 46, ry: 36 }; /* tightened when the roots came off */
 const CARD_W = 320, CARD_W_LIVE = 440; /* a card with a live demo is wider */
 const SPRING = { type: 'spring', stiffness: 320, damping: 34, mass: 1 } as const;
