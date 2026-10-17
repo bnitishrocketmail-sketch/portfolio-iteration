@@ -30,7 +30,7 @@
 .dt4 .rule { height: 1px; max-width: calc(1000px - 6.8cqw); margin: 0 auto; background: var(--line); }
 
 /* ---- the demo blocks ---- */
-.dt4 .demo { margin-top: 3.6cqw; }
+.dt4 .demo { margin-top: 1.8cqw; } /* the example sits under the paragraph it illustrates, no heading of its own */
 .dt4 .demo h3 { margin-bottom: .3em; font: 600 calc(var(--t-body) * 1.15)/1.25 var(--f-head); }
 .dt4 .demo .lede { max-width: 60ch; margin-bottom: 1.6em; font: var(--copy-w) var(--t-meta)/1.55 var(--f-copy); color: var(--mut); }
 .dt4 .dstage { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 3.4cqw; padding: 2.6cqw 2.8cqw 2cqw; border-radius: var(--r); background: var(--panel); border: 1px solid var(--line); }

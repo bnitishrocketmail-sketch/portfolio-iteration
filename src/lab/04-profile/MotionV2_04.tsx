@@ -65,9 +65,7 @@ function DrawerDemo({ root }: { root: RefObject<HTMLElement | null> }) {
     </div>
   );
   return (
-    <div className="demo" ref={box}>
-      <h3>The bottom drawer</h3>
-      <p className="lede">Same drawer, same content, same tap. The only difference is who answered the question “how should this move?” — the screen alone, or the system. Watch for three things: whether the tap is acknowledged, how the drawer arrives, and what the background does.</p>
+    <div className="demo" ref={box} aria-label="Example: a bottom drawer, with and without the system">
       <div className="dstage">
         <div className="column">
           <div className="tag">Without the system</div>
@@ -76,7 +74,7 @@ function DrawerDemo({ root }: { root: RefObject<HTMLElement | null> }) {
         </div>
         <div className="playwrap">
           <button type="button" className="playbtn" disabled={busy} onClick={play}><span className="tri" />Play both</button>
-          <div className="playnote">Watch them side by side</div>
+          <div className="playnote">Watch three things: whether the tap is acknowledged, how the drawer arrives, and what the background does.</div>
         </div>
         <div className="column">
           <div className="tag with">With the system</div>
@@ -286,7 +284,7 @@ export default function MotionV2_04({ variantSwitch }: { variantSwitch: ReactNod
           <div className="eye">Why motion matters</div>
           <h2>How an app moves is part of how it works.</h2>
           <p className="body">Screens arrive abruptly. The bottom drawer snaps instead of settling. Tabs cut instead of glide. None of these are bugs — each is a <strong>small missing decision about time and easing</strong>. Together, they read as lag and roughness, and the user can’t say why.</p>
-          <p className="body">You don’t need motion vocabulary to notice it. One moment, felt twice, is enough — here’s the bottom drawer, with and without the system’s logic behind it:</p>
+          <p className="body">You don’t need motion vocabulary to notice it. One moment, felt twice, is enough — here’s a bottom drawer, same tap and same content, with and without the system’s logic behind it:</p>
           <DrawerDemo root={scroller} />
           <p className="footnote">Note: the “Without the system” column recreates the patterns being described so the comparison is honest — an illustration of the behaviour, not a capture of a live app. In both columns the screens and the speed of use are identical. Only the motion decisions changed. The same logic applies to every other rough moment — tabs, page changes, touch feedback — and they all appear in the working demo further down.</p>
         </section>
