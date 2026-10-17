@@ -13,3 +13,12 @@
 .orbl-seg button small { font-weight: 500; font-size: 10px; opacity: .7; }
 .orbl-seg button.on { background: var(--pcard-open); color: var(--pcard-open-ink); opacity: 1; }
 @media (max-width: 700px) { .orbl-stage { width: 92vw; } .orbl-panel { left: 12px; right: 12px; width: auto; } }
+
+/* the Workflow page's orb field (WorkflowOrb04.tsx): a canvas under the pills, the size of the map */
+.ow4 { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--line-ink); font-family: var(--f-head); pointer-events: none; }
+/* the tuning panel, at the side of the page (outside the frame's flow), while the values are decided */
+.ot4-chip { position: fixed; z-index: 60; right: 16px; bottom: 44px; padding: .7em 1.1em; border: 0; border-radius: 999px; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 600 12px/1 var(--f-copy); box-shadow: var(--shadow-el); cursor: pointer; }
+.ot4.orbl-panel { z-index: 60; bottom: 44px; max-height: calc(100vh - 64px); overflow: auto; }
+.ot4-head { display: flex; align-items: center; gap: 6px; } .ot4-head b { flex: 1; font-weight: 600; }
+.ot4-head button { padding: .35em .7em; border: 0; border-radius: 999px; background: color-mix(in srgb, var(--line-ink) 10%, transparent); color: inherit; font: 600 11px/1 var(--f-copy); cursor: pointer; }
+.ot4-note { margin: 0; font-size: 10.5px; line-height: 1.4; opacity: .6; }

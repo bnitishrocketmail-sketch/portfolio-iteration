@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useSearchParams } from 'react-router-dom';
 import StateMachine04 from './StateMachine04';
+import { OrbField, OrbTuner, TUNE0, type OrbTune } from './WorkflowOrb04';
 import './workflow.css';
 
 /* 04's Workflow page (Nitish, 15–16 Oct; named Craft until 16 Oct): "how I work" as a map of connected nodes with little text — the crafts at the
@@ -46,6 +48,18 @@ const EDGES: [string, string, 'ai'?][] = [
   ['script', 'lottie'], ['script', 'ae'], ['sm', 'interaction'], ['sm', 'lottie'], ['sm', 'msys'], ['handoff', 'figma'], ['handoff', 'code'], ['msys', 'handoff'], ['msys', 'motion'],
   ['brief', 'motion', 'ai'], ['brief', 'interaction', 'ai'], ['brief', 'product', 'ai'], ['build', 'script', 'ai'], ['review', 'product', 'ai'],
 ];
+/* Variant 2 (Nitish, 17 Oct; WorkflowOrb04.tsx): the assistant's orb takes the centre, so the pills are laid out around
+   it, by group — motion at the top left (Motion design, After Effects, Lottie, Script-based motion), interaction at the
+   left (Interaction design, Rive, Protopie, State-machine design), product at the bottom (Product & UX design, Figma,
+   Code, Prototype & handoff), and at the right the motion design system and the model's steps (Brief, Build, Review).
+   Hand-laid against a map of about 1185 × 620 (1440 wide), clear of the orb at its default size. */
+const POS2: Record<string, { x: number; y: number }> = {
+  motion: { x: 29.7, y: 29 }, ae: { x: 44.9, y: 12.1 }, lottie: { x: 59.3, y: 15.3 }, script: { x: 16.2, y: 13.7 },
+  interaction: { x: 22.2, y: 56.5 }, rive: { x: 10.3, y: 37.1 }, protopie: { x: 12, y: 74.2 }, sm: { x: 30.6, y: 84.7 },
+  product: { x: 53.4, y: 83.1 }, figma: { x: 71.1, y: 90.3 }, code: { x: 44.9, y: 93.5 }, handoff: { x: 75.3, y: 71 },
+  msys: { x: 77.8, y: 43.5 }, brief: { x: 72.8, y: 24.2 }, build: { x: 88, y: 16.1 }, review: { x: 89.7, y: 59.7 },
+};
+const PINS = NODES.map(n => ({ id: n.id, ...POS2[n.id] }));
 const RING = { cx: 50, cy: 50, rx: 46, ry: 36 }; /* tightened when the roots came off */
 const CARD_W = 320, CARD_W_LIVE = 440; /* a card with a live demo is wider */
 const SPRING = { type: 'spring', stiffness: 320, damping: 34, mass: 1 } as const;
@@ -69,6 +83,12 @@ export default function Workflow04() {
   const at = Object.fromEntries(NODES.map(n => [n.id, n]));
   const mapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<Open | null>(null);
+  /* two variants (17 Oct): 1 is the map as it was, 2 the orb; 2 opens first, ?v=1 keeps 1 in the address */
+  const [params, setParams] = useSearchParams();
+  const v2 = params.get('v') !== '1';
+  const setVariant = (n: 1 | 2) => { setOpen(null); setParams(n === 1 ? { v: '1' } : {}, { replace: true }); };
+  const [tune, setTune] = useState<OrbTune>(TUNE0);
+  const pos = (n: Node) => (v2 ? POS2[n.id] : n);
   const reduce = useReducedMotion();
   /* every card's height, measured off-screen at its width */
   const measureRef = useRef<HTMLDivElement>(null);
@@ -103,20 +123,25 @@ export default function Workflow04() {
     <section className="pp4 cr4" aria-label="Workflow">
       <header className="pp4-head">
         <h2 className="h2-4">Workflow</h2>
-        <div className="pp4-right"><p className="pp4-note">How I work — the skills, the tools that serve them, the workflows that join them, and where the model fits.</p></div>
+        <div className="pp4-right">
+          <div className="vs4" role="tablist" aria-label="Variant">{([1, 2] as const).map(n => <button key={n} type="button" role="tab" aria-selected={v2 === (n === 2)} className={v2 === (n === 2) ? 'on' : ''} onClick={() => setVariant(n)}>Variant {n}</button>)}</div>
+          <p className="pp4-note">{v2 ? 'The skills and tools I work with, wired into the assistant. Knowing the craft is what makes the AI useful.' : 'How I work — the skills, the tools that serve them, the workflows that join them, and where the model fits.'}</p>
+        </div>
       </header>
       <div className="cm4-wrap">
         {/* a click on the map's floor closes the card. A tap's click can arrive with the floor as its target even though it
             landed on a node — the node opened its card on the tap's focus, so the tap's down and up targets differ and the
             click goes to their common ancestor — so the point is checked, not the target. */}
-        <div className="cm4" ref={mapRef} onClick={e => { if (!document.elementFromPoint(e.clientX, e.clientY)?.closest('.cc4, .cn4')) setOpen(null); }}>
-          <svg className="cm4-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <ellipse className="ring" cx={RING.cx} cy={RING.cy} rx={RING.rx} ry={RING.ry} />
-            {EDGES.map(([a, b, k]) => <line key={a + b} className={k} x1={at[a].x} y1={at[a].y} x2={at[b].x} y2={at[b].y} />)}
-          </svg>
-          <span className="cm4-cap" style={{ left: `${RING.cx}%`, top: `${RING.cy - RING.ry}%` }}>With AI</span>
+        <div className={`cm4${v2 ? ' v2' : ''}`} ref={mapRef} onClick={e => { if (!document.elementFromPoint(e.clientX, e.clientY)?.closest('.cc4, .cn4')) setOpen(null); }}>
+          {v2 ? <OrbField key="orb" pins={PINS} mapRef={mapRef} openId={open?.id ?? null} tune={tune} /> : <>
+            <svg className="cm4-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <ellipse className="ring" cx={RING.cx} cy={RING.cy} rx={RING.rx} ry={RING.ry} />
+              {EDGES.map(([a, b, k]) => <line key={a + b} className={k} x1={at[a].x} y1={at[a].y} x2={at[b].x} y2={at[b].y} />)}
+            </svg>
+            <span className="cm4-cap" style={{ left: `${RING.cx}%`, top: `${RING.cy - RING.ry}%` }}>With AI</span>
+          </>}
           {NODES.map(n => (
-            <button key={n.id} type="button" data-id={n.id} className={`cn4 ${n.kind}${open?.id === n.id ? ' on' : ''}`} style={{ left: `${n.x}%`, top: `${n.y}%` }} aria-expanded={open?.id === n.id}
+            <button key={n.id} type="button" data-id={n.id} className={`cn4 ${n.kind}${open?.id === n.id ? ' on' : ''}`} style={{ left: `${pos(n).x}%`, top: `${pos(n).y}%` }} aria-expanded={open?.id === n.id}
               onPointerEnter={e => { if (e.pointerType === 'touch') return; hold(); window.clearTimeout(enterT.current); enterT.current = window.setTimeout(() => show(n.id), 70); }}
               onPointerLeave={e => { if (e.pointerType === 'touch') return; window.clearTimeout(enterT.current); letGo(); }}
               onFocus={() => show(n.id)} onClick={() => show(n.id)}>{n.label}</button>
@@ -137,6 +162,7 @@ export default function Workflow04() {
             )}
           </AnimatePresence>
         </div>
+        {v2 && <OrbTuner tune={tune} setTune={setTune} anchor={mapRef} />}
         {/* the cards, off-screen, to be measured */}
         <div className="cc4-measure" ref={measureRef} aria-hidden="true" inert>
           {NODES.map(n => <div key={n.id} data-m={n.id} className="cc4-in" style={{ width: widthOf(n) }}><CardBody node={n} /></div>)}

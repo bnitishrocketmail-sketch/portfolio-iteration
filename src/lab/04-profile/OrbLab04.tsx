@@ -10,7 +10,7 @@ const SIZES: [number, string][] = [[2, 'Larger'], [3, 'Medium'], [4, 'Smaller']]
 
 export default function OrbLab04() {
   const [light, setLight] = useState(false);
-  const [freq, setFreq] = useState(3);
+  const [freq, setFreq] = useState(2); // 80 faces, chosen 17 Oct
   const [speedX, setSpeedX] = useState(14);
   const [speedY, setSpeedY] = useState(22);
   const [dot, setDot] = useState(2.2);
