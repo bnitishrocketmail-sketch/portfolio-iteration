@@ -3,6 +3,7 @@ import LabIndex from './lab/LabIndex';
 import Iteration01 from './lab/01-sheet/Iteration01';
 import Iteration04 from './lab/04-profile/Iteration04';
 import System04 from './lab/04-profile/System04';
+import OrbLab04 from './lab/04-profile/OrbLab04';
 import Iteration02 from './lab/02-field/Iteration02';
 import Iteration03 from './lab/03-console/Iteration03';
 
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/lab/01b-sheet/:view" element={<Iteration01 variant="b" />} />
         <Route path="/lab/01b-sheet/:view/:pid" element={<Iteration01 variant="b" />} />
         <Route path="/lab/04-profile/:view?" element={<Iteration04 />} /> {/* one route for home and the sections, so a tab change never remounts the screen */}
+        <Route path="/lab/04-orb" element={<OrbLab04 />} /> {/* the Workflow page's orb, on its own while it is tuned */}
         <Route path="/lab/04-system" element={<System04 />} /> {/* 04's design system — not a page of the portfolio */}
         <Route path="/lab/02-field" element={<Iteration02 />} />
         <Route path="/lab/02b-field" element={<Iteration02 palette="01" />} />
