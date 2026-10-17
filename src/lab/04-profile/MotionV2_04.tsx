@@ -283,8 +283,8 @@ export default function MotionV2_04({ variantSwitch }: { variantSwitch: ReactNod
 
         {/* 2 · the problem */}
         <section>
-          <div className="eye">What we all feel today</div>
-          <h2>The app works. It doesn’t yet feel worked-on.</h2>
+          <div className="eye">Why motion matters</div>
+          <h2>How an app moves is part of how it works.</h2>
           <p className="body">Screens arrive abruptly. The bottom drawer snaps instead of settling. Tabs cut instead of glide. None of these are bugs — each is a <strong>small missing decision about time and easing</strong>. Together, they read as lag and roughness, and the user can’t say why.</p>
           <p className="body">You don’t need motion vocabulary to notice it. One moment, felt twice, is enough — here’s the bottom drawer, with and without the system’s logic behind it:</p>
           <DrawerDemo root={scroller} />
