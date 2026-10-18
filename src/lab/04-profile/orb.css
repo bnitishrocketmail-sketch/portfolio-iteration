@@ -22,3 +22,5 @@
 .ot4-head { display: flex; align-items: center; gap: 6px; } .ot4-head b { flex: 1; font-weight: 600; }
 .ot4-head button { padding: .35em .7em; border: 0; border-radius: 999px; background: color-mix(in srgb, var(--line-ink) 10%, transparent); color: inherit; font: 600 11px/1 var(--f-copy); cursor: pointer; }
 .ot4-note { margin: 0; font-size: 10.5px; line-height: 1.4; opacity: .6; }
+/* the phone: the chip under the Design system chip at the top right, the panel clear of the nav bar at the bottom */
+@media (max-width: 700px) { .ot4-chip { right: 14px; bottom: auto; top: calc(46px + env(safe-area-inset-top)); } .ot4.orbl-panel { bottom: calc(84px + env(safe-area-inset-bottom)); max-height: calc(100vh - 160px); } }

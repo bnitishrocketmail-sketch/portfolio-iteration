@@ -254,8 +254,22 @@
      then the stack and Off duty */
   .it04 { position: static; display: block; padding: 14px 14px 40px; overflow: visible; }
   .bg4 { position: fixed; }
-  .frame4 { height: auto; aspect-ratio: auto; width: 100%; display: flex; flex-direction: column; gap: 14px; padding: 14px; border-radius: 22px; }
-  .navcol4 { flex-direction: row; padding: 6px 8px; } .nav4 { width: auto; flex: 1; min-width: 0; } .nav4 ul { flex-direction: row; gap: 4px; width: auto; overflow: auto; } .nav4 li { width: auto; } .nav4 li + li { margin-top: 0; } .nav4 ul button { padding: 8px 10px; } .lbl4 { writing-mode: horizontal-tb; transform: none; } .lbl4 > span { left: 0; } .hl4 { display: none; } .nav4 ul button.on { color: var(--frame); } .ai4 { margin: 0 0 0 auto; width: 40px; }
+  /* the frame is a size container on the desktop; a size container's height is contained (it ignores its children), so
+     as a column it collapsed to its padding — 28px — and everything hung out of it (the grey bar at the top of the phone
+     layout; found 18 Oct). On the phone it contains width only: cqw still resolves, cqh (used twice, both desktop) does not. */
+  .frame4 { container-type: inline-size; height: auto; aspect-ratio: auto; width: 100%; display: flex; flex-direction: column; gap: 14px; padding: 14px; border-radius: 22px; }
+  /* the nav (Nitish, 18 Oct): a bar floating at the bottom of the screen, clear of the phone's home indicator, with an
+     icon per section and the assistant's circle at its end; the highlighter pill travels sideways under the icons.
+     Same greys and shadow as the column. The page gets room underneath so nothing ends behind the bar. */
+  .it04 { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+  .navcol4 { position: fixed; z-index: 40; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: auto; max-width: calc(100vw - 24px); flex-direction: row; align-items: center; gap: 4px; padding: 6px; }
+  .nav4 { width: auto; flex: none; } .nav4 ul { flex-direction: row; gap: 2px; width: auto; } .nav4 li { width: auto; } .nav4 li + li { margin-top: 0; }
+  .nav4 ul button { padding: 0; width: 44px; height: 44px; } .ico4 { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .hl4 { left: auto; transform: none; top: 0; } /* placed by its measured left, not centred */
+  .hl4 .hltx4 { display: grid; place-items: center; width: 100%; height: 100%; }
+  .nav4 ul button.on { color: transparent; } /* the pill carries the icon, as it carries the name on the desktop */
+  .ai4 { margin: 0; width: 44px; height: 44px; flex: none; }
+  .tweaks4 { left: auto; right: 14px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; } /* the dev chip, out of the bar's way */
   .picwrap4 { display: flex; flex-direction: column; } .pic4, .pic4-in { display: contents; } /* the tile's pieces become the column's: picture, cut-out, name box */
   .pic4-img { position: relative; aspect-ratio: 1; height: auto; border-radius: var(--r) var(--r) 0 0; }
   .pic4-me, .fl4 { display: none !important; } /* the cards and the cutout need the picture's box, which the column has not got; later */
