@@ -256,7 +256,9 @@
      blurred picture, full-bleed, the tile and the pages each on their own grey container; a 12px gutter; a type scale
      set in pixels for the phone (the desktop's scales with the frame's width and bottomed out at its 11px floor here);
      the bar at the bottom carries the six icons only, laid out from one spacing rule. */
-  .it04 { --t-h1: 30px; --t-h2: 26px; --t-title: 17px; --t-body: 16px; --t-meta: 13px; --r: 20px; position: static; display: block; padding: 12px 12px calc(92px + env(safe-area-inset-bottom)); overflow: visible; background: var(--bg); }
+  .it04 { --t-h1: 30px; --t-h2: 26px; --t-title: 17px; --t-body: 16px; --t-meta: 13px; --r: 20px; --gut: 16px; position: static; display: block; padding: 12px var(--gut) calc(92px + env(safe-area-inset-bottom)); overflow: visible; background: var(--bg); }
+  /* the gutter, 16px, as apps keep it; the body's own 16px went (base.css) — it had boxed the picture in and left a strip of
+     the body's colour down each side, "one more container" (Nitish, 18 Oct) */
   .bg4 { position: fixed; inset: -6%; filter: blur(34px) brightness(.5); } /* the picture is the background (desktop: .45 behind the frame) */
   /* the frame: a size container on the desktop; a size container's height is contained (it ignores its children), so as a
      column it collapsed to its padding — 28px — and everything hung out of it (found 18 Oct). Here it contains width only
@@ -283,9 +285,14 @@
   .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 18px 18px 16px; } .corner4 { display: none; }
   .nm4 { line-height: 1.1; } .role4 { margin-top: 6px; font-size: 15px; } .sub4 { margin-top: 8px; max-width: none; } .cv4 { margin-top: 12px; font-size: 14px; padding: .65em 1.1em; }
   .name4 { position: static; width: auto; margin: 0 18px 18px; padding: 14px 16px; } .lede4 { max-width: none; }
-  /* the pages: each on its own grey container, the frame's */
-  .page4 { display: block; border-radius: var(--r); background: var(--frame); box-shadow: var(--shadow-frame); padding: 16px 14px 18px; min-height: 60vh; }
-  .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; gap: 10px; } .pp4-right { max-width: none; }
+  /* the pages: the heading and its note on the background, above the content (an app's section heading: outside the card,
+     at the content's edge — Nitish, 18 Oct); the content on its own grey container, the frame's; Workflow's map goes
+     straight on the picture, no container ("it looks much better directly placed over the blurred background") */
+  .page4 { display: block; }
+  .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; gap: 8px; padding: 4px 4px 0; } .pp4-right { max-width: none; }
+  .pp4-head .h2-4 { color: var(--name-ink); } .pp4-head .pp4-note { color: var(--glass-ink); } /* on the picture: the name's and the lede's inks, which already sit on it */
+  .pp4 > :not(.pp4-head) { border-radius: var(--r); background: var(--frame); box-shadow: var(--shadow-frame); padding: 16px 14px 18px; }
+  .cr4 > .cm4-wrap { background: none; box-shadow: none; padding: 0; }
   /* the projects: the desktop's fan of cards, one open, becomes a plain list — every card open, its content in flow
      (title, blurb, meta, chips, the arrow), the letter faint behind; the pieces were absolutely placed for the fan */
   .pp4-row { overflow: visible; -webkit-mask-image: none; mask-image: none; display: flex; flex-direction: column; gap: 12px; padding-bottom: 0; margin-bottom: 0; }

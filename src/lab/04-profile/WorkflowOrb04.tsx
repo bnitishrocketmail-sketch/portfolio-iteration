@@ -77,7 +77,7 @@ export function OrbField({ pins, links, wired, mapRef, openId, tune }: { pins: P
       const o = tuneR.current, still = reduce.matches;
       ink = getComputedStyle(cv).color || ink; font = getComputedStyle(cv).fontFamily || font;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      const cx = W / 2, cy = H / 2, R = H * o.size / 200, k = o.size / TUNE0.size;
+      const cx = W / 2, cy = H / 2, R = Math.min(W, H) * o.size / 200, k = o.size / TUNE0.size; // the orb's diameter: `size`% of the map's smaller side (its height on the desktop; its width on the phone's tall map)
       const P = projectOrb(geo.current.verts, ax, ay, cx, cy, R);
       /* the wires' state */
       for (const w of wires) if (w.v >= P.length || w.from >= P.length) { w.from = -1; w.v = w.phase === 'idle' ? -1 : pick(P, w.i, cx, cy, R, true); if (w.phase === 'shift') w.phase = 'hold'; } // the triangle size changed

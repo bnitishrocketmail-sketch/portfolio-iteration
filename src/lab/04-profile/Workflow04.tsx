@@ -65,6 +65,21 @@ const POS2: Record<string, { x: number; y: number }> = {
   msys: { x: 78.7, y: 43.2 }, review: { x: 91.2, y: 51 },
 };
 const PINS = NODES.map(n => ({ id: n.id, ...POS2[n.id] }));
+/* the phone (Nitish, 18 Oct: "recreate that layout in a mobile ratio"): the same pills, at their sizes, in rows down
+   a tall map (358 × 720) with the orb at its centre — the model's steps and the tools across the top, the animation
+   and interaction groups above the orb, product and handoff below, the widest skills on rows of their own, set to
+   alternate sides so the column reads as a path. Laid by rows (scratchpad layout_rows.py), checked for the hard rules
+   only — nothing overlapping, nothing on the orb or off the edge; at this width the lines must run under some pills,
+   which the desktop's layout avoids. */
+const POS2_PHONE: Record<string, { x: number; y: number }> = {
+  brief: { x: 17.9, y: 4.5 }, ae: { x: 50, y: 4.5 }, build: { x: 82.1, y: 4.5 },
+  motion: { x: 22.1, y: 12.5 }, script: { x: 69.8, y: 12.5 },
+  rive: { x: 19.6, y: 21 }, lottie: { x: 47.8, y: 21 }, review: { x: 78.1, y: 21 },
+  interaction: { x: 30, y: 29.5 }, msys: { x: 70, y: 37.5 },
+  protopie: { x: 20.1, y: 62.5 }, handoff: { x: 65.5, y: 62.5 },
+  sm: { x: 36, y: 71 }, code: { x: 30, y: 79.5 }, figma: { x: 69.1, y: 79.5 }, product: { x: 40, y: 88.5 },
+};
+const PINS_PHONE = NODES.map(n => ({ id: n.id, ...POS2_PHONE[n.id] }));
 /* who is wired to the orb: the tools (17 Oct, third pass — "let's do the opposite … the tools will now have the
    connections, shifted from one dot to the other"; the skills, wired on the second pass, keep only their lines to the
    tools) */
@@ -97,7 +112,11 @@ export default function Workflow04() {
   const v2 = params.get('v') !== '1';
   const setVariant = (n: 1 | 2) => { setOpen(null); setParams(n === 1 ? { v: '1' } : {}, { replace: true }); };
   const [tune, setTune] = useState<OrbTune>(TUNE0);
-  const pos = (n: Node) => (v2 ? POS2[n.id] : n);
+  /* the phone's tall map takes its own positions and the orb's smallest size, its wires kept to the minimum */
+  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 700px)').matches);
+  useEffect(() => { const mq = window.matchMedia('(max-width: 700px)'); const on = () => setPhone(mq.matches); mq.addEventListener('change', on); return () => mq.removeEventListener('change', on); }, []);
+  const pos = (n: Node) => (v2 ? (phone ? POS2_PHONE : POS2)[n.id] : n);
+  const tuneUsed = phone ? { ...tune, size: Math.min(tune.size, 24), pace: Math.max(tune.pace, 1.6) } : tune;
   const reduce = useReducedMotion();
   /* every card's height, measured off-screen at its width */
   const measureRef = useRef<HTMLDivElement>(null);
@@ -142,7 +161,7 @@ export default function Workflow04() {
             landed on a node — the node opened its card on the tap's focus, so the tap's down and up targets differ and the
             click goes to their common ancestor — so the point is checked, not the target. */}
         <div className={`cm4${v2 ? ' v2' : ''}`} ref={mapRef} onClick={e => { if (!document.elementFromPoint(e.clientX, e.clientY)?.closest('.cc4, .cn4')) setOpen(null); }}>
-          {v2 ? <OrbField key="orb" pins={PINS} links={EDGES} wired={WIRED} mapRef={mapRef} openId={open?.id ?? null} tune={tune} /> : <>
+          {v2 ? <OrbField key={phone ? 'orb-phone' : 'orb'} pins={phone ? PINS_PHONE : PINS} links={EDGES} wired={WIRED} mapRef={mapRef} openId={open?.id ?? null} tune={tuneUsed} /> : <>
             <svg className="cm4-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               <ellipse className="ring" cx={RING.cx} cy={RING.cy} rx={RING.rx} ry={RING.ry} />
               {EDGES.map(([a, b, k]) => <line key={a + b} className={k} x1={at[a].x} y1={at[a].y} x2={at[b].x} y2={at[b].y} />)}
