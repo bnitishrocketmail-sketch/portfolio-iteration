@@ -217,7 +217,14 @@
 .dt4 .cascadehint b { font-weight: 600; color: var(--mut); }
 
 @media (max-width: 700px) {
-  .dt4 section { padding: 48px 18px; }
+  /* the phone: the document flows with the page (no scroll box inside the page's scroll), no border of its own — the page's
+     container holds it; sizes from the phone's type scale, not the frame's width */
+  .dt4 { flex: none; overflow: visible; border: 0; background: none; border-radius: 0; }
+  .dt4 section { padding: 40px 4px; } .dt4 .dhero { min-height: 0; padding-top: 8px; padding-bottom: 24px; }
+  .dt4 h1 { font-size: 34px; } .dt4 h2 { font-size: 26px; } .dt4 .sub { font-size: 17px; } .dt4 p.body { font-size: 16px; }
+  .dt4 .eye { font-size: 12px; } .dt4 .footnote, .dt4 .caption, .dt4 .playnote, .dt4 .cascadehint { font-size: 13px; }
+  .dt4 .tcard h4, .dt4 .tier h4 { font-size: 17px; } .dt4 .tcard p, .dt4 .tier p, .dt4 .fstep p { font-size: 14px; } .dt4 .fstep h4 { font-size: 15px; } .dt4 .fstep .fnum, .dt4 .tier .n { font-size: 12px; }
+  .dt4 .close { font-size: 24px; } .dt4 .rule { max-width: none; }
   .dt4 .dstage, .dt4 .tokstage { gap: 26px; padding: 22px 16px; }
   .dt4 .tokpanel { flex-basis: 100%; min-width: 0; } .dt4 .tokrow { flex-wrap: wrap; } .dt4 .tokval { margin-left: 0; }
   .dt4 .band { flex-direction: column; gap: 10px; } .dt4 .bandlabel { flex-basis: auto; }

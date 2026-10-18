@@ -58,7 +58,7 @@
 
 @media (max-width: 700px) {
   /* the phone: the map keeps a size it is legible at and scrolls sideways — a first pass */
-  .cm4-wrap { overflow: auto; height: 420px; }
+  .cm4-wrap { overflow: auto; height: 420px; margin: 0 -14px; padding: 0 14px; } /* out to the container's edge, so the map can be dragged across */
   .cm4 { position: relative; inset: auto; width: 760px; height: 400px; }
 }
 
