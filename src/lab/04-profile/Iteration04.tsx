@@ -13,6 +13,7 @@ import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
 import Soon04 from './Soon04';
 import Motion04 from './Motion04';
+import PhoneNav04 from './PhoneNav04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { readTweaks, tweakKey } from './tokens';
 import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
@@ -99,23 +100,10 @@ function RollingWord() {
    carries the selected name itself — the old name goes out quickly, the new one comes in on the way — so the name is
    always inside the pill, and the pill hides the names it passes. */
 const NAV_SPRING = { type: 'spring', stiffness: 400, damping: 38, mass: 1 } as const;
-/* the phone's icons, one per section (Nitish, 18 Oct: the bar switches names for icons; these are placeholders until
-   his own — "the initial ones were not going with the visual language"); 24-unit box, stroked, so his can drop in */
-const ICON: Record<string, React.ReactNode> = {
-  home: <><circle cx="12" cy="8" r="3.6" /><path d="M4.5 20.5c.6-4 3.6-6 7.5-6s6.9 2 7.5 6" /></>,
-  projects: <><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" /><path d="M3.5 9.5h17M9 9.5v10" /></>,
-  workflow: <><circle cx="6" cy="6" r="2.5" /><circle cx="18" cy="6" r="2.5" /><circle cx="12" cy="18" r="2.5" /><path d="M8 7.3 10.5 16M16 7.3 13.5 16M8.5 6h7" /></>,
-  motion: <><path d="M3.5 16.5c3-9 6-9 8.5 0s5.5 9 8.5 0" /></>,
-  lab: <><path d="M9.5 3.5h5M10.5 3.5v6L5 19.5h14l-5.5-10v-6" /><path d="M7.5 15h9" /></>,
-  articles: <><rect x="4.5" y="3.5" width="15" height="17" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></>,
-};
 function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
   const reduce = useReducedMotion();
   const ulRef = useRef<HTMLUListElement>(null);
   const [boxes, setBoxes] = useState<Record<string, { top: number; height: number; width: number; left: number }> | null>(null);
-  /* the phone (Nitish, 18 Oct): the bar floats at the bottom and shows icons; the pill then travels sideways */
-  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 700px)').matches);
-  useEffect(() => { const mq = window.matchMedia('(max-width: 700px)'); const on = () => setPhone(mq.matches); mq.addEventListener('change', on); return () => mq.removeEventListener('change', on); }, []);
   useLayoutEffect(() => {
     const ul = ulRef.current; if (!ul) return;
     const measure = () => {
@@ -129,18 +117,18 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
   }, []);
   const i = NAV.findIndex(n => n.id === tab);
   const box = boxes?.[tab] ?? null;
-  const pill = box ? (phone ? { left: box.left, width: box.width, height: box.height, top: box.top } : { top: box.top, height: box.height, width: box.width }) : null;
+  const pill = box ? { top: box.top, height: box.height, width: box.width } : null;
   const tr = reduce ? { duration: 0 } : NAV_SPRING;
   const out = reduce ? { duration: 0 } : { duration: .1, ease: 'easeOut' as const }; /* the old name goes quickly … */
   const inn = reduce ? { duration: 0 } : { duration: .22, ease: 'easeOut' as const }; /* … the new one comes in while the pill is still arriving */
   return (
-    <nav className={`nav4${phone ? ' ph' : ''}`} aria-label="Sections">
+    <nav className="nav4" aria-label="Sections">
       <ul ref={ulRef}>
         {pill && (
           <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
             <AnimatePresence initial={false} mode="wait">
               <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
-                {phone ? <svg className="ico4" viewBox="0 0 24 24" aria-hidden="true">{ICON[tab]}</svg> : <span className="lbl4"><span>{NAV[i].label}</span></span>}
+                <span className="lbl4"><span>{NAV[i].label}</span></span>
               </motion.span>
             </AnimatePresence>
           </motion.i>
@@ -149,8 +137,8 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
           const on = n.id === tab;
           return (
             <li key={n.id} data-id={n.id}>
-              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} aria-label={phone ? n.label : undefined} onClick={() => go(n.id)}>
-                {phone ? <svg className="ico4" viewBox="0 0 24 24" aria-hidden="true">{ICON[n.id]}</svg> : <span className="lbl4"><span>{n.label}</span></span>}
+              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} onClick={() => go(n.id)}>
+                <span className="lbl4"><span>{n.label}</span></span>
               </button>
             </li>
           );
@@ -218,6 +206,7 @@ export default function Iteration04() {
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
           <Nav tab={tab} go={go} />
+          <PhoneNav04 items={NAV} tab={tab} go={go} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14 9l6.5 2L14 13l-2 6.5L10 13l-6.5-2L10 9z" fill="currentColor" /></svg>
           </button>

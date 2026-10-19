@@ -70,6 +70,7 @@
 .hltx4 { display: grid; place-items: center; }
 .ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: var(--ai-bg); color: var(--ai-ink); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
 .ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
+.pn4 { display: none; } /* the phone's bar (PhoneNav04.tsx); shown at the phone breakpoint, where the column hides */
 
 /* ---- the picture: the intro tile, with the bottom-left corner cut out (the cut-out beside it is the frame, not the tile) ---- */
 .picwrap4 { position: relative; min-width: 0; min-height: 0; }
@@ -264,14 +265,18 @@
      column it collapsed to its padding — 28px — and everything hung out of it (found 18 Oct). Here it contains width only
      (cqw still resolves) and has no surface of its own: no grey, no padding, no shadow */
   .frame4 { container-type: inline-size; height: auto; aspect-ratio: auto; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0; border-radius: 0; background: none; box-shadow: none; }
-  /* the bar: the icons only (the assistant's button comes back somewhere above, later); 44px targets; the gap between
-     targets and the bar's padding are one clearance, so the pill sits as far from the bar's edge as from its neighbours */
-  .navcol4 { --clear: 5px; position: fixed; z-index: 40; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: auto; max-width: calc(100vw - 24px); flex-direction: row; align-items: center; gap: 0; padding: var(--clear); }
-  .nav4 { width: auto; flex: none; } .nav4 ul { flex-direction: row; gap: var(--clear); width: auto; } .nav4 li { width: auto; } .nav4 li + li { margin-top: 0; }
-  .nav4 ul button { padding: 0; width: 44px; height: 44px; } .ico4 { display: block; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-  .hl4 { left: auto; transform: none; top: 0; } /* placed by its measured left, not centred */
-  .hl4 .hltx4 { display: grid; place-items: center; width: 100%; height: 100%; }
-  .nav4 ul button.on { color: transparent; } /* the pill carries the icon, as it carries the name on the desktop */
+  /* the bar (Nitish, 19 Oct, styled from a recording of Instagram's): a dark pill, about 6.3 : 1, the icons white and
+     outlined, the selected one filled on a lighter pill two-thirds of the bar's height; it blurs what passes behind it.
+     The desktop column (.nav4, .ai4) is hidden here; PhoneNav04 draws the phone's bar (PhoneNav04.tsx). */
+  .navcol4 { --bar-h: 58px; position: fixed; z-index: 40; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(calc(100vw - 32px), 366px); height: var(--bar-h); padding: 0; gap: 0; border-radius: 999px; background: rgba(28, 30, 33, .88); box-shadow: 0 8px 28px -8px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(255, 255, 255, .06); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+  .nav4 { display: none; }
+  .pn4 { display: block; width: 100%; height: 100%; }
+  .pn4 ul { position: relative; list-style: none; margin: 0; padding: 0 5px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+  .pn4 li { display: flex; }
+  .pn4 button { position: relative; z-index: 1; width: 56px; height: 100%; padding: 0; border: 0; background: none; color: #fff; display: grid; place-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .pn4-ico { display: block; width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .pn4-ico.fill { fill: currentColor; stroke: none; } .pn4-ico.fill .k { fill: none; stroke: currentColor; stroke-width: 2.2; } .pn4-ico.fill .k.w { stroke-width: 3.2; } /* 'k' keeps a stroke inside a filled icon */
+  .pn4-pill { position: absolute; top: calc(var(--bar-h) / 6); height: calc(var(--bar-h) * 2 / 3); border-radius: 999px; background: rgba(255, 255, 255, .13); pointer-events: none; }
   .ai4 { display: none; }
   .tweaks4 { left: auto; right: 12px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; } /* the dev chip, out of the bar's way */
   /* the intro: the picture, then the name box (his words), then the cut-out's name, role and CV — one container, the tile's grey */
