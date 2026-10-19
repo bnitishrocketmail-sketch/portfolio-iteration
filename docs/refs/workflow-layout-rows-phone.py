@@ -4,18 +4,16 @@ size = 24; cx, cy, R = MW/2, MH/2, min(MW, MH)*size/200
 # rows, top to bottom, each a list of pill ids laid out left-to-right with equal gaps across the width (or centred)
 rows = [
   (4.5,  ['brief', 'ae', 'build']),
-  (12.5, ['motion', 'script']),
-  (21.0, ['rive', 'lottie', 'review']),
-  (29.5, ['interaction']),
-  (37.5, ['msys']),
+  (13.0, ['motion', 'script']),
+  (21.5, ['rive', 'lottie', 'review']),
+  (30.0, ['interaction', 'msys']),
   # the orb at 50%
-  (62.5, ['protopie', 'handoff']),
-  (71.0, ['sm']),
-  (79.5, ['code', 'figma']),
-  (88.5, ['product']),
+  (70.0, ['protopie', 'handoff']),
+  (78.5, ['figma', 'sm', 'code']),
+  (88.0, ['product']),
 ]
 # single-pill rows: the skill alternates sides so the column reads as a path, not a stack
-side = {'interaction': .30, 'msys': .70, 'sm': .36, 'product': .40}
+side = {'product': .5}
 pos = {}
 for y, ids in rows:
     widths = [sz[i][0] for i in ids]; free = MW - sum(widths); gap = free/(len(ids)+1)

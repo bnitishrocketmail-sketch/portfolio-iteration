@@ -22,7 +22,7 @@ import './orb.css';
    turns round to the back), and fades. Reduced motion: the orb holds still, three wires to the dots facing them.
    The panel (OrbTuner) is for tuning while we decide, at the side of the page; it goes once the values are settled. */
 
-export type OrbTune = { size: number; freq: number; speedX: number; speedY: number; dot: number; line: number; fade: number; pace: number; float: boolean };
+export type OrbTune = { size: number; freq: number; speedX: number; speedY: number; dot: number; line: number; fade: number; pace: number; float: boolean; drift?: number }; // drift: a scale on how far the pills float (the phone halves it)
 /* the orb's diameter is `size`% of the map's height; the dot and wire sizes are the ones he approved, at the default size,
    and scale with it — the whole orb scales as one, keeping its proportions */
 export const TUNE0: OrbTune = { size: 21, freq: 2, speedX: 14, speedY: 22, dot: 2.2, line: 1, fade: .78, pace: 1, float: true };
@@ -118,7 +118,7 @@ export function OrbField({ pins, links, wired, mapRef, openId, tune }: { pins: P
         while (queue.length && queue[0].at <= t) queue.shift()!.run(); // after the wires settle, so a wire that has faded is gone before its successor starts
       }
       /* the pills' drift, written to the pills (the open one holds where it is, under its card) */
-      amp = still ? 0 : amp + ((o.float ? 1 : 0) - amp) * Math.min(1, dt * 2.5);
+      amp = still ? 0 : amp + ((o.float ? (o.drift ?? 1) : 0) - amp) * Math.min(1, dt * 2.5);
       ps.forEach((p, i) => {
         const d = drift[i];
         if (openR.current !== p.id) { d.x = amp * d.ax * Math.sin(6.283 * t / d.px + d.fx); d.y = amp * d.ay * Math.sin(6.283 * t / d.py + d.fy); }
