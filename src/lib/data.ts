@@ -83,7 +83,8 @@ export const NAV: { id: Exclude<ViewName, 'project'>; label: string }[] = [
    micro-interactions are its components), Lab (experiments, the plugin, explorations you can play with) and Articles
    (what he wrote and what was written about him; was Writing). Campaign and Experience are off for now — the CV may
    open a page of where he has worked later. 04 only; the other iterations keep NAV. */
-export const NAV04: typeof NAV = [NAV[0], NAV[1], { id: 'workflow', label: 'Workflow' }, { id: 'motion', label: 'Motion system' }, { id: 'lab', label: 'Lab' }, { id: 'articles', label: 'Articles' }];
+export const NAV04: typeof NAV = [NAV[0], NAV[1], { id: 'workflow', label: 'Workflow' }, { id: 'lab', label: 'Lab' }, { id: 'articles', label: 'Articles' }];
+/* (20 Oct) the Motion system left the nav, on both layouts: it is a Lab project now, its page opening from the Lab's card (/lab/04-profile/motion still works) */
 
 export function contextFor(view: ViewName, pid?: string): string {
   if (view === 'project') { const p = PROJECTS.find(p => p.id === pid); return 'Project · ' + (p ? p.title : ''); }

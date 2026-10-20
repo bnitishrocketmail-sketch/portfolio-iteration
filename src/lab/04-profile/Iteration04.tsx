@@ -12,6 +12,7 @@ import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
 import Soon04 from './Soon04';
+import Lab04 from './Lab04';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
@@ -179,7 +180,9 @@ export default function Iteration04() {
   const { view } = useParams();
   const navigate = useNavigate();
   const { isDark, toggle } = useTheme();
-  const tab: Tab = (NAV.some(n => n.id === view) ? view : 'home') as Tab;
+  /* the Motion system has no nav entry (20 Oct: a Lab project) but keeps its route; while it is open the nav shows Lab */
+  const tab: Tab = (NAV.some(n => n.id === view) || view === 'motion' ? view : 'home') as Tab;
+  const navTab: Tab = tab === 'motion' ? 'lab' : tab;
   const go = (v: ViewName, pid?: string) => { if (v === 'project' && pid) { navigate(`/lab/04-profile/projects`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
   const [ask, setAsk] = useState(0);
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
@@ -205,8 +208,8 @@ export default function Iteration04() {
       <div className="frame4">
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
-          <Nav tab={tab} go={go} />
-          <PhoneNav04 items={NAV} tab={tab} go={go} />
+          <Nav tab={navTab} go={go} />
+          <PhoneNav04 items={NAV} tab={navTab} go={go} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14 9l6.5 2L14 13l-2 6.5L10 13l-6.5-2L10 9z" fill="currentColor" /></svg>
           </button>
@@ -226,7 +229,12 @@ export default function Iteration04() {
           <motion.div key="motion" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
             <Motion04 />
           </motion.div>
-        ) : tab === 'lab' || tab === 'articles' ? (
+        ) : tab === 'lab' ? (
+          /* the experiments (Lab04.tsx); the Motion system's card opens its page */
+          <motion.div key="lab" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+            <Lab04 onOpen={v => go(v as ViewName)} />
+          </motion.div>
+        ) : tab === 'articles' ? (
           <motion.div key={tab} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
             <Soon04 id={tab} label={NAV.find(n => n.id === tab)!.label} />
           </motion.div>
