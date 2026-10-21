@@ -48,7 +48,7 @@ const SOCIAL: { label: string; href: string; path: string; box: string }[] = [
    so it shows whole above the card in front; ref 4's greys (dark at the back, light in front) and its soft shadow. Static
    for now — scrolling and the dots come later. ---- */
 const SHOWN = 3;
-const OFFSET = .58; /* ref 4, measured: each card peeks 58% of a card's height above the one in front */
+const OFFSET = .5; /* each card peeks half a card above the one in front (ref 4 had 58%; compressed 21 Oct, so the deck is two cards tall) */
 function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   return (
     <div className="stack4">
@@ -318,6 +318,7 @@ export default function Iteration04() {
             <i className="corner4 tr" aria-hidden="true" /> {/* the bracket's mirror at the top right (Nitish, 21 Oct): its top leg on the picture's top line, its right leg on the column's right edge, the cards' */}
           </div>
           <ProjectStack onOpen={id => go('project', id)} />
+          <i className="sep4" aria-hidden="true" /> {/* the separation between the two sections: whatever the column has left */}
           <div className="pill4 off"><h2 className="h2-4">Off duty</h2></div> {/* the heading outside the box, an H2 like Projects (Nitish, 21 Oct) */}
           <section className="off4"><PhotoStack fan tints={GREYS} caption /></section>
         </aside>
