@@ -26,7 +26,7 @@ export const CONTROLS: Control[] = [
   { group: 'Type', sub: 'Faces', kind: 'select', key: '--copy-font', label: 'Copy', def: "'Outfit'", light: "'Outfit'", options: FONTS },
   w('--name-w1', 'H1 (the first name)', '800'), w('--name-w2', 'The surname, the H1 light', '300'), w('--h2-w', 'H2', '500'),
   w('--copy-w', 'Body', '300'), w('--title-w', 'Title (and the title line’s rolling word)', '500'), w('--role-w2', 'The title line’s fixed word', '800'),
-  size('--s-h1', 'H1 — the name (H2 is three-quarters of it)', '2.8'), size('--s-body', 'Body', '1.25'), /* Title (13px) and Meta (11.5px) are fixed to the nav's sizes (21 Oct), so they have no slider */
+  size('--s-h1', 'H1 — the name (H2 is three-quarters of it)', '2.8'), size('--s-body', 'Body', '.94'), /* Title (13px) and Meta (11px) are fixed (21 Oct), so they have no slider; Body sits a step under Title at 1440 */
   /* colours: surfaces */
   col('Surfaces', '--bg', 'Page background', '#141416', '#d4d4d7'),
   col('Surfaces', '--frame', 'Main container', '#121212', '#b5b5b5'),
