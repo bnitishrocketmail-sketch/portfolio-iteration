@@ -174,10 +174,14 @@
 .rw4-probe span { display: inline-block; }
 
 /* ---- the right column ---- */
-.col4 { --off-title: var(--t-title); --off-meta: var(--t-meta); display: grid; grid-template-rows: 7.9% auto auto minmax(0, 1fr); gap: 1.4cqw; min-height: 0; } /* the Projects row, the stack, the Off duty row, the box; the title and meta sizes resolved here, for the box */ /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
+/* the column's rhythm (21 Oct, "reanalyse the spacing"): the two heading rows are their text's own height and one gap
+   separates everything — a heading from its container below, a container from the next heading — so Off duty gets the
+   clearance Projects has (it had 18px to its box and 21 above, against Projects' 32). The Projects heading keeps its
+   place: the row's top padding puts its text where the 7.9% row had centred it. */
+.col4 { --off-title: var(--t-title); --off-meta: var(--t-meta); --col-gap: 2.4cqw; display: grid; grid-template-rows: auto auto auto minmax(0, 1fr); gap: var(--col-gap); min-height: 0; } /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
 /* the Projects heading: no container of its own (Nitish, 14 Oct) — an H2 in the name's face, on the column's row */
-.pill4 { position: relative; display: flex; align-items: center; padding: 0 .4cqw; min-height: 0; } .pill4 .h2-4 { margin: 0; }
-.pill4.off { margin-top: .2cqw; }
+.pill4 { position: relative; display: flex; align-items: center; padding: 1.1cqw .4cqw 0; min-height: 0; } .pill4 .h2-4 { margin: 0; }
+.pill4.off { padding-top: 0; }
 /* "more" at the row's right end (Nitish, 21 Oct), with a chevron; its text ends on the bracket's right leg, and it sits
    inside the bracket's corner, below its top leg */
 
