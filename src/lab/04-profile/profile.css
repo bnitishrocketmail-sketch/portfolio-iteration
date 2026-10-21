@@ -32,7 +32,7 @@
 }
 /* light mode (Nitish, 14 Oct: his second set of values); the dark set above is the default */
 .it04.light {
-  --frame: #b5b5b5; --nav-bg: #e0e0e0; --nav-ink: #2f2e30; --nav-hl: #2f2e30; --nav-hl-ink: #c9c9c9; --ai-bg: #2f2e30; --ai-ink: #c9c9c9; --glass-bg: #000000; --glass-a: 0.2; --glass-ink: #c9c9cc; --name-ink: #2f2e30; --title-ink: #2f2e30; --line-ink: #2f2e30; --social-ink: #2f2e30; --cv-bg: #2f2e30; --cv-ink: #b5b5b5; --corner-ink: #2f2e30; --pcard-open: #e0e0e0; --pcard-open-ink: #121212; --pcard-fold: #2f2e30; --pcard-fold-ink: #e0e0e0; --ink: #dbdbdb; --muted: #e0e0e0; --role-ink2: #2f2e30; --h2-w: 600; --bg: #d4d4d7;
+  --frame: #b5b5b5; --nav-bg: #e0e0e0; --nav-ink: #2f2e30; --nav-hl: #2f2e30; --nav-hl-ink: #c9c9c9; --ai-bg: #2f2e30; --ai-ink: #c9c9c9; --glass-bg: #000000; --glass-a: 0.2; --glass-ink: #c9c9cc; --name-ink: #2f2e30; --title-ink: #2f2e30; --line-ink: #2f2e30; --social-ink: #2f2e30; --cv-bg: #2f2e30; --cv-ink: #b5b5b5; --corner-ink: #2f2e30; --pcard-open: #e0e0e0; --pcard-open-ink: #121212; --pcard-fold: #2f2e30; --pcard-fold-ink: #e0e0e0; --ink: #dbdbdb; --muted: #e0e0e0; --role-ink2: #2f2e30; --h2-w: 600; --bg: #d4d4d7; --h2-ink: var(--name-ink);
   --h2-w: 500; --card-front-ink: #2f2e30; /* the frame is light here, so the front card's text takes the dark grey */
 }
 .it04.light .bg4 { filter: blur(44px) brightness(1.02); }
@@ -161,7 +161,7 @@
 /* the name, in a Deco face for now (Nitish, 13 Oct — "something as minimal as deco"; the font iterations come later):
    Josefin Sans, the first name light and the surname bold, uppercase with air between the letters */
 .nm4 { display: block; font: 300 var(--t-h1)/1.08 var(--f-head); font-weight: var(--name-w1); text-transform: uppercase; letter-spacing: .1em; color: var(--name-ink); } /* H1 */
-.h2-4 { margin: 0; font: var(--h2-w) var(--t-h2)/1.1 var(--f-head); letter-spacing: -.01em; color: var(--ink); } /* H2: the name's size, sentence case (Nitish, 14 Oct) */
+.h2-4 { margin: 0; font: var(--h2-w) var(--t-h2)/1.1 var(--f-head); letter-spacing: -.01em; color: var(--h2-ink, var(--ink)); } /* H2: the name's size, sentence case (Nitish, 14 Oct); in light mode the name's dark ink, like the other text (21 Oct) */
 .sub4 { margin-top: .5cqw; font: var(--copy-w) var(--t-body)/1.4 var(--f-copy); color: var(--line-ink); max-width: 30ch; } /* body: the subheading, his words (13 Oct) */
 .nm4 b { font-weight: var(--name-w2); letter-spacing: .06em; }
 /* the title under the name, as decided (02 v29): the first word rolls Product → Interaction → Motion, "designer" stays */
