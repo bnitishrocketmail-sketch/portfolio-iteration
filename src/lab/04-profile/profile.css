@@ -138,13 +138,16 @@
 /* the corner bracket: a short 2.5px stroke along the blank area's bottom and left edges — where the tile's corner would
    be — turning the corner with the tile's radius; its legs run 12px past the curve, no further, and end in round caps
    (a dot the stroke's width on each end) */
-.corner4 { --sw: 2.5px; position: absolute; left: 0; bottom: 0; width: calc(var(--r) + 12px); height: calc(var(--r) + 12px); border: var(--sw) solid var(--corner-ink); border-top: 0; border-right: 0; border-bottom-left-radius: var(--r); pointer-events: none; }
+.corner4 { --sw: 2.5px; position: absolute; left: var(--sw); bottom: var(--sw); width: calc(var(--r) + 12px); height: calc(var(--r) + 12px); border: var(--sw) solid var(--corner-ink); border-top: 0; border-right: 0; border-bottom-left-radius: calc(var(--r) - var(--sw)); pointer-events: none; }
+/* an inside stroke (Nitish, 21 Oct: "they are centred rather than inside or outside; make them inside, both"): the bracket
+   sits one stroke-width in from the lines it aligns to — the picture's bottom and the cut-out's left — so the line stays
+   clear past it and the stroke reads as inside the corner, not on it; its radius shrinks by the same so the curve stays concentric */
 .corner4::before, .corner4::after { content: ""; position: absolute; width: var(--sw); height: var(--sw); border-radius: 50%; background: var(--corner-ink); }
-.corner4::before { left: calc(-1 * var(--sw)); top: calc(-.5 * var(--sw)); } /* the left leg's top end (the box's edge is the border's inner edge) */
+.corner4::before { left: calc(-1 * var(--sw)); top: calc(-.5 * var(--sw)); } /* the left leg's top end: on the leg (the box's edge is the border's inner edge), half a width above the box */
 .corner4::after { right: calc(-.5 * var(--sw)); bottom: calc(-1 * var(--sw)); } /* the bottom leg's right end */
 /* the mirror at the top right of the Projects row: the same bracket turned, its top leg level with the picture's top (the
    row starts on that line) and its right leg on the column's right edge, where the cards' edge is */
-.corner4.tr { left: auto; right: 0; bottom: auto; top: 0; border: var(--sw) solid var(--corner-ink); border-bottom: 0; border-left: 0; border-bottom-left-radius: 0; border-top-right-radius: var(--r); }
+.corner4.tr { left: auto; right: var(--sw); bottom: auto; top: var(--sw); border: var(--sw) solid var(--corner-ink); border-bottom: 0; border-left: 0; border-bottom-left-radius: 0; border-top-right-radius: calc(var(--r) - var(--sw)); }
 .corner4.tr::before { left: auto; top: auto; right: calc(-1 * var(--sw)); bottom: calc(-.5 * var(--sw)); } /* the right leg's bottom end */
 .corner4.tr::after { right: auto; bottom: auto; left: calc(-.5 * var(--sw)); top: calc(-1 * var(--sw)); } /* the top leg's left end */
 /* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
