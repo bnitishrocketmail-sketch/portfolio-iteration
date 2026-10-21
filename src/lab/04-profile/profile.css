@@ -205,7 +205,7 @@
 /* the box's head: the front photo's caption as the title, the count as the meta — the same pair as the project cards
    (the heading, "Off duty", is outside the box now, an H2 like Projects — 21 Oct). The box is a size container of its
    own, so the frame's type tokens shrink inside it; these take the sizes the cards resolve to, passed in from the column */
-.off4 .tile-head { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.off4 .tile-head { display: flex; flex-direction: row; align-items: baseline; justify-content: space-between; gap: 12px; } /* the caption at the left, the count at the right (21 Oct) */
 .off4 .tile-head .eyebrow { font: 600 var(--off-title)/1.2 var(--f-copy); letter-spacing: 0; opacity: 1; }
 .off4 .tile-head .mono-s { font: 500 var(--off-meta)/1.3 var(--f-copy); opacity: .72; }
 .off4 .stack { margin-top: 4px; }
@@ -217,7 +217,7 @@
 .off4 { position: relative; container-type: size; }
 .off4 .tile-head { position: relative; z-index: 2; }
 .off4 .stack { position: absolute; inset: 0; margin: 0; }
-.off4 .stack.fan figure { inset: auto; left: 34%; top: 37%; height: 98%; aspect-ratio: 1; width: auto; border-radius: 12px; transform-origin: 50% 50%; } /* 21 Oct: 15% bigger (85 → 98% of the box, square) and up 12% of where they sat (42 → 37%); the fan itself unchanged */
+.off4 .stack.fan figure { inset: auto; left: 34%; top: 37%; height: 98%; aspect-ratio: 4 / 3; width: auto; border-radius: 12px; transform-origin: 50% 50%; } /* 4 : 3 (Nitish, 21 Oct), the height as set on p70; the fan unchanged */ /* 21 Oct: 15% bigger (85 → 98% of the box, square) and up 12% of where they sat (42 → 37%); the fan itself unchanged */
 .off4 { overflow: hidden; }
 .off4 .hint { display: none; }
 
