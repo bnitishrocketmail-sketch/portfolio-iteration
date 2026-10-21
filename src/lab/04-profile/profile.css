@@ -142,6 +142,11 @@
 .corner4::before, .corner4::after { content: ""; position: absolute; width: var(--sw); height: var(--sw); border-radius: 50%; background: var(--corner-ink); }
 .corner4::before { left: calc(-1 * var(--sw)); top: calc(-.5 * var(--sw)); } /* the left leg's top end (the box's edge is the border's inner edge) */
 .corner4::after { right: calc(-.5 * var(--sw)); bottom: calc(-1 * var(--sw)); } /* the bottom leg's right end */
+/* the mirror at the top right of the Projects row: the same bracket turned, its top leg level with the picture's top (the
+   row starts on that line) and its right leg on the column's right edge, where the cards' edge is */
+.corner4.tr { left: auto; right: 0; bottom: auto; top: 0; border: var(--sw) solid var(--corner-ink); border-bottom: 0; border-left: 0; border-bottom-left-radius: 0; border-top-right-radius: var(--r); }
+.corner4.tr::before { left: auto; top: auto; right: calc(-1 * var(--sw)); bottom: calc(-.5 * var(--sw)); } /* the right leg's bottom end */
+.corner4.tr::after { right: auto; bottom: auto; left: calc(-.5 * var(--sw)); top: calc(-1 * var(--sw)); } /* the top leg's left end */
 /* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
 .me4 { grid-area: me; align-self: start; width: clamp(60px, 7cqw, 96px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; background: var(--g2); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18); }
 .me4 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transform: scale(2.2); transform-origin: 50% 60%; display: block; } /* the stand-in desk photo, zoomed to his face */
@@ -167,7 +172,7 @@
 /* ---- the right column ---- */
 .col4 { display: grid; grid-template-rows: 7.9% auto minmax(0, 1fr); gap: 1.4cqw; min-height: 0; } /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
 /* the Projects heading: no container of its own (Nitish, 14 Oct) — an H2 in the name's face, on the column's row */
-.pill4 { display: flex; align-items: center; padding: 0 .4cqw; min-height: 0; }
+.pill4 { position: relative; display: flex; align-items: center; padding: 0 .4cqw; min-height: 0; } .pill4 .h2-4 { margin: 0; }
 
 /* the stack (ref 4, measured again on 13 Oct): the cards run the column's full width at 165 × 127 (1.3:1); the front one
    sits on the deck's bottom, each one behind peeks 58% of a card above the next, so the deck is 2.16 cards tall and the

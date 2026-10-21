@@ -305,7 +305,10 @@ export default function Iteration04() {
 
         {/* the right column: the lo-fi's widgets — a pill, the three stacked cards, Off duty fanned */}
         <aside className="col4">
-          <h2 className="h2-4 pill4">Projects</h2>
+          <div className="pill4">
+            <h2 className="h2-4">Projects</h2>
+            <i className="corner4 tr" aria-hidden="true" /> {/* the bracket's mirror at the top right (Nitish, 21 Oct): its top leg on the picture's top line, its right leg on the column's right edge, the cards' */}
+          </div>
           <ProjectStack onOpen={id => go('project', id)} />
           <section className="off4"><PhotoStack fan tints={GREYS} /></section>
         </aside>
