@@ -58,6 +58,8 @@ export const CONTROLS: Control[] = [
   /* the intro's floating cards */
   ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'block'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
   ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '3', 'block'), ...card('loader', 'Loader', '60%', '59%', '1', 'block'),
+  /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */
+  { group: 'Intro cards', sub: 'Name box (the one-liner)', kind: 'select', key: '--name-box-v', label: 'Shown', def: 'flex', light: 'flex', options: [['Shown', 'flex'], ['Hidden', 'none']] },
 ];
 
 export const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;

@@ -21,6 +21,7 @@
   --c-ai-x: 11%; --c-ai-y: 38%; --c-ai-z: 3; --c-coin-x: 59%; --c-coin-y: 10%; --c-coin-z: 1; --c-loader-x: 60%; --c-loader-y: 59%; --c-loader-z: 1; --c-micro-x: 3%; --c-micro-y: 51%; --c-micro-z: 3; --c-gold-x: 18%; --c-gold-y: 12%; --c-gold-z: 3;
   --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 3;
   --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: none; --c-gold-v: block; --c-pers-v: block; /* each card shown or hidden */
+  --name-box-v: flex; /* the name box with the one-liner, shown or hidden (the design system page) */
   --pcard-open: var(--nav-bg); --pcard-open-ink: var(--frame); --pcard-fold: var(--nav-hl); --pcard-fold-ink: var(--nav-bg); /* the project page's cards: the theme's two greys, the open one light with dark text, the folded dark with light text (Nitish, 14 Oct) */
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
@@ -155,7 +156,7 @@
 .me4 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transform: scale(2.2); transform-origin: 50% 60%; display: block; } /* the stand-in desk photo, zoomed to his face */
 .lede4 { color: var(--glass-ink); font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); max-width: 36ch; } /* body */
 /* the name box: the reference's glass box at the bottom-right, the name in the marker lettering (ref 6) */
-.name4 { position: absolute; right: 1.8cqw; bottom: 7.2cqw; width: 36%; min-width: 230px; padding: 1.4cqw 1.6cqw 1.5cqw; border-radius: calc(var(--r) * .8); z-index: 3; display: flex; flex-direction: column; gap: .5cqw; /* lifted: four times its earlier clearance from the bottom (Nitish, 13 Oct) */
+.name4 { position: absolute; right: 1.8cqw; bottom: 7.2cqw; width: 36%; min-width: 230px; padding: 1.4cqw 1.6cqw 1.5cqw; border-radius: calc(var(--r) * .8); z-index: 3; display: var(--name-box-v, flex); flex-direction: column; gap: .5cqw; /* lifted: four times its earlier clearance from the bottom (Nitish, 13 Oct) */
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 18px 40px -18px rgba(0, 0, 0, .6); }
 /* the name, in a Deco face for now (Nitish, 13 Oct — "something as minimal as deco"; the font iterations come later):
    Josefin Sans, the first name light and the surname bold, uppercase with air between the letters */
