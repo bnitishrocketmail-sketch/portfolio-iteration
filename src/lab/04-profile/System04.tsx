@@ -31,13 +31,21 @@ function Sheet({ dark, values }: { dark: boolean; values: Record<string, string>
           <div className="sys-block">
             <h3>Type</h3>
             <div className="sys-type">
-              <div><span className="sys-cap">H1 · the name</span><span className="nm4">Nitish<br /><b>Bhardwaj</b></span></div>
-              <div><span className="sys-cap">H2 · section headings</span><span className="h2-4">Projects</span></div>
-              <div><span className="sys-cap">Title line</span><span className="role4"><span className="rw4" style={{ width: 'auto' }}><span className="rw4-w" style={{ position: 'static' }}>Interaction</span></span> designer</span></div>
-              <div><span className="sys-cap">Title · a card's name</span><b className="pc-name" style={{ position: 'static' }}><b>{p.title}</b><small>{p.client} · {p.year}</small></b></div>
-              <div><span className="sys-cap">Body · line about me</span><p className="sub4" style={{ margin: 0 }}>I design feedback{' '}rich interfaces powered by motion.</p></div>
-              <div><span className="sys-cap">Body · glass text</span><p className="lede4" style={{ margin: 0 }}>{COPY.lede}</p></div>
-              <div><span className="sys-cap">Meta · nav names</span><span style={{ font: '500 13px/1 var(--f-copy)', color: 'var(--nav-ink)', background: 'var(--nav-bg)', padding: '8px 12px', borderRadius: 999 }}>{NAV.map(n => n.label).join('   ')}</span></div>
+              {/* five styles, each one size and one weight (21 Oct: "some were too specific"); the home page's compositions
+                  are built from them and shown under their own heading, so a style can be reused on its own */}
+              <div><span className="sys-cap">H1 · a name, a page</span><span className="nm4">Nitish</span></div>
+              <div><span className="sys-cap">H2 · a section's heading</span><span className="h2-4">Projects</span></div>
+              <div><span className="sys-cap">Title · a card's or an item's name</span><b className="pc-name" style={{ position: 'static' }}><b>{p.title}</b></b></div>
+              <div><span className="sys-cap">Body · copy</span><p className="sub4" style={{ margin: 0 }}>I design feedback rich interfaces powered by motion.</p></div>
+              <div><span className="sys-cap">Meta · under a title, counts, labels</span><b className="pc-name" style={{ position: 'static' }}><small>{p.client} · {p.year}</small></b></div>
+            </div>
+            <h4 className="sys-sub">Compositions on the home page, from the styles above</h4>
+            <div className="sys-type">
+              <div><span className="sys-cap">The name · two H1 lines, the surname light</span><span className="nm4">Nitish<br /><b>Bhardwaj</b></span></div>
+              <div><span className="sys-cap">The title line · Meta size, Title weight; the rolling word in its own shade</span><span className="role4"><span className="rw4" style={{ width: 'auto' }}><span className="rw4-w" style={{ position: 'static' }}>Interaction</span></span> designer</span></div>
+              <div><span className="sys-cap">A card's head · Title over Meta (the project cards, Off duty)</span><b className="pc-name" style={{ position: 'static' }}><b>{p.title}</b><small>{p.client} · {p.year}</small></b></div>
+              <div><span className="sys-cap">Glass text · Body on the glass ink</span><p className="lede4" style={{ margin: 0 }}>{COPY.lede}</p></div>
+              <div><span className="sys-cap">Nav names · Meta weight at 13px</span><span style={{ font: '500 13px/1 var(--f-copy)', color: 'var(--nav-ink)', background: 'var(--nav-bg)', padding: '8px 12px', borderRadius: 999 }}>{NAV.map(n => n.label).join('   ')}</span></div>
             </div>
           </div>
           {/* elements */}

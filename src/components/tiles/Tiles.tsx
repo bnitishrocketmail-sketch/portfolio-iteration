@@ -40,7 +40,7 @@ export function Tools() {
    `fan` (04, ref 4's bottom-right tile): three large square photos leaning the same way, the front one lowest and furthest
    right, each one behind stepped down-left and turned more, mostly hidden under the one in front (ref 4, measured 13 Oct;
    the box is a size container, so the steps are in its units). The next photo after a tap or drag takes the front. */
-export function PhotoStack({ bleed = false, fan = false, tints }: { bleed?: boolean; fan?: boolean; tints?: [string, string][] }) {
+export function PhotoStack({ bleed = false, fan = false, tints, caption = false }: { bleed?: boolean; fan?: boolean; tints?: [string, string][]; caption?: boolean }) {
   const [i, setI] = useState(0);
   const [leaving, setLeaving] = useState<null | { idx: number; dir: number }>(null);
   const reduce = useReducedMotion();
@@ -54,7 +54,9 @@ export function PhotoStack({ bleed = false, fan = false, tints }: { bleed?: bool
   };
   return (
     <>
-      <div className="tile-head"><p className="eyebrow">Off duty</p><span className="mono-s dim">{bleed && <span className="hint-inline">drag or tap · </span>}{i + 1} / {n}</span></div>
+      {caption
+        ? <div className="tile-head"><p className="eyebrow">{LIFE[i].caption}</p><span className="mono-s dim">{i + 1} / {n}</span></div> /* 04 (21 Oct): the heading is outside; in here the front photo's caption as the title, the count as the meta */
+        : <div className="tile-head"><p className="eyebrow">Off duty</p><span className="mono-s dim">{bleed && <span className="hint-inline">drag or tap · </span>}{i + 1} / {n}</span></div>}
       <div className={`stack${bleed ? ' bleed' : ''}${fan ? ' fan' : ''}`} aria-label="Photo stack">
         {LIFE.map((c, k) => {
           const pos = (k - i + n) % n;

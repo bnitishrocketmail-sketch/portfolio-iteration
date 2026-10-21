@@ -10,13 +10,13 @@
   --nav-bg: #e0e0e0; --nav-ink: #2f2e30; --nav-hl: #2f2e30; --nav-hl-ink: #c9c9c9; --ai-bg: #2f2e30; --ai-ink: #c9c9c9; --glass-bg: #000000; --glass-a: 0.2;
   --glass-ink: #c9c9cc; --name-ink: #dfdfdf; --title-ink: #e0e0e0; --line-ink: #e0e0e0; --social-ink: #a6a6a6; --cv-bg: #d6d6d6; --cv-ink: #2b2b2e;
   --card-back: #6f6f74; --card-mid: #84848a; --card-front: #c3c3c8; --card-tab: #a5a5aa; --card-front-ink: var(--frame); /* the stack's greys as ref 4 has them (112, 132, 196 and 167 of 255), in the page's cool tint; the front card's text in the frame's colour (dark) */
-  --corner-ink: #bababa; --name-font: 'Outfit'; --name-w1: 800; --name-w2: 300; --copy-font: 'Outfit'; --copy-w: 300; --h2-w: 300; --title-w: 500; --role-w2: 800; --role-ink2: #59575b;
+  --corner-ink: #bababa; --name-font: 'Outfit'; --name-w1: 800; --name-w2: 300; --copy-font: 'Outfit'; --copy-w: 300; --h2-w: 500; --title-w: 500; --role-w2: 800; --role-ink2: #59575b;
   /* the type scale (14 Oct), for this page and the pages after it — two faces: the name's for headings, the copy's for
      everything else. H1 the name; H2 the sections' headings (Projects, Off duty): the name's face, upper case, spaced;
      titles — a card's name, a floating card's caption — the copy face, 600; body — the lines about him, the one-liner —
      the copy face at its weight; meta — a card's client and year, counts, the nav's names — the copy face, 500, smaller */
   --s-h1: 2.8; --s-title: 1.35; --s-body: 1.25; --s-meta: 1.05; /* the sizes, as percent of the frame's width (tokens.ts) */
-  --t-h1: clamp(16px, calc(var(--s-h1) * 1cqw), 44px); --t-h2: var(--t-h1); --t-title: clamp(11px, calc(var(--s-title) * 1cqw), 20px); --t-body: clamp(11px, calc(var(--s-body) * 1cqw), 19px); --t-meta: clamp(9px, calc(var(--s-meta) * 1cqw), 15px); /* H2 is H1's size (Nitish, 14 Oct) */
+  --t-h1: clamp(16px, calc(var(--s-h1) * 1cqw), 44px); --t-h2: clamp(14px, calc(var(--s-h1) * .75cqw), 33px); /* H2: three-quarters of H1 (Nitish, 21 Oct: smaller than the name, a little heavier) */ --t-title: clamp(11px, calc(var(--s-title) * 1cqw), 20px); --t-body: clamp(11px, calc(var(--s-body) * 1cqw), 19px); --t-meta: clamp(9px, calc(var(--s-meta) * 1cqw), 15px); /* H2 is H1's size (Nitish, 14 Oct) */
   --f-head: var(--name-font), 'Outfit', sans-serif; --f-copy: var(--copy-font), 'Outfit', sans-serif;
   --c-ai-x: 11%; --c-ai-y: 38%; --c-ai-z: 3; --c-coin-x: 59%; --c-coin-y: 10%; --c-coin-z: 1; --c-loader-x: 60%; --c-loader-y: 59%; --c-loader-z: 1; --c-micro-x: 3%; --c-micro-y: 51%; --c-micro-z: 3; --c-gold-x: 18%; --c-gold-y: 12%; --c-gold-z: 3;
   --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 3;
@@ -33,7 +33,7 @@
 /* light mode (Nitish, 14 Oct: his second set of values); the dark set above is the default */
 .it04.light {
   --frame: #b5b5b5; --nav-bg: #e0e0e0; --nav-ink: #2f2e30; --nav-hl: #2f2e30; --nav-hl-ink: #c9c9c9; --ai-bg: #2f2e30; --ai-ink: #c9c9c9; --glass-bg: #000000; --glass-a: 0.2; --glass-ink: #c9c9cc; --name-ink: #2f2e30; --title-ink: #2f2e30; --line-ink: #2f2e30; --social-ink: #2f2e30; --cv-bg: #2f2e30; --cv-ink: #b5b5b5; --corner-ink: #2f2e30; --pcard-open: #e0e0e0; --pcard-open-ink: #121212; --pcard-fold: #2f2e30; --pcard-fold-ink: #e0e0e0; --ink: #dbdbdb; --muted: #e0e0e0; --role-ink2: #2f2e30; --h2-w: 600; --bg: #d4d4d7;
-  --h2-w: 600; --card-front-ink: #2f2e30; /* the frame is light here, so the front card's text takes the dark grey */
+  --h2-w: 500; --card-front-ink: #2f2e30; /* the frame is light here, so the front card's text takes the dark grey */
 }
 .it04.light .bg4 { filter: blur(44px) brightness(1.02); }
 
@@ -174,9 +174,10 @@
 .rw4-probe span { display: inline-block; }
 
 /* ---- the right column ---- */
-.col4 { display: grid; grid-template-rows: 7.9% auto minmax(0, 1fr); gap: 1.4cqw; min-height: 0; } /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
+.col4 { --off-title: var(--t-title); --off-meta: var(--t-meta); display: grid; grid-template-rows: 7.9% auto auto minmax(0, 1fr); gap: 1.4cqw; min-height: 0; } /* the Projects row, the stack, the Off duty row, the box; the title and meta sizes resolved here, for the box */ /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
 /* the Projects heading: no container of its own (Nitish, 14 Oct) — an H2 in the name's face, on the column's row */
 .pill4 { position: relative; display: flex; align-items: center; padding: 0 .4cqw; min-height: 0; } .pill4 .h2-4 { margin: 0; }
+.pill4.off { margin-top: .2cqw; }
 /* "more" at the row's right end (Nitish, 21 Oct), with a chevron; its text ends on the bracket's right leg, and it sits
    inside the bracket's corner, below its top leg */
 
@@ -197,8 +198,12 @@
 
 /* Off duty: the lo-fi's fanned cards in a tile — 01's photo stack */
 .off4 { display: flex; flex-direction: column; gap: 6px; padding: 1.2cqw 1.4cqw; border-radius: var(--r); background: var(--g2); min-height: 0; box-shadow: var(--shadow-el); }
-.off4 .tile-head .eyebrow { font: var(--h2-w) var(--t-h2)/1.1 var(--f-head); letter-spacing: -.01em; opacity: 1; } /* H2, as Projects */
-.off4 .tile-head .mono-s { font: 500 var(--t-meta)/1.3 var(--f-copy); } /* meta */
+/* the box's head: the front photo's caption as the title, the count as the meta — the same pair as the project cards
+   (the heading, "Off duty", is outside the box now, an H2 like Projects — 21 Oct). The box is a size container of its
+   own, so the frame's type tokens shrink inside it; these take the sizes the cards resolve to, passed in from the column */
+.off4 .tile-head { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.off4 .tile-head .eyebrow { font: 600 var(--off-title)/1.2 var(--f-copy); letter-spacing: 0; opacity: 1; }
+.off4 .tile-head .mono-s { font: 500 var(--off-meta)/1.3 var(--f-copy); opacity: .72; }
 .off4 .stack { margin-top: 4px; }
 /* the fan as ref 4 draws it (measured 13 Oct, on the tile itself): big square cards — 85% of the tile's height, so most of
    each runs past the tile's bottom and is clipped, as in ref 4 (Nitish: the size against the container) — the front one's

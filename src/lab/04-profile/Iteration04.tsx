@@ -198,6 +198,14 @@ export default function Iteration04() {
     const r = w.getBoundingClientRect(); const dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;
     w.querySelectorAll<HTMLElement>('.fl4').forEach(c => { const d = Number(c.dataset.depth); c.style.setProperty('--px', (dx * 26 * d).toFixed(1) + 'px'); c.style.setProperty('--py', (dy * 18 * d).toFixed(1) + 'px'); });
   };
+  /* the Off duty box is a size container of its own, so the frame's type tokens (cqw) shrink inside it; the title and meta
+     sizes the cards resolve to are measured on the column and handed to the box in pixels (21 Oct) */
+  const colRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const col = colRef.current; if (!col) return;
+    const set = () => { const cs = getComputedStyle(col); col.style.setProperty('--off-title', cs.getPropertyValue('--t-title') && `${parseFloat(getComputedStyle(col.querySelector('.pc-name b') ?? col).fontSize)}px`); col.style.setProperty('--off-meta', `${parseFloat(getComputedStyle(col.querySelector('.pc-name small') ?? col).fontSize)}px`); };
+    set(); const ro = new ResizeObserver(set); ro.observe(col); return () => ro.disconnect();
+  }, [tab]);
   const unlean = () => wrapRef.current?.querySelectorAll<HTMLElement>('.fl4').forEach(c => { c.style.setProperty('--px', '0px'); c.style.setProperty('--py', '0px'); });
   /* after the button's own click has finished bubbling — the island closes on any click outside itself */
   useEffect(() => { if (!ask) return; const id = window.setTimeout(() => document.querySelector<HTMLButtonElement>('.it04 .island-pill')?.click(), 0); return () => window.clearTimeout(id); }, [ask]);
@@ -304,13 +312,14 @@ export default function Iteration04() {
         </div>
 
         {/* the right column: the lo-fi's widgets — a pill, the three stacked cards, Off duty fanned */}
-        <aside className="col4">
+        <aside className="col4" ref={colRef}>
           <div className="pill4">
             <h2 className="h2-4">Projects</h2>
             <i className="corner4 tr" aria-hidden="true" /> {/* the bracket's mirror at the top right (Nitish, 21 Oct): its top leg on the picture's top line, its right leg on the column's right edge, the cards' */}
           </div>
           <ProjectStack onOpen={id => go('project', id)} />
-          <section className="off4"><PhotoStack fan tints={GREYS} /></section>
+          <div className="pill4 off"><h2 className="h2-4">Off duty</h2></div> {/* the heading outside the box, an H2 like Projects (Nitish, 21 Oct) */}
+          <section className="off4"><PhotoStack fan tints={GREYS} caption /></section>
         </aside>
         </>)}
       </div>

@@ -20,6 +20,7 @@
 .sys-cap { font: 500 10.5px/1.3 var(--body); color: var(--muted); opacity: .65; letter-spacing: .04em; }
 /* the type specimens carry the page's own classes; here each sits with its label */
 .sys-type > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
+.sys-sub { margin: 18px 0 4px; font: 600 11px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); opacity: .7; }
 .sys-type .nm4 { text-transform: uppercase; }
 .sys-type .nm4, .sys-type .role4, .sys-type .sub4 { grid-area: auto; margin: 0; } /* the cut-out's grid areas mean nothing here */
 /* the elements: the same classes as on the profile, given a box where the profile's layout gave one */

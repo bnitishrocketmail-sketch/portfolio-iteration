@@ -24,9 +24,9 @@ export const CONTROLS: Control[] = [
   /* type */
   { group: 'Type', sub: 'Faces', kind: 'select', key: '--name-font', label: 'Headings (the name’s face)', def: "'Outfit'", light: "'Outfit'", options: FONTS },
   { group: 'Type', sub: 'Faces', kind: 'select', key: '--copy-font', label: 'Copy', def: "'Outfit'", light: "'Outfit'", options: FONTS },
-  w('--name-w1', 'First name', '800'), w('--name-w2', 'Surname', '300'), w('--h2-w', 'Headings', '300', '600'),
-  w('--copy-w', 'Copy', '300'), w('--title-w', 'Title word (Product / Interaction / Motion)', '500'), w('--role-w2', '“designer”', '800'),
-  size('--s-h1', 'H1 — the name, section headings', '2.8'), size('--s-title', 'Title — a card’s name', '1.35'), size('--s-body', 'Body', '1.25'), size('--s-meta', 'Meta', '1.05'),
+  w('--name-w1', 'H1 (the first name)', '800'), w('--name-w2', 'The surname, the H1 light', '300'), w('--h2-w', 'H2', '500'),
+  w('--copy-w', 'Body', '300'), w('--title-w', 'Title (and the title line’s rolling word)', '500'), w('--role-w2', 'The title line’s fixed word', '800'),
+  size('--s-h1', 'H1 — the name (H2 is three-quarters of it)', '2.8'), size('--s-title', 'Title — a card’s or an item’s name', '1.35'), size('--s-body', 'Body', '1.25'), size('--s-meta', 'Meta — the line under a title, counts, labels', '1.05'),
   /* colours: surfaces */
   col('Surfaces', '--bg', 'Page background', '#141416', '#d4d4d7'),
   col('Surfaces', '--frame', 'Main container', '#121212', '#b5b5b5'),
