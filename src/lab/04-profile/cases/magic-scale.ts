@@ -15,7 +15,7 @@ const magicScale: Case = {
     { k: 'Team', v: 'Product design' },
     { k: 'Focus', v: 'UI/UX design collaboration, interaction & motion design ownership' },
   ],
-  hero: { k: 'media', shape: 'wide', label: 'Hero video' },
+  hero: { k: 'media', shape: 'wide', ratio: '2.5 / 1', label: 'Hero video' }, /* a band, so the strip shows under it in the page's height; the video's own ratio may change this */
   sections: [
     {
       id: 'what', title: 'What is a Magic Scale?',
@@ -79,41 +79,30 @@ const magicScale: Case = {
     {
       id: 'flow', title: 'Final flow',
       blocks: [
-        { k: 'row', ratio: '3fr 2fr', of: [
-          { k: 'group', of: [
-            { k: 'h', t: 'Educating with motion' },
-            { k: 'p', t: ['We knew onboarding was everything for this unfamiliar flow. So we…'] },
-            { k: 'ul', items: [
-              ['Created a quick intro video with a real person demonstrating the tool.'],
-              ['Designed 3D motion graphics showing correct placement and orientation.'],
-              ['Added contextual nudges to guide and correct user behaviour (e.g. "Keep glasses parallel").'],
+        { k: 'flow', steps: [
+          { title: 'Educating with motion',
+            text: [
+              { k: 'p', t: ['We knew onboarding was everything for this unfamiliar flow. So we…'] },
+              { k: 'ul', items: [
+                ['Created a quick intro video with a real person demonstrating the tool.'],
+                ['Designed 3D motion graphics showing correct placement and orientation.'],
+                ['Added contextual nudges to guide and correct user behaviour (e.g. "Keep glasses parallel").'],
+              ] },
+            ],
+            media: [{ k: 'media', shape: 'phone', label: 'Video', cap: 'Intro video' }] },
+          { title: 'Onboarding animations', media: [{ k: 'media', shape: 'phone-land', label: 'Video', cap: 'Step 1' }, { k: 'media', shape: 'phone-land', label: 'Video', cap: 'Step 2' }] },
+          { title: 'Nudges to guide', media: [{ k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Nudge 1' }, { k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Nudge 2' }] },
+          { title: 'Measuring mechanism', media: [{ k: 'media', shape: 'phone-land', label: 'Video', cap: 'Slider interaction' }],
+            side: [
+              { k: 'h', t: 'Interaction design that eased decision fatigue' },
+              { k: 'ul', items: [
+                ['Dynamic info bar: glows green when the slider is active and returns to grey when released.'],
+                ['Animated CTA: the button becomes active after the slider stops → "Show M frames".'],
+                ['Slider feedback: a semi-transparent expanding glasses image reinforces the "half-frame" logic.'],
+                ['Onboarding CTA buttons with immediate visual feedback.'],
+              ] },
+              { k: 'figure', of: { k: 'media', shape: 'small', ratio: '5 / 2', label: 'CTA video' }, width: 'half' },
             ] },
-          ] },
-          { k: 'figure', of: { k: 'media', shape: 'phone', label: 'Video', cap: 'Intro video' }, width: 'phone' },
-        ] },
-        { k: 'h', t: 'Onboarding animations', center: true },
-        { k: 'row', of: [
-          { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Video', cap: 'Step 1' } },
-          { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Video', cap: 'Step 2' } },
-        ] },
-        { k: 'h', t: 'Nudges to guide', center: true },
-        { k: 'row', of: [
-          { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Nudge 1' } },
-          { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Nudge 2' } },
-        ] },
-        { k: 'h', t: 'Measuring mechanism', center: true },
-        { k: 'row', ratio: '1fr 1fr', of: [
-          { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Video', cap: 'Slider interaction' } },
-          { k: 'group', of: [
-            { k: 'h', t: 'Interaction design that eased decision fatigue' },
-            { k: 'ul', items: [
-              ['Dynamic info bar: glows green when the slider is active and returns to grey when released.'],
-              ['Animated CTA: the button becomes active after the slider stops → "Show M frames".'],
-              ['Slider feedback: a semi-transparent expanding glasses image reinforces the "half-frame" logic.'],
-              ['Onboarding CTA buttons with immediate visual feedback.'],
-            ] },
-            { k: 'figure', of: { k: 'media', shape: 'small', ratio: '5 / 2', label: 'CTA video' }, width: 'half' },
-          ] },
         ] },
       ],
     },
@@ -121,11 +110,11 @@ const magicScale: Case = {
       id: 'found', title: 'Where users found it',
       blocks: [
         { k: 'p', t: ['Ensuring that the scale is discoverable in key user journeys:'] },
-        { k: 'row', of: [
-          { k: 'figure', of: { k: 'media', shape: 'phone', label: 'Screen', cap: 'Welcome mat' } },
-          { k: 'figure', of: { k: 'media', shape: 'phone', label: 'Screen', cap: 'Home' } },
-          { k: 'figure', of: { k: 'media', shape: 'phone', label: 'Screen', cap: 'Profile section' } },
-          { k: 'figure', of: { k: 'media', shape: 'phone', label: 'Screen', cap: 'Product listing page' } },
+        { k: 'phones', of: [
+          { k: 'media', shape: 'phone', label: 'Screen', cap: 'Welcome mat' },
+          { k: 'media', shape: 'phone', label: 'Screen', cap: 'Home' },
+          { k: 'media', shape: 'phone', label: 'Screen', cap: 'Profile section' },
+          { k: 'media', shape: 'phone', label: 'Screen', cap: 'Product listing page' },
         ] },
       ],
     },
