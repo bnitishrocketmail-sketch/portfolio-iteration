@@ -18,8 +18,7 @@ import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { readTweaks, tweakKey } from './tokens';
-import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
-import { siLottiefiles } from 'simple-icons';
+import { SOCIAL } from './social';
 import './profile.css';
 
 /* Iteration 04 — "Profile". One screen, after the hi-fi reference (ref 5) with Nitish's changes (13 Oct) and the lo-fi
@@ -33,15 +32,6 @@ type Tab = Exclude<ViewName, 'project'>;
 /* photo placeholders: close mid-greys, so in the fan the depth comes from the shading, not from the tints */
 const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g5)', 'var(--g4)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g3)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g4)']];
 const WORDS = ['Product', 'Interaction', 'Motion']; /* the title's rolling first word (02 v29) */
-
-/* the notch's links: the brands' own marks (Nitish, 13 Oct) — LinkedIn and Instagram from Font Awesome's brand set,
-   LottieFiles from Simple Icons (which no longer carries LinkedIn); the email one is an envelope glyph */
-const SOCIAL: { label: string; href: string; path: string; box: string }[] = [
-  { label: 'LinkedIn', href: LINKS.linkedin, path: String(faLinkedinIn.icon[4]), box: `0 0 ${faLinkedinIn.icon[0]} ${faLinkedinIn.icon[1]}` },
-  { label: 'Instagram', href: LINKS.instagram, path: String(faInstagram.icon[4]), box: `0 0 ${faInstagram.icon[0]} ${faInstagram.icon[1]}` },
-  { label: 'LottieFiles', href: LINKS.lottiefiles, path: siLottiefiles.path, box: '0 0 24 24' },
-  { label: 'Email', href: '#', path: 'M2 5h20v14H2zm1 1v1.2l9 6 9-6V6zm18 2.4-9 6-9-6V18h18z', box: '0 0 24 24' },
-];
 
 /* ---- the projects stack, as ref 4 draws it (Nitish, 13 Oct — "adapt this as it is"): three cards the column's full
    width at 165 × 127, the front one at the bottom, each one behind stepped up by 58% of a card and in shade; a vertical
@@ -232,7 +222,7 @@ export default function Iteration04() {
         {tab === 'projects' ? (
           /* the project page takes the picture's and the column's place (Projects04.tsx); the nav stays */
           <motion.div key={pid ? `case-${pid}` : 'projects'} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
-            {pid ? <Case04 id={pid} back={() => go('projects')} /> : <Projects04 onOpen={id => go('project', id)} />}
+            {pid ? <Case04 id={pid} back={() => go('projects')} onOpen={id => go('project', id)} /> : <Projects04 onOpen={id => go('project', id)} />}
           </motion.div>
         ) : tab === 'motion' ? (
           /* the motion system (Motion04.tsx), in the same place */

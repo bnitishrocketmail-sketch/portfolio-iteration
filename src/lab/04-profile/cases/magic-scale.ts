@@ -21,10 +21,8 @@ const magicScale: Case = {
       id: 'what', title: 'What is a Magic Scale?',
       blocks: [
         { k: 'p', t: ['A guided tool allowing users to ', { b: 'measure their glasses by placing them on their phone screen' }, ' & measuring half the frame, users can accurately determine their frame size (XS, S, M, L, XL) in millimeters. This approach ', { b: 'empowers users to trust the results' }, ', as they measure their glasses themselves.'] },
-        { k: 'row', of: [
-          { k: 'stats', title: 'Impact of the feature', tone: 'dark', items: [{ n: '3.3%', l: 'Conversion increase' }, { n: '9.5%', l: 'Adoptions' }, { n: '38%', l: 'Completion' }, { n: '98%', l: 'Frame sizing accuracy' }] },
-          { k: 'stats', title: 'Why a new sizing tool?', items: [{ n: '5.6%', l: 'Returns due to sizing' }, { n: '80%', l: 'AR-compatible devices' }, { n: '50–60%', l: 'AR sizing accuracy' }, { n: '98%', l: 'Frame sizing accuracy' }] },
-        ] },
+        { k: 'stats', title: 'Impact of the feature', tone: 'dark', items: [{ n: '3.3%', l: 'Conversion increase' }, { n: '9.5%', l: 'Adoptions' }, { n: '38%', l: 'Completion' }, { n: '98%', l: 'Frame sizing accuracy' }] },
+        { k: 'stats', title: 'Why a new sizing tool?', items: [{ n: '5.6%', l: 'Returns due to sizing' }, { n: '80%', l: 'AR-compatible devices' }, { n: '50–60%', l: 'AR sizing accuracy' }, { n: '98%', l: 'Frame sizing accuracy' }] },
       ],
     },
     {
@@ -73,7 +71,7 @@ const magicScale: Case = {
           { k: 'media', shape: 'video', ratio: '20 / 11', label: 'Zones video' },
         ] },
         { k: 'legend', items: ['Less interactive elements', 'Place where the spec/frame is placed on screen', 'Main interactive elements'] },
-        { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Final ruler design' }, width: 'half' },
+        { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Final ruler design' } },
       ],
     },
     {

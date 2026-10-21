@@ -3,7 +3,33 @@
    --s1 the tightest (a caption under its figure), --s2 the grid gaps, --s3 a card's padding and the room between the
    blocks inside it and between the cards, --s4 the room between the parts of a section, --s5 between a flow's steps.
    The exceptions: a list's own rhythm (em), the head's gap, which is the other pages' (.pp4). */
-.cs4 { --s1: .6cqw; --s2: 1.2cqw; --s3: 1.8cqw; --s4: 2.4cqw; --s5: 3.6cqw; }
+.cs4 { --s1: .6cqw; --s2: 1.2cqw; --s3: 1.8cqw; --s4: 2.4cqw; --s5: 3.6cqw;
+  /* one phone for the whole study (21 Oct): every upright screen this wide, every landscape one this tall — the same
+     device on its side; 10% under the first cut's */
+  --ph-w: clamp(135px, 13.3cqw, 172px); --ph-h: calc(var(--ph-w) * 19.5 / 9); }
+
+/* the study at the left, the column at the right — the home page's column: its width and the frame's gap, level with
+   the first container (the head stays above both) */
+.cs4-main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) calc(.21 * var(--fw)); gap: 0 calc(.016 * var(--fw)); }
+.cs4-aside { min-height: 0; display: grid; grid-template-rows: 70% minmax(0, 1fr); gap: var(--s3); padding: 2px 2px 2px 0; }
+.cs4-next { position: relative; display: flex; flex-direction: column; gap: var(--s1); min-height: 0; padding: var(--s3); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
+.cs4-eyebrow { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .55; margin-bottom: var(--s1); } /* meta */
+.cs4-next-title { margin: 0; font: var(--h2-w) clamp(18px, 2.2cqw, 28px)/1.15 var(--f-head); letter-spacing: -.01em; } /* the open card's title style */
+.cs4-next-blurb { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); opacity: .82; } /* body */
+.cs4-next-meta { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
+.cs4-next-letter { position: absolute; left: 4%; bottom: -6%; font: 800 clamp(96px, 10cqw, 140px)/1 var(--display); letter-spacing: -.04em; opacity: .08; pointer-events: none; } /* the row's big letter, at the foot, the arrow at the right */
+.cs4-next-arrow { right: var(--s3); bottom: var(--s3); }
+.cs4-talk { display: flex; flex-direction: column; justify-content: space-between; gap: var(--s1); min-height: 0; padding: var(--s2) var(--s3); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
+.cs4-talk-head { display: flex; align-items: center; gap: var(--s2); }
+.cs4-talk .cs4-me { width: clamp(36px, 3.4cqw, 46px); flex: none; align-self: center; box-shadow: 0 0 0 1px color-mix(in srgb, var(--pcard-open-ink) 14%, transparent); }
+.cs4-talk-who { display: flex; flex-direction: column; gap: .15em; min-width: 0; }
+.cs4-talk-name { font: 600 var(--t-title)/1.2 var(--f-copy); } /* title */
+.cs4-talk-role { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
+.cs4-talk-line { margin: 0; font: var(--copy-w) var(--t-meta)/1.4 var(--f-copy); opacity: .82; } /* meta: the card is small */
+.cs4-talk-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
+.cs4-talk .cs4-talk-btn { margin: 0; background: var(--pcard-open-ink); color: var(--pcard-open); } /* the CV button's shape, in the card's inks */
+.cs4-talk .cs4-links { display: flex; gap: 2px; padding: 0; border-radius: 0; } .cs4-talk .cs4-links a { color: var(--pcard-open-ink); opacity: .7; } .cs4-talk .cs4-links a:hover { opacity: 1; background: color-mix(in srgb, var(--pcard-open-ink) 8%, transparent); }
+.cs4-talk .cs4-links svg { width: 15px; height: 15px; }
 
 .cs4-title { display: flex; flex-direction: column; gap: .3cqw; }
 .cs4-back { align-self: flex-start; display: inline-flex; align-items: center; gap: .4em; margin: 0 0 0 -.4em; padding: .3em .6em .3em .4em; border: 0; border-radius: 999px; background: none; color: var(--line-ink); opacity: .7; cursor: pointer; font: 500 var(--t-meta)/1 var(--f-copy); transition: opacity .2s, background-color .2s; } /* meta */
@@ -13,11 +39,12 @@
 .cs4-body { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: flex; flex-direction: column; gap: var(--s3); padding: 2px 2px var(--s3); }
 .cs4-hero { flex: none; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
 .cs4-hero .cs4-media { border-radius: 0; background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
-.cs4-strip { flex: none; margin: 0; display: grid; grid-template-columns: auto auto auto auto minmax(0, 1.7fr) auto; gap: var(--s3) var(--s4); padding: var(--s3); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); }
+.cs4-strip { flex: none; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3) var(--s4); padding: var(--s3); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); } /* two rows of four: the short facts, then the focus and the tags */
+.cs4-strip > div:nth-child(5) { grid-column: span 2; }
 .cs4-strip > div { display: flex; flex-direction: column; gap: .3em; min-width: 0; }
 .cs4-strip dt { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .55; } /* meta */
 .cs4-strip dd { margin: 0; font: 500 var(--t-title)/1.35 var(--f-copy); } /* title */
-.cs4-strip .cs4-tags { justify-self: end; }
+.cs4-strip .cs4-tags { grid-column: span 2; }
 .cs4-chips { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: var(--s1); }
 .cs4-chips li { padding: .45em .9em; border-radius: 999px; background: color-mix(in srgb, currentColor 10%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); } /* meta, the open card's chips */
 
@@ -39,15 +66,16 @@
 .cs4-slot { font: 500 var(--t-meta)/1.2 var(--f-copy); letter-spacing: .04em; text-transform: uppercase; opacity: .38; } /* meta */
 .cs4-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: var(--s1); min-width: 0; }
 .cs4-fig figcaption { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; text-align: center; } /* meta */
-.cs4-fig.phone { width: min(100%, clamp(150px, 14.5cqw, 196px)); justify-self: center; }
-.cs4-fig.phone-land { width: min(100%, clamp(300px, 34cqw, 460px)); justify-self: center; }
+.cs4-fig.phone { width: min(100%, var(--ph-w)); justify-self: center; }
+.cs4-fig.phone-land { width: min(100%, var(--ph-h)); justify-self: center; }
 .cs4-fig.half { width: 56%; align-self: center; }
 .cs4-phones { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--s2) var(--s5); padding: var(--s2) 0; }
 
 /* the flow: the steps down the card, --s5 apart, the curves drawn over them */
-.cs4-flow { position: relative; display: flex; flex-direction: column; gap: var(--s5); padding-top: var(--s2); }
-.cs4-wires { position: absolute; inset: 0; pointer-events: none; color: color-mix(in srgb, var(--pcard-open-ink) 38%, transparent); overflow: visible; }
-.cs4-wires path { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.cs4-flow { position: relative; display: flex; flex-direction: column; gap: calc(var(--s5) + var(--s3)); padding-top: var(--s2); } /* the steps further apart than anything else: the knots need the room */
+.cs4-wires { position: absolute; inset: 0; z-index: 1; pointer-events: none; color: color-mix(in srgb, var(--pcard-open-ink) 26%, transparent); overflow: visible; } /* over the screens: the node sits on one */
+.cs4-wires path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.cs4-wires .ring { fill: color-mix(in srgb, var(--pcard-open-ink) 26%, var(--pcard-open)); } .cs4-wires .core { fill: var(--pcard-open); } /* his node: a ring with the card showing through */
 .cs4-step { display: grid; gap: var(--s2) var(--s4); align-items: start; grid-template-columns: minmax(0, 1fr); }
 .cs4-step .cs4-sub.step { grid-column: 1 / -1; text-align: center; }
 .cs4-step.with-text { grid-template-columns: 3fr 2fr; } .cs4-step.with-text .cs4-sub.step { text-align: left; }
@@ -75,7 +103,10 @@
 .cs4-soon { flex: 1; display: grid; place-items: center; border-radius: var(--r); border: 1px dashed color-mix(in srgb, var(--line-ink) 22%, transparent); font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; color: var(--line-ink); opacity: .5; } /* as a tab not built yet */
 
 @media (max-width: 700px) {
-  .cs4 { --s1: 8px; --s2: 12px; --s3: 16px; --s4: 24px; --s5: 36px; }
+  .cs4 { --s1: 8px; --s2: 12px; --s3: 16px; --s4: 24px; --s5: 36px; --ph-w: 150px; }
+  .cs4-main { display: flex; flex-direction: column; gap: 12px; }
+  .cs4-aside { display: flex; flex-direction: column; gap: 12px; padding: 0; } .cs4-next { box-shadow: var(--shadow-frame); padding: 16px 16px 18px; min-height: 180px; } .cs4-next-title { font-size: 22px; } .cs4-next-arrow { right: 14px; bottom: 14px; }
+  .cs4-talk { box-shadow: var(--shadow-frame); padding: 16px 16px 18px; gap: 12px; } .cs4-talk-line { font-size: var(--t-body); }
   .cs4-title { gap: 4px; } .cs4-back { color: var(--glass-ink); }
   .it04 .cs4 > .cs4-body { overflow: visible; padding: 0; background: none; box-shadow: none; border-radius: 0; } /* not the phone's card treatment of a .pp4 page's body — its own parts are the cards */
   .cs4-hero, .cs4-strip, .cs4-sec { box-shadow: var(--shadow-frame); }
@@ -83,7 +114,7 @@
   .cs4-h { font-size: 22px; }
   .cs4-row { grid-template-columns: 1fr !important; }
   .cs4-media { border-radius: calc(var(--r) - 8px); }
-  .cs4-fig.phone { width: min(100%, 200px); } .cs4-fig.phone-land { width: 100%; } .cs4-fig.half { width: 80%; }
+  .cs4-fig.phone { width: min(100%, var(--ph-w)); } .cs4-fig.phone-land { width: min(100%, var(--ph-h)); } .cs4-fig.half { width: 80%; }
   .cs4-phones { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); padding: 0; } .cs4-phones .cs4-fig.phone { width: 100%; }
   .cs4-step.with-text, .cs4-step.with-side { grid-template-columns: 1fr; }
   .cs4-screens { flex-direction: column; gap: var(--s4); }

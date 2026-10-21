@@ -1,6 +1,8 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { PROJECTS } from '../../lib/data';
 import { CASES, type Block, type Media, type Rich, type Step } from './cases';
+import { MAIL, SOCIAL } from './social';
+import desk from '../../assets/nitish-desk.webp';
 import './case.css';
 
 /* 04's case study (Nitish, 21 Oct): a company project opened from the Projects row or the home stack. His Framer site
@@ -30,38 +32,46 @@ const Fig = ({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) => (
   <figure className={`cs4-fig ${m.shape}${cls ? ' ' + cls : ''}`} data-fl={fl}><Slot m={m} fl={fl && fl + '.m'} />{m.cap && <figcaption>{m.cap}</figcaption>}</figure>
 );
 
-/* the flow: steps in a column; a curve runs from each step's last screen to the next step's heading, and between two
-   screens of one step — measured after layout (and on resize), drawn in the card's ink, faint, with a small head */
+/* the flow: steps in a column, wired as his page drew them (21 Oct, "the knots should be exactly as they are seen"):
+   from a step's last screen to the next step's first screen a 2px line that leaves a ring node inside the screen near
+   its bottom, drops, sweeps across above the next heading and drops again to an open chevron just over the next
+   screen; between two screens of one step a shorter S from a node in the first's lower right to the second's left
+   edge. Measured after layout and on resize; drawn in the card's ink, faint, like his light grey on white. */
 function Flow({ steps }: { steps: Step[] }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [paths, setPaths] = useState<string[]>([]);
+  const [wires, setWires] = useState<{ d: string; node: [number, number] }[]>([]);
   const [size, setSize] = useState<[number, number]>([0, 0]);
   useLayoutEffect(() => {
     const root = ref.current; if (!root) return;
     const draw = () => {
       const R = root.getBoundingClientRect(); const box = (sel: string) => { const el = root.querySelector<HTMLElement>(`[data-fl="${sel}"]`); if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left - R.left, y: r.top - R.top, w: r.width, h: r.height }; };
-      const out: string[] = [];
-      const vS = (x1: number, y1: number, x2: number, y2: number) => `M${x1.toFixed(1)} ${y1.toFixed(1)} C${x1.toFixed(1)} ${((y1 + y2) / 2).toFixed(1)}, ${x2.toFixed(1)} ${((y1 + y2) / 2).toFixed(1)}, ${x2.toFixed(1)} ${y2.toFixed(1)}`;
-      const hS = (x1: number, y1: number, x2: number, y2: number) => `M${x1.toFixed(1)} ${y1.toFixed(1)} C${((x1 + x2) / 2).toFixed(1)} ${y1.toFixed(1)}, ${((x1 + x2) / 2).toFixed(1)} ${y2.toFixed(1)}, ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+      const f = (n: number) => n.toFixed(1);
+      const out: { d: string; node: [number, number] }[] = [];
+      /* drop, sweep across, drop: the two cubics of his big connectors */
+      const dropAcross = (sx: number, sy: number, tx: number, ty: number) => { const my = sy + (ty - sy) * .5; return `M${f(sx)} ${f(sy)} C${f(sx)} ${f(sy)}, ${f(sx)} ${f(my)}, ${f((sx + tx) / 2)} ${f(my)} C${f(tx)} ${f(my)}, ${f(tx)} ${f(ty)}, ${f(tx)} ${f(ty)}`; };
+      const across = (sx: number, sy: number, tx: number, ty: number) => { const mx = (sx + tx) / 2; return `M${f(sx)} ${f(sy)} C${f(mx)} ${f(sy)}, ${f(mx)} ${f(ty)}, ${f(tx)} ${f(ty)}`; };
       steps.forEach((s, i) => {
-        /* between the screens of one step: side by side, or one under the other on the phone */
         for (let j = 1; j < s.media.length; j++) {
-          const a = box(`${i}.${j - 1}.m`), b = box(`${i}.${j}.m`), af = box(`${i}.${j - 1}`); if (!a || !b || !af) continue;
-          if (b.y >= a.y + a.h - 2) out.push(vS(af.x + af.w / 2, af.y + af.h, b.x + b.w / 2, b.y - 6)); /* under the caption, to the next screen's top */
-          else out.push(hS(a.x + a.w, a.y + a.h / 2, b.x - 6, b.y + b.h / 2)); /* screen to screen, at mid height */
+          const a = box(`${i}.${j - 1}.m`), b = box(`${i}.${j}.m`); if (!a || !b) continue;
+          if (b.y >= a.y + a.h - 2) { const sx = a.x + a.w * .7, sy = a.y + a.h - 18; out.push({ d: dropAcross(sx, sy, b.x + b.w * .5, b.y - 14), node: [sx, sy] }); } /* one under the other (the phone): right of the caption, to the next's top */
+          else { const sx = a.x + a.w * .88, sy = a.y + a.h * .78; out.push({ d: across(sx, sy, b.x - 3, b.y + b.h * .58), node: [sx, sy] }); } /* side by side */
         }
-        /* to the next step's heading */
-        if (i < steps.length - 1) { const a = box(`${i}.${s.media.length - 1}`), t = box(`${i + 1}.t`); if (a && t) out.push(vS(a.x + a.w / 2, a.y + a.h, t.x + t.w / 2, t.y - 8)); } /* from under the caption to above the heading */
+        if (i < steps.length - 1) {
+          const a = box(`${i}.${s.media.length - 1}.m`), b = box(`${i + 1}.0.m`), t = box(`${i + 1}.t`); if (!a || !b || !t) return;
+          const sx = a.x + a.w * .7, sy = a.y + a.h - 18; /* right of the caption under it */
+          const column = Math.abs((a.x + a.w / 2) - (b.x + b.w / 2)) < 40; /* the phone: the screens in one column, the heading between — the line ends above the heading */
+          out.push({ d: column ? dropAcross(sx, sy, t.x + t.w / 2, t.y - 10) : dropAcross(sx, sy, b.x + b.w * .53, b.y - 14), node: [sx, sy] });
+        }
       });
-      setPaths(out); setSize([R.width, R.height]);
+      setWires(out); setSize([R.width, R.height]);
     };
     draw(); const ro = new ResizeObserver(draw); ro.observe(root); root.querySelectorAll('[data-fl]').forEach(el => ro.observe(el)); return () => ro.disconnect();
   }, [steps]);
   return (
     <div className="cs4-flow" ref={ref}>
       <svg className="cs4-wires" width={size[0]} height={size[1]} viewBox={`0 0 ${size[0]} ${size[1]}`} aria-hidden="true">
-        <defs><marker id="cs4-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 L8 5 L1 9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></marker></defs>
-        {paths.map((d, i) => <path key={i} d={d} markerEnd="url(#cs4-head)" />)}
+        <defs><marker id="cs4-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto"><path d="M1 0.5 L8 5 L1 9.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></marker></defs>
+        {wires.map((w, i) => <g key={i}><path d={w.d} markerEnd="url(#cs4-head)" /><circle className="ring" cx={w.node[0]} cy={w.node[1]} r="5" /><circle className="core" cx={w.node[0]} cy={w.node[1]} r="3" /></g>)}
       </svg>
       {steps.map((s, i) => (
         <div key={s.title} className={`cs4-step${s.text ? ' with-text' : ''}${s.side ? ' with-side' : ''}`}>
@@ -102,9 +112,10 @@ function Render({ b }: { b: Block }) {
   }
 }
 
-export default function Case04({ id, back }: { id: string; back: () => void }) {
-  const p = PROJECTS.find(p => p.id === id);
+export default function Case04({ id, back, onOpen }: { id: string; back: () => void; onOpen: (id: string) => void }) {
+  const k = PROJECTS.findIndex(p => p.id === id); const p = PROJECTS[k];
   const c = CASES[id];
+  const next = PROJECTS[(k + 1) % PROJECTS.length]; /* the column's top card: the next project (what else it holds, later) */
   if (!p) return null;
   return (
     <section className="pp4 cs4" aria-label={p.title}>
@@ -115,6 +126,7 @@ export default function Case04({ id, back }: { id: string; back: () => void }) {
         </div>
         <div className="pp4-right"><p className="pp4-note">{c?.sub ?? p.blurb}</p></div>
       </header>
+      <div className="cs4-main">
       <div className="cs4-body">
         {c ? (<>
           {c.hero && <div className="cs4-hero"><Slot m={c.hero} /></div>}
@@ -133,6 +145,32 @@ export default function Case04({ id, back }: { id: string; back: () => void }) {
         </>) : (
           <div className="cs4-soon">Case study to come</div>
         )}
+      </div>
+      {/* the column at the right (21 Oct): the home page's column width, level with the first container — the next
+          project in a card 70% of the height, and the rest for a second card, its content to come */}
+      <aside className="cs4-aside">
+        <article className="cs4-next">
+          <span className="cs4-eyebrow">Next project</span>
+          <h3 className="cs4-next-title">{next.title}</h3>
+          <p className="cs4-next-blurb">{next.blurb}</p>
+          <span className="cs4-next-meta">{next.client} · {next.year}</span>
+          <span className="cs4-next-letter" aria-hidden="true">{next.letter}</span>
+          <button type="button" className="pp4-arrow cs4-next-arrow" aria-label={`Open ${next.title}`} onClick={() => onOpen(next.id)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+        </article>
+        {/* the second card (21 Oct): his old site's contact card, at the foot of its project pages — the photo, the name, a
+            line, "Let's talk!" and the links — in 04's parts (the intro's photo disc, its CV button's style, the notch's marks) */}
+        <article className="cs4-talk" aria-label="Contact">
+          <div className="cs4-talk-head">
+            <span className="me4 cs4-me"><img src={desk} alt="" /></span>
+            <div className="cs4-talk-who"><b className="cs4-talk-name">Nitish Bhardwaj</b><span className="cs4-talk-role">Product · motion designer</span></div>
+          </div>
+          <p className="cs4-talk-line">If you like what you see or have any questions, feel free to send me an email anytime.</p>
+          <div className="cs4-talk-row">
+            <a className="cv4 cs4-talk-btn" href={MAIL}>Let's talk!</a>
+            <div className="links4 cs4-links">{SOCIAL.filter(l => l.label !== 'Email').map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}</div>
+          </div>
+        </article>
+      </aside>
       </div>
     </section>
   );
