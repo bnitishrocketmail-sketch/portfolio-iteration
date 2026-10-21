@@ -172,11 +172,9 @@
 /* ---- the right column ---- */
 .col4 { display: grid; grid-template-rows: 7.9% auto minmax(0, 1fr); gap: 1.4cqw; min-height: 0; } /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
 /* the Projects heading: no container of its own (Nitish, 14 Oct) — an H2 in the name's face, on the column's row */
-.pill4 { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 0 .4cqw; min-height: 0; } .pill4 .h2-4 { margin: 0; }
+.pill4 { position: relative; display: flex; align-items: center; padding: 0 .4cqw; min-height: 0; } .pill4 .h2-4 { margin: 0; }
 /* "more" at the row's right end (Nitish, 21 Oct), with a chevron; its text ends on the bracket's right leg, and it sits
    inside the bracket's corner, below its top leg */
-.more4 { display: inline-flex; align-items: center; gap: .15em; margin-right: calc(-1 * .4cqw + 2.5px); padding: 0; border: 0; background: none; color: var(--line-ink); font: 500 var(--t-meta)/1 var(--f-copy); cursor: pointer; opacity: .8; transition: opacity .2s, translate .2s; }
-.more4:hover { opacity: 1; translate: 2px 0; } .more4 svg { width: 1.1em; height: 1.1em; }
 
 /* the stack (ref 4, measured again on 13 Oct): the cards run the column's full width at 165 × 127 (1.3:1); the front one
    sits on the deck's bottom, each one behind peeks 58% of a card above the next, so the deck is 2.16 cards tall and the

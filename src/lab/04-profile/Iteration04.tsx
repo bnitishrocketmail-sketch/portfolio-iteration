@@ -307,7 +307,6 @@ export default function Iteration04() {
         <aside className="col4">
           <div className="pill4">
             <h2 className="h2-4">Projects</h2>
-            <button type="button" className="more4" onClick={() => go('projects')}>more <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
             <i className="corner4 tr" aria-hidden="true" /> {/* the bracket's mirror at the top right (Nitish, 21 Oct): its top leg on the picture's top line, its right leg on the column's right edge, the cards' */}
           </div>
           <ProjectStack onOpen={id => go('project', id)} />
