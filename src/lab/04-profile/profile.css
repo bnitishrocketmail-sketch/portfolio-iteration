@@ -180,9 +180,9 @@
    place: the row's top padding puts its text where the 7.9% row had centred it. */
 .col4 { --off-title: var(--t-title); --off-meta: var(--t-meta); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto auto; gap: 0; min-height: 0; } /* heading, stack, the separation (what is left), heading, box */
 /* the rhythm (21 Oct, second pass: "the title should be a little closer to the container it refers to"): a heading sits
-   12px above its container; what remains of the column's height is the separation between the stack and the Off duty
+   18px above its container; what remains of the column's height is the separation between the stack and the Off duty
    heading, so the two sections read apart. The box is the card's size. */
-.col4 > .stack4 { margin-top: 12px; } .col4 > .off4 { margin-top: 12px; aspect-ratio: 165 / 113; width: 100%; min-height: 0; flex: none; }
+.col4 > .stack4 { margin-top: 18px; } .col4 > .off4 { margin-top: 18px; aspect-ratio: 165 / 113; width: 100%; min-height: 0; flex: none; } /* 18px (12 + 50%, 21 Oct) */
 .col4 > .pill4.off { margin-top: 0; } /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
 /* the Projects heading: no container of its own (Nitish, 14 Oct) — an H2 in the name's face, on the column's row */
 .pill4 { position: relative; display: flex; align-items: center; padding: 1.1cqw .4cqw 0; min-height: 0; } .pill4 .h2-4 { margin: 0; }
@@ -194,7 +194,7 @@
    sits on the deck's bottom, each one behind peeks 58% of a card above the next, so the deck is 2.16 cards tall and the
    back card's top is the deck's top. The tab is a vertical pill 3.6% in from the left, 12.1% × 25.2% of the card, one
    mid grey on every card; centred on the front card, 28% from the top on the ones behind (whole above the card in front). */
-.stack4 { position: relative; min-height: 0; aspect-ratio: 165 / 226; width: 100%; } /* two cards tall (a card 165 × 113, each behind peeking half a card — 21 Oct) */
+.stack4 { position: relative; min-height: 0; aspect-ratio: 165 / 243; width: 100%; } /* a card 165 × 113, each behind peeking 57.5% of a card: 113 × (1 + 2 × .575) = 243 (21 Oct) */
 .deck4 { position: absolute; inset: 0; }
 .pcard4 { position: absolute; left: 0; width: 100%; aspect-ratio: 165 / 113; /* 21 Oct: a card and the Off duty box one size, between the old card (165 × 127) and the old box (165 × 69) */ display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--card-front-ink); font: inherit; text-align: left; cursor: pointer; overflow: visible;
   box-shadow: 0 0 16px rgba(0, 0, 0, .3); } /* ref 4's: a soft halo about 16px out, darkest at the edge, seen on the card behind above each card's top (Nitish, 13 Oct — copied as it is, spill above included) */

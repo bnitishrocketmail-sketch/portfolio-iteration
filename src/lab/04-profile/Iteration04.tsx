@@ -48,7 +48,7 @@ const SOCIAL: { label: string; href: string; path: string; box: string }[] = [
    so it shows whole above the card in front; ref 4's greys (dark at the back, light in front) and its soft shadow. Static
    for now — scrolling and the dots come later. ---- */
 const SHOWN = 3;
-const OFFSET = .5; /* each card peeks half a card above the one in front (ref 4 had 58%; compressed 21 Oct, so the deck is two cards tall) */
+const OFFSET = .575; /* each card peeks 57.5% of a card above the one in front (ref 4 had 58%; compressed to 50% on 21 Oct, then spread 15% the same day) */
 function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   return (
     <div className="stack4">
