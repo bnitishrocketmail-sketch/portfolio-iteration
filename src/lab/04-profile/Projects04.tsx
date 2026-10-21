@@ -13,11 +13,11 @@ import { PROJECTS } from '../../lib/data';
    follows from the viewport: open + 2½ folded + 3 gaps = the width. The row stays put for the first two cards; from the
    third, the card two before the open one goes half into the left edge (see `shift`). The
    geometry is explicit — the row is measured, each card's x and width are animated on a spring — so nothing scales:
-   covers are cropped by their cards and reveal as they widen. The arrow is to open the case study; where that goes is next. */
+   covers are cropped by their cards and reveal as they widen. The arrow opens the case study (Case04.tsx), in the page's place. */
 const OPEN = .58; /* the open card, of the viewport's width (ref 7: 66% with two folded; five here) */
 const SPRING = { type: 'spring', stiffness: 260, damping: 32, mass: 1 } as const;
 
-export default function Projects04() {
+export default function Projects04({ onOpen }: { onOpen: (id: string) => void }) {
   const reduce = useReducedMotion();
   const [sel, setSel] = useState(PROJECTS[0].id);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ export default function Projects04() {
               <div className="pp4-top"><h3 className="pp4-title">{p.title}</h3><p className="pp4-blurb">{p.blurb}</p></div>
               <ul className="pp4-chips">{p.tags.map(t => <li key={t}>{t}</li>)}</ul>
               <span className="pp4-meta">{p.client} · {p.role} · {p.year}</span>
-              <button type="button" className="pp4-arrow" aria-label={`Open ${p.title}`}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+              <button type="button" className="pp4-arrow" aria-label={`Open ${p.title}`} onClick={() => onOpen(p.id)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
             </motion.div>
             {/* the folded layout: 01's card's lines, set vertically at the bottom-left */}
             <motion.div className="pp4-fold" initial={false} animate={{ opacity: open ? 0 : 1 }} transition={open ? { ...fade, duration: .14 } : { ...fade, delay: reduce ? 0 : .12 }} aria-hidden={open}>

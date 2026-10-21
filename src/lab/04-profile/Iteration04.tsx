@@ -13,6 +13,7 @@ import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
 import Soon04 from './Soon04';
 import Lab04 from './Lab04';
+import Case04 from './Case04';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
@@ -177,13 +178,14 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
 }
 
 export default function Iteration04() {
-  const { view } = useParams();
+  const { view: v0, pid } = useParams();
+  const view = v0 ?? (pid ? 'projects' : undefined); /* /projects/:pid is a case study on the Projects tab */
   const navigate = useNavigate();
   const { isDark, toggle } = useTheme();
   /* the Motion system has no nav entry (20 Oct: a Lab project) but keeps its route; while it is open the nav shows Lab */
   const tab: Tab = (NAV.some(n => n.id === view) || view === 'motion' ? view : 'home') as Tab;
   const navTab: Tab = tab === 'motion' ? 'lab' : tab;
-  const go = (v: ViewName, pid?: string) => { if (v === 'project' && pid) { navigate(`/lab/04-profile/projects`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
+  const go = (v: ViewName, id?: string) => { if (v === 'project' && id) { navigate(`/lab/04-profile/projects/${id}`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
   const [ask, setAsk] = useState(0);
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
      mode change, and when the system page writes them from another tab */
@@ -229,8 +231,8 @@ export default function Iteration04() {
             shadow as that shape — onto the frame around it and onto the cut-out area — and the cut-out sits beside it. */}
         {tab === 'projects' ? (
           /* the project page takes the picture's and the column's place (Projects04.tsx); the nav stays */
-          <motion.div key="projects" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
-            <Projects04 />
+          <motion.div key={pid ? `case-${pid}` : 'projects'} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+            {pid ? <Case04 id={pid} back={() => go('projects')} /> : <Projects04 onOpen={id => go('project', id)} />}
           </motion.div>
         ) : tab === 'motion' ? (
           /* the motion system (Motion04.tsx), in the same place */

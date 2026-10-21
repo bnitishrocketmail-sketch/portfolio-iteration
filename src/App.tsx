@@ -20,7 +20,8 @@ export default function App() {
         <Route path="/lab/01b-sheet" element={<Iteration01 variant="b" />} />
         <Route path="/lab/01b-sheet/:view" element={<Iteration01 variant="b" />} />
         <Route path="/lab/01b-sheet/:view/:pid" element={<Iteration01 variant="b" />} />
-        <Route path="/lab/04-profile/:view?" element={<Iteration04 />} /> {/* one route for home and the sections, so a tab change never remounts the screen */}
+        <Route path="/lab/04-profile/:view?" element={<Iteration04 />} />
+        <Route path="/lab/04-profile/projects/:pid" element={<Iteration04 />} /> {/* a case study, on the Projects tab */} {/* one route for home and the sections, so a tab change never remounts the screen */}
         <Route path="/lab/04-orb" element={<OrbLab04 />} /> {/* the Workflow page's orb, on its own while it is tuned */}
         <Route path="/lab/04-system" element={<System04 />} /> {/* 04's design system — not a page of the portfolio */}
         <Route path="/lab/02-field" element={<Iteration02 />} />

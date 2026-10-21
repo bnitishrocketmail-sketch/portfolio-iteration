@@ -1,0 +1,84 @@
+/* ---- 04's case study (Case04.tsx): the project's panel at the left, the case study scrolling beside it ---- */
+.cs4 { flex: 1; min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(220px, 27%) minmax(0, 1fr); gap: 1.6cqw; padding: .6cqw .2cqw 0; }
+
+/* the panel: the open project card's information, carried over, in the open card's colours */
+.cs4-side { min-height: 0; display: flex; flex-direction: column; gap: 1.4cqw; padding: 1.6cqw 1.8cqw 1.8cqw; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: auto; scrollbar-width: thin; }
+.cs4-back { align-self: flex-start; display: inline-flex; align-items: center; gap: .4em; margin: 0 0 .2cqw -.3em; padding: .3em .6em .3em .4em; border: 0; border-radius: 999px; background: none; color: inherit; opacity: .62; cursor: pointer; font: 500 var(--t-meta)/1 var(--f-copy); transition: opacity .2s, background-color .2s; } /* meta */
+.cs4-back:hover { opacity: 1; background: color-mix(in srgb, currentColor 8%, transparent); } .cs4-back svg { width: 1.1em; height: 1.1em; }
+.cs4-head { display: flex; flex-direction: column; gap: .5cqw; } .cs4-head .h2-4 { color: inherit; }
+.cs4-lede { margin: 0; font: var(--copy-w) var(--t-body)/1.4 var(--f-copy); opacity: .82; } /* body */
+.cs4-meta { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
+.cs4-chips { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .5cqw; }
+.cs4-chips li { padding: .45em .9em; border-radius: 999px; background: color-mix(in srgb, currentColor 10%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); } /* meta, the open card's chips */
+.cs4-facts { margin: 0; display: grid; gap: .9cqw; padding-top: 1.2cqw; border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.cs4-facts dt { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .55; } /* meta */
+.cs4-facts dd { margin: .1em 0 0; font: 500 var(--t-title)/1.35 var(--f-copy); } /* title */
+.cs4-toc { margin-top: auto; padding-top: 1.2cqw; border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.cs4-toc ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .15cqw; }
+.cs4-toc button { display: flex; align-items: baseline; gap: .7em; width: 100%; padding: .32em .4em; margin: 0 -.4em; border: 0; border-radius: 8px; background: none; color: inherit; text-align: left; cursor: pointer; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .5; transition: opacity .2s, background-color .2s; } /* meta */
+.cs4-toc .cs4-n { font-variant-numeric: tabular-nums; opacity: .7; }
+.cs4-toc li.on button { opacity: 1; } .cs4-toc button:hover { opacity: 1; background: color-mix(in srgb, currentColor 6%, transparent); }
+
+/* the case study: the hero, then the sections as cards; it scrolls in its own column */
+.cs4-body { min-height: 0; overflow: auto; scrollbar-width: thin; display: flex; flex-direction: column; gap: 1.2cqw; padding: 2px 2px 1.2cqw; scroll-padding-top: 2px; }
+.cs4-hero { flex: none; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
+.cs4-hero .cs4-media { border-radius: 0; background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
+.cs4-sec { flex: none; display: flex; flex-direction: column; gap: 1.1cqw; padding: 1.6cqw 1.8cqw 1.8cqw; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); scroll-margin-top: 2px; }
+.cs4-h { margin: 0 0 .2cqw; font: var(--h2-w) clamp(18px, 2.2cqw, 28px)/1.15 var(--f-head); letter-spacing: -.01em; } /* the open card's title style */
+.cs4-sub { margin: 0; font: 600 var(--t-body)/1.3 var(--f-copy); } /* body, emphasised */
+.cs4-sub.center { text-align: center; margin-top: .6cqw; }
+.cs4-p { margin: 0; max-width: 72ch; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); } /* body */
+.cs4-p b, .cs4-ul b, .cs4-ol b { font-weight: 600; }
+.cs4-ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5em; max-width: 72ch; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); }
+.cs4-ul li { position: relative; padding-left: 1.5em; } .cs4-ul li::before { content: '→'; position: absolute; left: 0; opacity: .45; }
+.cs4-ol { margin: 0; padding: 0 0 0 1.5em; display: flex; flex-direction: column; gap: .7em; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); } .cs4-ol li { padding-left: .3em; }
+.cs4-row { display: grid; gap: 1.2cqw; align-items: start; } .cs4-row.center { align-items: center; }
+.cs4-group { display: flex; flex-direction: column; gap: 1.1cqw; min-width: 0; }
+
+/* the slots: a tint of the card's ink, the shape of the visual to come, its name in the middle */
+.cs4-media { position: relative; width: 100%; border-radius: calc(var(--r) - .8cqw); background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); display: grid; place-items: center; overflow: hidden; }
+.cs4-media.phone, .cs4-media.phone-land { border-radius: clamp(14px, 1.6cqw, 22px); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); }
+.cs4-slot { font: 500 var(--t-meta)/1.2 var(--f-copy); letter-spacing: .04em; text-transform: uppercase; opacity: .38; } /* meta */
+.cs4-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: .6cqw; min-width: 0; }
+.cs4-fig figcaption { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; text-align: center; } /* meta */
+.cs4-fig.phone { align-self: center; justify-self: center; width: min(100%, clamp(150px, 15cqw, 210px)); }
+.cs4-fig.half { width: 56%; align-self: center; }
+.cs4-fig .cs4-media.small { width: 100%; }
+
+/* the numbers: two panels, the feature's impact in the folded card's dark, the reasons for it in the card's own grey */
+.cs4-stats { display: flex; flex-direction: column; gap: 1cqw; padding: 1.2cqw 1.4cqw 1.3cqw; border-radius: calc(var(--r) - .6cqw); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
+.cs4-stats.dark { background: var(--pcard-fold); color: var(--pcard-fold-ink); }
+.cs4-stats ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1cqw; }
+.cs4-stats li { display: flex; flex-direction: column; gap: .25em; min-width: 0; }
+.cs4-stats .n { font: 500 clamp(17px, 1.9cqw, 24px)/1 var(--f-head); letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; } /* a display number, a step under the heading so four fit a half-width panel */
+.cs4-stats .l { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
+
+.cs4-legend { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: .6cqw 2.2cqw; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .8; } /* meta */
+.cs4-legend li { display: inline-flex; align-items: center; gap: .6em; }
+.cs4-legend .sw { width: 1.1em; height: 1.1em; border-radius: 4px; background: color-mix(in srgb, var(--pcard-open-ink) 12%, transparent); }
+.cs4-legend .s1 { background: color-mix(in srgb, var(--pcard-open-ink) 26%, transparent); } .cs4-legend .s2 { background: color-mix(in srgb, var(--pcard-open-ink) 48%, transparent); }
+
+.cs4-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2cqw; }
+.cs4-col { display: flex; flex-direction: column; gap: .9cqw; padding: 1.2cqw 1.4cqw 1.4cqw; border-radius: calc(var(--r) - .6cqw); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
+
+.cs4-soon { flex: 1; display: grid; place-items: center; border-radius: var(--r); border: 1px dashed color-mix(in srgb, var(--line-ink) 22%, transparent); font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; color: var(--line-ink); opacity: .5; } /* as a tab not built yet */
+
+@media (max-width: 700px) {
+  .cs4 { display: flex; flex-direction: column; gap: 12px; padding: 0; }
+  .cs4-side { overflow: visible; gap: 14px; padding: 16px 16px 18px; box-shadow: var(--shadow-frame); }
+  .cs4-back { margin-bottom: 0; }
+  .cs4-head { gap: 6px; } .cs4-chips { gap: 6px; } .cs4-facts { gap: 10px; padding-top: 14px; }
+  .cs4-toc { margin-top: 0; padding-top: 14px; } .cs4-toc ol { flex-direction: row; flex-wrap: wrap; gap: 4px 6px; }
+  .cs4-toc button { width: auto; margin: 0; padding: 6px 10px; border-radius: 999px; background: color-mix(in srgb, currentColor 6%, transparent); } .cs4-toc .cs4-n { display: none; }
+  .cs4-body { overflow: visible; gap: 12px; padding: 0; }
+  .cs4-hero, .cs4-sec { box-shadow: var(--shadow-frame); } .cs4-sec { gap: 14px; padding: 16px 16px 18px; scroll-margin-top: 12px; }
+  .cs4-h { margin-bottom: 2px; font-size: 22px; }
+  .cs4-sub.center { margin-top: 6px; }
+  .cs4-row { gap: 12px; grid-template-columns: 1fr !important; } .cs4-row.phones { grid-template-columns: 1fr 1fr !important; }
+  .cs4-group { gap: 14px; }
+  .cs4-media { border-radius: calc(var(--r) - 8px); }
+  .cs4-fig { gap: 8px; } .cs4-fig.phone { width: min(100%, 200px); } .cs4-fig.half { width: 80%; }
+  .cs4-stats { gap: 12px; padding: 14px 16px 16px; border-radius: calc(var(--r) - 6px); } .cs4-stats ul { grid-template-columns: 1fr 1fr; gap: 12px; } .cs4-stats .n { font-size: 24px; }
+  .cs4-legend { gap: 6px 18px; justify-content: flex-start; }
+  .cs4-cols { grid-template-columns: 1fr; gap: 12px; } .cs4-col { gap: 10px; padding: 14px 16px 16px; border-radius: calc(var(--r) - 6px); }
+}
