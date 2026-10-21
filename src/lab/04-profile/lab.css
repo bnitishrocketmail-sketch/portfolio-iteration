@@ -1,12 +1,16 @@
 /* ---- 04's Lab (Lab04.tsx): a grid after Iteration 1's project page, in 04's greys ---- */
 .lb4 { min-height: 0; }
-.lb4-grid { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2cqw; align-content: start; padding: 2px; }
-.lb4-card { position: relative; display: flex; flex-direction: column; gap: .9cqw; padding: .8cqw .8cqw 1.2cqw; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); transition: transform .35s cubic-bezier(.3, 1.2, .4, 1); }
+/* the grid fills the page (Nitish, 21 Oct: "a lot of empty space below"): its two rows share the height left under the
+   header, and a card's media tile takes what its row gives — with more items the grid will scroll again; the space
+   below is kept for later information. More room above the grid, under the heading and its line. */
+.lb4-grid { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 1.2cqw; margin-top: 1.4cqw; padding: 2px; }
+.lb4-card { position: relative; display: flex; flex-direction: column; gap: .9cqw; min-height: 0; padding: .8cqw .8cqw 1.2cqw; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); transition: transform .35s cubic-bezier(.3, 1.2, .4, 1); }
 .lb4-card:hover { transform: translateY(-3px); }
 .lb4-card.wide { grid-column: span 2; }
 .lb4-hit { position: absolute; inset: 0; z-index: 2; border: 0; background: none; border-radius: inherit; cursor: pointer; } .lb4-hit:disabled { cursor: default; }
 .lb4-hit:focus-visible { outline: 2px solid var(--pcard-open-ink); outline-offset: -4px; }
-.lb4-media { position: relative; height: clamp(120px, 12cqw, 190px); border-radius: calc(var(--r) - .8cqw); background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); overflow: hidden; display: grid; place-items: center; }
+.lb4-media { position: relative; flex: 1; min-height: 120px; border-radius: calc(var(--r) - .8cqw); background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); overflow: hidden; display: grid; place-items: center; }
+.lb4-body { flex: none; }
 .lb4-body { display: flex; flex-direction: column; gap: .35em; padding: 0 .5cqw; }
 .lb4-top { display: flex; align-items: baseline; justify-content: space-between; gap: 1em; }
 .lb4-top h3 { margin: 0; font: 600 var(--t-title)/1.2 var(--f-copy); } /* title */
@@ -49,7 +53,7 @@
 @media (max-width: 700px) {
   .lb4-grid { grid-template-columns: 1fr; gap: 12px; overflow: visible; padding: 0; }
   .lb4-card { gap: 10px; padding: 8px 8px 14px; transform: none !important; } .lb4-card.wide { grid-column: auto; }
-  .lb4-media { height: 190px; border-radius: calc(var(--r) - 8px); }
+  .lb4-grid { grid-auto-rows: auto; margin-top: 0; } .lb4-media { flex: none; height: 190px; border-radius: calc(var(--r) - 8px); }
   .lb4-body { padding: 0 8px; } .lb4-top { flex-direction: column; gap: 2px; } .lb4-body p { -webkit-line-clamp: 3; }
   /* a quiet mark on the tile that is playing, since there is no hover to tell */
   .lb4-card.live .lb4-media { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--pcard-open-ink) 35%, transparent); }
