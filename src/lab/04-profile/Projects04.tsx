@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { LINKS, PROJECTS } from '../../lib/data';
+import { PROJECTS } from '../../lib/data';
 
 /* 04's project page, first iteration (Nitish, 14 Oct), after ref 7: "Projects" at the top-left, a line and the CV at the
    right; below, every project in one row — the selected one open wide, laid out as the reference's wide card (the cover,
@@ -45,7 +45,6 @@ export default function Projects04() {
         <h2 className="h2-4">Projects</h2>
         <div className="pp4-right">
           <p className="pp4-note">Product work, motion systems and the tools built along the way.</p>
-          <a className="cv4" href={LINKS.cv}>View CV <span aria-hidden="true">↗</span></a>
         </div>
       </header>
       <div className="pp4-row" ref={rowRef}>

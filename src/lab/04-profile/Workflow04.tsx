@@ -109,9 +109,9 @@ export default function Workflow04() {
   const mapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<Open | null>(null);
   /* two variants (17 Oct): 1 is the map as it was, 2 the orb; 2 opens first, ?v=1 keeps 1 in the address */
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const v2 = params.get('v') !== '1';
-  const setVariant = (n: 1 | 2) => { setOpen(null); setParams(n === 1 ? { v: '1' } : {}, { replace: true }); };
+  /* the switch is gone from the page (21 Oct); ?v=1 still shows Variant 1 for comparison */
   const [tune, setTune] = useState<OrbTune>(TUNE0);
   /* the phone's tall map takes its own positions and the orb's smallest size, its wires kept to the minimum */
   const [phone, setPhone] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 700px)').matches);
@@ -153,7 +153,6 @@ export default function Workflow04() {
       <header className="pp4-head">
         <h2 className="h2-4">Workflow</h2>
         <div className="pp4-right">
-          <div className="vs4" role="tablist" aria-label="Variant">{([1, 2] as const).map(n => <button key={n} type="button" role="tab" aria-selected={v2 === (n === 2)} className={v2 === (n === 2) ? 'on' : ''} onClick={() => setVariant(n)}>Variant {n}</button>)}</div>
           <p className="pp4-note">{v2 ? 'The skills and tools I work with, wired into the assistant. Knowing the craft is what makes the AI useful.' : 'How I work — the skills, the tools that serve them, the workflows that join them, and where the model fits.'}</p>
         </div>
       </header>
