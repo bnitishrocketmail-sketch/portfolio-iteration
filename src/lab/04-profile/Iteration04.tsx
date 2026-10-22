@@ -15,6 +15,7 @@ import Soon04 from './Soon04';
 import Lab04 from './Lab04';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
+import Blob4 from './Blob4';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
@@ -59,11 +60,11 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
           const r = k; /* 0 = front (bottom), 2 = back (top): the list's first is the front card, as it is the row's first (22 Oct) */
           const y = r === 1 ? (hov === 1 ? `${RISE}%` : hov === 2 ? `${SINK}%` : '0%') : '0%';
           return (
-            <motion.button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}${hov === r ? ' hov' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r }}
+            <motion.button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}${hov === r ? ' hov' : ''}${p.cover && 'bg' in p.cover ? ' lit' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r }}
               animate={{ y }} transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30 }}
               onPointerEnter={e => { if (e.pointerType !== 'touch') setHov(r); }} onClick={() => onOpen(p.id)}>
               <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE ? { WebkitMaskImage: holeMask(r > 0), maskImage: holeMask(r > 0) } : {}) }} aria-hidden="true">
-                {p.cover && <Cover src={p.cover.video} poster={p.cover.poster} on={hov === r} />}
+                {p.cover && ('video' in p.cover ? <Cover src={p.cover.video} poster={p.cover.poster} on={hov === r} /> : <span className="pc-video pc-lot" style={{ background: p.cover.bg }}><Lottie className="pc-lot-in" src={p.cover.lottie} still={p.cover.still} playing={hov === r} /></span>)}
               </span>
               {!HOLE && <i className="tab4" aria-hidden="true" />}
               <span className="pc-name"><b>{p.title}</b><small>{p.client} · {p.year}</small></span>
@@ -116,7 +117,9 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
           <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
             <AnimatePresence initial={false} mode="wait">
               <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
-                <span className="lbl4"><span>{NAV[i].label}</span></span>
+                {tab === 'home'
+                  ? <motion.span className="me4 navme4 in" initial={{ scale: 1 }} animate={{ scale: .8, transition: reduce ? { duration: 0 } : { duration: .3, ease: 'easeOut' } }}><img src={desk} alt="" /></motion.span> /* the photo shrinks a little inside the pill, which shows round it as a ring (22 Oct) */
+                  : <span className="lbl4"><span>{NAV[i].label}</span></span>}
               </motion.span>
             </AnimatePresence>
           </motion.i>
@@ -125,8 +128,8 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
           const on = n.id === tab;
           return (
             <li key={n.id} data-id={n.id}>
-              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} onClick={() => go(n.id)}>
-                <span className="lbl4"><span>{n.label}</span></span>
+              <button type="button" className={`${on ? 'on' : ''}${n.id === 'home' ? ' navme' : ''}`} aria-current={on ? 'page' : undefined} aria-label={n.id === 'home' ? n.label : undefined} onClick={() => go(n.id)}>
+                {n.id === 'home' ? <span className="me4 navme4"><img src={desk} alt="" /></span> : <span className="lbl4"><span>{n.label}</span></span>} {/* the first tab is his photo (22 Oct) */}
               </button>
             </li>
           );
@@ -208,7 +211,7 @@ export default function Iteration04() {
           <Nav tab={navTab} go={go} />
           <PhoneNav04 items={NAV} tab={navTab} go={go} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14 9l6.5 2L14 13l-2 6.5L10 13l-6.5-2L10 9z" fill="currentColor" /></svg>
+            <Blob4 /> {/* the assistant's wavy mark (22 Oct), in place of the sparkle */}
           </button>
         </div>
 

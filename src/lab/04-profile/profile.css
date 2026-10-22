@@ -71,6 +71,12 @@
 .hltx4 { display: grid; place-items: center; }
 .ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: var(--ai-bg); color: var(--ai-ink); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
 .ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
+.ai4 .blob4 { width: 88%; height: 88%; overflow: visible; } /* the assistant's mark (Blob4.tsx): the wavy ring with its name in the middle */
+.blob4 path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.blob4 text { font: 600 17px var(--f-copy); letter-spacing: .02em; fill: currentColor; }
+/* the first tab is his photo: a disc the pill's width; inside the pill it is a little smaller, the pill showing round it */
+.nav4 ul button.navme { padding: 0; width: var(--pill-w); height: var(--pill-w); }
+.nav4 .navme4, .hl4 .navme4 { grid-area: auto; width: var(--pill-w); height: var(--pill-w); box-shadow: none; background: var(--nav-bg); } /* the pill's width, over .me4's own size and grid place */
 .pn4 { display: none; } /* the phone's bar (PhoneNav04.tsx); shown at the phone breakpoint, where the column hides */
 
 /* ---- the picture: the intro tile, with the bottom-left corner cut out (the cut-out beside it is the frame, not the tile) ---- */
@@ -205,6 +211,10 @@
 .pc-face { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; } /* the card's surface and its clip, under the name; the pill is a hole in it (the shadow stays on the button, outside the mask) */
 .pc-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1); transition: filter .5s ease; } /* black and white until the hover (22 Oct) */
 .pcard4.hov .pc-video { filter: grayscale(0); }
+.pcard4 { background: none; } /* the button's own ground gone (22 Oct): the pill's hole shows the card behind, not a button's grey */
+.pc-lot { display: block; } .pc-lot-in { position: absolute; left: 0; right: 0; top: 26%; height: 40%; } /* B on the middle card: under the name, half hidden by the front card until the hover lifts it (22 Oct) */
+.pc-lot-in svg { display: block; width: 100%; height: 100%; }
+.pcard4.lit { color: var(--card-front-ink); } /* a card with a light ground of its own takes the front card's dark ink */
 .tab4 { position: absolute; left: 3.6%; top: 50%; transform: translateY(-50%); width: 9.7%; height: 25.2%; border-radius: 999px; background: var(--card-tab); z-index: 1; } /* 22 Oct: a fifth narrower; drawn only when the pill is not a hole */
 .pcard4.back .tab4 { top: 28%; transform: none; }
 .pc-name { position: absolute; left: 1.4cqw; right: 1.2cqw; top: 1.1cqw; z-index: 1; display: flex; flex-direction: column; gap: 2px; }

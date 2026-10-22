@@ -6,7 +6,7 @@ export const VIEW_ORDER: ViewName[] = ['home', 'projects', 'project', 'micro', '
 export type Project = {
   id: string; title: string; client: string; role: string; year: string;
   letter: string; m1: string; m2: string; wide?: boolean; blurb: string; tags: string[];
-  cover?: { video: string; poster: string }; /* the home stack's card plays this on hover (22 Oct) */
+  cover?: { video: string; poster: string } | { lottie: string; still?: number; bg?: string }; /* the home stack's card plays this on hover (22 Oct): a clip, or a Lottie on a ground of its own */
 };
 
 /* PLACEHOLDER set: these are projects I know exist; confirm which are showable. */
@@ -17,7 +17,8 @@ export const PROJECTS: Project[] = [
     blurb: 'A frame (glasses) size measuring tool — patent pending.', tags: ['App feature', 'UX/UI', 'Interaction/Motion'],
     cover: { video: '/cases/magic-scale/hero.mp4', poster: '/cases/magic-scale/hero-poster.webp' } },
   { id: 'lenskart-b', title: "B — Lenskart's AI assistant", client: 'Lenskart', role: 'Motion & interaction', year: '2026', letter: 'B', m1: '#7B7EE4', m2: '#DFB3F3', wide: true,
-    blurb: 'State Lotties for an AI-assisted eyeglass-buying journey, with the transitions recorded end to end.', tags: ['Lottie', 'State machine', 'Product'] },
+    blurb: 'State Lotties for an AI-assisted eyeglass-buying journey, with the transitions recorded end to end.', tags: ['Lottie', 'State machine', 'Product'],
+    cover: { lottie: 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie', still: 300, bg: '#fff' } }, /* B's states back to back (LOTTIES.b), on white, held listening (Nitish, 22 Oct) */
   { id: 'coin-rig', title: 'Coin Rig', client: 'LottieFiles Bazaar', role: 'Design & build', year: '2026', letter: 'C', m1: '#F5BD56', m2: '#C94A3A',
     blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Plugin', 'Faux 3D', 'Tool'] },
   { id: 'rupee-coin', title: 'Rupee coin flight', client: 'Loading & success state', role: 'Motion design', year: '2026', letter: '₹', m1: '#1F8A70', m2: '#BDE6D9',
