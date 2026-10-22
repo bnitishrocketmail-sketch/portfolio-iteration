@@ -99,12 +99,13 @@
 .cs4-stats ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s2); }
 .cs4-stats li { display: flex; flex-direction: column; gap: .25em; min-width: 0; }
 .cs4-stats .n { font: 500 clamp(16px, 1.85cqw, 24px)/1 var(--f-head); letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; } /* a display number, a step under the heading: four fit a half-width panel */
-.cs4-stats-body { position: relative; }
-.cs4-stats-more { position: absolute; inset: 0; margin: 0; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); opacity: 0; pointer-events: none; transition: opacity .25s; } /* body */
+.cs4-stats-body { display: grid; } .cs4-stats-body > * { grid-area: 1 / 1; } /* the numbers and the paragraph share one cell: the panel is as tall as the taller of the two, so its padding holds in both states (22 Oct) */
+.cs4-stats-more { margin: 0; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); opacity: 0; pointer-events: none; transition: opacity .25s; } /* body */
+.cs4-row:has(.cs4-stats) { align-items: stretch; } /* two panels side by side, one height */
 .cs4-stats-more b { font-weight: 600; }
 .cs4-stats.has-more ul { transition: opacity .25s; }
 @media (hover: hover) { .cs4-stats.has-more:hover ul, .cs4-stats.has-more:focus-visible ul { opacity: 0; } .cs4-stats.has-more:hover .cs4-stats-more, .cs4-stats.has-more:focus-visible .cs4-stats-more { opacity: 1; } .cs4-stats.has-more { outline: 0; cursor: default; } } /* his page's hover: the numbers give way to the paragraph */
-@media (hover: none) { .cs4-stats-more { position: static; opacity: 1; margin-top: var(--s2); } } /* no hover to reveal it: the paragraph follows the numbers */
+@media (hover: none) { .cs4-stats-body { display: flex; flex-direction: column; gap: var(--s2); } .cs4-stats-more { opacity: 1; } } /* no hover to reveal it: the paragraph follows the numbers */
 .cs4-stats .l { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
 
 .cs4-legend { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s1) var(--s4); font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .8; } /* meta */

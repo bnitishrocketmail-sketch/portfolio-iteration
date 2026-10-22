@@ -74,7 +74,7 @@ const magicScale: Case = {
           ['Only half of the frame needs to be measured to get the size — the system will double it.'],
         ] },
         { k: 'row', ratio: '1fr 1fr', align: 'center', of: [
-          { k: 'media', shape: 'phone-land', label: 'Zones diagram', src: `${A}/zones.webp` },
+          { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Zones diagram', src: `${A}/zones.webp` } }, /* a figure, so it takes the one phone size */
           { k: 'media', shape: 'video', ratio: '20 / 11', label: 'Zones video', src: `${A}/zones.mp4`, poster: `${A}/zones-poster.webp` },
         ] },
         { k: 'legend', items: ['Less interactive elements', 'Place where the spec/frame is placed on screen', 'Main interactive elements'], colors: ['#fae1fa', '#c0c5f5', '#f5c0ef'] } /* the diagram's own three */,

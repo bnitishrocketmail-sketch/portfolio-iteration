@@ -35,7 +35,7 @@ function Clip({ src, poster, on, crop }: { src: string; poster?: string; on: boo
   const ref = useRef<HTMLVideoElement>(null);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !still) v.play().catch(() => {}); else v.pause(); }, [on, still]);
-  return <video ref={ref} src={src} poster={poster} muted loop playsInline preload="metadata" aria-hidden="true" style={crop ? { inset: `-${crop}%`, width: 'auto', height: 'auto' } : undefined} />;
+  return <video ref={ref} src={src} poster={poster} muted loop playsInline preload="metadata" aria-hidden="true" style={crop ? { left: `-${crop}%`, top: `-${crop}%`, width: `${100 + 2 * crop}%`, height: `${100 + 2 * crop}%` } : undefined} />; /* a replaced element keeps its own size under inset alone, so the size is spelled out */
 }
 /* a slot: empty, it shows its shape and its name; filled (22 Oct), it holds the page's own picture or clip, with any
    Lotties layered over it where his page had them */
@@ -45,7 +45,7 @@ function Slot({ m, fl }: { m: Media; fl?: string }) {
   const clip = !!m.src && /\.mp4$/.test(m.src);
   return (
     <div ref={ref} className={`cs4-media ${m.shape}${m.src ? ' filled' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape] }} role="img" aria-label={m.src ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
-      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { inset: `-${m.crop}%`, width: 'auto', height: 'auto' } : undefined} />) : <span className="cs4-slot">{m.label}</span>}
+      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { left: `-${m.crop}%`, top: `-${m.crop}%`, width: `${100 + 2 * m.crop}%`, height: `${100 + 2 * m.crop}%` } : undefined} />) : <span className="cs4-slot">{m.label}</span>}
       {m.layers?.map((l, i) => (
         <div key={i} className="cs4-layer" style={{ left: `${l.box[0]}%`, top: `${l.box[1]}%`, width: `${l.box[2]}%`, height: `${l.box[3]}%` }}>
           {l.kind === 'lottie' ? <Lottie className="cs4-lot" src={l.src} playing={on} /> : <img src={l.src} alt="" />}
