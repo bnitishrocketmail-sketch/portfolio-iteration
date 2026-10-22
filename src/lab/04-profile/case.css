@@ -25,8 +25,7 @@
 .cs4-talk-who { display: flex; flex-direction: column; gap: .15em; min-width: 0; }
 .cs4-talk-name { font: 600 var(--t-title)/1.2 var(--f-copy); } /* title */
 .cs4-talk-role { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
-.cs4-sign { width: clamp(84px, 7.6cqw, 104px); aspect-ratio: 593 / 141; margin-top: .15em; } .cs4-sign svg { display: block; width: 100%; height: 100%; } /* his signature Lottie, under the name */
-.cs4-talk .cs4-me img { transform: none; object-position: 50% 30%; } /* his own photo, not the desk stand-in's zoom */
+.cs4-sign { width: clamp(84px, 7.6cqw, 104px); aspect-ratio: 593 / 141; margin-top: -4px; will-change: transform; } .cs4-sign-in, .cs4-sign svg { display: block; width: 100%; height: 100%; } /* his written title under the name, shifted so the word's first letter sits on the name's edge (Signature04.tsx); pulled up by the file's empty top */
 .cs4-talk-line { margin: 0; font: var(--copy-w) var(--t-meta)/1.4 var(--f-copy); opacity: .82; } /* meta: the card is small */
 .cs4-talk-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
 .cs4-talk .cs4-talk-btn { margin: 0; background: var(--pcard-open-ink); color: var(--pcard-open); } /* the CV button's shape, in the card's inks */
@@ -38,7 +37,7 @@
 .cs4-back:hover { opacity: 1; background: color-mix(in srgb, currentColor 8%, transparent); } .cs4-back svg { width: 1.1em; height: 1.1em; }
 
 /* the study: the hero, the strip, the sections as cards; it scrolls in its own column */
-.cs4-body { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: flex; flex-direction: column; gap: var(--s3); padding: 2px 2px var(--s3); }
+.cs4-body { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: flex; flex-direction: column; gap: var(--s3); margin: 0 -16px -16px; padding: 2px 16px calc(var(--s3) + 16px); } /* the box runs 16px out into the gaps around it, so the cards' shadows are not clipped by the scrolling (22 Oct); the content sits where it did */
 .cs4-hero { flex: none; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
 .cs4-hero .cs4-media { border-radius: 0; background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
 .cs4-strip { flex: none; margin: 0; display: grid; grid-template-columns: auto auto auto auto minmax(0, 1fr); gap: var(--s3) var(--s4); padding: var(--s3); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); } /* one row: the short facts, the focus taking what is left */
@@ -49,6 +48,8 @@
 .cs4-chips li { padding: .45em .9em; border-radius: 999px; background: color-mix(in srgb, currentColor 10%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); } /* meta, the open card's chips */
 
 .cs4-sec { flex: none; display: flex; flex-direction: column; gap: var(--s3); padding: var(--s3) var(--s3) var(--s4); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); }
+.cs4-sec.white { background: #fff; color: #121212; } /* a clip whose phone turns on white floats on it (22 Oct) */
+.cs4-sec.white .cs4-media { background: #fff; } .cs4-sec.white .cs4-stats, .cs4-sec.white .cs4-col { background: #f0f0f0; }
 .cs4-h { margin: 0 0 calc(var(--s2) - var(--s3)); font: var(--h2-w) clamp(18px, 2.2cqw, 28px)/1.15 var(--f-head); letter-spacing: -.01em; } /* the open card's title style; --s2 under it */
 .cs4-sub { margin: 0; font: 600 var(--t-body)/1.3 var(--f-copy); } /* body, emphasised */
 .cs4-sub.center { text-align: center; }
@@ -64,6 +65,7 @@
 .cs4-media { position: relative; width: 100%; border-radius: calc(var(--r) - .8cqw); background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); display: grid; place-items: center; overflow: hidden; }
 .cs4-media.phone, .cs4-media.phone-land { border-radius: clamp(14px, 1.6cqw, 22px); }
 .cs4-media.phone::after, .cs4-media.phone-land::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); pointer-events: none; z-index: 2; } /* the device's edge, over the picture */
+.cs4-fig.phone .cs4-media, .cs4-fig.phone-land .cs4-media { box-shadow: 0 10px 26px -14px rgba(0, 0, 0, .35); } /* a soft shadow behind every screen (22 Oct) */
 /* filled: the picture or clip covers the slot; layers sit over it by their boxes */
 .cs4-media.filled { background: color-mix(in srgb, var(--pcard-open-ink) 10%, var(--pcard-open)); }
 .cs4-media > img, .cs4-media > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -74,14 +76,15 @@
 .cs4-fig figcaption { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; text-align: center; } /* meta */
 .cs4-fig.phone { width: min(100%, var(--ph-w)); justify-self: center; }
 .cs4-fig.phone-land { width: min(100%, var(--ph-h)); justify-self: center; }
+.cs4-sec > .cs4-fig { align-self: center; } /* a figure on its own in a section sits in the middle, as his page had the final ruler */
 .cs4-fig.half { width: 56%; align-self: center; }
 .cs4-phones { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--s2) var(--s5); padding: var(--s2) 0; }
 
 /* the flow: the steps down the card, --s5 apart, the curves drawn over them */
 .cs4-flow { position: relative; display: flex; flex-direction: column; gap: calc(var(--s5) + var(--s3)); padding-top: var(--s2); } /* the steps further apart than anything else: the knots need the room */
-.cs4-wires { position: absolute; inset: 0; z-index: 1; pointer-events: none; color: color-mix(in srgb, var(--pcard-open-ink) 26%, transparent); overflow: visible; } /* over the screens: the node sits on one */
+.cs4-wires { position: absolute; inset: 0; z-index: 3; pointer-events: none; color: color-mix(in srgb, var(--pcard-open-ink) 13%, transparent); overflow: visible; } /* over the screens and their edges: the node sits on an edge; as faint as his (224 on 245) */
 .cs4-wires path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.cs4-wires .ring { fill: color-mix(in srgb, var(--pcard-open-ink) 26%, var(--pcard-open)); } .cs4-wires .core { fill: var(--pcard-open); } /* his node: a ring with the card showing through */
+.cs4-wires .ring { fill: color-mix(in srgb, var(--pcard-open-ink) 13%, var(--pcard-open)); } .cs4-wires .core { fill: var(--pcard-open); } /* his node: a ring with the card showing through */
 .cs4-step { display: grid; gap: var(--s2) var(--s4); align-items: start; grid-template-columns: minmax(0, 1fr); }
 .cs4-step .cs4-sub.step { grid-column: 1 / -1; text-align: center; }
 .cs4-step.with-text { grid-template-columns: 3fr 2fr; } .cs4-step.with-text .cs4-sub.step { text-align: left; }
@@ -95,7 +98,13 @@
 .cs4-stats.dark { background: var(--pcard-fold); color: var(--pcard-fold-ink); }
 .cs4-stats ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s2); }
 .cs4-stats li { display: flex; flex-direction: column; gap: .25em; min-width: 0; }
-.cs4-stats .n { font: 500 clamp(18px, 2.2cqw, 28px)/1 var(--f-head); letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; } /* the display size */
+.cs4-stats .n { font: 500 clamp(16px, 1.85cqw, 24px)/1 var(--f-head); letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; } /* a display number, a step under the heading: four fit a half-width panel */
+.cs4-stats-body { position: relative; }
+.cs4-stats-more { position: absolute; inset: 0; margin: 0; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); opacity: 0; pointer-events: none; transition: opacity .25s; } /* body */
+.cs4-stats-more b { font-weight: 600; }
+.cs4-stats.has-more ul { transition: opacity .25s; }
+@media (hover: hover) { .cs4-stats.has-more:hover ul, .cs4-stats.has-more:focus-visible ul { opacity: 0; } .cs4-stats.has-more:hover .cs4-stats-more, .cs4-stats.has-more:focus-visible .cs4-stats-more { opacity: 1; } .cs4-stats.has-more { outline: 0; cursor: default; } } /* his page's hover: the numbers give way to the paragraph */
+@media (hover: none) { .cs4-stats-more { position: static; opacity: 1; margin-top: var(--s2); } } /* no hover to reveal it: the paragraph follows the numbers */
 .cs4-stats .l { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
 
 .cs4-legend { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s1) var(--s4); font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .8; } /* meta */

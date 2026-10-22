@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Lottie } from '../../components/micro/Lottie';
+import Signature04 from './Signature04';
+import desk from '../../assets/nitish-desk.webp';
 import { PROJECTS } from '../../lib/data';
 import { CASES, type Block, type Media, type Rich, type Step } from './cases';
 import { MAIL, SOCIAL } from './social';
@@ -29,11 +31,11 @@ function useInView(ref: React.RefObject<HTMLElement | null>) {
   useEffect(() => { const el = ref.current; if (!el) return; const io = new IntersectionObserver(([e]) => setOn(e.isIntersecting), { threshold: .05 }); io.observe(el); return () => io.disconnect(); }, [ref]);
   return on;
 }
-function Clip({ src, poster, on }: { src: string; poster?: string; on: boolean }) {
+function Clip({ src, poster, on, crop }: { src: string; poster?: string; on: boolean; crop?: number }) {
   const ref = useRef<HTMLVideoElement>(null);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !still) v.play().catch(() => {}); else v.pause(); }, [on, still]);
-  return <video ref={ref} src={src} poster={poster} muted loop playsInline preload="metadata" aria-hidden="true" />;
+  return <video ref={ref} src={src} poster={poster} muted loop playsInline preload="metadata" aria-hidden="true" style={crop ? { inset: `-${crop}%`, width: 'auto', height: 'auto' } : undefined} />;
 }
 /* a slot: empty, it shows its shape and its name; filled (22 Oct), it holds the page's own picture or clip, with any
    Lotties layered over it where his page had them */
@@ -43,7 +45,7 @@ function Slot({ m, fl }: { m: Media; fl?: string }) {
   const clip = !!m.src && /\.mp4$/.test(m.src);
   return (
     <div ref={ref} className={`cs4-media ${m.shape}${m.src ? ' filled' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape] }} role="img" aria-label={m.src ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
-      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} /> : <img src={m.src} alt="" loading="lazy" decoding="async" />) : <span className="cs4-slot">{m.label}</span>}
+      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { inset: `-${m.crop}%`, width: 'auto', height: 'auto' } : undefined} />) : <span className="cs4-slot">{m.label}</span>}
       {m.layers?.map((l, i) => (
         <div key={i} className="cs4-layer" style={{ left: `${l.box[0]}%`, top: `${l.box[1]}%`, width: `${l.box[2]}%`, height: `${l.box[3]}%` }}>
           {l.kind === 'lottie' ? <Lottie className="cs4-lot" src={l.src} playing={on} /> : <img src={l.src} alt="" />}
@@ -86,7 +88,7 @@ function Flow({ steps }: { steps: Step[] }) {
         }
         if (i < steps.length - 1) {
           const a = box(`${i}.${s.media.length - 1}.m`), b = box(`${i + 1}.0.m`), t = box(`${i + 1}.t`); if (!a || !b || !t) return;
-          const sx = a.x + a.w * .7, sy = a.y + a.h; /* the node on the screen's bottom edge, right of the caption under it */
+          const sx = a.x + a.w * (a.h > a.w ? .86 : .7), sy = a.y + a.h; /* the node on the screen's bottom edge, right of the caption under it (further right on an upright phone, whose caption fills more of its width) */
           const column = Math.abs((a.x + a.w / 2) - (b.x + b.w / 2)) < 40; /* the phone: the screens in one column, the heading between — the line ends above the heading */
           out.push({ ...(column ? dropAcross(sx, sy, t.x + t.w / 2, t.y - 8) : dropAcross(sx, sy, b.x + b.w * .53, b.y - 8)), node: [sx, sy] });
         }
@@ -131,12 +133,15 @@ function Render({ b }: { b: Block }) {
     case 'phones': return <div className="cs4-phones">{b.of.map((m, i) => <Fig key={i} m={m} />)}</div>;
     case 'group': return <div className="cs4-group">{b.of.map((x, i) => <Render key={i} b={x} />)}</div>;
     case 'stats': return (
-      <div className={`cs4-stats${b.tone ? ' ' + b.tone : ''}`}>
+      <div className={`cs4-stats${b.tone ? ' ' + b.tone : ''}${b.more ? ' has-more' : ''}`} tabIndex={b.more ? 0 : undefined}>
         {b.title && <h4 className="cs4-sub">{b.title}</h4>}
-        <ul>{b.items.map(s => <li key={s.l}><span className="n">{s.n}</span><span className="l">{s.l}</span></li>)}</ul>
+        <div className="cs4-stats-body">
+          <ul>{b.items.map(s => <li key={s.l}><span className="n">{s.n}</span><span className="l">{s.l}</span></li>)}</ul>
+          {b.more && <p className="cs4-stats-more">{text(b.more)}</p>} {/* his page's hover: the numbers give way to this */}
+        </div>
       </div>
     );
-    case 'legend': return <ul className="cs4-legend">{b.items.map((t, i) => <li key={t}><i className={`sw s${i}`} aria-hidden="true" />{t}</li>)}</ul>;
+    case 'legend': return <ul className="cs4-legend">{b.items.map((t, i) => <li key={t}><i className={`sw s${i}`} style={b.colors ? { background: b.colors[i] } : undefined} aria-hidden="true" />{t}</li>)}</ul>;
     case 'cols': return (
       <div className="cs4-cols">
         {b.of.map(c => <div key={c.h} className="cs4-col"><h4 className="cs4-sub">{c.h}</h4><p className="cs4-p">{text(c.p)}</p><ul className="cs4-ul">{c.ul.map((it, i) => <li key={i}>{text(it)}</li>)}</ul></div>)}
@@ -170,7 +175,7 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
             {c.facts.map(f => <div key={f.k}><dt>{f.k}</dt><dd>{f.v}</dd></div>)}
           </dl>
           {c.sections.map(s => (
-            <section key={s.id} data-sec={s.id} className="cs4-sec" aria-label={s.title}>
+            <section key={s.id} data-sec={s.id} className={`cs4-sec${s.tone ? ' ' + s.tone : ''}`} aria-label={s.title}>
               <h3 className="cs4-h">{s.title}</h3>
               {s.blocks.map((b, i) => <Render key={i} b={b} />)}
             </section>
@@ -194,10 +199,10 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
             line, "Let's talk!" and the links — in 04's parts (the intro's photo disc, its CV button's style, the notch's marks) */}
         <article className="cs4-talk" aria-label="Contact">
           <div className="cs4-talk-head">
-            <span className="me4 cs4-me"><img src="/cases/magic-scale/me.webp" alt="" /></span> {/* the photo his page's card carries */}
-            <div className="cs4-talk-who"><b className="cs4-talk-name">Nitish Bhardwaj</b><Lottie className="cs4-sign" src="/cases/magic-scale/signature.json" label="Motion designer" /></div> {/* his written "Motion designer", the page's Lottie */}
+            <span className="me4 cs4-me"><img src={desk} alt="" /></span> {/* the portfolio's own photo (22 Oct), as the intro has it */}
+            <div className="cs4-talk-who"><b className="cs4-talk-name">Nitish Bhardwaj</b><Signature04 className="cs4-sign" label="Product, motion designer" /></div> {/* his written title, aligned to the name (Signature04.tsx) */}
           </div>
-          <p className="cs4-talk-line">If you like what you see or have any questions, feel free to send me an email anytime.</p>
+          <p className="cs4-talk-line">If you like what you see or have any questions, feel free to connect anytime.</p> {/* his line, reworded for the handles beside it (22 Oct) */}
           <div className="cs4-talk-row">
             <a className="cv4 cs4-talk-btn" href={MAIL}>Let's talk!</a>
             <div className="links4 cs4-links">{SOCIAL.filter(l => l.label !== 'Email').map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}</div>

@@ -23,8 +23,13 @@ const magicScale: Case = {
       id: 'what', title: 'What is a Magic Scale?',
       blocks: [
         { k: 'p', t: ['A guided tool allowing users to ', { b: 'measure their glasses by placing them on their phone screen' }, ' & measuring half the frame, users can accurately determine their frame size (XS, S, M, L, XL) in millimeters. This approach ', { b: 'empowers users to trust the results' }, ', as they measure their glasses themselves.'] },
-        { k: 'stats', title: 'Impact of the feature', tone: 'dark', items: [{ n: '3.3%', l: 'Conversion increase' }, { n: '9.5%', l: 'Adoptions' }, { n: '38%', l: 'Completion' }, { n: '98%', l: 'Frame sizing accuracy' }] },
-        { k: 'stats', title: 'Why a new sizing tool?', items: [{ n: '5.6%', l: 'Returns due to sizing' }, { n: '80%', l: 'AR-compatible devices' }, { n: '50–60%', l: 'AR sizing accuracy' }, { n: '98%', l: 'Frame sizing accuracy' }] },
+        /* side by side, as his page has them, with its hover: the numbers give way to a paragraph (22 Oct) */
+        { k: 'row', of: [
+          { k: 'stats', title: 'Impact of the feature', tone: 'dark', items: [{ n: '3.3%', l: 'Conversion increase' }, { n: '9.5%', l: 'Adoptions' }, { n: '38%', l: 'Completion' }, { n: '98%', l: 'Frame sizing accuracy' }],
+            more: ['Magic Scale simplified size selection by letting users measure frames directly on their phone, reducing confusion and building trust. This boosted confidence, cut size-related returns, and drove a strong uplift in conversions.'] },
+          { k: 'stats', title: 'Why a new sizing tool?', items: [{ n: '5.6%', l: 'Returns due to sizing' }, { n: '80%', l: 'AR-compatible devices' }, { n: '50–60%', l: 'AR sizing accuracy' }, { n: '98%', l: 'Frame sizing accuracy' }],
+            more: ['During our primary research we found out that a lot of users find ', { b: 'AR sizing unreliable' }, ' due to face movement, alignment, and lighting issues. Some had ', { b: 'privacy concerns' }, ', while others ordered two sizes and kept the one that fit.'] },
+        ] },
       ],
     },
     {
@@ -61,7 +66,7 @@ const magicScale: Case = {
       ],
     },
     {
-      id: 'direction', title: 'Final direction: a 3-part scale experience',
+      id: 'direction', title: 'Final direction: a 3-part scale experience', tone: 'white', /* the clip's phone turns on white; a white card lets it float (22 Oct) */
       blocks: [
         { k: 'ul', items: [
           ['A UI design ensuring no information being obscured by the physical glasses placed on the screen.'],
@@ -69,10 +74,10 @@ const magicScale: Case = {
           ['Only half of the frame needs to be measured to get the size — the system will double it.'],
         ] },
         { k: 'row', ratio: '1fr 1fr', align: 'center', of: [
-          { k: 'media', shape: 'image', ratio: '20 / 9', label: 'Zones diagram', src: `${A}/zones.webp` },
+          { k: 'media', shape: 'phone-land', label: 'Zones diagram', src: `${A}/zones.webp` },
           { k: 'media', shape: 'video', ratio: '20 / 11', label: 'Zones video', src: `${A}/zones.mp4`, poster: `${A}/zones-poster.webp` },
         ] },
-        { k: 'legend', items: ['Less interactive elements', 'Place where the spec/frame is placed on screen', 'Main interactive elements'] },
+        { k: 'legend', items: ['Less interactive elements', 'Place where the spec/frame is placed on screen', 'Main interactive elements'], colors: ['#fae1fa', '#c0c5f5', '#f5c0ef'] } /* the diagram's own three */,
         { k: 'figure', of: { k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Final ruler design', src: `${A}/ruler.webp` } },
       ],
     },
@@ -89,7 +94,7 @@ const magicScale: Case = {
                 ['Added contextual nudges to guide and correct user behaviour (e.g. "Keep glasses parallel").'],
               ] },
             ],
-            media: [{ k: 'media', shape: 'phone', ratio: '1014 / 1808', label: 'Video', cap: 'Intro video', src: `${A}/intro.webp` }] /* a still on his page too: a frame of the video with the widget over it */ },
+            media: [{ k: 'media', shape: 'phone', label: 'Video', cap: 'Intro video', src: `${A}/intro.webp` }] /* a still on his page too: a frame of the video with the widget over it */ },
           { title: 'Onboarding animations', media: [{ k: 'media', shape: 'phone-land', label: 'Video', cap: 'Step 1', src: `${A}/step-1.mp4`, poster: `${A}/step-1-poster.webp` }, { k: 'media', shape: 'phone-land', label: 'Video', cap: 'Step 2', src: `${A}/step-2.mp4`, poster: `${A}/step-2-poster.webp` }] },
           { title: 'Nudges to guide', media: [{ k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Nudge 1', src: `${A}/nudge-1.webp`, layers: [{ kind: 'lottie', src: `${A}/nudge-1.json`, box: [15.3, 39.3, 57, 56.8] }] }, { k: 'media', shape: 'phone-land', label: 'Screen', cap: 'Nudge 2', src: `${A}/nudge-2.webp`, layers: [{ kind: 'lottie', src: `${A}/nudge-2.json`, box: [13.9, 70.7, 36, 27.5] }, { kind: 'lottie', src: `${A}/chevron.json`, box: [52.8, 77.7, 7.1, 14.4] }] }] },
           { title: 'Measuring mechanism', media: [{ k: 'media', shape: 'phone-land', label: 'Video', cap: 'Slider interaction', src: `${A}/slider.mp4`, poster: `${A}/slider-poster.webp` }],
@@ -101,7 +106,7 @@ const magicScale: Case = {
                 ['Slider feedback: a semi-transparent expanding glasses image reinforces the "half-frame" logic.'],
                 ['Onboarding CTA buttons with immediate visual feedback.'],
               ] },
-              { k: 'figure', of: { k: 'media', shape: 'small', ratio: '5 / 2', label: 'CTA video', src: `${A}/cta.mp4`, poster: `${A}/cta-poster.webp` }, width: 'half' },
+              { k: 'figure', of: { k: 'media', shape: 'small', ratio: '5 / 2', label: 'CTA video', src: `${A}/cta.mp4`, poster: `${A}/cta-poster.webp`, crop: 2.5 }, width: 'half' } /* the clip runs a little past the slot: its own hairlines stay out of view */,
             ] },
         ] },
       ],
