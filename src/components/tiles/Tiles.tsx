@@ -54,6 +54,8 @@ export function PhotoStack({ bleed = false, fan = false, tints, caption = false 
   };
   return (
     <>
+      {/* the fan's ground (22 Oct): the front photo, filled and blurred, dissolving to the next as the front changes */}
+      {fan && <div className="stack-bg" aria-hidden="true"><AnimatePresence initial={false}>{LIFE[i].src && <motion.img key={i} src={LIFE[i].src} alt="" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduce ? 0 : .7, ease: 'easeInOut' }} />}</AnimatePresence></div>}
       {caption
         ? <div className="tile-head"><p className="eyebrow">{LIFE[i].caption}</p><span className="mono-s dim">{i + 1} / {n}</span></div> /* 04 (21 Oct): the heading is outside; in here the front photo's caption as the title, the count as the meta */
         : <div className="tile-head"><p className="eyebrow">Off duty</p><span className="mono-s dim">{bleed && <span className="hint-inline">drag or tap · </span>}{i + 1} / {n}</span></div>}
@@ -65,7 +67,7 @@ export function PhotoStack({ bleed = false, fan = false, tints, caption = false 
           return (
             <motion.figure key={c.caption} className={c.src ? 'photo' : undefined} style={{ '--g1': tints ? tints[k % tints.length][0] : c.g1, '--g2': tints ? tints[k % tints.length][1] : c.g2, zIndex: n - pos } as React.CSSProperties}
               animate={out ? { x: leaving.dir * 420, rotate: leaving.dir * 14, opacity: 0, ...(fan ? { filter: 'grayscale(0) brightness(1)' } : {}) }
-                : fan ? { x: `${pos * -19}cqw`, y: `${pos * 14}cqh`, rotate: -6 - pos * 10, scale: 1, /* 22 Oct: the whole fan 6° further right (the front at 6°, not 12°), so more of each photo shows */ opacity: pos > 2 ? 0 : 1, filter: `grayscale(${pos ? 1 : 0}) brightness(${1 - pos * .16})` } /* ref 4 (measured 13 Oct): the front leans 12°, each one behind 19% of the tile further left, 14% of its height further down, 10° more, and in shade — and, with photos (22 Oct), black and white until a card comes to the front, where it turns to colour */
+                : fan ? { x: `${pos * -13.3}cqw`, y: `${pos * 9.8}cqh`, rotate: -6 - pos * 10, scale: 1, /* 22 Oct: the whole fan 6° further right (the front at 6°, not 12°), so more of each photo shows; the steps 30% shorter (13.3% and 9.8%, from 19 and 14), the ones behind tucked closer to the one in front */ opacity: pos > 2 ? 0 : 1, filter: `grayscale(${pos ? 1 : 0}) brightness(${1 - pos * .16})` } /* ref 4 (measured 13 Oct): the front leans 12°, each one behind 19% of the tile further left, 14% of its height further down, 10° more, and in shade — and, with photos (22 Oct), black and white until a card comes to the front, where it turns to colour */
                 : { x: 0, y: pos * -6, rotate: (pos % 2 ? -1 : 1) * pos * 2.4, scale: 1 - pos * .045, opacity: pos > 3 ? 0 : 1 }}
               transition={{ type: 'spring', bounce: .18, duration: .5 }}
               drag={isTop && !out ? 'x' : false} dragSnapToOrigin dragElastic={.9}
