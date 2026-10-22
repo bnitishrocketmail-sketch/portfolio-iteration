@@ -39,12 +39,10 @@
 .cs4-body { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: flex; flex-direction: column; gap: var(--s3); padding: 2px 2px var(--s3); }
 .cs4-hero { flex: none; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
 .cs4-hero .cs4-media { border-radius: 0; background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
-.cs4-strip { flex: none; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3) var(--s4); padding: var(--s3); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); } /* two rows of four: the short facts, then the focus and the tags */
-.cs4-strip > div:nth-child(5) { grid-column: span 2; }
+.cs4-strip { flex: none; margin: 0; display: grid; grid-template-columns: auto auto auto auto minmax(0, 1fr); gap: var(--s3) var(--s4); padding: var(--s3); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); } /* one row: the short facts, the focus taking what is left */
 .cs4-strip > div { display: flex; flex-direction: column; gap: .3em; min-width: 0; }
 .cs4-strip dt { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .55; } /* meta */
 .cs4-strip dd { margin: 0; font: 500 var(--t-title)/1.35 var(--f-copy); } /* title */
-.cs4-strip .cs4-tags { grid-column: span 2; }
 .cs4-chips { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: var(--s1); }
 .cs4-chips li { padding: .45em .9em; border-radius: 999px; background: color-mix(in srgb, currentColor 10%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); } /* meta, the open card's chips */
 
@@ -74,7 +72,7 @@
 /* the flow: the steps down the card, --s5 apart, the curves drawn over them */
 .cs4-flow { position: relative; display: flex; flex-direction: column; gap: calc(var(--s5) + var(--s3)); padding-top: var(--s2); } /* the steps further apart than anything else: the knots need the room */
 .cs4-wires { position: absolute; inset: 0; z-index: 1; pointer-events: none; color: color-mix(in srgb, var(--pcard-open-ink) 26%, transparent); overflow: visible; } /* over the screens: the node sits on one */
-.cs4-wires path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.cs4-wires path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .cs4-wires .ring { fill: color-mix(in srgb, var(--pcard-open-ink) 26%, var(--pcard-open)); } .cs4-wires .core { fill: var(--pcard-open); } /* his node: a ring with the card showing through */
 .cs4-step { display: grid; gap: var(--s2) var(--s4); align-items: start; grid-template-columns: minmax(0, 1fr); }
 .cs4-step .cs4-sub.step { grid-column: 1 / -1; text-align: center; }
@@ -110,7 +108,7 @@
   .cs4-title { gap: 4px; } .cs4-back { color: var(--glass-ink); }
   .it04 .cs4 > .cs4-body { overflow: visible; padding: 0; background: none; box-shadow: none; border-radius: 0; } /* not the phone's card treatment of a .pp4 page's body — its own parts are the cards */
   .cs4-hero, .cs4-strip, .cs4-sec { box-shadow: var(--shadow-frame); }
-  .cs4-strip { grid-template-columns: 1fr 1fr; } .cs4-strip > div:nth-child(5) { grid-column: 1 / -1; } .cs4-strip .cs4-tags { grid-column: 1 / -1; justify-self: start; }
+  .cs4-strip { grid-template-columns: 1fr 1fr; } .cs4-strip > div:nth-child(5) { grid-column: 1 / -1; }
   .cs4-h { font-size: 22px; }
   .cs4-row { grid-template-columns: 1fr !important; }
   .cs4-media { border-radius: calc(var(--r) - 8px); }

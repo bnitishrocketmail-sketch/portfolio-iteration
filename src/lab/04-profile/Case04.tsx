@@ -18,6 +18,7 @@ import './case.css';
    --s1…--s5 tokens in case.css). The text styles are the system's: H2 for the title, the open card's display size for a
    section's heading, body emphasised for a sub-heading, body for copy, meta for captions, labels and facts. */
 
+const f2 = (n: number) => n.toFixed(1);
 const text = (r: Rich): ReactNode => r.map((x, i) => (typeof x === 'string' ? x : <b key={i}>{x.b}</b>));
 const RATIO: Record<Media['shape'], string> = { wide: '2 / 1', video: '16 / 9', image: '4 / 3', phone: '9 / 19.5', 'phone-land': '19.5 / 9', small: '3 / 2' };
 
@@ -39,28 +40,31 @@ const Fig = ({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) => (
    edge. Measured after layout and on resize; drawn in the card's ink, faint, like his light grey on white. */
 function Flow({ steps }: { steps: Step[] }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [wires, setWires] = useState<{ d: string; node: [number, number] }[]>([]);
+  /* a wire: its line (ending short of the head), its node on the screen's border, its head at the end, turned along the line */
+  const [wires, setWires] = useState<{ d: string; node: [number, number]; head: [number, number, number] }[]>([]);
   const [size, setSize] = useState<[number, number]>([0, 0]);
   useLayoutEffect(() => {
     const root = ref.current; if (!root) return;
     const draw = () => {
       const R = root.getBoundingClientRect(); const box = (sel: string) => { const el = root.querySelector<HTMLElement>(`[data-fl="${sel}"]`); if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left - R.left, y: r.top - R.top, w: r.width, h: r.height }; };
       const f = (n: number) => n.toFixed(1);
-      const out: { d: string; node: [number, number] }[] = [];
-      /* drop, sweep across, drop: the two cubics of his big connectors */
-      const dropAcross = (sx: number, sy: number, tx: number, ty: number) => { const my = sy + (ty - sy) * .5; return `M${f(sx)} ${f(sy)} C${f(sx)} ${f(sy)}, ${f(sx)} ${f(my)}, ${f((sx + tx) / 2)} ${f(my)} C${f(tx)} ${f(my)}, ${f(tx)} ${f(ty)}, ${f(tx)} ${f(ty)}`; };
-      const across = (sx: number, sy: number, tx: number, ty: number) => { const mx = (sx + tx) / 2; return `M${f(sx)} ${f(sy)} C${f(mx)} ${f(sy)}, ${f(mx)} ${f(ty)}, ${f(tx)} ${f(ty)}`; };
+      const out: typeof wires = [];
+      const GAP = 11; /* the line stops this short of the head's point, so the two never merge (his drawings: air between the line and the head's arms) */
+      /* drop, sweep across, drop — the two cubics of his big connectors; the line ends GAP above the head, which points down */
+      const dropAcross = (sx: number, sy: number, tx: number, ty: number) => { const my = sy + (ty - sy) * .5, ey = ty - GAP; return { d: `M${f(sx)} ${f(sy)} C${f(sx)} ${f(sy)}, ${f(sx)} ${f(my)}, ${f((sx + tx) / 2)} ${f(my)} C${f(tx)} ${f(my)}, ${f(tx)} ${f(ey)}, ${f(tx)} ${f(ey)}`, head: [tx, ty, 90] as [number, number, number] }; };
+      /* the short S between two screens; the line ends GAP before the head, which points right */
+      const across = (sx: number, sy: number, tx: number, ty: number) => { const ex = tx - GAP, mx = (sx + ex) / 2; return { d: `M${f(sx)} ${f(sy)} C${f(mx)} ${f(sy)}, ${f(mx)} ${f(ty)}, ${f(ex)} ${f(ty)}`, head: [tx, ty, 0] as [number, number, number] }; };
       steps.forEach((s, i) => {
         for (let j = 1; j < s.media.length; j++) {
           const a = box(`${i}.${j - 1}.m`), b = box(`${i}.${j}.m`); if (!a || !b) continue;
-          if (b.y >= a.y + a.h - 2) { const sx = a.x + a.w * .7, sy = a.y + a.h - 18; out.push({ d: dropAcross(sx, sy, b.x + b.w * .5, b.y - 14), node: [sx, sy] }); } /* one under the other (the phone): right of the caption, to the next's top */
-          else { const sx = a.x + a.w * .88, sy = a.y + a.h * .78; out.push({ d: across(sx, sy, b.x - 3, b.y + b.h * .58), node: [sx, sy] }); } /* side by side */
+          if (b.y >= a.y + a.h - 2) { const sx = a.x + a.w * .7, sy = a.y + a.h; out.push({ ...dropAcross(sx, sy, b.x + b.w * .5, b.y - 6), node: [sx, sy] }); } /* one under the other (the phone): the node on the bottom edge, right of the caption; the head just over the next */
+          else { const sx = a.x + a.w, sy = a.y + a.h * .78; out.push({ ...across(sx, sy, b.x - 4, b.y + b.h * .58), node: [sx, sy] }); } /* side by side: the node on the right edge, the head at the next one's left edge */
         }
         if (i < steps.length - 1) {
           const a = box(`${i}.${s.media.length - 1}.m`), b = box(`${i + 1}.0.m`), t = box(`${i + 1}.t`); if (!a || !b || !t) return;
-          const sx = a.x + a.w * .7, sy = a.y + a.h - 18; /* right of the caption under it */
+          const sx = a.x + a.w * .7, sy = a.y + a.h; /* the node on the screen's bottom edge, right of the caption under it */
           const column = Math.abs((a.x + a.w / 2) - (b.x + b.w / 2)) < 40; /* the phone: the screens in one column, the heading between — the line ends above the heading */
-          out.push({ d: column ? dropAcross(sx, sy, t.x + t.w / 2, t.y - 10) : dropAcross(sx, sy, b.x + b.w * .53, b.y - 14), node: [sx, sy] });
+          out.push({ ...(column ? dropAcross(sx, sy, t.x + t.w / 2, t.y - 8) : dropAcross(sx, sy, b.x + b.w * .53, b.y - 8)), node: [sx, sy] });
         }
       });
       setWires(out); setSize([R.width, R.height]);
@@ -70,8 +74,14 @@ function Flow({ steps }: { steps: Step[] }) {
   return (
     <div className="cs4-flow" ref={ref}>
       <svg className="cs4-wires" width={size[0]} height={size[1]} viewBox={`0 0 ${size[0]} ${size[1]}`} aria-hidden="true">
-        <defs><marker id="cs4-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto"><path d="M1 0.5 L8 5 L1 9.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></marker></defs>
-        {wires.map((w, i) => <g key={i}><path d={w.d} markerEnd="url(#cs4-head)" /><circle className="ring" cx={w.node[0]} cy={w.node[1]} r="5" /><circle className="core" cx={w.node[0]} cy={w.node[1]} r="3" /></g>)}
+        {wires.map((w, i) => (
+          <g key={i}>
+            <path d={w.d} />
+            {/* the head: an open chevron, its point at the end, its arms back along the line (his: 11 long, 6.5 across) */}
+            <path className="head" d="M-8 -4.5 L0 0 L-8 4.5" transform={`translate(${f2(w.head[0])} ${f2(w.head[1])}) rotate(${w.head[2]})`} />
+            <circle className="ring" cx={w.node[0]} cy={w.node[1]} r="5" /><circle className="core" cx={w.node[0]} cy={w.node[1]} r="3" />
+          </g>
+        ))}
       </svg>
       {steps.map((s, i) => (
         <div key={s.title} className={`cs4-step${s.text ? ' with-text' : ''}${s.side ? ' with-side' : ''}`}>
@@ -130,11 +140,10 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
       <div className="cs4-body">
         {c ? (<>
           {c.hero && <div className="cs4-hero"><Slot m={c.hero} /></div>}
-          {/* the information strip under the hero, as his page had it: the facts in columns, the tags at the end */}
+          {/* the information strip under the hero, as his page had it: the facts in a row (22 Oct: no tags — the facts say it) */}
           <dl className="cs4-strip">
             <div><dt>Client</dt><dd>{p.client} · {p.year}</dd></div>
             {c.facts.map(f => <div key={f.k}><dt>{f.k}</dt><dd>{f.v}</dd></div>)}
-            <div className="cs4-tags"><dt>Tags</dt><dd><ul className="cs4-chips">{c.chips.map(t => <li key={t}>{t}</li>)}</ul></dd></div>
           </dl>
           {c.sections.map(s => (
             <section key={s.id} data-sec={s.id} className="cs4-sec" aria-label={s.title}>
