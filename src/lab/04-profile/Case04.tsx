@@ -168,7 +168,7 @@ function Flow({ steps }: { steps: Step[] }) {
    white and held still. Every few seconds the left one slides into the phone, growing and turning to colour as it goes,
    the one inside slides out to the right, and the right one fades away to come back in at the left — round and round.
    The phone is drawn over the screens, so a screen passes under its bezel on its way in and out. */
-const CAR = { hold: 3800, slide: .9, side: .8, tilt: 16, ease: [.2, .8, .2, 1] as [number, number, number, number] };
+const CAR = { hold: 3800, slide: 1, side: .8, tilt: 16, ease: [.3, .1, .25, 1] as [number, number, number, number] };
 function Carousel({ of }: { of: Media[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const els = useRef<(HTMLDivElement | null)[]>([]);
@@ -178,22 +178,28 @@ function Carousel({ of }: { of: Media[] }) {
   const orderRef = useRef<number[]>(first);
   const [inPhone, setInPhone] = useState(first[1]);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* the three places, from the phone's width: the sides a fifth smaller, close to the phone (22 Oct: the gap 60% less) */
+  /* the places, a belt of equal steps: further left (unseen), left, the phone, right, further right (unseen); the sides a
+     fifth smaller, close to the phone (22 Oct: the gap 60% less) */
   const places = () => {
     const el = ref.current; const w = el?.querySelector<HTMLElement>('.cs4-car-phone')?.offsetWidth ?? 160;
     const gap = (el?.offsetWidth ?? 900) < w * 2.9 ? w * .05 : w * .096;
     const off = w / 2 + gap + w * CAR.side / 2; /* phone's half, the gap, the side screen's half */
-    return { L: -off, C: 0, R: off, w };
+    return { off, L: -off, R: off };
   };
-  /* a screen's look in a place: at the sides a fifth smaller, in grayscale, turned a little away — the left one's left
-     edge back, the right one's right edge back (22 Oct), as if facing the phone */
-  const look = (x: number, at: 'L' | 'C' | 'R', opacity = 1) => ({ x, scale: at === 'C' ? 1 : CAR.side, rotateY: at === 'L' ? CAR.tilt : at === 'R' ? -CAR.tilt : 0, filter: at === 'C' ? 'grayscale(0)' : 'grayscale(1)', opacity });
+  /* a screen's look, written straight to its style: its place on the belt (x), its size, its turn in perspective — the
+     sides turned 16° with their inner edge back (22 Oct, the other way round from the first cut) — its colour, opacity */
+  const put = (el: HTMLElement, x: number, side: number /* 0 in the phone … 1 at a side */, turn: number /* -1 left, 1 right */, opacity = 1) => {
+    el.style.transform = `translateX(${x.toFixed(2)}px) scale(${(1 - (1 - CAR.side) * side).toFixed(4)}) rotateY(${(turn * CAR.tilt * side).toFixed(2)}deg)`;
+    el.style.filter = `grayscale(${side.toFixed(3)})`; el.style.opacity = opacity.toFixed(3);
+  };
   /* put the screens in their places without motion (first paint, a resize) */
-  const settle = () => { const P = places(); orderRef.current.forEach((i, k) => { const el = els.current[i]; if (el) animate(el, look([P.L, P.C, P.R][k], (['L', 'C', 'R'] as const)[k]), { duration: 0 }); }); };
+  const settle = () => { const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (E[l]) put(E[l], P.L, 1, -1); if (E[c]) put(E[c], 0, 0, 0); if (E[r]) put(E[r], P.R, 1, 1); };
   useLayoutEffect(() => { settle(); const ro = new ResizeObserver(settle); if (ref.current) ro.observe(ref.current); return () => ro.disconnect(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  /* the loop, while on screen: every few seconds the left one slides into the phone and the one inside out to the right,
-     while the right one fades away sliding further right; then, a beat later, a new screen fades in at the left, sliding
-     in from further left (22 Oct: it must not read as the right one coming round the back) */
+  /* the loop, while on screen: every few seconds the whole belt moves one step to the right, as one motion (22 Oct: "the
+     same velocity, keeping the same gap") — the left screen into the phone, turning flat and to colour; the one inside out
+     to the right, turning away and grey; the right one further right, fading out over the first half of the move — and,
+     carried over unseen at the midpoint, the same screen in from further left over the second half, fading in, so a new
+     screen arrives at the left in step with the rest */
   useEffect(() => {
     if (!on || still || of.length < 3) return;
     let live = true; let t = 0;
@@ -201,12 +207,11 @@ function Carousel({ of }: { of: Media[] }) {
       if (!live) return;
       const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (!E[l] || !E[c] || !E[r]) return;
       orderRef.current = [r, l, c]; setInPhone(l); /* the one sliding in starts playing as it goes */
-      const o = { duration: CAR.slide, ease: CAR.ease };
-      await Promise.all([animate(E[l]!, look(P.C, 'C'), o), animate(E[c]!, look(P.R, 'R'), o), animate(E[r]!, look(P.R + P.w * .3, 'R', 0), { duration: CAR.slide * .6, ease: 'easeIn' })]);
-      if (!live) return;
-      /* the new one at the left: carried over unseen (a 0-length first keyframe — a 0 s animate takes motion's default time), then in from further left */
-      const from = look(P.R + P.w * .3, 'R', 0), at = look(P.L - P.w * .3, 'L', 0), to = look(P.L, 'L', 1);
-      await animate(E[r]!, { x: [from.x, at.x, to.x], scale: [from.scale, at.scale, to.scale], rotateY: [from.rotateY, at.rotateY, to.rotateY], filter: [from.filter, at.filter, to.filter], opacity: [0, 0, 1] }, { duration: CAR.slide * .68, times: [0, .04, 1], ease: 'easeOut', delay: .12 });
+      await animate(0, 1, { duration: CAR.slide, ease: CAR.ease, onUpdate: p => {
+        put(E[l]!, P.L + P.off * p, 1 - p, -1);
+        put(E[c]!, P.off * p, p, 1);
+        if (p < .5) put(E[r]!, P.R + P.off * p, 1, 1, 1 - 2 * p); else put(E[r]!, P.L - P.off + P.off * p, 1, -1, 2 * p - 1);
+      } });
       if (live) t = window.setTimeout(step, CAR.hold);
     };
     t = window.setTimeout(step, CAR.hold);
