@@ -58,7 +58,7 @@
    to the bar's sides, to its rounded top (the pill's cap concentric with the bar's) and to the names before and after it —
    and the assistant's circle sits concentric in the bar's foot. The clearance is (bar − pill) / 2; padding and margins in
    % resolve against the bar's width, so it holds at every size. */
-.navcol4 { --pill-w: 33px; /* a name's line (13px) and its button's sides (10px each) */ display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: calc(50% - var(--pill-w) / 2) 0 12%; border-radius: 999px; background: var(--nav-bg); box-shadow: var(--shadow-el); }
+.navcol4 { --pill-w: 33px; /* a name's line (13px) and its button's sides (10px each) */ --me-w: 48px; /* his photo's disc (22 Oct: bigger than the pill's width) */ display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: calc(50% - var(--me-w) / 2) 0 12%; /* the disc as far from the top as from the sides */ border-radius: 999px; background: var(--nav-bg); box-shadow: var(--shadow-el); }
 .nav4 { width: 100%; }
 .nav4 ul { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; width: 100%; }
 .nav4 li { display: flex; justify-content: center; width: 100%; }
@@ -69,14 +69,15 @@
 .lbl4 > span { display: block; position: relative; left: 1.5px; } /* sideways text sits a pixel off its box's centre */
 .hl4 { position: absolute; left: 50%; transform: translateX(-50%); box-sizing: border-box; border-radius: 999px; background: var(--nav-hl); color: var(--nav-hl-ink); z-index: 1; pointer-events: none; overflow: hidden; font: 500 13px/1 var(--f-copy); letter-spacing: .01em; display: grid; place-items: center; }
 .hltx4 { display: grid; place-items: center; }
-.ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: var(--ai-bg); color: var(--ai-ink); display: grid; place-items: center; cursor: pointer; transition: transform .2s; }
+.ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: none; color: var(--ai-bg); display: grid; place-items: center; cursor: pointer; transition: transform .2s; } /* no ground of its own (22 Oct): the mark in the dark the ground had */
 .ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
-.ai4 .blob4 { width: 88%; height: 88%; overflow: visible; } /* the assistant's mark (Blob4.tsx): the wavy ring with its name in the middle */
+.ai4 .blob4 { width: 100%; height: 100%; overflow: visible; } /* the assistant's mark (Blob4.tsx): the wavy ring with its name in the middle */
 .blob4 path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
 .blob4 text { font: 600 17px var(--f-copy); letter-spacing: .02em; fill: currentColor; }
 /* the first tab is his photo: a disc the pill's width; inside the pill it is a little smaller, the pill showing round it */
-.nav4 ul button.navme { padding: 0; width: var(--pill-w); height: var(--pill-w); }
-.nav4 .navme4, .hl4 .navme4 { grid-area: auto; width: var(--pill-w); height: var(--pill-w); box-shadow: none; background: var(--nav-bg); } /* the pill's width, over .me4's own size and grid place */
+.nav4 ul button.navme { padding: 0; width: var(--me-w); height: var(--me-w); }
+.nav4 .navme4, .hl4 .navme4 { grid-area: auto; width: var(--me-w); height: var(--me-w); box-shadow: none; background: var(--nav-bg); } /* the disc's own width (--me-w, navcol4), over .me4's own size and grid place */
+.nav4 li[data-id="home"] + li { margin-top: max(0px, calc(50% - var(--pill-w) / 2)); } /* the word after the disc as far from it as the words are from each other: the disc has no padding of its own, so the next button's is not taken off (22 Oct) */
 .pn4 { display: none; } /* the phone's bar (PhoneNav04.tsx); shown at the phone breakpoint, where the column hides */
 
 /* ---- the picture: the intro tile, with the bottom-left corner cut out (the cut-out beside it is the frame, not the tile) ---- */
@@ -212,8 +213,8 @@
 .pc-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1); transition: filter .5s ease; } /* black and white until the hover (22 Oct) */
 .pcard4.hov .pc-video { filter: grayscale(0); }
 .pcard4 { background: none; } /* the button's own ground gone (22 Oct): the pill's hole shows the card behind, not a button's grey */
-.pc-lot { display: block; } .pc-lot-in { position: absolute; left: 0; right: 0; top: 26%; height: 40%; } /* B on the middle card: under the name, half hidden by the front card until the hover lifts it (22 Oct) */
-.pc-lot-in svg { display: block; width: 100%; height: 100%; }
+.pc-lot { display: block; } .pc-lot-in { position: absolute; left: 0; right: 0; top: var(--name-b, 30%); bottom: 0; display: grid; place-items: center; } /* B on the middle card: the band from the name's foot to the card's foot (22 Oct, second pass: as big as the band holds, the same room above and below) */
+.pc-lot-in svg { display: block; width: auto !important; height: 86% !important; }
 .pcard4.lit { color: var(--card-front-ink); } /* a card with a light ground of its own takes the front card's dark ink */
 .tab4 { position: absolute; left: 3.6%; top: 50%; transform: translateY(-50%); width: 9.7%; height: 25.2%; border-radius: 999px; background: var(--card-tab); z-index: 1; } /* 22 Oct: a fifth narrower; drawn only when the pill is not a hole */
 .pcard4.back .tab4 { top: 28%; transform: none; }

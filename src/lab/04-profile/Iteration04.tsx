@@ -53,9 +53,17 @@ const RISE = -(1 - OFFSET) * .5 * 100, SINK = OFFSET * .4 * 100;
 function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   const [hov, setHov] = useState<number | null>(null);
   const reduce = useReducedMotion();
+  /* where a card's name ends, handed to the card (--name-b): B's Lottie is centred in the band from there to the card's
+     foot, the same room above it as below (Nitish, 22 Oct) */
+  const deck = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const d = deck.current; if (!d) return;
+    const set = () => d.querySelectorAll<HTMLElement>('.pcard4').forEach(c => { const n = c.querySelector<HTMLElement>('.pc-name'); if (n) c.style.setProperty('--name-b', `${n.offsetTop + n.offsetHeight}px`); });
+    set(); const ro = new ResizeObserver(set); ro.observe(d); return () => ro.disconnect();
+  }, []);
   return (
     <div className="stack4">
-      <div className="deck4" onPointerLeave={() => setHov(null)}>
+      <div className="deck4" ref={deck} onPointerLeave={() => setHov(null)}>
         {PROJECTS.slice(0, SHOWN).map((p, k) => {
           const r = k; /* 0 = front (bottom), 2 = back (top): the list's first is the front card, as it is the row's first (22 Oct) */
           const y = r === 1 ? (hov === 1 ? `${RISE}%` : hov === 2 ? `${SINK}%` : '0%') : '0%';
