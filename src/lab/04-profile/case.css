@@ -12,7 +12,7 @@
 /* the study at the left, the column at the right — the home page's column: its width and the frame's gap, level with
    the first container (the head stays above both) */
 .cs4-main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) calc(.21 * var(--fw)); gap: 0 calc(.016 * var(--fw)); } /* the study scrolls behind the head, which is out of the flow above it */
-.cs4-aside { min-height: 0; display: grid; grid-template-rows: 70% minmax(0, 1fr); gap: var(--s3); padding: 2px 2px 2px 0; margin-top: var(--head-h, 80px); } /* level with the study's first container */
+.cs4-aside { min-height: 0; display: grid; grid-template-rows: 70% minmax(0, 1fr); gap: var(--s3); padding: 2px 2px 2px 0; margin-top: calc(var(--head-h, 80px) + 2 * var(--s2)); } /* level with the study's first container: under the floating bar and its room above and below */
 .cs4-next { position: relative; display: flex; flex-direction: column; gap: var(--s1); min-height: 0; padding: var(--s3); border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
 .cs4-eyebrow { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .55; margin-bottom: var(--s1); } /* meta */
 .cs4-next-title { margin: 0; font: var(--h2-w) clamp(18px, 2.2cqw, 28px)/1.15 var(--f-head); letter-spacing: -.01em; } /* the open card's title style */
@@ -33,11 +33,9 @@
 .cs4-talk .cs4-links { display: flex; gap: 2px; padding: 0; border-radius: 0; } .cs4-talk .cs4-links a { color: var(--pcard-open-ink); opacity: .7; } .cs4-talk .cs4-links a:hover { opacity: 1; background: color-mix(in srgb, var(--pcard-open-ink) 8%, transparent); }
 .cs4-talk .cs4-links svg { width: 15px; height: 15px; }
 
-.it04 .cs4-head { position: absolute; top: 0; left: 0; right: 0; z-index: 5; display: block; padding: .6cqw .2cqw var(--s3); } /* across the whole page (22 Oct): the one-liner and the tags at the far right */
-.cs4-glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
-.cs4-glass i { position: absolute; left: 0; right: 0; top: calc(var(--i) * 100% / 6); height: calc(100% / 6 + 1px); -webkit-backdrop-filter: blur(calc((6 - var(--i)) * 2.4px)); backdrop-filter: blur(calc((6 - var(--i)) * 2.4px)); } /* 14px of blur at the top, 2px at the foot */
-.cs4-glass::after { content: ''; position: absolute; inset: 0; background: linear-gradient(var(--frame) 72%, transparent); } /* the frame's colour, whole behind the title and the tags, gone at the foot */
-.cs4-head-in { display: flex; align-items: flex-start; justify-content: space-between; gap: 2cqw; padding: 0 .4cqw; }
+.it04 .cs4-head { position: absolute; top: var(--s2); left: .2cqw; right: .2cqw; z-index: 5; display: block; padding: var(--s2) var(--s3) var(--s3); border-radius: var(--r); } /* a floating card across the page (22 Oct), room above it; the one-liner and the tags at its far right */
+.cs4-glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); } /* the home page's glass, without its tint: nothing at rest, frosted when something scrolls under */
+.cs4-head-in { display: flex; align-items: flex-start; justify-content: space-between; gap: 2cqw; }
 .cs4-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--s2); max-width: 34ch; text-align: right; }
 .cs4-side .cs4-chips { justify-content: flex-end; color: var(--line-ink); } .cs4-side .cs4-chips li { background: color-mix(in srgb, var(--line-ink) 10%, transparent); }
 .cs4-title { display: flex; flex-direction: column; gap: .3cqw; }
@@ -45,7 +43,7 @@
 .cs4-back:hover { opacity: 1; background: color-mix(in srgb, currentColor 8%, transparent); } .cs4-back svg { width: 1.1em; height: 1.1em; }
 
 /* the study: the hero, the strip, the sections as cards; it scrolls in its own column */
-.cs4-body { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: var(--s3); margin: 0 -16px -16px; padding: var(--head-h, 80px) 16px calc(var(--s3) + 16px); scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--line-ink) 32%, transparent) transparent; } /* starts under the head; a bare thumb for a scrollbar, no track (22 Oct) */
+.cs4-body { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: var(--s3); margin: 0 -16px -16px; padding: calc(var(--head-h, 80px) + 2 * var(--s2)) 16px calc(var(--s3) + 16px); scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--line-ink) 32%, transparent) transparent; } /* starts under the head; a bare thumb for a scrollbar, no track (22 Oct) */
 .cs4-body::-webkit-scrollbar { width: 6px; } .cs4-body::-webkit-scrollbar-track { background: transparent; } .cs4-body::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--line-ink) 32%, transparent); border-radius: 3px; } /* the box runs 16px out into the gaps around it, so the cards' shadows are not clipped by the scrolling (22 Oct); the content sits where it did */
 .cs4-hero { flex: none; border-radius: var(--r); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
 .cs4-hero .cs4-media { border-radius: 0; background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
@@ -135,7 +133,7 @@
   .cs4-aside { display: flex; flex-direction: column; gap: 12px; padding: 0; } .cs4-next { box-shadow: var(--shadow-frame); padding: 16px 16px 18px; min-height: 180px; } .cs4-next-title { font-size: 22px; } .cs4-next-arrow { right: 14px; bottom: 14px; }
   .cs4-talk { box-shadow: var(--shadow-frame); padding: 16px 16px 18px; gap: 12px; } .cs4-talk-line { font-size: var(--t-body); }
   .cs4-title { gap: 4px; } .cs4-back { color: var(--glass-ink); }
-  .it04 .cs4-head { position: static; display: flex; flex-direction: column; padding: 4px 4px 0; } .cs4-glass { display: none; } .cs4-head-in { flex-direction: column; align-items: flex-start; gap: 8px; padding: 0; } .cs4-side { align-items: flex-start; text-align: left; max-width: none; } .cs4-side .cs4-chips { justify-content: flex-start; }
+  .it04 .cs4-head { position: static; display: flex; flex-direction: column; padding: 4px 4px 0; border-radius: 0; } .cs4-glass { display: none; } .cs4-head-in { flex-direction: column; align-items: flex-start; gap: 8px; padding: 0; } .cs4-side { align-items: flex-start; text-align: left; max-width: none; } .cs4-side .cs4-chips { justify-content: flex-start; }
   .cs4-main { margin-top: 0; } .cs4-aside { margin-top: 0; } .cs4-body { padding-top: 0; }
   .it04 .cs4 > .cs4-body { overflow: visible; padding: 0; background: none; box-shadow: none; border-radius: 0; } /* not the phone's card treatment of a .pp4 page's body — its own parts are the cards */
   .cs4-hero, .cs4-strip, .cs4-sec { box-shadow: var(--shadow-frame); }
