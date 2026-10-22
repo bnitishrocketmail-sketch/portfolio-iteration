@@ -155,15 +155,27 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
   const k = PROJECTS.findIndex(p => p.id === id); const p = PROJECTS[k];
   const c = CASES[id];
   const next = PROJECTS[(k + 1) % PROJECTS.length]; /* the column's top card: the next project (what else it holds, later) */
+  /* the head's height, handed to the page: the study starts under it, the column level with the study's first container */
+  const root = useRef<HTMLElement>(null), headRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const el = root.current, h = headRef.current; if (!el || !h) return;
+    const set = () => el.style.setProperty('--head-h', `${h.offsetHeight}px`);
+    set(); const ro = new ResizeObserver(set); ro.observe(h); return () => ro.disconnect();
+  }, []);
   if (!p) return null;
   return (
-    <section className="pp4 cs4" aria-label={p.title}>
-      <header className="pp4-head cs4-head">
+    <section className="pp4 cs4" aria-label={p.title} ref={root}>
+      {/* the head sits over the scrolling study (22 Oct): the containers pass under it through a frosted band that fades out
+          at its foot — seen only when something is behind it; the one-liner and the tags at the right, on the study's own
+          right edge, not the page's */}
+      <header className="pp4-head cs4-head" ref={headRef}>
+        <div className="cs4-head-in">
         <div className="cs4-title">
           <button type="button" className="cs4-back" onClick={back}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M12 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>Projects</button>
           <h2 className="h2-4">{c?.title ?? p.title}</h2>
         </div>
-        <div className="pp4-right"><p className="pp4-note">{c?.sub ?? p.blurb}</p></div>
+        <div className="cs4-side"><p className="pp4-note">{c?.sub ?? p.blurb}</p>{c && <ul className="cs4-chips">{c.chips.map(t => <li key={t}>{t}</li>)}</ul>}</div>
+        </div>
       </header>
       <div className="cs4-main">
       <div className="cs4-body">
