@@ -67,14 +67,14 @@ export function PhotoStack({ bleed = false, fan = false, tints, caption = false 
           return (
             <motion.figure key={c.caption} className={c.src ? 'photo' : undefined} style={{ '--g1': tints ? tints[k % tints.length][0] : c.g1, '--g2': tints ? tints[k % tints.length][1] : c.g2, zIndex: n - pos } as React.CSSProperties}
               animate={out ? { x: leaving.dir * 420, rotate: leaving.dir * 14, opacity: 0, ...(fan ? { filter: 'grayscale(0) brightness(1)' } : {}) }
-                : fan ? { x: `${pos * -13.3}cqw`, y: `${pos * 9.8}cqh`, rotate: -6 - pos * 10, scale: 1, /* 22 Oct: the whole fan 6° further right (the front at 6°, not 12°), so more of each photo shows; the steps 30% shorter (13.3% and 9.8%, from 19 and 14), the ones behind tucked closer to the one in front */ opacity: pos > 2 ? 0 : 1, filter: `grayscale(${pos ? 1 : 0}) brightness(${1 - pos * .16})` } /* ref 4 (measured 13 Oct): the front leans 12°, each one behind 19% of the tile further left, 14% of its height further down, 10° more, and in shade — and, with photos (22 Oct), black and white until a card comes to the front, where it turns to colour */
+                : fan ? { x: `${pos * -13.3}cqw`, y: `${pos * 9.8}cqh`, rotate: -6 - pos * 10, scale: 1, /* 22 Oct: the whole fan 6° further right (the front at 6°, not 12°), so more of each photo shows; the steps 30% shorter (13.3% and 9.8%, from 19 and 14), the ones behind tucked closer to the one in front */ opacity: pos > 3 ? 0 : 1, /* four in the fan (22 Oct: a fourth at the back, far left, by the same steps) */ filter: `grayscale(${pos ? 1 : 0}) brightness(${1 - pos * .16})` } /* ref 4 (measured 13 Oct): the front leans 12°, each one behind 19% of the tile further left, 14% of its height further down, 10° more, and in shade — and, with photos (22 Oct), black and white until a card comes to the front, where it turns to colour */
                 : { x: 0, y: pos * -6, rotate: (pos % 2 ? -1 : 1) * pos * 2.4, scale: 1 - pos * .045, opacity: pos > 3 ? 0 : 1 }}
               transition={{ type: 'spring', bounce: .18, duration: .5 }}
               drag={isTop && !out ? 'x' : false} dragSnapToOrigin dragElastic={.9}
               onDragStart={() => { dragged.current = true; }}
               onDragEnd={(_, info) => { if (Math.abs(info.offset.x) > 56) advance(info.offset.x > 0 ? 1 : -1); window.setTimeout(() => { dragged.current = false; }, 0); }}
               onTap={() => { if (isTop && !dragged.current) advance(1); }}>
-              {c.src && <img src={c.src} alt="" draggable={false} loading={pos > 2 ? 'lazy' : undefined} decoding="async" />}
+              {c.src && <img src={c.src} alt="" draggable={false} loading={pos > 3 ? 'lazy' : undefined} decoding="async" />}
               <figcaption>{c.caption}</figcaption>
             </motion.figure>
           );
