@@ -135,7 +135,7 @@
    tile's clip path reads for its inner corner. The name, the title, the line, the CV and the photo sit in it. */
 .cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: none; border-radius: 0 var(--r) 0 0; z-index: 3;
   display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name me" "role me" "sub sub" "cv cv"; column-gap: 1cqw; row-gap: .5cqw; align-items: start; }
-.nm4 { grid-area: name; } .role4 { grid-area: role; } .sub4 { grid-area: sub; } .cv4 { grid-area: cv; justify-self: end; }
+.nm4 { grid-area: name; } .role4, .sig4 { grid-area: role; } .sub4 { grid-area: sub; } .cv4 { grid-area: cv; justify-self: end; }
 /* the corner bracket: a short 2.5px stroke along the blank area's bottom and left edges — where the tile's corner would
    be — turning the corner with the tile's radius; its legs run 12px past the curve, no further, and end in round caps
    (a dot the stroke's width on each end) */
@@ -168,6 +168,8 @@
 .role4 { display: block; margin-top: .5cqw; font: var(--role-w2) clamp(12px, 1.35cqw, 15.5px)/1.3 var(--f-copy); color: var(--role-ink2); white-space: nowrap; } /* "designer": its own colour and weight */
 .cv4 { margin-top: .9cqw; display: inline-flex; align-items: center; gap: 6px; padding: .55em 1em; border-radius: 999px; background: var(--cv-bg); color: var(--cv-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); text-decoration: none; transition: transform .2s; }
 .cv4:hover { transform: translateY(-1px); }
+.sig4 { height: calc(2.15 * clamp(12px, 1.35cqw, 15.5px)); aspect-ratio: 593 / 141; margin-top: .3cqw; justify-self: start; will-change: transform; } /* his written title under the name (22 Oct): its letters a little taller than the title line's were, well under the name's; shifted so the word's first letter sits on the name's edge (Signature04.tsx) */
+.sig4 .sig-in, .sig4 svg { display: block; width: 100%; height: 100%; }
 .rw4 { display: inline-block; position: relative; overflow: hidden; vertical-align: bottom; color: var(--title-ink); font-weight: var(--title-w); white-space: nowrap; } /* the width is animated (RollingWord); the nbsp inside gives it its line */
 .rw4-w { position: absolute; left: 0; top: 0; display: inline-block; white-space: nowrap; }
 .rw4-probe { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; white-space: nowrap; display: flex; } /* the words, for their widths */
@@ -324,7 +326,7 @@
   .it04 .island { border-radius: 0 0 20px 20px !important; max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
   .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 18px 18px 16px; } .corner4 { display: none; }
-  .nm4 { line-height: 1.1; } .role4 { margin-top: 6px; font-size: 15px; } .sub4 { margin-top: 8px; max-width: none; } .cv4 { margin-top: 12px; font-size: 14px; padding: .65em 1.1em; }
+  .nm4 { line-height: 1.1; } .role4 { margin-top: 6px; font-size: 15px; } .sig4 { height: 32px; margin-top: 6px; } .sub4 { margin-top: 8px; max-width: none; } .cv4 { margin-top: 12px; font-size: 14px; padding: .65em 1.1em; }
   .name4 { position: static; width: auto; margin: 0 18px 18px; padding: 14px 16px; } .lede4 { max-width: none; }
   /* the pages: the heading and its note on the background, above the content (an app's section heading: outside the card,
      at the content's edge — Nitish, 18 Oct); the content on its own grey container, the frame's; Workflow's map goes

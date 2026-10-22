@@ -14,6 +14,7 @@ import Workflow04 from './Workflow04';
 import Soon04 from './Soon04';
 import Lab04 from './Lab04';
 import Case04 from './Case04';
+import Signature04 from './Signature04';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
@@ -31,7 +32,6 @@ import './profile.css';
 type Tab = Exclude<ViewName, 'project'>;
 /* photo placeholders: close mid-greys, so in the fan the depth comes from the shading, not from the tints */
 const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g5)', 'var(--g4)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g3)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g4)']];
-const WORDS = ['Product', 'Interaction', 'Motion']; /* the title's rolling first word (02 v29) */
 
 /* ---- the projects stack, as ref 4 draws it (Nitish, 13 Oct — "adapt this as it is"): three cards the column's full
    width at 165 × 127, the front one at the bottom, each one behind stepped up by 58% of a card and in shade; a vertical
@@ -80,34 +80,6 @@ function Cover({ src, poster, on }: { src: string; poster: string; on: boolean }
   const reduce = useReducedMotion();
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !reduce) v.play().catch(() => {}); else v.pause(); }, [on, reduce]);
   return <video ref={ref} className="pc-video" src={src} poster={poster} muted loop playsInline preload="metadata" />;
-}
-
-/* the title's rolling first word: Product → Interaction → Motion (02 v29). The box's width is animated outright, on a
-   spring, to the next word's measured width — so "designer" travels, quickly but not in a jump (Nitish, 14 Oct; a layout
-   animation on an inline box had made it abrupt) — while the words themselves slide up through the clip. The widths come
-   from hidden copies set in the same type, re-measured when the type changes. */
-function RollingWord() {
-  const reduce = useReducedMotion();
-  const [i, setI] = useState(0);
-  const probe = useRef<HTMLSpanElement>(null);
-  const [widths, setWidths] = useState<number[] | null>(null);
-  useEffect(() => { if (reduce) return; const id = setInterval(() => setI(n => (n + 1) % WORDS.length), 2400); return () => clearInterval(id); }, [reduce]);
-  useLayoutEffect(() => {
-    const p = probe.current; if (!p) return;
-    const measure = () => setWidths([...p.children].map(c => (c as HTMLElement).getBoundingClientRect().width));
-    measure(); const ro = new ResizeObserver(measure); ro.observe(p); document.fonts?.addEventListener?.('loadingdone', measure);
-    return () => { ro.disconnect(); document.fonts?.removeEventListener?.('loadingdone', measure); };
-  }, []);
-  const w = widths?.[i];
-  return (
-    <motion.span className="rw4" initial={false} animate={w != null ? { width: w } : undefined} transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34, mass: 1 }}>
-      {'\u00a0'}
-      <AnimatePresence initial={false}>
-        <motion.span key={WORDS[i]} className="rw4-w" initial={{ y: '110%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '-110%', opacity: 0 }} transition={reduce ? { duration: 0 } : { duration: .42, ease: [.3, 1, .4, 1] }}>{WORDS[i]}</motion.span>
-      </AnimatePresence>
-      <span className="rw4-probe" ref={probe} aria-hidden="true">{WORDS.map(x => <span key={x}>{x}</span>)}</span>
-    </motion.span>
-  );
 }
 
 /* the nav: the section names run along the bar reading bottom to top (01's side nav), names only (Nitish, 13 Oct — the
@@ -190,6 +162,7 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
   }, [wrap, cut, links, key]);
   return clip;
 }
+
 
 export default function Iteration04() {
   const { view: v0, pid } = useParams();
@@ -321,7 +294,7 @@ export default function Iteration04() {
             <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
             {/* his photo in a disc beside the name (Nitish, 13 Oct); the desk photo stands in until he sends the one he means */}
             <span className="me4"><img src={desk} alt="" /></span>
-            <span className="role4"><RollingWord /> designer</span>
+            <Signature04 className="sig4" label="Product, motion designer" /> {/* his written title (22 Oct), in the rolling word's place — the word's first letter on the name's edge, as on the case study's card */}
             <p className="sub4">I design feedback{'\u00a0'}rich interfaces powered by motion.</p>
             <a className="cv4" href={LINKS.cv}>View CV <span aria-hidden="true">↗</span></a>
           </div>

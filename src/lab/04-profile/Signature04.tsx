@@ -7,7 +7,7 @@ import type { AnimationItem } from 'lottie-web';
    layers), so the drawing shifts left as the wipe runs, by the difference, and back. The wipe's play head travels over
    frames 0–90 and returns over 210–300 (60 fps, 421 frames); the shift follows it with a smooth step. Under reduced
    motion it holds the first frame, PRODUCT, at that word's offset. */
-const SRC = '/cases/magic-scale/signature.json';
+const SRC = '/signature.json'; /* public/signature.json — his, not a project's */
 const W = 593, P = 33.5, M = 64;
 const ease = (t: number) => t * t * (3 - 2 * t);
 const shiftAt = (f: number) => P + (M - P) * (f < 90 ? ease(f / 90) : f < 210 ? 1 : f < 300 ? 1 - ease((f - 210) / 90) : 0);
@@ -30,5 +30,5 @@ export default function Signature04({ className, label }: { className?: string; 
     place(0);
     return () => { dead = true; anim?.destroy(); };
   }, []);
-  return <div ref={box} className={className} role="img" aria-label={label}><div ref={stage} className="cs4-sign-in" /></div>;
+  return <div ref={box} className={className} role="img" aria-label={label}><div ref={stage} className="sig-in" /></div>;
 }

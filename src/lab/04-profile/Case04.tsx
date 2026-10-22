@@ -169,6 +169,9 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
           at its foot — seen only when something is behind it; the one-liner and the tags at the right, on the study's own
           right edge, not the page's */}
       <header className="pp4-head cs4-head" ref={headRef}>
+        {/* the frosted band: six strips of backdrop blur, strongest at the top, and the frame's colour over them fading out
+            at the foot — strips rather than a masked blur, which some browsers drop (22 Oct) */}
+        <div className="cs4-glass" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(i => <i key={i} style={{ '--i': i } as React.CSSProperties} />)}</div>
         <div className="cs4-head-in">
         <div className="cs4-title">
           <button type="button" className="cs4-back" onClick={back}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M12 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>Projects</button>
