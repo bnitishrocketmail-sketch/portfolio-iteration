@@ -26,7 +26,7 @@
 .cs4-talk-who { display: flex; flex-direction: column; gap: .15em; min-width: 0; }
 .cs4-talk-name { font: 600 var(--t-title)/1.2 var(--f-copy); } /* title */
 .cs4-talk-role { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
-.cs4-sign { width: clamp(84px, 7.6cqw, 104px); aspect-ratio: 593 / 141; margin-top: -4px; will-change: transform; } .cs4-sign .sig-in, .cs4-sign svg { display: block; width: 100%; height: 100%; } /* his written title under the name, shifted so the word's first letter sits on the name's edge (Signature04.tsx); pulled up by the file's empty top */
+.cs4-sign { width: clamp(84px, 7.6cqw, 104px); aspect-ratio: 593 / 141; margin-top: -4px; margin-left: calc(.083 * var(--t-title)); will-change: transform; color: var(--pcard-open-ink); } /* in the card's ink; in by the N's bearing */ .cs4-sign .sig-in, .cs4-sign svg { display: block; width: 100%; height: 100%; } /* his written title under the name, shifted so the word's first letter sits on the name's edge (Signature04.tsx); pulled up by the file's empty top */
 .cs4-talk-line { margin: 0; font: var(--copy-w) var(--t-body)/1.4 var(--f-copy); opacity: .82; } /* body */
 .cs4-talk-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
 .cs4-talk .cs4-talk-btn { margin: 0; background: var(--nav-hl); color: var(--nav-hl-ink); font: 600 var(--t-title)/1 var(--f-copy); padding: .7em 1.1em; } /* the CV button's shape, in the nav highlight's dark (the system's), set in Title (22 Oct) */
