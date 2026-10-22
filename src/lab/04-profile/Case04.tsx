@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { animate } from 'motion/react';
 import { Lottie } from '../../components/micro/Lottie';
 import Signature04 from './Signature04';
 import BMachine from './BMachine';
@@ -33,9 +34,9 @@ function Clip({ src, poster, on, crop }: { src: string; poster?: string; on: boo
 }
 /* a slot: empty, it shows its shape and its name; filled (22 Oct), it holds the page's own picture or clip, with any
    Lotties layered over it where his page had them */
-function Slot({ m, fl }: { m: Media; fl?: string }) {
+function Slot({ m, fl, active = true }: { m: Media; fl?: string; active?: boolean /* false holds a clip or Lottie still (the hero's screens at the sides) */ }) {
   const ref = useRef<HTMLDivElement>(null);
-  const on = useInView(ref);
+  const on = useInView(ref) && active;
   const clip = !!m.src && /\.mp4$/.test(m.src);
   const filled = !!(m.src || m.lottie);
   return (
@@ -162,6 +163,52 @@ function Flow({ steps }: { steps: Step[] }) {
   );
 }
 
+/* the hero (Nitish, 22 Oct): a flat, front-facing phone in the middle — a bezel and its island, nothing more — and the
+   three screens taking turns in it. One plays inside; the other two float at its sides, a fifth smaller, in black and
+   white and held still. Every few seconds the left one slides into the phone, growing and turning to colour as it goes,
+   the one inside slides out to the right, and the right one fades away to come back in at the left — round and round.
+   The phone is drawn over the screens, so a screen passes under its bezel on its way in and out. */
+const CAR = { hold: 3800, slide: .9, side: .8, ease: [.2, .8, .2, 1] as [number, number, number, number] };
+function Carousel({ of }: { of: Media[] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const els = useRef<(HTMLDivElement | null)[]>([]);
+  const on = useInView(ref, .3);
+  /* which screen is at the left, in the phone, at the right */
+  const [order, setOrder] = useState<number[]>(() => [of.length - 1, 0, 1].map(i => (i + of.length) % of.length));
+  const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* the three places, from the phone's width: the sides a fifth smaller, a little clear of the bezel */
+  const places = () => {
+    const el = ref.current; const w = el?.querySelector<HTMLElement>('.cs4-car-phone')?.offsetWidth ?? 200;
+    const gap = (el?.offsetWidth ?? 900) < w * 2.9 ? w * .1 : w * .22; /* the sides closer in on a phone, where they run past the card */
+    const off = w / 2 + gap + w * CAR.side / 2; /* phone's half, the gap, the side screen's half */
+    return { L: -off, C: 0, R: off, out: off + w * .5, in: -off - w * .5 };
+  };
+  /* put the screens in their places, without motion (first paint, a resize, reduced motion) */
+  const settle = () => { const P = places(); order.forEach((i, k) => { const el = els.current[i]; if (!el) return; const side = k !== 1; el.style.transform = `translateX(${[P.L, P.C, P.R][k]}px) scale(${side ? CAR.side : 1})`; el.style.filter = side ? 'grayscale(1)' : 'grayscale(0)'; el.style.opacity = '1'; }); };
+  useLayoutEffect(() => { settle(); const ro = new ResizeObserver(settle); if (ref.current) ro.observe(ref.current); return () => ro.disconnect(); }, [order]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!on || still || of.length < 3) return;
+    let dead = false;
+    const t = setTimeout(async () => {
+      const P = places(); const [l, c, r] = order; const E = els.current; if (!E[l] || !E[c] || !E[r]) return;
+      const o = { duration: CAR.slide, ease: CAR.ease };
+      const a1 = animate(E[l], { x: P.C, scale: 1, filter: 'grayscale(0)' }, o);
+      const a2 = animate(E[c], { x: P.R, scale: CAR.side, filter: 'grayscale(1)' }, o);
+      /* the right one: away and gone, then back in from the left */
+      const a3 = (async () => { await animate(E[r]!, { x: P.out, opacity: 0 }, { duration: CAR.slide * .45, ease: 'easeIn' }); if (dead) return; await animate(E[r]!, { x: P.in }, { duration: 0 }); await animate(E[r]!, { x: P.L, opacity: 1 }, { duration: CAR.slide * .5, ease: 'easeOut' }); })();
+      setOrder([r, l, c]); /* the one sliding in starts playing as it goes */
+      await Promise.all([a1, a2, a3]);
+    }, CAR.hold);
+    return () => { dead = true; clearTimeout(t); };
+  }, [on, order, still, of.length]);
+  return (
+    <div className="cs4-car" ref={ref}>
+      {of.map((m, i) => <div key={i} ref={el => { els.current[i] = el; }} className={`cs4-car-item${order[1] === i ? ' in' : ''}`} style={{ zIndex: order[1] === i ? 2 : 1 }}><Slot m={m} active={order[1] === i} /></div>)}
+      <div className="cs4-car-phone" aria-hidden="true"><i className="island" /></div>
+    </div>
+  );
+}
+
 function Render({ b }: { b: Block }) {
   switch (b.k) {
     case 'p': return <p className="cs4-p">{text(b.t)}</p>;
@@ -189,8 +236,7 @@ function Render({ b }: { b: Block }) {
       </div>
     );
     case 'flow': return <Flow steps={b.steps} />;
-    /* three phones overlapping, the middle in front and raised (his hero) */
-    case 'trio': return <div className="cs4-trio">{b.of.map((m, i) => <Fig key={i} m={m} />)}</div>;
+    case 'carousel': return <Carousel of={b.of} />;
     /* his FAQ panel: a cut screen, then the questions it raised under their labels */
     case 'faq': return (
       <div className="cs4-faq">

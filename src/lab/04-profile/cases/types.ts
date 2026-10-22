@@ -22,8 +22,8 @@ export type Block =
   | { k: 'legend'; items: string[]; colors?: string[] }
   | { k: 'cols'; of: { h: string; p: Rich; ul: Rich[] }[] }
   | { k: 'flow'; steps: Step[] }
-  /* three phones overlapping, the middle one in front and raised (the B study's hero) */
-  | { k: 'trio'; of: [Media, Media, Media] }
+  /* one phone with the screens taking turns in it, the other two floating at its sides (the B study's hero) */
+  | { k: 'carousel'; of: Media[] }
   /* his FAQ panel: a cut screen over the questions it drew, each under a label */
   | { k: 'faq'; of: { m: Media; qs: { label: string; q: string[] }[] }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */

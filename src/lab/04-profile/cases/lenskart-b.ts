@@ -24,12 +24,13 @@ export const lenskartB: Case = {
     { k: 'Team', v: 'Product design' },
     { k: 'Focus', v: 'UI/UX design collaboration, interaction & motion design ownership' },
   ],
-  /* his hero: three phones, the middle one in front — Lensa's chat, Claire greeting, and B (the revamped states, the
-     showreel Lottie, where his page ran the old states' clip) */
-  hero: { k: 'trio', of: [
+  /* the hero (Nitish, 22 Oct): one phone in the middle with the three screens taking turns in it — B (the revamped
+     states, the showreel Lottie, where his page ran the old states' clip), Lensa's chat, Claire greeting — the other
+     two floating at its sides, smaller, still and in black and white, until they slide in */
+  hero: { k: 'carousel', of: [
+    phone('plp-empty.webp', 'B on the product list', { layers: [{ kind: 'lottie', src: 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie', box: [24, 35.5, 52.7, 23.8] }] }),
     lensa('Chat with Lensa'),
     clip('claire', 'Claire greeting on the product list'),
-    phone('plp-empty.webp', 'B on the product list', { layers: [{ kind: 'lottie', src: 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie', box: [24, 35.5, 52.7, 23.8] }] }),
   ] },
   sections: [
     { id: 'start', title: 'Where it started?', blocks: [
