@@ -293,13 +293,14 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
   const k = PROJECTS.findIndex(p => p.id === id); const p = PROJECTS[k];
   const c = CASES[id];
   const next = PROJECTS[(k + 1) % PROJECTS.length]; /* the column's top card: the next project (what else it holds, later) */
-  /* the head's height, handed to the page: the study starts under it, the column level with the study's first container */
-  const root = useRef<HTMLElement>(null), headRef = useRef<HTMLElement>(null);
+  /* the head's height, handed to the page: the study starts under it, the column level with the study's first container;
+     and the hero's, so the column's first card is as tall as the hero beside it (Nitish, 22 Oct) */
+  const root = useRef<HTMLElement>(null), headRef = useRef<HTMLElement>(null), heroRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const el = root.current, h = headRef.current; if (!el || !h) return;
-    const set = () => el.style.setProperty('--head-h', `${h.offsetHeight}px`);
-    set(); const ro = new ResizeObserver(set); ro.observe(h); return () => ro.disconnect();
-  }, []);
+    const set = () => { el.style.setProperty('--head-h', `${h.offsetHeight}px`); const hero = heroRef.current; if (hero) el.style.setProperty('--hero-h', `${hero.offsetHeight}px`); else el.style.removeProperty('--hero-h'); };
+    set(); const ro = new ResizeObserver(set); ro.observe(h); if (heroRef.current) ro.observe(heroRef.current); return () => ro.disconnect();
+  }, [id]);
   if (!p) return null;
   return (
     <section className="pp4 cs4" aria-label={p.title} ref={root}>
@@ -320,7 +321,7 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
       <div className="cs4-main">
       <div className="cs4-body">
         {c ? (<>
-          {c.hero && <div className={`cs4-hero${c.hero.k === 'media' ? '' : ' block'}`}>{c.hero.k === 'media' ? <Slot m={c.hero} /> : <Render b={c.hero} />}</div>}
+          {c.hero && <div ref={heroRef} className={`cs4-hero${c.hero.k === 'media' ? '' : ' block'}`}>{c.hero.k === 'media' ? <Slot m={c.hero} /> : <Render b={c.hero} />}</div>}
           {/* the information strip under the hero, as his page had it: the facts in a row (22 Oct: no tags — the facts say it) */}
           <dl className="cs4-strip">
             <div><dt>Client</dt><dd>{p.client} · {p.year}</dd></div>
