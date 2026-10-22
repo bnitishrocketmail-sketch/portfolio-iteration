@@ -4,7 +4,8 @@ import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { siLottiefiles } from 'simple-icons';
 import { COPY, LINKS, NAV04 as NAV, PROJECTS } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
-import { CONTROLS, defOf, readTweaks, tweakKey, writeTweaks, type Control } from './tokens';
+import { readTweaks, tweakKey, writeTweaks } from './tokens';
+import Controls04 from './Controls04';
 import './profile.css';
 import './system.css';
 
@@ -109,51 +110,25 @@ export default function System04() {
   const sheetsRef = useRef<HTMLDivElement>(null);
   const [z, setZ] = useState(.6);
   useEffect(() => { const el = sheetsRef.current; if (!el) return; const fit = () => setZ(Math.min(1, (el.clientWidth - 56) / 1320)); fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
-  const [mode, setMode] = useState<boolean>(isDark); /* which mode the controls edit */
+  const mode = isDark; /* the panel edits the mode the site is in, as on the profile */
   const [dark, setDarkV] = useState<Record<string, string>>(() => readTweaks(true));
   const [light, setLightV] = useState<Record<string, string>>(() => readTweaks(false));
-  const [copied, setCopied] = useState(false);
   useEffect(() => { const on = (e: StorageEvent) => { if (e.key === tweakKey(true)) setDarkV(readTweaks(true)); if (e.key === tweakKey(false)) setLightV(readTweaks(false)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, []);
   const values = mode ? dark : light;
   const setValues = (v: Record<string, string>) => { (mode ? setDarkV : setLightV)(v); writeTweaks(mode, v); };
-  const set = (k: string, v: string) => setValues({ ...values, [k]: v });
-  const reset = () => setValues({});
-  const copy = () => { const out = Object.fromEntries([['Mode', mode ? 'dark' : 'light'] as [string, string]].concat(CONTROLS.map(c => [`${c.group} · ${c.sub} · ${c.label}`, values[c.key] ?? defOf(c, mode)]))); navigator.clipboard?.writeText(JSON.stringify(out, null, 2)).then(() => { setCopied(true); window.setTimeout(() => setCopied(false), 1400); }); };
-  const groups = [...new Set(CONTROLS.map(c => c.group))];
-  const field = (c: Control) => {
-    const v = values[c.key] ?? defOf(c, mode);
-    return (
-      <label key={c.key}><span>{c.label}</span>
-        {c.kind === 'color' && <input type="color" value={v} onChange={e => set(c.key, e.target.value)} />}
-        {c.kind === 'range' && <span className="tw-range"><input type="range" min={c.min} max={c.max} step={c.step} value={parseFloat(v)} onChange={e => set(c.key, e.target.value + (c.unit ?? ''))} /><output>{v}</output></span>}
-        {c.kind === 'select' && <select value={v} onChange={e => set(c.key, e.target.value)}>{c.options.map(([l, val]) => <option key={val} value={val}>{l}</option>)}</select>}
-      </label>
-    );
-  };
   return (
     <div className="sys">
       <header className="sys-head">
-        <div><h1>04 · Design system</h1><p>The type scale and every element of the profile, in both modes, drawn with the page's own tokens. Edits here go straight to the profile; each mode keeps its own set. The site is in {isDark ? 'dark' : 'light'} mode right now.</p></div>
+        <div><h1>04 · Design system</h1><p>The type scale and every element of the profile, in both modes, drawn with the page's own tokens. The controls are in the panel at the side (Controls); edits go straight to the profile, and each mode keeps its own set. The site is in {isDark ? 'dark' : 'light'} mode right now.</p></div>
         <Link className="sys-back" to="/lab/04-profile">← Back to the profile</Link>
       </header>
+      <Controls04 values={values} onChange={setValues} dark={mode} toggle={toggle} onSystem />
       <div className="sys-body">
         <div className="sys-sheets" ref={sheetsRef}>
           <div className="sys-page" style={{ '--bg': dark['--bg'] ?? '#141416', '--z': z } as React.CSSProperties}><Sheet dark values={dark} /></div>
           <div className="sys-page" style={{ '--bg': light['--bg'] ?? '#d4d4d7', '--z': z } as React.CSSProperties}><Sheet dark={false} values={light} /></div>
         </div>
-        <aside className="sys-controls" aria-label="Controls">
-          <div className="sys-mode" role="tablist"><button type="button" role="tab" className={mode ? 'on' : ''} aria-selected={mode} onClick={() => setMode(true)}>Dark</button><button type="button" role="tab" className={!mode ? 'on' : ''} aria-selected={!mode} onClick={() => setMode(false)}>Light</button></div>
-          <div className="sys-actions"><button type="button" onClick={copy}>{copied ? 'Copied' : 'Copy values'}</button><button type="button" onClick={reset}>Reset this mode</button><button type="button" onClick={toggle}>Site to {isDark ? 'light' : 'dark'}</button></div>
-          {groups.map((g, gi) => {
-            const subs = [...new Set(CONTROLS.filter(c => c.group === g).map(c => c.sub))];
-            return (
-              <details key={g} open={gi < 2}>
-                <summary>{g}</summary>
-                {subs.map(sub => <div key={sub}><h5>{sub}</h5>{CONTROLS.filter(c => c.group === g && c.sub === sub).map(field)}</div>)}
-              </details>
-            );
-          })}
-        </aside>
+        {/* the controls live in the control centre (Controls04.tsx) now, the panel at the side of this page as of the profile (22 Oct); the sheets have the page */}
       </div>
     </div>
   );

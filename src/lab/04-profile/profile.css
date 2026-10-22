@@ -48,6 +48,14 @@
   display: grid; grid-template-columns: calc(.053 * var(--fw)) minmax(0, 1fr) calc(.21 * var(--fw)); /* the nav: ref 5's 9.7% less a quarter, less a fifth, then a touch more so the round tips fit the button (Nitish, 13 Oct) */ gap: calc(.016 * var(--fw)); padding: calc(.014 * var(--fw)); border-radius: 36px; background: var(--frame);
   box-shadow: var(--shadow-frame), 0 0 0 1px rgba(255, 255, 255, .06); }
 
+/* the glass version of the main container (a control, 22 Oct): its own colour at a third, the picture behind blurred
+   through it, a light edge along the top; the picture behind is less blurred so the glass has something to blur */
+.it04.glassframe .bg4 { filter: blur(14px) brightness(.66); }
+.it04.light.glassframe .bg4 { filter: blur(14px) brightness(1.02); }
+.it04.glassframe .frame4 { background: color-mix(in srgb, var(--frame) 34%, transparent); -webkit-backdrop-filter: blur(30px) saturate(1.35); backdrop-filter: blur(30px) saturate(1.35);
+  box-shadow: var(--shadow-frame), inset 0 1px 0 rgba(255, 255, 255, .14), 0 0 0 1px rgba(255, 255, 255, .1); }
+.it04.light.glassframe .frame4 { box-shadow: var(--shadow-frame), inset 0 1px 0 rgba(255, 255, 255, .5), 0 0 0 1px rgba(255, 255, 255, .35); }
+
 /* ---- nav: the names along a bar, a travelling highlighter, the assistant below ---- */
 /* the nav column: a bar in the assistant button's colour with round tips, the column's full height; the section names run
    along it reading bottom to top (01's side nav), names only (Nitish, 13 Oct), the selected one in a pill in the frame's
@@ -89,9 +97,9 @@
 .pic4-me { z-index: 2; pointer-events: none; }
 .pic4.bw .pic4-img { filter: grayscale(1); } /* the drawing's black-and-white version (22 Oct, a control) */
 /* the control centre (Controls04.tsx): the design-system page's controls in a panel down the left of the page */
-.cc4 { position: fixed; left: 18px; top: 16px; bottom: 48px; z-index: 70; width: 300px; max-height: none; overflow: auto; scrollbar-width: thin; }
-.cc4-sys { display: block; padding: 9px 12px; border-radius: 10px; background: #2a2a2f; color: #f0f0f3; font: 600 12px var(--body); text-decoration: none; text-align: center; }
-.cc4-sys:hover { background: #34343a; }
+.ctl4 { align-content: start; position: fixed; left: 18px; top: 16px; bottom: 48px; z-index: 70; width: 300px; max-height: none; overflow: auto; scrollbar-width: thin; }
+.ctl4-sys { display: block; padding: 9px 12px; border-radius: 10px; background: #2a2a2f; color: #f0f0f3; font: 600 12px var(--body); text-decoration: none; text-align: center; }
+.ctl4-sys:hover { background: #34343a; }
 /* the floating Lottie cards: the page's glass (the name box's recipe), sized on the frame; behind him or in front; they
    float (the hero's drift) and lean with the pointer by their depth */
 .fl4 { position: absolute; z-index: 1; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }

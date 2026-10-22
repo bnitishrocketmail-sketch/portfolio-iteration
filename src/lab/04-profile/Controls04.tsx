@@ -7,7 +7,7 @@ import './system.css';
    better; a button in it opens the whole design-system page"): the chip at the page's foot opens a panel down the left
    side with the same controls the design-system page has (tokens.ts), for the mode the site is in; at its top, the way
    to the whole page. Values go to the browser as before, so the page and the design system stay in step. */
-export default function Controls04({ values, onChange, dark, toggle }: { values: Record<string, string>; onChange: (v: Record<string, string>) => void; dark: boolean; toggle: () => void }) {
+export default function Controls04({ values, onChange, dark, toggle, onSystem }: { values: Record<string, string>; onChange: (v: Record<string, string>) => void; dark: boolean; toggle: () => void; onSystem?: boolean }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const set = (k: string, v: string) => { const next = { ...values, [k]: v }; onChange(next); writeTweaks(dark, next); };
@@ -28,8 +28,8 @@ export default function Controls04({ values, onChange, dark, toggle }: { values:
     <>
       <button type="button" className="tweaks4 tw-toggle" aria-expanded={open} onClick={() => setOpen(o => !o)}>{open ? 'Close' : 'Controls'}</button>
       {open && (
-        <aside className="sys-controls cc4" aria-label="Controls">
-          <Link className="cc4-sys" to="/lab/04-system">Open the design system →</Link>
+        <aside className="sys-controls ctl4" aria-label="Controls">
+          {onSystem ? <Link className="ctl4-sys" to="/lab/04-profile">← Back to the profile</Link> : <Link className="ctl4-sys" to="/lab/04-system">Open the design system →</Link>}
           <div className="sys-actions"><button type="button" onClick={copy}>{copied ? 'Copied' : 'Copy values'}</button><button type="button" onClick={reset}>Reset this mode</button><button type="button" onClick={toggle}>Site to {dark ? 'light' : 'dark'}</button></div>
           {groups.map((g, gi) => {
             const subs = [...new Set(CONTROLS.filter(c => c.group === g).map(c => c.sub))];

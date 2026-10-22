@@ -63,6 +63,8 @@ export const CONTROLS: Control[] = [
   /* the intro's picture (Nitish, 22 Oct): the drawing as it is, the drawing in black and white, or his photo — the cutout
      and the cards in front and behind the same in each */
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-v', label: 'Version', def: 'illo', light: 'illo', options: [['The drawing', 'illo'], ['The drawing, black and white', 'illo-bw'], ['The photo', 'photo']] },
+  /* the main container solid, as it was, or glass: the picture behind showing through it, blurred (22 Oct) */
+  { group: 'Main container', sub: 'Background', kind: 'select', key: '--frame-v', label: 'Version', def: 'solid', light: 'solid', options: [['Solid', 'solid'], ['Glass', 'glass']] },
 ];
 
 export const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;

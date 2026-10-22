@@ -1,12 +1,12 @@
 /* 04's design-system page (System04.tsx): the sheets of specimens, one per mode, drawn with the same classes and tokens
-   as the profile, laid on a 1320-wide frame and zoomed to fit; the controls in a column at the right. */
+   as the profile, laid on a 1320-wide frame and zoomed to fit; the controls in the side panel (Controls04). */
 /* the document is locked for the lab's fixed frames (base.css); this page scrolls on its own */
 .sys { position: fixed; inset: 0; overflow: auto; scrollbar-width: thin; background: #0f0f10; color: #e6e6ea; font-family: var(--body); padding: 28px clamp(16px, 3vw, 44px) 80px; }
 .sys-head { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
 .sys-head h1 { margin: 0; font: 500 clamp(18px, 2vw, 24px)/1.2 var(--body); letter-spacing: -.01em; }
 .sys-head p { margin: 4px 0 0; color: #9a9aa2; font-size: 13px; max-width: 70ch; }
 .sys-back { color: #c9c9cf; font: 500 12px var(--body); text-decoration: none; padding: 8px 14px; border-radius: 999px; background: #1e1e22; }
-.sys-body { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: start; }
+.sys-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; } /* the sheets only; the controls are in the side panel (22 Oct) */
 .sys-sheets { display: grid; gap: 28px; min-width: 0; }
 /* a sheet: the page's background around the frame, the frame at 1320 wide, zoomed to the column */
 .sys-sheet { border-radius: 22px; overflow: hidden; }
