@@ -16,6 +16,7 @@ import Lab04 from './Lab04';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
 import Blob4 from './Blob4';
+import Fintech3D from './Fintech3D';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
@@ -72,7 +73,7 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
               animate={{ y }} transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30 }}
               onPointerEnter={e => { if (e.pointerType !== 'touch') setHov(r); }} onClick={() => onOpen(p.id)}>
               <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE ? { WebkitMaskImage: holeMask(r > 0), maskImage: holeMask(r > 0) } : {}) }} aria-hidden="true">
-                {p.cover && ('video' in p.cover ? <Cover src={p.cover.video} poster={p.cover.poster} on={hov === r} /> : <span className="pc-video pc-lot" style={{ background: p.cover.bg }}><Lottie className="pc-lot-in" src={p.cover.lottie} still={p.cover.still} playing={hov === r} /></span>)}
+                {p.cover && ('video' in p.cover ? <Cover src={p.cover.video} poster={p.cover.poster} on={hov === r} /> : 'lottie' in p.cover ? <span className="pc-video pc-lot" style={{ background: p.cover.bg }}><Lottie className="pc-lot-in" src={p.cover.lottie} still={p.cover.still} playing={hov === r} /></span> : <span className="pc-video pc-comp"><Fintech3D mini on={hov === r} /></span>)}
               </span>
               {!HOLE && <i className="tab4" aria-hidden="true" />}
               <span className="pc-name"><b>{p.title}</b><small>{p.client} · {p.year}</small></span>

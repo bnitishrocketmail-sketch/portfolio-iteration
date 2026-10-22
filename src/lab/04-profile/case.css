@@ -148,6 +148,7 @@
 .cs4-over { position: relative; width: 100%; } .cs4-over > .cs4-layer { z-index: 3; }
 /* his FAQ panel: four columns, a screen over the questions, each under its label */
 .cs4-faq { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); padding: var(--s3); border-radius: calc(var(--r) - .6cqw); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
+.cs4-faq.n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); } /* six cells: two rows of three */
 .cs4-faq-col { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
 .cs4-faq-q { display: flex; flex-direction: column; gap: .5em; align-items: flex-start; }
 .cs4-faq-label { padding: .3em .75em; border-radius: 999px; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); } /* his green label, in the folded card's dark */
@@ -164,6 +165,20 @@
 .cs4-ver-chip { padding: .5em .9em; border-radius: 999px; background: var(--pcard-open); font: 600 var(--t-title)/1.2 var(--f-copy); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); } /* title */
 .cs4-ver-chip.name { font-weight: 500; }
 .cs4-phones.ver { padding: var(--s1) 0 0; gap: var(--s3) var(--s4); }
+
+/* ---- the fintech study's hero (Fintech3D.tsx): his two phones in perspective, the screens projected onto them ---- */
+.cs4-hero.fill { padding: 0; }
+.ft3d { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; border-radius: inherit; background: linear-gradient(100deg, #2b56ec 0%, #4a4df0 55%, #7b3df2 100%); color: #fff; } /* his page's ground for the phones: the brand's blue running to violet */
+.ft3d-logo { position: absolute; left: 4%; top: 7%; z-index: 4; font: 700 clamp(14px, 1.7cqw, 22px)/1 var(--f-head); letter-spacing: -.01em; }
+.ft3d-stage { position: absolute; left: 50%; top: -7.5%; transform-origin: 50% 0; }
+.ft3d-phones, .ft3d-island { position: absolute; left: 0; top: 0; display: block; max-width: none; }
+.ft3d-island { z-index: 3; pointer-events: none; }
+.ft3d-scr { position: absolute; left: 0; top: 0; z-index: 2; transform-origin: 0 0; overflow: hidden; background: #fff; backface-visibility: hidden; } /* a flat box, carried onto the glass by its matrix3d */
+.ft3d-scr > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.ft3d-lot { position: absolute; } .ft3d-lot > div, .ft3d-lot svg { display: block; width: 100%; height: 100%; }
+.ft3d-copy { position: absolute; left: 8%; right: 8%; top: 55%; text-align: center; color: #1c1c3a; font-family: var(--f-copy); }
+.ft3d-copy b { display: block; font-size: 26px; line-height: 1.3; font-weight: 700; } .ft3d-copy span { display: block; margin-top: 12px; font-size: 19px; opacity: .6; }
+.pc-comp .ft3d { position: absolute; inset: 0; aspect-ratio: auto; } .ft3d.mini .ft3d-logo { display: none; } .ft3d.mini .ft3d-stage { left: 78%; top: -12%; } /* in the stack's card the name is the title, and the phones stand at the right, clear of it */
 
 /* ---- the state machine (BMachine.tsx): two tabs over one panel ---- */
 .bm { display: flex; flex-direction: column; gap: var(--s3); }

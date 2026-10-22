@@ -3,6 +3,7 @@ import { animate } from 'motion/react';
 import { Lottie } from '../../components/micro/Lottie';
 import Signature04 from './Signature04';
 import BMachine from './BMachine';
+import Fintech3D from './Fintech3D';
 import { useInView } from './inview';
 import desk from '../../assets/nitish-desk.webp';
 import { PROJECTS } from '../../lib/data';
@@ -46,12 +47,17 @@ function Slot({ m, fl, active = true }: { m: Media; fl?: string; active?: boolea
     </div>
   );
 }
-/* a layer by its box: a Lottie or a picture */
-const LayerBox = ({ l, on }: { l: Layer; on: boolean }) => (
-  <div className="cs4-layer" style={{ left: `${l.box[0]}%`, top: `${l.box[1]}%`, width: `${l.box[2]}%`, height: `${l.box[3]}%` }}>
-    {l.kind === 'lottie' ? <Lottie className="cs4-lot" src={l.src} playing={on} /> : <img src={l.src} alt="" />}
-  </div>
-);
+/* a layer by its box: a Lottie or a picture; a Lottie is fetched once its slot has been on screen (the fintech page's
+   six cells carry 3 MB of them) */
+function LayerBox({ l, on }: { l: Layer; on: boolean }) {
+  const [seen, setSeen] = useState(on);
+  useEffect(() => { if (on) setSeen(true); }, [on]);
+  return (
+    <div className="cs4-layer" style={{ left: `${l.box[0]}%`, top: `${l.box[1]}%`, width: `${l.box[2]}%`, height: `${l.box[3]}%` }}>
+      {l.kind === 'lottie' ? (seen && <Lottie className="cs4-lot" src={l.src} playing={on} />) : <img src={l.src} alt="" />}
+    </div>
+  );
+}
 
 /* a figure: the slot and its caption; a layer that runs past the slot (`over`) sits beside the slot, outside its clipping */
 function Fig({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) {
@@ -267,7 +273,7 @@ function Render({ b }: { b: Block }) {
     case 'carousel': return <Carousel of={b.of} />;
     /* his FAQ panel: a cut screen, then the questions it raised under their labels */
     case 'faq': return (
-      <div className="cs4-faq">
+      <div className={`cs4-faq n${b.of.length}`}>
         {b.of.map((c, i) => (
           <div key={i} className="cs4-faq-col">
             <Slot m={c.m} />
@@ -286,6 +292,7 @@ function Render({ b }: { b: Block }) {
       </div>
     );
     case 'machine': return <BMachine />;
+    case 'fintech': return <Fintech3D />;
   }
 }
 
@@ -321,7 +328,7 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
       <div className="cs4-main">
       <div className="cs4-body">
         {c ? (<>
-          {c.hero && <div ref={heroRef} className={`cs4-hero${c.hero.k === 'media' ? '' : ' block'}`}>{c.hero.k === 'media' ? <Slot m={c.hero} /> : <Render b={c.hero} />}</div>}
+          {c.hero && <div ref={heroRef} className={`cs4-hero${c.hero.k === 'media' ? '' : c.hero.k === 'fintech' ? ' fill' : ' block'}`}>{c.hero.k === 'media' ? <Slot m={c.hero} /> : <Render b={c.hero} />}</div>}
           {/* the information strip under the hero, as his page had it: the facts in a row (22 Oct: no tags — the facts say it) */}
           <dl className="cs4-strip">
             <div><dt>Client</dt><dd>{p.client} · {p.year}</dd></div>
