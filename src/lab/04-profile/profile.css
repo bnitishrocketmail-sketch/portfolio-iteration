@@ -85,7 +85,11 @@
 /* the first tab is his photo: a disc the pill's width; inside the pill it is a little smaller, the pill showing round it */
 .nav4 ul button.navme { padding: 0; width: var(--me-w); height: var(--me-w); }
 .nav4 .navme4, .hl4 .navme4 { grid-area: auto; width: var(--me-w); height: var(--me-w); box-shadow: none; background: var(--nav-bg); } /* the disc's own width (--me-w, navcol4), over .me4's own size and grid place */
-.nav4 li[data-id="home"] + li { margin-top: max(0px, calc(50% - var(--pill-w) / 2)); } /* the word after the disc as far from it as the words are from each other: the disc has no padding of its own, so the next button's is not taken off (22 Oct) */
+.nav4:not(.sig) li[data-id="home"] + li { margin-top: max(0px, calc(50% - var(--pill-w) / 2)); } /* the word after the disc as far from it as the words are from each other: the disc has no padding of its own, so the next button's is not taken off (22 Oct) */
+/* the signature version of the first tab (22 Oct): his cursive "Nitish" turned to run up the bar like the names, about a
+   name's length, in the names' colour; in the pill, in the pill's ink */
+.navsig4 { position: relative; display: block; width: 15px; height: 60px; }
+.navsig4 svg { position: absolute; left: 50%; top: 50%; width: 60px; height: 15.2px; transform: translate(-50%, -50%) rotate(-90deg); }
 .pn4 { display: none; } /* the phone's bar (PhoneNav04.tsx); shown at the phone breakpoint, where the column hides */
 
 /* ---- the picture: the intro tile, with the bottom-left corner cut out (the cut-out beside it is the frame, not the tile) ---- */

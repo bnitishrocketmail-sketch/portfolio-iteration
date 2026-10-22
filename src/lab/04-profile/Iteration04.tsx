@@ -18,6 +18,7 @@ import Lab04 from './Lab04';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
 import Blob4 from './Blob4';
+import Sig4 from './Sig4';
 import Fintech3D, { Launches3D } from './Fintech3D';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
@@ -109,7 +110,7 @@ function Cover({ src, poster, on }: { src: string; poster: string; on: boolean }
    carries the selected name itself — the old name goes out quickly, the new one comes in on the way — so the name is
    always inside the pill, and the pill hides the names it passes. */
 const NAV_SPRING = { type: 'spring', stiffness: 400, damping: 38, mass: 1 } as const;
-function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
+function Nav({ tab, go, sig }: { tab: Tab; go: (v: ViewName) => void; sig?: boolean }) {
   const reduce = useReducedMotion();
   const ulRef = useRef<HTMLUListElement>(null);
   const [boxes, setBoxes] = useState<Record<string, { top: number; height: number; width: number; left: number }> | null>(null);
@@ -131,13 +132,15 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
   const out = reduce ? { duration: 0 } : { duration: .1, ease: 'easeOut' as const }; /* the old name goes quickly … */
   const inn = reduce ? { duration: 0 } : { duration: .22, ease: 'easeOut' as const }; /* … the new one comes in while the pill is still arriving */
   return (
-    <nav className="nav4" aria-label="Sections">
+    <nav className={`nav4${sig ? ' sig' : ''}`} aria-label="Sections">
       <ul ref={ulRef}>
         {pill && (
           <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
             <AnimatePresence initial={false} mode="wait">
               <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
-                {tab === 'home'
+                {tab === 'home' && sig
+                  ? <span className="navsig4"><Sig4 /></span> /* the signature version of the first tab (22 Oct): in the pill like a name */
+                  : tab === 'home'
                   ? <motion.span className="me4 navme4 in" initial={{ scale: 1 }} animate={{ scale: .8, transition: reduce ? { duration: 0 } : { duration: .3, ease: 'easeOut' } }}><img src={desk} alt="" /></motion.span> /* the photo shrinks a little inside the pill, which shows round it as a ring (22 Oct) */
                   : <span className="lbl4"><span>{NAV[i].label}</span></span>}
               </motion.span>
@@ -148,8 +151,8 @@ function Nav({ tab, go }: { tab: Tab; go: (v: ViewName) => void }) {
           const on = n.id === tab;
           return (
             <li key={n.id} data-id={n.id}>
-              <button type="button" className={`${on ? 'on' : ''}${n.id === 'home' ? ' navme' : ''}`} aria-current={on ? 'page' : undefined} aria-label={n.id === 'home' ? n.label : undefined} onClick={() => go(n.id)}>
-                {n.id === 'home' ? <span className="me4 navme4"><img src={desk} alt="" /></span> : <span className="lbl4"><span>{n.label}</span></span>} {/* the first tab is his photo (22 Oct) */}
+              <button type="button" className={`${on ? 'on' : ''}${n.id === 'home' && !sig ? ' navme' : ''}`} aria-current={on ? 'page' : undefined} aria-label={n.id === 'home' ? n.label : undefined} onClick={() => go(n.id)}>
+                {n.id === 'home' && sig ? <span className="navsig4"><Sig4 /></span> : n.id === 'home' ? <span className="me4 navme4"><img src={desk} alt="" /></span> : <span className="lbl4"><span>{n.label}</span></span>} {/* the first tab is his photo (22 Oct) */}
               </button>
             </li>
           );
@@ -230,7 +233,7 @@ export default function Iteration04() {
       <div className="frame4">
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
-          <Nav tab={navTab} go={go} />
+          <Nav tab={navTab} go={go} sig={tweaks['--home-tab'] === 'sig'} />
           <PhoneNav04 items={NAV} tab={navTab} go={go} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
             <Blob4 /> {/* the assistant's wavy mark (22 Oct), in place of the sparkle */}
