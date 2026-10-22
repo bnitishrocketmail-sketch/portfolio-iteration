@@ -46,7 +46,11 @@ const HOLE = true; /* the pill as a hole punched through the card (Nitish, 22 Oc
 /* the pill's geometry, in the card's 165 × 113: 3.6% in, 9.7% wide (12.1% less a fifth, 22 Oct), 25.2% tall, at the middle of the
    front card and 28% down the ones behind. As a hole it is a mask on the card's face: everything but the pill */
 const PILL = { x: 165 * .036, w: 165 * .097, h: 113 * .252 };
-const holeMask = (back: boolean) => { const r = PILL.w / 2, cy = 113 * (back ? .28 : .5) + (back ? PILL.h / 2 : 0), top = cy - PILL.h / 2 + r; const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 165 113'><path fill-rule='evenodd' d='M0 0H165V113H0Z M${PILL.x} ${top} a${r} ${r} 0 0 1 ${PILL.w} 0 v${PILL.h - 2 * r} a${r} ${r} 0 0 1 -${PILL.w} 0 z'/></svg>`; return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`; };
+/* the hole's place (22 Oct): its left edge on the name's (the name sits 1.4cqw in, measured on the card and handed in as a
+   fraction of the card's width); on the front card at the card's middle, on the ones behind at the middle of the strip
+   they show under their name — from the name's foot (measured: the name's lines are fixed sizes, so where it ends moves
+   with the frame) to where the next card begins (OFFSET of the height) */
+const holeMask = (back: boolean, nx = .036, nb = .24) => { const r = PILL.w / 2, cy = 113 * (back ? (nb + OFFSET) / 2 : .5), top = cy - PILL.h / 2 + r, x = 165 * nx; const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 165 113'><path fill-rule='evenodd' d='M0 0H165V113H0Z M${x.toFixed(2)} ${top.toFixed(2)} a${r} ${r} 0 0 1 ${PILL.w} 0 v${(PILL.h - 2 * r).toFixed(2)} a${r} ${r} 0 0 1 -${PILL.w} 0 z'/></svg>`; return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`; };
 /* the hover (Nitish, 22 Oct), by a card's place: the front one stays put and only comes alive — its clip plays and turns from
    black and white to colour; the middle one rises by half of what the front card hides of it; the back one cannot rise, so
    the middle one sinks instead, by 40% of what it shows, and more of the back card is seen */
@@ -57,9 +61,14 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   /* where a card's name ends, handed to the card (--name-b): B's Lottie is centred in the band from there to the card's
      foot, the same room above it as below (Nitish, 22 Oct) */
   const deck = useRef<HTMLDivElement>(null);
+  const [nm, setNm] = useState<{ x: number; b: number }>({ x: .036, b: .24 }); /* the name's left edge and foot, as fractions of the card, for the hole */
   useLayoutEffect(() => {
     const d = deck.current; if (!d) return;
-    const set = () => d.querySelectorAll<HTMLElement>('.pcard4').forEach(c => { const n = c.querySelector<HTMLElement>('.pc-name'); if (n) c.style.setProperty('--name-b', `${n.offsetTop + n.offsetHeight}px`); });
+    const set = () => {
+      const cards = d.querySelectorAll<HTMLElement>('.pcard4');
+      cards.forEach(c => { const n = c.querySelector<HTMLElement>('.pc-name'); if (n) c.style.setProperty('--name-b', `${n.offsetTop + n.offsetHeight}px`); });
+      const c = cards[0], n = c?.querySelector<HTMLElement>('.pc-name'); if (c && n && c.offsetWidth) setNm({ x: n.offsetLeft / c.offsetWidth, b: (n.offsetTop + n.offsetHeight) / c.offsetHeight });
+    };
     set(); const ro = new ResizeObserver(set); ro.observe(d); return () => ro.disconnect();
   }, []);
   return (
@@ -72,7 +81,7 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
             <motion.button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}${hov === r ? ' hov' : ''}${p.cover && 'bg' in p.cover ? ' lit' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r }}
               animate={{ y }} transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30 }}
               onPointerEnter={e => { if (e.pointerType !== 'touch') setHov(r); }} onClick={() => onOpen(p.id)}>
-              <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE ? { WebkitMaskImage: holeMask(r > 0), maskImage: holeMask(r > 0) } : {}) }} aria-hidden="true">
+              <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE ? { WebkitMaskImage: holeMask(r > 0, nm.x, nm.b), maskImage: holeMask(r > 0, nm.x, nm.b) } : {}) }} aria-hidden="true">
                 {p.cover && ('video' in p.cover ? <Cover src={p.cover.video} poster={p.cover.poster} on={hov === r} /> : 'lottie' in p.cover ? <span className="pc-video pc-lot" style={{ background: p.cover.bg }}><Lottie className="pc-lot-in" src={p.cover.lottie} still={p.cover.still} playing={hov === r} /></span> : <span className="pc-video pc-comp">{p.cover.comp === 'fintech' ? <Fintech3D mini on={hov === r} /> : <Launches3D mini on={hov === r} />}</span>)}
               </span>
               {!HOLE && <i className="tab4" aria-hidden="true" />}
