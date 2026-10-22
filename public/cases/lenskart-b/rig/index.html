@@ -1,0 +1,1120 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>B States Rig</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground: #EDEFF4;
+    --panel: #FFFFFF;
+    --line: #D9DCE6;
+    --ink: #1A1C4B;
+    --ink-2: #5A5E82;
+    --ink-3: #9A9DB8;
+    --accent: #FF5A2E;
+    --accent-ink: #FFFFFF;
+    --chip: #F1F2F8;
+    --chip-on: #1A1C4B;
+    --focus: #3B7BFF;
+    --phone-shadow: 0 30px 60px -20px rgba(26,28,75,.28), 0 0 0 1px rgba(26,28,75,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #14161F; --panel: #1D2030; --line: #2E3247; --ink: #EEF0FA; --ink-2: #A9ADCB; --ink-3: #6E7295;
+      --chip: #262A3D; --chip-on: #EEF0FA; --phone-shadow: 0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #14161F; --panel: #1D2030; --line: #2E3247; --ink: #EEF0FA; --ink-2: #A9ADCB; --ink-3: #6E7295;
+    --chip: #262A3D; --chip-on: #EEF0FA; --phone-shadow: 0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 14px;
+    padding-block: 32px; padding-inline: 24px;
+  }
+  .stage { display: flex; gap: 40px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+
+  /* ---------- phone ---------- */
+  .phone-wrap { position: relative; flex: 0 0 auto; }
+  .phone {
+    position: relative; width: 360px; height: 800px; overflow: hidden; border-radius: 28px;
+    background: #F8F8F8 url("phone.webp") 0 0 / 360px 800px no-repeat;
+    box-shadow: var(--phone-shadow);
+  }
+  .phone.flat { border-radius: 0; box-shadow: none; }
+  .greet-text {
+    position: absolute; left: 60px; top: 515px; width: 240px; height: 60px;
+    background: url("greet.webp") 0 0 / 240px 60px no-repeat;
+    transition: opacity .35s ease;
+  }
+  .phone.results .greet-text { opacity: 0; }
+
+  /* B rig: lottie canvas 646x800 scaled so the B matches the screenshot's B */
+  .rig {
+    position: absolute; left: 101.35px; top: 256.95px; width: 157.2px; height: 194.8px;
+    transform-origin: 50% 50%; transform: scale(.8);   /* the whole assistant (B, waves, blob) 20 % smaller than the source */
+    transition: transform .55s cubic-bezier(.2,.8,.2,1);
+    will-change: transform;
+  }
+  .phone.results .rig { transform: translateY(363.65px) scale(.45); }   /* B centred at (180, 718): bottom row, like the app */
+  .rig .layer { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+  .rig .layer.on { opacity: 1; }
+  .rig .layer svg { display: block; width: 100% !important; height: 100% !important; }
+  .rig.fade .layer { transition: opacity var(--xfade, 200ms) ease-in-out; }
+  .rig .layer.cut { transition: none !important; }
+  .rig .layer[data-state="listening"], .rig .layer[data-state="thinking"] { z-index: 1 !important; }   /* rings live under the B */
+  .rig .layer.bg { z-index: -1; transform-origin: 51% 41%; transform: translateX(-12px) scale(1.2); }   /* gradient blob: always underneath every state; scaled 1.2× about its centre, nudged left */
+
+  /* state label under the B (none in Default); hidden while the results sheet is up */
+  .state-label {
+    position: absolute; left: 0; right: 0; top: 430px; text-align: center;
+    font-family: "DM Sans", system-ui, sans-serif; font-size: 13px; font-weight: 500; letter-spacing: .02em; color: #8E92B4;
+    opacity: 0; transition: opacity .18s ease, top .55s cubic-bezier(.2,.8,.2,1); pointer-events: none;
+  }
+  .state-label.show { opacity: 1; }
+  .phone.nolabel .state-label { opacity: 0; }
+  .phone.results .state-label { top: 604px; }
+  .phone.captioned .greet-text { opacity: 0; }
+
+  /* scripted conversation captions: under the B (centre) — or beside the shrunken B while the results sheet is up */
+  .caption {
+    position: absolute; left: 28px; right: 28px; top: 456px; text-align: center;
+    font-family: "DM Sans", system-ui, sans-serif; font-size: 16px; line-height: 1.35; font-weight: 500; color: #1F2160;
+    pointer-events: none; transition: opacity .25s ease, top .55s cubic-bezier(.2,.8,.2,1), font-size .55s ease;
+  }
+  .phone.results .caption { top: 626px; left: 36px; right: 36px; font-size: 14px; line-height: 1.3; }
+  .caption.user { color: #8E92B4; font-weight: 400; }
+  .caption .mic { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; margin-right: 6px; opacity: 0; transition: opacity .2s ease; }
+  .caption.user .mic { opacity: 1; }
+  .caption .w { opacity: 0; transition: opacity .14s ease; }
+  .caption .w.on { opacity: 1; }
+  .caption.hide { opacity: 0; }
+  .scenario textarea {
+    width: 100%; height: 190px; resize: vertical; font: 11.5px/1.45 "JetBrains Mono", ui-monospace, monospace; color: var(--ink);
+    background: var(--chip); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; white-space: pre; overflow: auto;
+  }
+
+  /* results sheet */
+  .sheet {
+    position: absolute; left: 0; right: 0; top: 44px; bottom: 214px; background: #F8F8F8;
+    transform: translateY(105%); opacity: 0;
+    transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .3s ease;
+    -webkit-mask-image: linear-gradient(#000 82%, transparent 100%); mask-image: linear-gradient(#000 82%, transparent 100%);
+  }
+  .phone.results .sheet { transform: translateY(0); opacity: 1; }
+  .sheet .head { position: absolute; left: 0; right: 0; top: 0; height: 64px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; z-index: 2; }
+  .sheet .head b { font-family: "DM Sans", system-ui, sans-serif; font-size: 20px; font-weight: 700; color: #1F2160; letter-spacing: -.01em; }
+  .sheet .head .x { width: 38px; height: 38px; border-radius: 10px; background: #fff; box-shadow: 0 1px 6px rgba(26,28,75,.10); display: flex; align-items: center; justify-content: center; color: #1F2160; }
+  .sheet .head .x svg { width: 16px; height: 16px; }
+  .sheet .pane { position: absolute; left: 0; right: 0; top: 64px; bottom: 0; opacity: 0; background: #F8F8F8; transition: opacity .28s ease; overflow-y: auto; scrollbar-width: none; }   /* opaque, so a pushed-in screen covers the previous one */
+  .sheet .pane::-webkit-scrollbar { display: none; }
+  .sheet .pane.on { opacity: 1; }
+  .sheet .pane img { display: block; width: 100%; height: auto; }
+  .sheet .pane.card { padding: 0 20px; }
+  .sheet .pane.card img { border-radius: 20px; background: #fff; box-shadow: 0 12px 40px -12px rgba(26,28,75,.25); }
+  .sheet .pane.cart { padding: 0 8px; }
+
+  /* ---------- controls ---------- */
+  .panel {
+    width: 300px; flex: 0 1 300px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px; display: flex; flex-direction: column; gap: 18px;
+  }
+  .panel.hidden { display: none; }
+  .panel h1 { font-size: 15px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  .panel h1 small { display: block; font-weight: 400; color: var(--ink-2); margin-top: 2px; }
+  .group { display: flex; flex-direction: column; gap: 8px; }
+  .group h2 { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 2px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  button {
+    font: inherit; font-weight: 500; color: var(--ink); background: var(--chip); border: 1px solid transparent; border-radius: 10px;
+    padding: 9px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; line-height: 1;
+  }
+  button:hover { border-color: var(--line); }
+  button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  button kbd {
+    font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10.5px; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: 5px; padding: 2px 5px; line-height: 1;
+  }
+  button.on { background: var(--chip-on); color: var(--panel); }
+  button.on kbd { color: inherit; border-color: rgba(255,255,255,.35); }
+  :root[data-theme="dark"] button.on, :root:not([data-theme="light"]) button.on { }
+  button.accent { background: var(--accent); color: var(--accent-ink); }
+  button.accent kbd { color: inherit; border-color: rgba(255,255,255,.45); }
+  button.wide { width: 100%; justify-content: space-between; }
+
+  .status {
+    font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; color: var(--ink-2);
+    background: var(--chip); border-radius: 10px; padding: 10px 12px; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .status b { color: var(--ink); font-weight: 500; }
+  .status .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 6px; vertical-align: 0; }
+
+  label.opt { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--ink-2); }
+  label.opt select, label.opt input[type=range] { font: inherit; }
+  select { background: var(--chip); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 5px 8px; }
+  .hint { color: var(--ink-3); font-size: 12px; line-height: 1.5; margin: 0; }
+  .hint kbd { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
+
+  @media (max-width: 760px) { .stage { gap: 24px; } .panel { width: 360px; flex-basis: 360px; } }
+  /* inside the case study (?embed): no ground, no padding, the panel as tall as the phone and scrolling, the page's font */
+  .embed body { background: transparent; padding: 0; font-family: 'Outfit', system-ui, sans-serif; }
+  .embed .stage { gap: 32px; }
+  .embed .panel { max-height: 800px; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; border: 0; background: transparent; padding: 0 12px 0 0; }
+  .embed .panel h1 { display: none; }
+  .embed .scenario textarea, .embed .status, .embed button kbd, .embed .hint kbd { font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; }
+  @media (prefers-reduced-motion: reduce) { .rig, .sheet, .sheet .pane, .greet-text { transition: none; } }
+</style>
+
+<div class="stage">
+  <div class="phone-wrap">
+    <div class="phone" id="phone">
+      <div class="greet-text"></div>
+      <div class="state-label" id="label"></div>
+      <div class="caption hide" id="caption"></div>
+      <div class="sheet" id="sheet">
+        <div class="head"><b id="sheet-title">Showing Products (10)</b><span class="x"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></span></div>
+        <div class="pane products" data-pane="products"><img src="products.webp" alt="Product results"></div>
+        <div class="pane card" data-pane="card"><img src="card.webp" alt="Product card"></div>
+        <div class="pane cart" data-pane="cart"><img src="cart.webp" alt="Cart"></div>
+      </div>
+      <div class="rig" id="rig">
+        <div class="layer bg" data-state="gradient"></div>
+        <div class="layer" data-state="default"></div>
+        <div class="layer" data-state="connecting"></div>
+        <div class="layer" data-state="connected"></div>
+        <div class="layer" data-state="listening"></div>
+        <div class="layer" data-state="thinking"></div>
+        <div class="layer" data-state="talking"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel">
+    <h1>B · assistant states<small>Lenskart eyewear expert — state rig for recording</small></h1>
+
+    <div class="group">
+      <h2>Assistant state</h2>
+      <div class="row">
+        <button data-go="connecting">Connecting <kbd>1</kbd></button>
+        <button data-go="connected" class="accent">Connect → Listening <kbd>2</kbd></button>
+      </div>
+      <div class="row">
+        <button data-go="listening">Listening <kbd>3</kbd></button>
+        <button data-go="thinking">Thinking <kbd>4</kbd></button>
+        <button data-go="talking">Talking <kbd>5</kbd></button>
+      </div>
+      <div class="row">
+        <button data-go="default">Default <kbd>0</kbd></button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Results sheet</h2>
+      <div class="row">
+        <button data-sheet="products">Products <kbd>Q</kbd></button>
+        <button data-sheet="card">Product card <kbd>W</kbd></button>
+        <button data-sheet="cart">Cart <kbd>E</kbd></button>
+      </div>
+      <div class="row">
+        <button data-sheet="none">Hide results <kbd>R</kbd></button>
+      </div>
+    </div>
+
+    <div class="group scenario">
+      <h2>Scripted conversation</h2>
+      <div class="row">
+        <button id="scn-play" class="accent">Play <kbd>P</kbd></button>
+        <button id="scn-stop">Stop / reset <kbd>Esc</kbd></button>
+      </div>
+      <textarea id="script" spellcheck="false">connecting 1400
+connected
+wait 900
+user: Show me black full-rim frames under three thousand rupees
+think 2000
+b: Sure! Here are black full-rim frames that fit your face — all under ₹3,000.
+sheet products
+wait 1600
+user: Open the first one
+think 2000
+b: Here's the John Jacobs Rhapsody — ₹2,500 after 37% off, with free anti-glare lenses.
+sheet card
+wait 1600
+user: Add it to my cart
+think 2000
+b: Done — the John Jacobs Rhapsody is in your cart. Want me to take you to checkout?
+sheet cart
+wait 1500</textarea>
+      <p class="hint">One beat per line: <code>connecting ms</code> · <code>connected</code> · <code>user: …</code> (Listening, words appear as heard) · <code>think ms</code> · <code>b: …</code> (Talking, B's swell follows the words) · <code>sheet products|card|cart|none</code> · <code>wait ms</code> · <code>default</code>. Any state button stops the run.</p>
+    </div>
+
+    <div class="group">
+      <h2>Now playing</h2>
+      <div class="status">
+        <span>state</span><b id="st-state"><span class="dot"></span>default</b>
+        <span>frame</span><b id="st-frame">0 / 1</b>
+        <span>loop</span><b id="st-loop">hold</b>
+        <span>route</span><b id="st-route">—</b>
+        <span>sheet</span><b id="st-sheet">hidden</b>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>B scale</h2>
+      <label class="opt">Listening breath — depth
+        <select id="bs-ampl"><option value="0">off</option><option value="3">3 %</option><option value="5" selected>5 %</option><option value="8">8 %</option></select>
+      </label>
+      <label class="opt">Listening breath — period
+        <select id="bs-perl"><option value="0.8">0.8 s</option><option value="1" selected>1 s (reference)</option><option value="1.5">1.5 s</option><option value="2">2 s</option></select>
+      </label>
+      <label class="opt">Thinking — held size
+        <select id="bs-think"><option value="100">100 %</option><option value="96">96 %</option><option value="93">93 %</option><option value="90" selected>90 %</option></select>
+      </label>
+      <label class="opt">Talking — voice swell
+        <select id="bs-talk"><option value="0">off</option><option value="4">4 %</option><option value="8" selected>8 %</option><option value="12">12 %</option></select>
+      </label>
+    </div>
+
+    <div class="group">
+      <h2>Options</h2>
+      <label class="opt">Hold on Default after the flip lands
+        <select id="hold">
+          <option value="0">0 ms</option>
+          <option value="80">80 ms</option>
+          <option value="150" selected>150 ms</option>
+          <option value="300">300 ms</option>
+          <option value="600">600 ms</option>
+        </select>
+      </label>
+      <label class="opt">State label under the B
+        <select id="labelsel"><option value="on" selected>show</option><option value="off">hide</option></select>
+      </label>
+      <label class="opt">Dots on Thinking (Listening… / Talking… always)
+        <select id="thinkdots"><option value="off" selected>Thinking</option><option value="on">Thinking…</option></select>
+      </label>
+      <label class="opt">Waves entering Listening (from Default / after the flip)
+        <select id="wavesin">
+          <option value="0">dissolve in (previous)</option>
+          <option value="500">expand from behind B — 500 ms</option>
+          <option value="700" selected>expand from behind B — 700 ms</option>
+          <option value="1000">expand from behind B — 1 s</option>
+        </select>
+      </label>
+      <label class="opt">Thinking stroke (source-comp pt; Listening outer ring = 3 pt)
+        <select id="tstroke">
+          <option value="2">2 pt</option>
+          <option value="3">3 pt (same as the wave)</option>
+          <option value="4" selected>4 pt (wave + 1)</option>
+          <option value="4.5">4.5 pt</option>
+          <option value="5">5 pt</option>
+          <option value="6">6 pt</option>
+        </select>
+      </label>
+      <label class="opt">Thinking dot (travels the ring once per loop)
+        <select id="tdot">
+          <option value="0">off</option>
+          <option value="14">14 pt</option>
+          <option value="18" selected>18 pt (source)</option>
+          <option value="24">24 pt</option>
+        </select>
+      </label>
+      <label class="opt">Blend Listening ⇄ Thinking
+        <select id="blend">
+          <option value="500">500 ms</option>
+          <option value="750" selected>750 ms</option>
+          <option value="1000">1 s</option>
+          <option value="2000">2 s</option>
+        </select>
+      </label>
+      <label class="opt">Twist cycles per loop (6 s)
+        <select id="cycles">
+          <option value="1">1</option>
+          <option value="2" selected>2 — motion matches the waves</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+        </select>
+      </label>
+      <label class="opt">Dissolve duration
+        <select id="xfade">
+          <option value="120">120 ms</option>
+          <option value="200" selected>200 ms</option>
+          <option value="300">300 ms</option>
+          <option value="450">450 ms</option>
+        </select>
+      </label>
+      <label class="opt">Phone frame
+        <select id="frame">
+          <option value="rounded" selected>rounded + shadow</option>
+          <option value="flat">flat (crop-friendly)</option>
+        </select>
+      </label>
+      <p class="hint">Press <kbd>H</kbd> to hide this panel while recording. Phone is 360×800 CSS px — record at 2× for a crisp 720×1600.</p>
+    </div>
+  </div>
+</div>
+
+<script src="lottie.min.js"></script>
+<script>
+/* --- portfolio build (22 Oct): the state Lotties live in ../b/*.json (the case study's states row plays the same files),
+   the screens in *.webp next to this page; the rig's own script below runs once they are in. Opened with ?embed the page
+   sits inside the case study's card: no ground of its own, the panel scrolling beside the phone, the colours handed in
+   by the page around it (postMessage {tokens}). --- */
+(async () => {
+  const names = ['default', 'connecting', 'connected', 'listening', 'talking', 'gradient'];
+  const got = await Promise.all(names.map(n => fetch('../b/' + n + '.json').then(r => r.json())));
+  window.__ANIM = Object.fromEntries(names.map((n, i) => [n, got[i]]));
+  window.__ANIM.thinking = {"nm":"Main Scene","ddd":0,"h":800,"w":646,"meta":{"g":"@lottiefiles/creator@1.112.0"},"layers":[],"v":"5.7.0","fr":60,"op":361,"ip":0,"assets":[]}; /* the template the Thinking ring is generated into */
+  const main = document.getElementById('rig-main'); const run = document.createElement('script'); run.textContent = main.textContent; document.body.appendChild(run);
+})();
+const q = new URLSearchParams(location.search);
+if (q.has('embed')) { document.documentElement.classList.add('embed');
+  addEventListener('DOMContentLoaded', () => { const st = document.querySelector('.stage'), pw = document.querySelector('.phone-wrap'); const fit = () => { pw.style.zoom = innerWidth < 372 ? ((innerWidth - 8) / 360).toFixed(3) : ''; };   /* a narrow frame (a phone): the phone shrinks to the width */
+    const tell = () => { fit(); parent.postMessage({ rigHeight: Math.ceil(st.getBoundingClientRect().height) + 4 }, location.origin); }; new ResizeObserver(tell).observe(st); addEventListener('resize', tell); tell(); }); if (q.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark'; if (q.get('theme') === 'light') document.documentElement.dataset.theme = 'light'; }
+addEventListener('message', e => { const t = e.data && e.data.tokens; if (!t || typeof t !== 'object') return; for (const k of Object.keys(t)) if (/^[a-z0-9-]+$/i.test(k) && typeof t[k] === 'string' && t[k].length < 80) document.documentElement.style.setProperty('--' + k, t[k]); });
+</script>
+<script type="text/plain" id="rig-main">
+(function(){
+  const ANIM = window.__ANIM;   /* the state Lotties, loaded from ../b/*.json before this script runs (rig-boot below) */
+  const THINK_TPL = JSON.parse(JSON.stringify(ANIM.thinking));   // pristine copy: lottie-web mutates loaded data in place
+  const rig = document.getElementById('rig');
+  const phone = document.getElementById('phone');
+  const sheet = document.getElementById('sheet');
+  const players = {};
+  const layers = {};
+  // Each state: loop policy and what happens on completion
+  const SPEC = {
+    default:    { loop: false, label: 'hold' },
+    connecting: { loop: true,  label: 'loop' },
+    connected:  { loop: false, label: 'once' },
+    listening:  { loop: true,  label: 'loop' },
+    thinking:   { loop: true,  label: 'loop' },
+    talking:    { loop: true,  label: 'loop' },
+    gradient:   { loop: true,  label: 'loop' },   // background blob, not a state
+  };
+  rig.querySelectorAll('.layer').forEach(el => {
+    const name = el.dataset.state;
+    layers[name] = el;
+    players[name] = lottie.loadAnimation({
+      container: el, renderer: 'svg', loop: SPEC[name].loop, autoplay: false,
+      animationData: ANIM[name],
+      rendererSettings: { preserveAspectRatio: 'xMidYMid meet', progressiveLoad: false }
+    });
+  });
+
+  let current = null;      // dominant visible state
+  let dir = 1;             // playback direction of the connected transition
+  let seq = 0;             // token: bumping it cancels any in-flight sequence
+  const stState = document.getElementById('st-state');
+  const stFrame = document.getElementById('st-frame');
+  const stLoop  = document.getElementById('st-loop');
+  const stSheet = document.getElementById('st-sheet');
+  const stRoute = document.getElementById('st-route');
+  const holdSel = document.getElementById('hold');
+  const fadeMs  = () => +document.getElementById('xfade').value;
+  const holdMs  = () => +holdSel.value;
+
+  // ---------- layer primitives ----------
+  // Every layer: 'on' = opacity 1. Opacity animates over fadeMs() unless 'cut' is set for that change.
+  let zTop = 10;
+  const timers = {};
+  const clearTimers = n => { (timers[n] || []).forEach(clearTimeout); timers[n] = []; };
+  const later = (n, fn, ms) => { timers[n].push(setTimeout(fn, ms)); };
+  rig.classList.add('fade');
+  rig.style.setProperty('--xfade', fadeMs() + 'ms');
+
+  function setLayer(name, on, instant) {
+    const el = layers[name];
+    clearTimers(name);
+    if (instant) { el.classList.add('cut'); }
+    if (on && name !== 'listening' && name !== 'thinking') el.style.zIndex = ++zTop;
+    el.classList.toggle('on', on);
+    if (instant) { void el.offsetWidth; el.classList.remove('cut'); }
+    if (!on) later(name, () => players[name].stop(), instant ? 0 : fadeMs() + 20);
+  }
+  // base: Default sits underneath whenever a B-family state is showing
+  function setBase(on) { const el = layers.default; clearTimers('default'); el.classList.add('cut'); el.style.zIndex = 5; el.classList.toggle('on', on); void el.offsetWidth; el.classList.remove('cut'); if (on) players.default.goToAndStop(0, true); }
+
+  const wait = (ms, token) => new Promise(res => setTimeout(() => res(seq === token), ms));
+  function onComplete(name, token) {
+    return new Promise(res => {
+      const p = players[name];
+      const h = () => { setTimeout(() => p.removeEventListener('complete', h), 0); res(seq === token); };
+      p.addEventListener('complete', h);
+    });
+  }
+  // background gradient blob: on behind Listening, Thinking and Talking, off elsewhere; dissolves with the state
+  const BG_STATES = { listening: true, thinking: true, talking: true };
+  let bgOn = false;
+  function setBg(on) {
+    if (on === bgOn) return;
+    bgOn = on;
+    const el = layers.gradient; clearTimers('gradient');
+    if (on) { players.gradient.goToAndPlay(0, true); el.classList.add('on'); }
+    else { el.classList.remove('on'); later('gradient', () => players.gradient.stop(), fadeMs() + 20); }
+  }
+  const LABELS = { connecting: 'Connecting', connected: 'Connected', listening: 'Listening…', thinking: 'Thinking', talking: 'Talking…' };
+  document.getElementById('thinkdots').addEventListener('change', e => { LABELS.thinking = e.target.value === 'on' ? 'Thinking…' : 'Thinking'; if (current === 'thinking') { labelText = ''; setLabel(LABELS.thinking); } });
+  const labelEl = document.getElementById('label'); let labelTimer = 0, labelText = '';
+  function setLabel(text) {
+    if (text === labelText) return; labelText = text; clearTimeout(labelTimer);
+    if (!text) { labelEl.classList.remove('show'); return; }
+    if (!labelEl.classList.contains('show')) { labelEl.textContent = text; labelEl.classList.add('show'); return; }
+    labelEl.classList.remove('show');
+    labelTimer = setTimeout(() => { labelEl.textContent = text; labelEl.classList.add('show'); }, 180);
+  }
+  document.getElementById('labelsel').addEventListener('change', e => phone.classList.toggle('nolabel', e.target.value === 'off'));
+  function status(name, d) {
+    current = name; dir = d || 1;
+    setLabel(name === 'connected' && dir === -1 ? 'Connecting' : (LABELS[name] || ''));   // heading back to the loop reads as Connecting
+    setBg(!!BG_STATES[name]);
+    document.querySelectorAll('[data-go]').forEach(b => b.classList.toggle('on', b.dataset.go === name));
+    stState.innerHTML = '<span class="dot"></span>' + (dir === -1 ? '◀ ' : '') + name;
+    stLoop.textContent = SPEC[name].label + (dir === -1 ? ' (reverse)' : '');
+  }
+
+
+  // =====================================================================================
+  // THINKING: generated at runtime. The outer Listening ring (waves_8) is read from the live
+  // SVG, morphed to a circle, then into the reference "loading" ∞ twist. Inner rings shrink
+  // into the B. Reverse on the way back, landing on the Listening ring at the resume frame.
+  // =====================================================================================
+  const THINK = {"N":32,"entry":[[[1.0057,-0.0692],[0.9838,0.1248],[0.9423,0.3162],[0.8713,0.4987],[0.7722,0.6656],[0.6209,0.7905],[0.451,0.89],[0.2655,0.9515],[0.0742,0.9934],[-0.1156,0.9811],[-0.3081,0.9446],[-0.4893,0.8697],[-0.6496,0.7554],[-0.7893,0.6158],[-0.8891,0.4465],[-0.9699,0.267],[-1.0063,0.0744],[-1.0061,-0.1231],[-0.9625,-0.3145],[-0.8698,-0.4883],[-0.7491,-0.6432],[-0.6093,-0.7829],[-0.4476,-0.8951],[-0.2664,-0.9723],[-0.0734,-1.0001],[0.1241,-1.0001],[0.3153,-0.9591],[0.4932,-0.8734],[0.6443,-0.7484],[0.7839,-0.6087],[0.8954,-0.4468],[0.9584,-0.2599]],[[1.0067,-0.0679],[0.9958,0.1288],[0.9417,0.3183],[0.8702,0.5023],[0.7681,0.6702],[0.6226,0.8035],[0.4458,0.8927],[0.2624,0.9659],[0.0703,1.0072],[-0.1222,0.9803],[-0.3152,0.9472],[-0.4957,0.867],[-0.654,0.7511],[-0.794,0.6111],[-0.9043,0.4488],[-0.9741,0.2654],[-1.0063,0.0721],[-1.0063,-0.126],[-0.9616,-0.317],[-0.8704,-0.4886],[-0.7488,-0.6435],[-0.6088,-0.7835],[-0.4474,-0.8952],[-0.2658,-0.9725],[-0.0722,-1.0001],[0.1258,-1.0001],[0.3175,-0.9585],[0.4956,-0.8722],[0.6466,-0.7461],[0.7866,-0.6061],[0.8998,-0.4458],[0.9683,-0.2606]],[[1.0067,-0.0749],[1.0067,0.1248],[0.9544,0.3163],[0.8734,0.4971],[0.7734,0.6662],[0.627,0.8013],[0.4488,0.8915],[0.264,0.9656],[0.0705,1.0071],[-0.1247,0.9876],[-0.3185,0.9464],[-0.5016,0.8713],[-0.6572,0.7479],[-0.7984,0.6066],[-0.921,0.4511],[-0.9949,0.2662],[-1.0063,0.0678],[-1.0063,-0.1319],[-0.97,-0.3261],[-0.8876,-0.5047],[-0.765,-0.6609],[-0.6168,-0.7936],[-0.4553,-0.9091],[-0.2708,-0.9839],[-0.0733,-1.0001],[0.1264,-1.0001],[0.3212,-0.9674],[0.5029,-0.8858],[0.6606,-0.7662],[0.8014,-0.6246],[0.9109,-0.4581],[0.976,-0.2697]],[[1.0408,0.0062],[1.0078,0.2037],[0.9345,0.3903],[0.8457,0.5697],[0.7161,0.7235],[0.551,0.8392],[0.3655,0.9178],[0.1733,0.9779],[-0.0289,0.9788],[-0.2309,0.9751],[-0.4228,0.9121],[-0.5991,0.8167],[-0.7525,0.6867],[-0.8913,0.5401],[-0.9835,0.3602],[-1.0402,0.1674],[-1.0404,-0.0348],[-1.0229,-0.2344],[-0.9595,-0.4262],[-0.8399,-0.5866],[-0.6969,-0.7295],[-0.5463,-0.8632],[-0.3714,-0.9621],[-0.1749,-1.0001],[0.0224,-1.0315],[0.2199,-1.0001],[0.4133,-0.9466],[0.5943,-0.8565],[0.7419,-0.719],[0.8667,-0.5613],[0.9645,-0.3849],[1.0251,-0.1938]],[[1.071,0.0653],[1.0078,0.2578],[0.9141,0.436],[0.8041,0.6013],[0.654,0.7368],[0.4802,0.8405],[0.2902,0.9105],[0.0934,0.9528],[-0.1056,0.978],[-0.3035,0.9399],[-0.4928,0.8683],[-0.6692,0.7696],[-0.8129,0.6263],[-0.9438,0.4728],[-1.0324,0.2904],[-1.0743,0.093],[-1.0729,-0.1098],[-1.0331,-0.3072],[-0.9393,-0.4863],[-0.8151,-0.6454],[-0.6714,-0.7887],[-0.5035,-0.9018],[-0.3144,-0.9694],[-0.1161,-1.0001],[0.0869,-1.0001],[0.2864,-0.9777],[0.479,-0.9142],[0.6513,-0.8096],[0.7948,-0.6661],[0.9226,-0.51],[1.0126,-0.3302],[1.0737,-0.1374]],[[1.109,-0.0469],[1.0681,0.1485],[0.9746,0.3248],[0.8553,0.4819],[0.7103,0.6207],[0.5398,0.7259],[0.3572,0.8084],[0.1668,0.8716],[-0.0287,0.9105],[-0.2295,0.9105],[-0.4242,0.8662],[-0.6091,0.7902],[-0.7691,0.6701],[-0.9111,0.5281],[-1.0283,0.3676],[-1.0806,0.1746],[-1.1087,-0.022],[-1.0745,-0.2181],[-1.0051,-0.4042],[-0.8924,-0.5681],[-0.7503,-0.7102],[-0.5971,-0.838],[-0.4163,-0.925],[-0.2216,-0.966],[-0.0207,-0.966],[0.1801,-0.9646],[0.3711,-0.9042],[0.5553,-0.8256],[0.7264,-0.7215],[0.8735,-0.5857],[0.9933,-0.4254],[1.0735,-0.2426]],[[1.1151,0.0295],[1.0315,0.2031],[0.8939,0.341],[0.7372,0.4554],[0.5716,0.557],[0.405,0.6567],[0.2248,0.729],[0.0373,0.7788],[-0.1527,0.8098],[-0.3386,0.8141],[-0.5275,0.7739],[-0.7048,0.6945],[-0.8597,0.5795],[-0.9972,0.4415],[-1.0827,0.269],[-1.1092,0.0784],[-1.1087,-0.1129],[-1.0742,-0.3011],[-0.9835,-0.4732],[-0.8478,-0.6128],[-0.7068,-0.7468],[-0.5364,-0.837],[-0.3516,-0.8965],[-0.1569,-0.8978],[0.0379,-0.8969],[0.2262,-0.8522],[0.4065,-0.78],[0.5788,-0.6937],[0.7455,-0.5939],[0.8917,-0.4669],[1.026,-0.3262],[1.1167,-0.156]],[[1.0818,0.0504],[0.9226,0.1418],[0.766,0.238],[0.6091,0.3335],[0.4455,0.4182],[0.2869,0.5109],[0.1219,0.593],[-0.0535,0.6489],[-0.2284,0.7048],[-0.4127,0.7058],[-0.5932,0.6827],[-0.7636,0.6143],[-0.919,0.5161],[-1.0499,0.3865],[-1.1228,0.2185],[-1.1428,0.0374],[-1.1408,-0.1469],[-1.081,-0.3204],[-0.9846,-0.476],[-0.8542,-0.6063],[-0.705,-0.7133],[-0.5302,-0.7706],[-0.3499,-0.7954],[-0.1656,-0.7949],[0.0126,-0.7533],[0.1866,-0.6936],[0.3541,-0.618],[0.5169,-0.532],[0.6752,-0.4387],[0.8262,-0.3336],[0.9736,-0.2246],[1.1137,-0.1069]],[[0.7345,0.0243],[0.5965,0.1011],[0.4659,0.1894],[0.3293,0.268],[0.1962,0.3522],[0.0608,0.431],[-0.0843,0.4923],[-0.2314,0.5486],[-0.38,0.6008],[-0.5382,0.6035],[-0.6925,0.5814],[-0.8391,0.5243],[-0.9692,0.4353],[-1.081,0.3231],[-1.1452,0.1804],[-1.1769,0.028],[-1.1608,-0.1276],[-1.1196,-0.2783],[-1.0239,-0.4025],[-0.9119,-0.5146],[-0.7854,-0.6072],[-0.6383,-0.6589],[-0.4859,-0.6926],[-0.3332,-0.6613],[-0.1804,-0.6308],[-0.0339,-0.5735],[0.113,-0.5171],[0.247,-0.4343],[0.3853,-0.3582],[0.5139,-0.2672],[0.6528,-0.192],[0.7767,-0.0956]],[[1.1828,-0.0163],[1.054,-0.1435],[0.868,-0.1472],[0.6894,-0.1123],[0.5194,-0.0366],[0.3602,0.0598],[0.2102,0.169],[0.0541,0.2696],[-0.1044,0.3662],[-0.2768,0.4346],[-0.4512,0.4977],[-0.6372,0.5011],[-0.8187,0.4716],[-0.9826,0.3882],[-1.1137,0.2559],[-1.1769,0.085],[-1.1769,-0.1012],[-1.117,-0.2731],[-0.9865,-0.4058],[-0.846,-0.5264],[-0.6666,-0.5664],[-0.4887,-0.5644],[-0.308,-0.5274],[-0.1376,-0.4543],[0.0214,-0.3587],[0.1806,-0.2634],[0.3377,-0.1642],[0.4918,-0.0598],[0.6536,0.0324],[0.8104,0.1282],[0.9836,0.1932],[1.1556,0.1473]],[[1.21,0.0256],[1.1203,-0.1359],[0.9674,-0.2418],[0.7803,-0.2495],[0.5993,-0.2058],[0.4377,-0.1117],[0.2783,-0.013],[0.1264,0.0969],[-0.0283,0.2028],[-0.1897,0.298],[-0.3598,0.3745],[-0.5378,0.432],[-0.7257,0.4329],[-0.9048,0.3894],[-1.0649,0.2921],[-1.1717,0.144],[-1.1869,-0.0408],[-1.1331,-0.2187],[-1.0233,-0.369],[-0.8634,-0.4655],[-0.6811,-0.5026],[-0.4962,-0.4786],[-0.3219,-0.4104],[-0.1539,-0.3262],[0.004,-0.2253],[0.1552,-0.1149],[0.3115,-0.0107],[0.466,0.0954],[0.6304,0.1856],[0.8015,0.262],[0.9838,0.2932],[1.1409,0.1955]],[[1.1773,-0.0376],[1.1146,-0.2083],[0.9729,-0.3261],[0.7959,-0.3779],[0.6156,-0.3568],[0.4372,-0.315],[0.2729,-0.2284],[0.1208,-0.1224],[-0.038,-0.0261],[-0.1943,0.0744],[-0.3464,0.1795],[-0.5182,0.2489],[-0.6943,0.2976],[-0.8726,0.2976],[-1.0407,0.2272],[-1.1669,0.0915],[-1.1766,-0.0931],[-1.0997,-0.2583],[-0.9415,-0.3495],[-0.7557,-0.3516],[-0.5785,-0.2995],[-0.4174,-0.2082],[-0.2576,-0.1143],[-0.1047,-0.0096],[0.0499,0.0935],[0.1993,0.2028],[0.3551,0.3032],[0.5264,0.3734],[0.708,0.3987],[0.8933,0.3924],[1.0462,0.2911],[1.1587,0.1453]],[[1.1773,-0.051],[1.1103,-0.2131],[0.9814,-0.3371],[0.8207,-0.4152],[0.6471,-0.4502],[0.469,-0.4471],[0.2983,-0.3984],[0.1383,-0.318],[-0.0147,-0.2262],[-0.1577,-0.1204],[-0.3061,-0.0217],[-0.4701,-0.0111],[-0.6242,-0.101],[-0.7841,-0.1815],[-0.9567,-0.2154],[-1.1213,-0.1686],[-1.1769,-0.0073],[-1.0829,0.1299],[-0.9178,0.194],[-0.7423,0.1732],[-0.5717,0.1206],[-0.4129,0.0427],[-0.2573,0.1279],[-0.1134,0.2331],[0.0357,0.3312],[0.1958,0.4115],[0.3653,0.4661],[0.5444,0.467],[0.7204,0.4483],[0.8805,0.3681],[1.0161,0.2529],[1.1264,0.1135]],[[1.1663,-0.0105],[1.0984,-0.1578],[0.979,-0.2772],[0.8429,-0.374],[0.6866,-0.4353],[0.5271,-0.4873],[0.3583,-0.4883],[0.1953,-0.4559],[0.037,-0.4045],[-0.106,-0.316],[-0.2462,-0.2233],[-0.3838,-0.1267],[-0.5281,-0.0415],[-0.6833,0.0249],[-0.8424,0.0811],[-1.0102,0.09],[-1.1345,-0.0152],[-1.0209,-0.1127],[-0.867,-0.0483],[-0.7132,0.0209],[-0.5751,0.1175],[-0.4368,0.213],[-0.2942,0.302],[-0.1433,0.3779],[0.0076,0.4534],[0.1682,0.5011],[0.337,0.5011],[0.5011,0.4743],[0.6568,0.4113],[0.8035,0.3291],[0.9381,0.2291],[1.0722,0.1286]],[[1.1066,-0.0588],[1.0206,-0.1674],[0.9065,-0.2476],[0.7919,-0.3272],[0.6678,-0.393],[0.5407,-0.4525],[0.4066,-0.4883],[0.2658,-0.4883],[0.1249,-0.4883],[-0.0111,-0.4649],[-0.1422,-0.4172],[-0.2597,-0.3416],[-0.376,-0.2642],[-0.4908,-0.1847],[-0.6116,-0.114],[-0.7337,-0.0452],[-0.8031,0.0629],[-0.7098,0.1629],[-0.5923,0.2386],[-0.4751,0.3147],[-0.3582,0.391],[-0.2273,0.4391],[-0.0966,0.4875],[0.0419,0.5011],[0.1827,0.5011],[0.3187,0.4779],[0.4493,0.429],[0.5753,0.3667],[0.6933,0.2921],[0.81,0.2153],[0.926,0.1372],[1.0407,0.0577]],[[-0.4219,-0.0649],[-0.669,-0.0726],[-0.7654,-0.1056],[-0.5591,-0.2414],[-0.3529,-0.3778],[-0.1297,-0.4824],[0.1172,-0.4883],[0.3595,-0.4537],[0.5835,-0.3498],[0.794,-0.221],[0.9696,-0.0538],[0.7487,-0.006],[0.5019,0.0083],[0.2551,0.0226],[0.0082,0.0369],[-0.2386,0.0512],[-0.4854,0.0655],[-0.7322,0.0797],[-0.8705,0.1485],[-0.6669,0.2871],[-0.4531,0.4102],[-0.2191,0.4894],[0.0266,0.4955],[0.2617,0.4196],[0.4836,0.3109],[0.6882,0.1737],[0.9019,0.0505],[0.8136,-0.0262],[0.5665,-0.0339],[0.3194,-0.0417],[0.0723,-0.0494],[-0.1748,-0.0571]]],"cycle":[[[-0.505,-0.3545],[-0.3868,-0.4149],[-0.268,-0.4741],[-0.1377,-0.4883],[-0.0048,-0.4883],[0.122,-0.4605],[0.2462,-0.4174],[0.3643,-0.3567],[0.4819,-0.2958],[0.5907,-0.2215],[0.6986,-0.1463],[0.7597,-0.0332],[0.6719,0.0617],[0.559,0.1298],[0.4503,0.2041],[0.3413,0.2778],[0.2321,0.3514],[0.1098,0.3997],[-0.0152,0.4399],[-0.1422,0.467],[-0.2752,0.467],[-0.4054,0.4525],[-0.5281,0.4062],[-0.6474,0.3481],[-0.7575,0.2756],[-0.8674,0.203],[-0.973,0.125],[-1.0394,0.0162],[-0.9463,-0.0667],[-0.8362,-0.1391],[-0.726,-0.2113],[-0.6156,-0.283]],[[-0.6042,-0.3445],[-0.5024,-0.4088],[-0.3911,-0.454],[-0.2694,-0.4542],[-0.1477,-0.4542],[-0.0304,-0.4347],[0.0822,-0.3945],[0.1918,-0.343],[0.2942,-0.2796],[0.3946,-0.2133],[0.4948,-0.147],[0.5714,-0.0544],[0.5056,0.0447],[0.4053,0.1107],[0.3053,0.1775],[0.2052,0.2439],[0.1051,0.3102],[-0.0033,0.3632],[-0.1176,0.3984],[-0.2323,0.4296],[-0.3537,0.4329],[-0.4754,0.4311],[-0.5895,0.3947],[-0.6969,0.3384],[-0.8064,0.2868],[-0.9064,0.2199],[-0.9951,0.137],[-1.0404,0.0308],[-1.0012,-0.0746],[-0.8921,-0.1274],[-0.8019,-0.2085],[-0.7045,-0.2783]],[[-0.4668,-0.4201],[-0.3143,-0.4201],[-0.168,-0.3883],[-0.0277,-0.3317],[0.1002,-0.2507],[0.2305,-0.1735],[0.3578,-0.0913],[0.4794,0.0006],[0.6047,0.0873],[0.7463,0.1407],[0.8951,0.1598],[1.0042,0.0703],[0.9772,-0.074],[0.8446,-0.1453],[0.6922,-0.1472],[0.5483,-0.1032],[0.4135,-0.0323],[0.2911,0.0586],[0.1658,0.1438],[0.0386,0.2261],[-0.0978,0.294],[-0.2392,0.348],[-0.3844,0.3866],[-0.5295,0.3722],[-0.6753,0.3356],[-0.8155,0.2793],[-0.9248,0.1732],[-1.0061,0.0502],[-0.9626,-0.0886],[-0.8547,-0.1964],[-0.7363,-0.2898],[-0.6087,-0.3715]],[[-0.5151,-0.386],[-0.3666,-0.3533],[-0.2254,-0.2933],[-0.087,-0.2246],[0.0432,-0.1432],[0.1733,-0.0599],[0.296,0.0335],[0.4248,0.117],[0.557,0.193],[0.7037,0.2387],[0.8489,0.226],[0.9696,0.1414],[0.9995,-0.006],[0.9168,-0.1347],[0.785,-0.2118],[0.6307,-0.2154],[0.4826,-0.1791],[0.3466,-0.1079],[0.2141,-0.0285],[0.0867,0.059],[-0.038,0.1484],[-0.1696,0.2276],[-0.3089,0.2935],[-0.4572,0.3294],[-0.6117,0.3304],[-0.7594,0.2909],[-0.8887,0.2093],[-0.9945,0.097],[-0.9926,-0.0532],[-0.911,-0.1833],[-0.7915,-0.2645],[-0.6614,-0.3463]],[[-0.5153,-0.3026],[-0.3729,-0.2481],[-0.2421,-0.1694],[-0.1173,-0.0816],[0.0227,-0.0223],[0.1502,-0.1047],[0.2799,-0.1846],[0.4191,-0.2482],[0.5663,-0.2836],[0.7195,-0.2795],[0.858,-0.2137],[0.9659,-0.1076],[0.9907,0.0377],[0.9347,0.1795],[0.8138,0.2651],[0.6667,0.2964],[0.5133,0.2932],[0.3747,0.2279],[0.244,0.1492],[0.1093,0.0762],[-0.0131,0.0141],[-0.1433,0.0949],[-0.2722,0.1767],[-0.4141,0.2327],[-0.5619,0.2623],[-0.7155,0.2623],[-0.8558,0.2065],[-0.9652,0.0987],[-1.0057,-0.0423],[-0.9204,-0.1648],[-0.8096,-0.2709],[-0.6663,-0.3177]],[[-0.4494,0.1582],[-0.3122,0.0876],[-0.1765,0.0124],[-0.0519,-0.08],[0.0729,-0.1701],[0.2052,-0.2495],[0.3452,-0.3153],[0.494,-0.3519],[0.6489,-0.3482],[0.7889,-0.2821],[0.9194,-0.2004],[1.0009,-0.0702],[0.9837,0.079],[0.9162,0.2146],[0.7857,0.2957],[0.6418,0.351],[0.4888,0.3646],[0.3395,0.3335],[0.1971,0.2748],[0.0666,0.1927],[-0.0642,0.1114],[-0.1862,0.0157],[-0.3158,-0.0693],[-0.4476,-0.1486],[-0.5859,-0.2187],[-0.7348,-0.2495],[-0.8773,-0.2079],[-0.9858,-0.0971],[-0.999,0.0527],[-0.8958,0.1672],[-0.7477,0.198],[-0.5982,0.194]],[[-0.5144,0.0692],[-0.3752,-0.0015],[-0.2402,-0.079],[-0.1174,-0.1734],[0.0142,-0.2557],[0.1536,-0.326],[0.2966,-0.3854],[0.4528,-0.386],[0.609,-0.386],[0.7538,-0.3333],[0.8781,-0.2416],[0.9872,-0.1299],[1.0207,0.0119],[0.9513,0.147],[0.8375,0.2535],[0.7059,0.3357],[0.561,0.3906],[0.412,0.4328],[0.2602,0.4095],[0.1153,0.3541],[-0.0244,0.2844],[-0.1557,0.2017],[-0.2875,0.1199],[-0.4069,0.0197],[-0.5392,-0.063],[-0.6806,-0.1291],[-0.8254,-0.1812],[-0.9719,-0.1475],[-1.0398,-0.0151],[-0.9527,0.1085],[-0.8063,0.1584],[-0.6564,0.1261]],[[-0.4972,-0.0499],[-0.3679,-0.1326],[-0.2386,-0.2152],[-0.1089,-0.2969],[0.029,-0.3663],[0.1712,-0.4233],[0.3196,-0.4542],[0.4738,-0.4515],[0.6185,-0.4012],[0.7541,-0.3347],[0.8899,-0.2619],[1.0,-0.1538],[1.0676,-0.0193],[0.9865,0.1091],[0.8635,0.2],[0.7399,0.2902],[0.6073,0.3674],[0.4643,0.4224],[0.3178,0.4667],[0.1635,0.467],[0.0168,0.4236],[-0.1263,0.3687],[-0.2596,0.2926],[-0.3862,0.2058],[-0.5165,0.1256],[-0.6618,0.0739],[-0.8045,0.0153],[-0.9258,-0.0763],[-1.0386,-0.0093],[-0.9307,0.0848],[-0.799,0.0129],[-0.6476,-0.017]],[[-0.3397,-0.2694],[-0.2251,-0.3425],[-0.1109,-0.4164],[0.0167,-0.4624],[0.1482,-0.4883],[0.2854,-0.4883],[0.4159,-0.456],[0.5456,-0.4203],[0.6678,-0.3585],[0.7891,-0.2955],[0.901,-0.2184],[0.9981,-0.1216],[1.067,-0.0121],[0.9716,0.0844],[0.8502,0.1471],[0.7382,0.2241],[0.6263,0.3012],[0.5067,0.3668],[0.3847,0.429],[0.2557,0.4674],[0.1253,0.5011],[-0.0112,0.4952],[-0.142,0.463],[-0.2647,0.4025],[-0.3869,0.3406],[-0.5094,0.2797],[-0.6214,0.2029],[-0.7332,0.1256],[-0.8007,0.018],[-0.6889,-0.0583],[-0.5658,-0.1185],[-0.4527,-0.1937]],[[-0.4699,-0.309],[-0.3476,-0.383],[-0.2268,-0.4594],[-0.0889,-0.4889],[0.0488,-0.5225],[0.1876,-0.4972],[0.3289,-0.4779],[0.46,-0.4204],[0.5889,-0.3598],[0.7113,-0.2858],[0.8322,-0.2097],[0.9369,-0.1118],[0.96,0.0104],[0.8367,0.0831],[0.7164,0.1602],[0.5957,0.2367],[0.4769,0.3166],[0.3558,0.3925],[0.2216,0.4417],[0.0878,0.4914],[-0.0548,0.5011],[-0.1989,0.5011],[-0.3364,0.4652],[-0.4663,0.404],[-0.595,0.3395],[-0.7153,0.2624],[-0.8361,0.1859],[-0.9542,0.1053],[-0.9636,-0.0186],[-0.837,-0.0864],[-0.7084,-0.151],[-0.5881,-0.2284]]],"refMs":40,"winding":1,"centre":[320,400],"R":250,"strokeW":4.63,"colour":[1,0.3294,0.1725],"inner":[{"ty":4,"nm":"waves_12","sr":1,"st":0,"op":361,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[91.88431822785567,91.88431822785569],"ix":6},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[303,398,0],"t":0,"ti":[0,0,0],"to":[0,0,0]},{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[329,390,0],"t":180,"ti":[0,0,0],"to":[0,0,0]},{"s":[303,398,0],"t":359}],"ix":2},"r":{"a":0,"k":-25,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape_55","ix":1,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[{"c":true,"i":[[-5.945,-104],[-75.465,41.182],[-15.486,58],[72.839,11.506]],"o":[[5.945,104],[68,-37.108],[15.486,-58],[-100,-15.797]],"v":[[-169.063,25.953],[60.992,177.061],[170.479,35.953],[52.992,-160.25]]}],"t":-0.736},{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[{"c":true,"i":[[-14.796,-95.43],[-80.851,53.462],[-18.338,80.571],[77.53,23.431]],"o":[[19.823,127.848],[75.023,-49.608],[18.219,-80.048],[-76.852,-23.227]],"v":[[-141.063,5.953],[38.992,123.061],[168.478,31.953],[34.992,-152.25]]}],"t":180},{"s":[{"c":true,"i":[[-5.945,-104],[-75.465,41.182],[-15.486,58],[72.839,11.506]],"o":[[5.945,104],[68,-37.108],[15.486,-58],[-100,-15.797]],"v":[[-169.063,25.953],[60.992,177.061],[170.479,35.953],[52.992,-160.25]]}],"t":359.265625}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":3,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":4.5,"ix":5},"c":{"a":0,"k":[1,0.3294,0.1725],"ix":3}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[2.141,0.523],"ix":2},"r":{"a":1,"k":[{"o":{"x":0.167,"y":0.2},"i":{"x":0.833,"y":0.8},"s":[0],"t":0},{"s":[-360],"t":360}],"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":5},{"ty":4,"nm":"waves_11","sr":1,"st":0,"op":361,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[113.00399687162923,113.0039968716292],"ix":6},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[303,398,0],"t":0,"ti":[0,0,0],"to":[0,0,0]},{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[329,390,0],"t":180,"ti":[0,0,0],"to":[0,0,0]},{"s":[303,398,0],"t":359}],"ix":2},"r":{"a":0,"k":-25,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape_55","ix":1,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[{"c":true,"i":[[-5.945,-104],[-75.465,41.182],[-15.486,58],[72.839,11.506]],"o":[[5.945,104],[68,-37.108],[15.486,-58],[-100,-15.797]],"v":[[-169.063,25.953],[60.992,177.061],[170.479,35.953],[52.992,-160.25]]}],"t":-0.736},{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[{"c":true,"i":[[-14.796,-95.43],[-80.851,53.462],[-18.338,80.571],[77.53,23.431]],"o":[[19.823,127.848],[75.023,-49.608],[18.219,-80.048],[-76.852,-23.227]],"v":[[-141.063,5.953],[38.992,123.061],[168.478,31.953],[34.992,-152.25]]}],"t":180},{"s":[{"c":true,"i":[[-5.945,-104],[-75.465,41.182],[-15.486,58],[72.839,11.506]],"o":[[5.945,104],[68,-37.108],[15.486,-58],[-100,-15.797]],"v":[[-169.063,25.953],[60.992,177.061],[170.479,35.953],[52.992,-160.25]]}],"t":359.265625}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":3,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":4,"ix":5},"c":{"a":0,"k":[1,0.3294,0.1725],"ix":3}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[2.141,0.523],"ix":2},"r":{"a":1,"k":[{"o":{"x":0.167,"y":0.2},"i":{"x":0.833,"y":0.8},"s":[0],"t":0},{"s":[-360],"t":360}],"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":6},{"ty":4,"nm":"waves_10","sr":1,"st":0,"op":361,"ip":0,"hd":false,"ddd":0,"bm":0,"hasMask":false,"ao":0,"ks":{"a":{"a":0,"k":[0,0,0],"ix":1},"s":{"a":0,"k":[133.77941375709716,133.7794137570972],"ix":6},"sk":{"a":0,"k":0},"p":{"a":1,"k":[{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[303,398,0],"t":0,"ti":[0,0,0],"to":[0,0,0]},{"o":{"x":0.167,"y":0.167},"i":{"x":0.833,"y":0.833},"s":[329,390,0],"t":180,"ti":[0,0,0],"to":[0,0,0]},{"s":[303,398,0],"t":359}],"ix":2},"r":{"a":0,"k":-25,"ix":10},"sa":{"a":0,"k":0},"o":{"a":0,"k":100,"ix":11}},"shapes":[{"ty":"gr","bm":0,"hd":false,"mn":"ADBE Vector Group","nm":"Shape_55","ix":1,"cix":2,"np":2,"it":[{"ty":"sh","bm":0,"hd":false,"mn":"ADBE Vector Shape - Group","nm":"Path 1","ix":1,"d":1,"ks":{"a":1,"k":[{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[{"c":true,"i":[[-5.945,-104],[-75.465,41.182],[-15.486,58],[72.839,11.506]],"o":[[5.945,104],[68,-37.108],[15.486,-58],[-100,-15.797]],"v":[[-169.063,25.953],[60.992,177.061],[170.479,35.953],[52.992,-160.25]]}],"t":-0.736},{"o":{"x":0.333,"y":0},"i":{"x":0.667,"y":1},"s":[{"c":true,"i":[[-14.796,-95.43],[-80.851,53.462],[-18.338,80.571],[77.53,23.431]],"o":[[19.823,127.848],[75.023,-49.608],[18.219,-80.048],[-76.852,-23.227]],"v":[[-141.063,5.953],[38.992,123.061],[168.478,31.953],[34.992,-152.25]]}],"t":180},{"s":[{"c":true,"i":[[-5.945,-104],[-75.465,41.182],[-15.486,58],[72.839,11.506]],"o":[[5.945,104],[68,-37.108],[15.486,-58],[-100,-15.797]],"v":[[-169.063,25.953],[60.992,177.061],[170.479,35.953],[52.992,-160.25]]}],"t":359.265625}],"ix":2}},{"ty":"st","bm":0,"hd":false,"mn":"ADBE Vector Graphic - Stroke","nm":"Stroke 1","lc":1,"lj":1,"ml":3,"o":{"a":0,"k":100,"ix":4},"w":{"a":0,"k":3.5,"ix":5},"c":{"a":0,"k":[1,0.3294,0.1725],"ix":3}},{"ty":"tr","a":{"a":0,"k":[0,0],"ix":1},"s":{"a":0,"k":[100,100],"ix":3},"sk":{"a":0,"k":0,"ix":4},"p":{"a":0,"k":[2.141,0.523],"ix":2},"r":{"a":1,"k":[{"o":{"x":0.167,"y":0.2},"i":{"x":0.833,"y":0.8},"s":[0],"t":0},{"s":[-360],"t":360}],"ix":6},"sa":{"a":0,"k":0,"ix":5},"o":{"a":0,"k":100,"ix":7}}]}],"ind":7}],"loopFrames":361};
+  const TN = 40, FPS = 60;
+  THINK.winding = 1;                                                   // model circle: t increasing → positive signed area in canvas coords
+  const clone = o => JSON.parse(JSON.stringify(o));
+
+  // ---- read a rendered path (lottie-web SVG) into canvas-space points
+  function pathPoints(pathEl, svgEl) {
+    const m = svgEl.getScreenCTM().inverse().multiply(pathEl.getScreenCTM());
+    const ap = (x, y) => [m.a * x + m.c * y + m.e, m.b * x + m.d * y + m.f];
+    const d = pathEl.getAttribute('d');
+    const nums = d.replace(/([MCLZmclz])/g, ' $1 ').trim().split(/[\s,]+/).filter(Boolean);
+    const pts = []; let cur = null, i = 0, cmd = 'M';
+    while (i < nums.length) {
+      const tk = nums[i];
+      if (/^[MCLZmclz]$/.test(tk)) { cmd = tk.toUpperCase(); i++; if (cmd === 'Z') continue; else continue; }
+      if (cmd === 'M' || cmd === 'L') { cur = [+nums[i], +nums[i + 1]]; pts.push(ap(...cur)); i += 2; if (cmd === 'M') cmd = 'L'; }
+      else if (cmd === 'C') {
+        const p0 = cur, p1 = [+nums[i], +nums[i+1]], p2 = [+nums[i+2], +nums[i+3]], p3 = [+nums[i+4], +nums[i+5]]; i += 6;
+        for (let k = 1; k <= 10; k++) { const t = k / 10, u = 1 - t;
+          const x = u*u*u*p0[0] + 3*u*u*t*p1[0] + 3*u*t*t*p2[0] + t*t*t*p3[0];
+          const y = u*u*u*p0[1] + 3*u*u*t*p1[1] + 3*u*t*t*p2[1] + t*t*t*p3[1];
+          pts.push(ap(x, y)); }
+        cur = p3;
+      } else i++;
+    }
+    return pts;
+  }
+  const signedArea = P => 0.5 * P.reduce((a, p, k) => { const q = P[(k + 1) % P.length]; return a + p[0]*q[1] - q[0]*p[1]; }, 0);
+  // evenly-spaced closed resample; starts at the EXACT point where the curve crosses the ray "due right" of the
+  // centre (interpolated between samples, so the start never hops a vertex as the ring drifts); enforce winding
+  function resampleClosed(P, n, centre, winding) {
+    if (Math.sign(signedArea(P)) !== winding) P = P.slice().reverse();
+    const m = P.length;
+    const seg = [0]; for (let k = 0; k < m; k++) { const q = P[(k + 1) % m]; seg.push(seg[k] + Math.hypot(q[0]-P[k][0], q[1]-P[k][1])); }
+    const L = seg[m];
+    // find the crossing of y = centre.y with x > centre.x
+    let s0 = 0, found = false;
+    for (let k = 0; k < m; k++) { const a = P[k], b = P[(k + 1) % m]; const da = a[1] - centre[1], db = b[1] - centre[1];
+      if ((da <= 0 && db > 0) || (da > 0 && db <= 0)) { const t = da / (da - db); const x = a[0] + (b[0] - a[0]) * t;
+        if (x > centre[0]) { s0 = seg[k] + (seg[k + 1] - seg[k]) * t; found = true; break; } } }
+    if (!found) { let best = 0, bestA = 1e9; P.forEach((p, k) => { const an = Math.abs(Math.atan2(p[1] - centre[1], p[0] - centre[0])); if (an < bestA) { bestA = an; best = k; } }); s0 = seg[best]; }
+    const at = s => { s = ((s % L) + L) % L; let k = 0; while (k < m - 1 && seg[k + 1] < s) k++;
+      const t = (s - seg[k]) / (seg[k + 1] - seg[k] || 1); const a = P[k], b = P[(k + 1) % m]; return [a[0] + (b[0]-a[0]) * t, a[1] + (b[1]-a[1]) * t]; };
+    const out = []; for (let j = 0; j < n; j++) out.push(at(s0 + j / n * L));
+    return out;
+  }
+  const circlePts = (c, R, n) => { const out = []; for (let j = 0; j < n; j++) { const a = THINK.winding * 2 * Math.PI * j / n; out.push([c[0] + R * Math.cos(a), c[1] + R * Math.sin(a)]); } return out; };
+  const refPts = (f, c, R) => f.map(([x, y]) => [c[0] + R * x, c[1] + R * y]);
+  // closed polyline -> lottie path with smooth (Catmull-Rom) handles
+  function toShape(P) {
+    const n = P.length, v = [], i = [], o = [];
+    for (let k = 0; k < n; k++) { const a = P[(k - 1 + n) % n], b = P[(k + 1) % n]; const tx = (b[0]-a[0]) / 6, ty = (b[1]-a[1]) / 6;
+      v.push([P[k][0], P[k][1]]); o.push([tx, ty]); i.push([-tx, -ty]); }
+    return { c: true, v, i, o };
+  }
+  const EASE_IO = { o: { x: [0.42], y: [0] }, i: { x: [0.58], y: [1] } }, LIN = { o: { x: [0.5], y: [0.5] }, i: { x: [0.5], y: [0.5] } };
+  const shapeKf = (kfs) => kfs.map(([t, P, e], idx) => ({ t, s: [toShape(P)], ...(e || LIN) }));
+
+  function readRing(layerName, strokeW) {
+    const svg = layers[layerName].querySelector('svg'); if (!svg) return null;
+    const path = svg.querySelector(`path[stroke-width="${strokeW}"]`); if (!path) return null;
+    return resampleClosed(pathPoints(path, svg), TN, THINK.centre, THINK.winding);
+  }
+  const OUTER_W = '3';   // waves_8 local stroke width (unique among the Listening paths)
+  // Thinking stroke: the dial is in source-comp pt (the Listening outer ring is 3 pt at 154 % = THINK.strokeW canvas px).
+  // The width eases from the wave's to the dial's over the blend in, and back over the blend out, so no hard step.
+  const strokeSel = document.getElementById('tstroke');
+  const thinkW = () => +strokeSel.value * THINK.strokeW / 3;
+  const liveTwistW = () => { const el = layers.thinking.querySelector('g.twist path'); return el ? +el.getAttribute('stroke-width') || thinkW() : thinkW(); };
+  const liveDotOp = () => { const g = layers.thinking.querySelector('g.dot'); if (!g) return 0; const o = parseFloat(g.getAttribute('opacity')); return isNaN(o) ? 100 : o * 100; };
+  const easeKf = (t0, v0, t1, v1) => ({ a: 1, k: [ { t: t0, s: [v0], o: { x: [0.2], y: [0.7] }, i: { x: [0.5], y: [1] } }, { t: t1, s: [v1] } ] });
+  const readTwist = () => { const svg = layers.thinking.querySelector('svg'), path = svg && svg.querySelector('g.twist path'); return path ? resampleClosed(pathPoints(path, svg), TN, THINK.centre, THINK.winding) : null; };
+
+  function ringLayer(kfs, opKf, wKf) {
+    return { ddd: 0, ind: 90, ty: 4, nm: 'twist ring', cl: 'twist', sr: 1, st: 0, ip: 0, op: 99999, ao: 0,
+      ks: { o: opKf || { a: 0, k: 100 }, r: { a: 0, k: 0 }, p: { a: 0, k: [0, 0, 0] }, a: { a: 0, k: [0, 0, 0] }, s: { a: 0, k: [100, 100, 100] } },
+      shapes: [{ ty: 'gr', nm: 'ring', it: [
+        { ty: 'sh', nm: 'path', ks: { a: 1, k: shapeKf(kfs) } },
+        { ty: 'st', nm: 'stroke', c: { a: 0, k: THINK.colour }, o: { a: 0, k: 100 }, w: wKf || { a: 0, k: thinkW() }, lc: 2, lj: 2 },
+        { ty: 'tr', p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } } ] }] };
+  }
+  // the travelling dot: the same morphing path, drawn as a round-capped stroke trimmed to a sliver (how the source
+  // Thinking Lottie did it — waves_9, stroke 18, trim 0–0.05 %), with the trim offset sweeping the path once per loop.
+  const dotSel = document.getElementById('tdot');
+  const dotW = () => +dotSel.value * THINK.strokeW / 3;          // source pt → canvas px, same conversion as the ring
+  const DOT_DIR = -1;                                           // sign of travel along the path (matched to the waves' spin below)
+  function dotLayer(kfs, opKf, dot0, lastT) {
+    // offset in degrees: 360° = once around; linear over the whole animation so the loop wrap lands on the same spot
+    const offKf = { a: 1, k: [ { t: 0, s: [DOT_DIR * 360 * dot0], o: { x: [0.167], y: [0.167] }, i: { x: [0.833], y: [0.833] } },
+                               { t: lastT, s: [DOT_DIR * 360 * (dot0 + lastT / THINK.loopFrames)] } ] };
+    return { ddd: 0, ind: 91, ty: 4, nm: 'dot', cl: 'dot', sr: 1, st: 0, ip: 0, op: 99999, ao: 0,
+      ks: { o: opKf || { a: 0, k: 100 }, r: { a: 0, k: 0 }, p: { a: 0, k: [0, 0, 0] }, a: { a: 0, k: [0, 0, 0] }, s: { a: 0, k: [100, 100, 100] } },
+      shapes: [{ ty: 'gr', nm: 'dot', it: [
+        { ty: 'sh', nm: 'path', ks: { a: 1, k: shapeKf(kfs) } },
+        { ty: 'tm', nm: 'trim', s: { a: 0, k: 0 }, e: { a: 0, k: 0.05 }, o: offKf, m: 1 },
+        { ty: 'st', nm: 'stroke', c: { a: 0, k: THINK.colour }, o: { a: 0, k: 100 }, w: { a: 0, k: dotW() }, lc: 2, lj: 1 },
+        { ty: 'tr', p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } } ] }] };
+  }
+  // inner rings: copies of the Listening inner waves. lottie-web does NOT treat `st` as a keyframe offset
+  // (it subtracts it from both sides), so the keyframe times themselves are shifted: local frame `f` lands on comp time `at`.
+  // The wave loop is periodic (A at −1, B at 180, A at 359), so keyframes are extended a period each side before shifting.
+  function shiftKeyframes(node, dt) {
+    if (Array.isArray(node)) { node.forEach(n => shiftKeyframes(n, dt)); return; }
+    if (node && typeof node === 'object') {
+      if (node.a === 1 && Array.isArray(node.k) && node.k.length && typeof node.k[0].t === 'number') {
+        const kf = node.k, span = kf[kf.length - 1].t - kf[0].t;
+        if (span > 300) {                       // a full wave period: tile it one period each side.
+          // Only keyframes that carry easing (all but the last) may start a segment — a copy of the final keyframe
+          // as a segment start makes lottie-web throw inside renderFrame and silently freeze the whole animation.
+          const body = kf.slice(0, -1), last = kf[kf.length - 1];
+          // per-period value change (a continuous spin is 0° → −360°): copies shift by it so the motion continues
+          const num = Array.isArray(kf[0].s) && typeof kf[0].s[0] === 'number';
+          const dv = num ? kf[0].s.map((v, j) => (last.s ? last.s[j] : v) - v) : null;
+          const sh = (arr, dt, m) => arr.map(k => { const c = clone(k); c.t = k.t + dt; if (dv && c.s) c.s = c.s.map((v, j) => v + m * dv[j]); if (dv && c.e) c.e = c.e.map((v, j) => v + m * dv[j]); return c; });
+          node.k = sh(body, -span, -1).concat(sh(body, 0, 0), sh(body, span, 1), sh([last], span, 1));
+        }
+        node.k.forEach(k => { k.t += dt; });
+        return;
+      }
+      Object.values(node).forEach(v => shiftKeyframes(v, dt));
+    }
+  }
+  function innerLayers(f, at, fadeFrom, fadeTo, dirIn) {
+    return THINK.inner.map(src => { const L = clone(src); L.st = 0; L.ip = 0; L.op = fadeTo + 1;
+      shiftKeyframes(L, at - f);
+      L.ks.o = { a: 1, k: [ { t: fadeFrom, s: [dirIn ? 0 : 100], o: { x: [dirIn ? 0.42 : 0.2], y: [dirIn ? 0 : 0.7] }, i: { x: [dirIn ? 0.58 : 0.5], y: [1] } }, { t: fadeTo, s: [dirIn ? 100 : 0] } ] };
+      return L; });
+  }
+  // ---- the travelling-loop model, fitted to the reference:  x = sx·cos t,  y = sin t·(a + b·cos t)
+  //   (1,0) circle · (0,h) symmetric ∞ · crossing sits at x = −a/b, so sweeping a from −A to +A with b = B·sin(πφ)
+  //   is the loop being born at the right tip, travelling left and dying at the left tip; at both ends it's an ellipse.
+  const MODEL = { A: 0.49, B: 0.60, sxLens: 0.85, sxInf: 0.97 };
+  function modelPts(a, b, sx, c, R) {
+    const out = [];
+    for (let k = 0; k < TN; k++) { const t = THINK.winding * 2 * Math.PI * k / TN;
+      out.push([c[0] + R * sx * Math.cos(t), c[1] + R * Math.sin(t) * (a + b * Math.cos(t))]); }
+    return out;
+  }
+  const smooth = u => u * u * (3 - 2 * u);
+  const easeOut = u => 1 - Math.pow(1 - Math.max(0, Math.min(1, u)), 3);   // blend weight: fast start, settles smoothly
+  const cyclesSel = document.getElementById('cycles'), blendSel = document.getElementById('blend');
+  const blendFrames = () => Math.round(+blendSel.value / 1000 * FPS);
+  const cycFrames = () => THINK.loopFrames / +cyclesSel.value;
+  // twist at absolute phase φ (cycles); sign alternates per cycle so (a,b) stay continuous across seams
+  function twistAt(phi) { const k = Math.floor(phi + 1e-9), f = phi - k, sg = (((k % 2) + 2) % 2 === 0) ? 1 : -1;
+    return { a: -sg * MODEL.A * Math.cos(Math.PI * f), b: sg * MODEL.B * Math.sin(Math.PI * f), sx: MODEL.sxLens + (MODEL.sxInf - MODEL.sxLens) * Math.sin(Math.PI * f) }; }
+  const twistPts = phi => { const p = twistAt(phi); return modelPts(p.a, p.b, p.sx, THINK.centre, THINK.R); };
+  const mix = (P, Q, w) => P.map((p, k) => [p[0] + (Q[k][0] - p[0]) * w, p[1] + (Q[k][1] - p[1]) * w]);
+  // vertex labelling: the twist's traversal direction flips sign with `a`, so its labels are matched to the wave's
+  // ONCE (best reversal + rotation against the wave at the press) and then kept fixed — blending never cancels.
+  const relabel = (P, L) => { const Q = L.rev ? P.slice().reverse() : P; return Q.slice(L.rot).concat(Q.slice(0, L.rot)); };
+  function matchLabels(T, W) { let best = { rev: false, rot: 0 }, bestD = Infinity;
+    for (const rev of [false, true]) for (let rot = 0; rot < TN; rot++) { const Q = relabel(T, { rev, rot }); let d = 0; for (let k = 0; k < TN; k++) d += Math.hypot(Q[k][0] - W[k][0], Q[k][1] - W[k][1]); if (d < bestD) { bestD = d; best = { rev, rot }; } }
+    return best; }
+  let twistLabel = { rev: false, rot: 0 };
+
+  // ---- the Listening outer ring at every frame of its loop, read once from lottie-web (so the wave can keep
+  //      running underneath the blend). Built in idle chunks after load.
+  const RING = new Array(THINK.loopFrames); let ringReady = false;
+  function buildRingTable(done) {
+    let f = 0;
+    const step = () => { const t0 = performance.now();
+      while (f < THINK.loopFrames && performance.now() - t0 < 12) { players.listening.goToAndStop(f, true); RING[f] = readRing('listening', OUTER_W); f++; }
+      if (f < THINK.loopFrames) setTimeout(step, 0); else { players.listening.goToAndStop(0, true); ringReady = true; done && done(); } };
+    setTimeout(step, 50);
+  }
+  const ringAt = f => { const i = ((Math.round(f) % THINK.loopFrames) + THINK.loopFrames) % THINK.loopFrames;
+    if (!RING[i]) { players.listening.goToAndStop(i, true); RING[i] = readRing('listening', OUTER_W); }   // lazy fill if the table isn't ready yet
+    return RING[i]; };
+
+  // what the Thinking ring is doing right now (phase and how much of it is still "wave")
+  let thinkState = null;   // { phi0, wave0, dot0, f0, D, mode }  — phase, wave-weight & dot position at the animation's frame 0
+  function thinkNow() {
+    const p = players.thinking, fr = (p.firstFrame || 0) + p.currentFrame;
+    if (!thinkState) return { phi: 0, wave: 0, dot: 0 };
+    const { phi0, wave0, dot0, D, mode } = thinkState;
+    const u = Math.min(1, fr / Math.max(1, D));
+    const wave = mode === 'in' ? wave0 * (1 - easeOut(u)) : mode === 'out' ? wave0 + (1 - wave0) * easeOut(u) : 0;
+    return { phi: phi0 + fr / cycFrames(), wave, dot: ((dot0 || 0) + fr / THINK.loopFrames) % 1 };
+  }
+
+  // ---- build: blend IN.  E0 = live ring at press (or null from a non-ring state), f = Listening frame at press
+  function buildThinkingIn(E0, f, phi0, wave0, w0, dot0, dotOp0) {
+    const D = blendFrames(), d = clone(THINK_TPL), kfs = [], cyc = cycFrames();
+    const wKf = (E0 && Math.abs(w0 - thinkW()) > 1e-3) ? easeKf(0, w0, D, thinkW()) : null;
+    for (let t = 0; t <= D; t++) {
+      const wave = wave0 * (1 - easeOut(t / D));
+      const W = E0 ? (t === 0 ? E0 : ringAt(f + t)) : null;
+      const T = relabel(twistPts(phi0 + t / cyc), twistLabel);
+      kfs.push([t, W ? mix(T, W, wave) : T, LIN]);
+    }
+    const loopStart = D, loopEnd = D + THINK.loopFrames;
+    for (let t = D + 1; t <= loopEnd; t++) kfs.push([t, relabel(twistPts(phi0 + t / cyc), twistLabel), LIN]);
+    const opKf = E0 ? null : { a: 1, k: [ { t: 0, s: [0], o: { x: [0.42], y: [0] }, i: { x: [0.58], y: [1] } }, { t: Math.round(D / 2), s: [100] } ] };
+    if (dotW() > 0) {                                     // dot fades in over the first 40 % of the blend (from wherever it was mid-exit)
+      const dOp = { a: 1, k: [ { t: 0, s: [dotOp0 || 0], o: { x: [0.42], y: [0] }, i: { x: [0.58], y: [1] } }, { t: Math.max(4, Math.round(D * 0.4)), s: [100] } ] };
+      d.layers.push(dotLayer(kfs, dOp, dot0 || 0, loopEnd));
+    }
+    d.layers.push(ringLayer(kfs, opKf, wKf));
+    if (E0) d.layers.push(...innerLayers(f, 0, 0, Math.max(6, Math.round(D * 0.25)), false));   // gone before the outer ring crosses them
+    d.ip = 0; d.op = loopEnd + 1;
+    return { json: d, loopStart, loopEnd, D };
+  }
+  // ---- build: blend OUT.  T0 = live ring at press; the wave takes over from Listening frame f0 onward
+  function buildThinkingOut(T0, f0, phi0, wave0, toListening, w0, dot0) {
+    const D = blendFrames(), d = clone(THINK_TPL), kfs = [], cyc = cycFrames();
+    let opKf = null;
+    const wKf = toListening ? easeKf(0, w0, D, THINK.strokeW) : { a: 0, k: w0 };
+    for (let t = 0; t <= D; t++) {
+      const T = relabel(twistPts(phi0 + t / cyc), twistLabel);
+      if (toListening) { const wave = wave0 + (1 - wave0) * easeOut(t / D); kfs.push([t, mix(T, ringAt(f0 + t), wave), LIN]); }
+      else kfs.push([t, T, LIN]);
+    }
+    if (!toListening) opKf = { a: 1, k: [ { t: 0, s: [100], o: { x: [0.42], y: [0] }, i: { x: [0.58], y: [1] } }, { t: Math.round(D / 2), s: [0] } ] };
+    if (dotW() > 0) d.layers.push(dotLayer(kfs, { a: 1, k: [ { t: 0, s: [100], o: { x: [0.42], y: [0] }, i: { x: [0.58], y: [1] } }, { t: Math.max(4, Math.round(D * 0.6)), s: [0] } ] }, dot0 || 0, D));
+    d.layers.push(ringLayer(kfs, opKf, wKf));
+    if (toListening) d.layers.push(...innerLayers(f0, 0, Math.round(D * 0.4), D, true));   // appear once the outer ring has opened up
+    d.ip = 0; d.op = D + 1;
+    return { json: d, D };
+  }
+  function loadThinking(json, loopStart, loopEnd) {
+    if (players.thinking) { try { players.thinking.destroy(); } catch (e) {} }
+    layers.thinking.innerHTML = '';
+    const p = lottie.loadAnimation({ container: layers.thinking, renderer: 'svg', loop: false, autoplay: false, animationData: json,
+      rendererSettings: { preserveAspectRatio: 'xMidYMid meet' } });
+    players.thinking = p;
+    if (loopStart != null) {
+      p.addEventListener('complete', function h() { setTimeout(() => p.removeEventListener('complete', h), 0); if (players.thinking !== p) return; p.loop = true; p.playSegments([loopStart, loopEnd], true); });
+    }
+    p.goToAndStop(0, true);                                   // show frame 0 now…
+    requestAnimationFrame(() => { if (players.thinking === p) p.goToAndPlay(0, true); });   // …start the clock on the next tick (build time otherwise skips frames)
+    return p;
+  }
+  // Listening virtual clock (so a quick there-and-back resumes where the rings would have been)
+  let listenClock = { frame: 0, at: performance.now() };
+  const listenFrameNow = () => (listenClock.frame + (performance.now() - listenClock.at) / 1000 * FPS) % THINK.loopFrames;
+
+  async function enterThinking(from, token) {
+    const now = thinkNow();                                   // if we're mid-exit, carry the current phase & wave weight
+    const phi0 = (from === 'thinking') ? now.phi : 0;
+    if (from === 'listening' || from === 'thinking') {
+      const f = from === 'listening' ? players.listening.currentFrame : listenFrameNow();
+      const E0 = from === 'listening' ? readRing('listening', OUTER_W) : (readTwist() || ringAt(f));
+      const wave0 = from === 'listening' ? 1 : now.wave;
+      const w0 = from === 'listening' ? THINK.strokeW : liveTwistW();
+      if (from === 'listening') twistLabel = matchLabels(twistPts(phi0), E0);
+      const dotOp0 = from === 'thinking' ? liveDotOp() : 0;
+      const b = buildThinkingIn(E0, f, phi0, wave0, w0, from === 'thinking' ? now.dot : 0, dotOp0);
+      thinkState = { phi0, wave0, dot0: from === 'thinking' ? now.dot : 0, f0: f, D: b.D, mode: 'in' };
+      listenClock = { frame: f, at: performance.now() };
+      loadThinking(b.json, b.loopStart, b.loopEnd);
+      setLayer('thinking', true, true); if (from === 'listening') setLayer('listening', false, true);
+    } else {
+      twistLabel = { rev: false, rot: 0 };
+      const b = buildThinkingIn(null, 0, 0, 0, thinkW(), 0, 0);
+      thinkState = { phi0: 0, wave0: 0, dot0: 0, f0: 0, D: b.D, mode: 'in' };
+      loadThinking(b.json, b.loopStart, b.loopEnd);
+      setLayer('thinking', true, true);
+      if (from && from !== 'default') setLayer(from, false, false);
+    }
+    status('thinking'); return true;
+  }
+  async function exitThinking(toListening, token) {
+    const now = thinkNow();
+    const f0 = listenFrameNow();
+    const b = buildThinkingOut(null, f0, now.phi, now.wave, toListening, liveTwistW(), now.dot);
+    thinkState = { phi0: now.phi, wave0: now.wave, dot0: now.dot, f0, D: b.D, mode: 'out' };
+    window.__lastExit = { f0, total: b.D };
+    loadThinking(b.json, null, null);
+    const ok = await onComplete('thinking', token);
+    if (!ok) return false;
+    if (toListening) {
+      const fr = (f0 + Math.min(b.D, Math.round(players.thinking.currentFrame))) % THINK.loopFrames;
+      players.listening.goToAndPlay(fr, true); listenClock = { frame: fr, at: performance.now() };
+      setLayer('listening', true, true); setLayer('thinking', false, true); status('listening');
+    } else { setLayer('thinking', false, true); }
+    thinkState = null;
+    return true;
+  }
+
+
+  // ---------- moves (each returns true if it ran to the end, false if cancelled) ----------
+  const isB = s => s === 'default' || s === 'listening' || s === 'thinking' || s === 'talking';
+
+  // Waves entering Listening over the Default B: instead of dissolving in where they stand, the rings start hidden
+  // under the B (scale .3 about the B's centre — even the outer ring is then inside the B's outline) and ease
+  // outward to full size, so they appear to expand out from behind the B. Opacity is 1 from the start; the B covers them.
+  const wavesInSel = document.getElementById('wavesin');
+  function wavesExpand(el) {
+    const ms = +wavesInSel.value; if (!ms) return false;
+    el.style.transformOrigin = '50% 50%';
+    el.animate([{ transform: 'scale(.3)' }, { transform: 'scale(1)' }], { duration: ms, easing: 'cubic-bezier(.17,.84,.3,1)' });
+    return true;
+  }
+  // B family: dissolve on top of the Default base
+  async function toB(target, token) {                     // from default / listening / thinking / talking
+    const from = current;
+    setBase(true);
+    if (target === 'thinking') return await enterThinking(from, token);
+    if (from === 'thinking') {
+      if (target === 'listening') return await exitThinking(true, token);      // continuous wave blend
+      // any other B-family target: the Thinking layer (ring + twist) simply dissolves out over the base while the
+      // target dissolves in — the B underneath is identical, so nothing waits and nothing jumps
+      setLayer('thinking', false, false); thinkState = null;
+      if (target === 'default') { status('default'); return true; }
+    }
+    if (target === 'default') {
+      if (from !== 'default' && from !== 'thinking') setLayer(from, false, false);   // rings/fill fade out over the base
+      status('default'); return true;
+    }
+    players[target].setDirection(1); players[target].goToAndPlay(0, true);
+    if (target === 'listening') listenClock = { frame: 0, at: performance.now() };
+    if (target === 'listening' && from === 'default' && wavesExpand(layers.listening)) setLayer(target, true, true);   // rings grow out from under the B
+    else setLayer(target, true, false);
+    if (from !== 'default' && from !== 'thinking' && from !== target) setLayer(from, false, false); // simultaneous dissolve (thinking handled above)
+    status(target); return true;
+  }
+  // Connecting loop -> Connected transition: park frame 0 over the loop, dots dissolve, then flip
+  async function loopToTransition(token) {
+    const c = players.connected; c.setDirection(1); c.goToAndStop(0, true);
+    setLayer('connected', true, false); status('connected', 1);
+    if (!await wait(fadeMs(), token)) return false;
+    setLayer('connecting', false, true);          // fully covered by now — drop it
+    c.goToAndPlay(0, true);
+    return await onComplete('connected', token);
+  }
+  // Connected transition -> Connecting loop: reverse to goggles, then the loop (dots) dissolves in
+  async function transitionToLoop(token) {
+    const c = players.connected;
+    players.connecting.setDirection(1); players.connecting.goToAndPlay(0, true);
+    setLayer('connecting', true, false); status('connecting');
+    if (!await wait(fadeMs(), token)) return false;
+    setLayer('connected', false, true);
+    return true;
+  }
+  // ---- eased reverse for the Connected transition ----
+  // Forward, the flip is an ease-out (fast start, smooth settle). The player's own reverse mirrors that
+  // into an ease-in. EASE is the measured cumulative motion per forward frame; in reverse we pick, at each
+  // moment, the frame that is as far FROM THE END as the forward easing would be from the start.
+  const EASE = [0.0, 0.0008, 0.0263, 0.0555, 0.0731, 0.1146, 0.16, 0.1874, 0.2323, 0.2719, 0.2899, 0.3232, 0.363, 0.3849, 0.4264, 0.4639, 0.4855, 0.5249, 0.5657, 0.5897, 0.6289, 0.6644, 0.684, 0.7194, 0.7544, 0.7725, 0.8035, 0.8298, 0.8412, 0.8611, 0.8799, 0.8893, 0.9079, 0.9243, 0.9325, 0.9471, 0.9593, 0.9646, 0.9738, 0.9812, 0.9843, 0.9896, 0.9938, 0.9955, 0.9982, 0.9995, 0.9998, 1.0, 1.0, 1.0];                                   // EASE[f] = share of total motion done by frame f
+  const LAST = EASE.length - 1;
+  const easeAt = f => { f = Math.max(0, Math.min(LAST, f)); const i = Math.floor(f), r = f - i; return i >= LAST ? EASE[LAST] : EASE[i] + (EASE[i + 1] - EASE[i]) * r; };
+  const frameForProgress = p => {                          // inverse of easeAt: largest frame whose progress <= p, interpolated
+    p = Math.max(0, Math.min(1, p));
+    let i = LAST; while (i > 0 && EASE[i] > p) i--;
+    if (i >= LAST) return LAST;
+    const span = EASE[i + 1] - EASE[i];
+    return i + (span > 1e-6 ? (p - EASE[i]) / span : 0);
+  };
+  const reverseFrameAtTime = t => frameForProgress(1 - easeAt(LAST * t));      // t: 0..1 of the reverse play
+  const reverseTimeAtFrame = f => frameForProgress(1 - easeAt(f)) / LAST;      // where in the reverse play a frame sits
+  let revLoop = null;
+  const cancelReverse = () => { if (revLoop) { cancelAnimationFrame(revLoop.raf); revLoop.res(false); revLoop = null; } };
+  function playReverse(fromFrame, token) {
+    cancelReverse();
+    const c = players.connected; c.pause();
+    const duration = (c.totalFrames / c.frameRate) * 1000;
+    const t0 = performance.now() - reverseTimeAtFrame(fromFrame) * duration;
+    return new Promise(res => {
+      const loop = { raf: 0, res };
+      revLoop = loop;
+      const tick = now => {
+        if (revLoop !== loop) return;
+        const t = Math.min(1, (now - t0) / duration);
+        c.goToAndStop(reverseFrameAtTime(t), true);
+        if (t >= 1) { c.goToAndStop(0, true); revLoop = null; res(seq === token); return; }
+        loop.raf = requestAnimationFrame(tick);
+      };
+      loop.raf = requestAnimationFrame(tick);
+    });
+  }
+
+  // Default (base) -> reverse transition: identical frame, exact cut, then the eased reverse
+  async function baseToReverse(token) {
+    const c = players.connected; c.setDirection(1); c.goToAndStop(c.totalFrames - 1, true);
+    setLayer('connected', true, true); setBase(false); status('connected', -1);
+    return await playReverse(c.totalFrames - 1, token);
+  }
+  // transition landed on its last frame -> Default base underneath, exact cut
+  function transitionToBase() { setBase(true); setLayer('connected', false, true); status('default'); }
+  // flip an in-flight transition from wherever it is
+  async function flip(d, token) {
+    const c = players.connected; const f = c.currentFrame;
+    status('connected', d);
+    if (d === -1) return await playReverse(f, token);
+    cancelReverse(); c.setDirection(1); c.goToAndPlay(f, true);
+    return await onComplete('connected', token);
+  }
+
+  // a script's opening beat: the app starts out connecting, so from the idle Default cut straight to the loop (no flip back)
+  function cutToConnecting() {
+    const token = ++seq; scaleState = 'default'; cancelReverse();
+    players.connecting.setDirection(1); players.connecting.goToAndPlay(0, true);
+    setLayer('connecting', true, true); setBase(false); setLayer('connected', false, true);
+    ['listening', 'thinking', 'talking'].forEach(n => setLayer(n, false, true)); thinkState = null;
+    status('connecting'); stRoute.textContent = 'cut: connecting';
+  }
+  // ---------- router ----------
+  async function go(target) {
+    if (!SPEC[target] || target === 'gradient') return;
+    const cur = current;
+    if (target === cur && cur !== 'connected' && !(cur === 'thinking' && thinkState && thinkState.mode === 'out')) return;   // re-pressing Thinking mid-exit turns it around
+    const token = ++seq;
+    scaleState = (target === 'connected') ? 'default' : target;   // B scale reacts at the press
+    const F = fadeMs(), H = holdMs();
+    let ok = true;
+    const route = [];
+    const note = s => { route.push(s); stRoute.textContent = route.join(' → '); };
+
+    if (isB(cur) && isB(target)) {                       // within the B family
+      note(cur + ' ⇢ ' + target + ' (dissolve)');
+      await toB(target, token);
+    }
+    else if (target === 'connecting') {
+      if (isB(cur)) {
+        if (cur !== 'default') { note(cur + ' ⇢ default'); await toB('default', token); ok = await wait(F + H, token); if (!ok) return; }
+        note('◀ connected'); ok = await baseToReverse(token);
+      } else if (cur === 'connected') { note('◀ connected (flip)'); ok = await flip(-1, token); }
+      if (!ok) return;
+      note('connecting (dots in)'); await transitionToLoop(token);
+    }
+    else if (cur === 'connecting' || cur === 'connected') {   // leaving the goggle family: connected / default / listening / talking
+      if (cur === 'connecting') { note('connected (dots out, flip)'); ok = await loopToTransition(token); }
+      else { note('connected (flip)'); ok = await flip(1, token); }
+      if (!ok) return;
+      transitionToBase(); note('default');
+      const land = target === 'connected' ? 'listening' : target;
+      if (land !== 'default') {
+        const grow = land === 'listening' && +wavesInSel.value > 0;           // waves expand straight out of the landing — no hold
+        ok = await wait(grow ? 0 : H, token); if (!ok) return;
+        note(land + (grow ? ' (waves expand)' : ' (fade in)')); await toB(land, token);
+      }
+    }
+    if (seq === token) stRoute.textContent = 'settled: ' + current;
+  }
+
+  const SHEET_TITLES = { products: 'Showing Products (10)', card: 'Product details', cart: 'Your cart' };
+  const PUSH = { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' };
+  let paneShown = null;
+  function showSheet(which) {
+    const panes = sheet.querySelectorAll('.pane');
+    const titleEl = document.getElementById('sheet-title');
+    if (which === 'none') {
+      phone.classList.remove('results'); paneShown = null;
+      // clear panes after the slide-out finishes
+      setTimeout(() => { if (!phone.classList.contains('results')) panes.forEach(x => { x.classList.remove('on'); x.getAnimations().forEach(a => a.cancel()); }); }, 600);
+    } else if (!phone.classList.contains('results') || !paneShown || paneShown === which) {
+      // first screen: the whole sheet pulls up from the bottom
+      panes.forEach(x => x.classList.toggle('on', x.dataset.pane === which));
+      titleEl.textContent = SHEET_TITLES[which];
+      phone.classList.add('results'); paneShown = which;
+    } else {
+      // next screen: pushes in from the right, the previous one slides off to the left — like the app's screen switch
+      const from = sheet.querySelector(`.pane[data-pane="${paneShown}"]`), to = sheet.querySelector(`.pane[data-pane="${which}"]`);
+      panes.forEach(x => { if (x !== from && x !== to) x.classList.remove('on'); });
+      to.classList.add('on'); to.style.zIndex = 2; from.style.zIndex = 1;
+      to.animate([{ transform: 'translateX(100%)', opacity: 1 }, { transform: 'translateX(0)', opacity: 1 }], PUSH);
+      const back = from.animate([{ transform: 'translateX(0)', opacity: 1 }, { transform: 'translateX(-30%)', opacity: 0 }], PUSH);
+      back.onfinish = () => { from.classList.remove('on'); from.style.zIndex = ''; };
+      titleEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: 'forwards' }).onfinish = () => { titleEl.textContent = SHEET_TITLES[which]; titleEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 }); };
+      paneShown = which;
+    }
+    document.querySelectorAll('[data-sheet]').forEach(b => b.classList.toggle('on', b.dataset.sheet === which && which !== 'none'));
+    stSheet.textContent = which === 'none' ? 'hidden' : which;
+  }
+
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+  document.querySelectorAll('[data-sheet]').forEach(b => b.addEventListener('click', () => showSheet(b.dataset.sheet)));
+
+  const xfade = document.getElementById('xfade');
+  function applyFade() { rig.style.setProperty('--xfade', (+xfade.value) + 'ms'); }
+  xfade.addEventListener('change', applyFade); applyFade();
+  document.getElementById('frame').addEventListener('change', e => phone.classList.toggle('flat', e.target.value === 'flat'));
+
+  // =====================================================================================
+  // SCRIPTED CONVERSATION: a Play button runs the textarea script beat by beat, with captions.
+  //   user: …  → Listening; the words appear one by one as if being heard (grey, mic glyph)
+  //   b: …     → Talking; the words appear as B says them and the B's swell is driven by the same word timing
+  // =====================================================================================
+  const capEl = document.getElementById('caption');
+  const MIC = '<svg class="mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg>';
+  const scn = { token: 0, running: false, driving: false };
+  let capTalk = null;                                         // { t0, env } — word-timed swell for the B while a b: line plays
+  const WORD_MS = { user: 330, b: 240 }, PUNCT_MS = 180;   // B forms its sentences a touch quicker than the user speaks
+  const sleep = (ms, tok) => new Promise(res => setTimeout(() => res(scn.token === tok), ms));
+  const scnGo = async (state, tok) => { scn.driving = true; try { await go(state); } finally { scn.driving = false; } return scn.token === tok; };
+  const scnSheet = which => { scn.driving = true; showSheet(which); scn.driving = false; };
+
+  function wordTimes(text, who) {
+    const words = text.split(/\s+/).filter(Boolean); let t = 0; const out = [];
+    for (const w of words) { out.push({ w, t, dur: WORD_MS[who] * (0.6 + Math.min(1.2, w.replace(/[^\p{L}\p{N}₹%]/gu, '').length / 5)) }); t += out[out.length - 1].dur + (/[,.!?—;:]$/.test(w) ? PUNCT_MS : 0); }
+    return { words: out, total: t };
+  }
+  function bumpInto(arr, t0, dur, amp) { const a = Math.round(t0 * TALK_HZ), b = Math.min(arr.length, Math.round((t0 + dur) * TALK_HZ));
+    for (let i = a; i < b; i++) { const u = (i - a) / Math.max(1, b - a); arr[i] = Math.max(arr[i], amp * 0.5 * (1 - Math.cos(2 * Math.PI * u))); } }
+  function talkEnvFor(wt) {                                   // one bump per rough syllable of each word, stressed one bigger
+    const env = new Float32Array(Math.ceil(wt.total / 1000 * TALK_HZ) + TALK_HZ);
+    for (const { w, t, dur } of wt.words) { const syl = Math.max(1, Math.round(w.replace(/[^\p{L}]/gu, '').length / 3)), stress = Math.floor(Math.random() * syl);
+      for (let k = 0; k < syl; k++) bumpInto(env, (t + dur * k / syl) / 1000, dur / syl / 1000 * 1.15, (k === stress ? 0.75 : 0.4) + Math.random() * 0.25); }
+    return env;
+  }
+  async function speak(text, who, tok) {
+    const wt = wordTimes(text, who);
+    capEl.className = 'caption ' + who; capEl.innerHTML = (who === 'user' ? MIC : '') + wt.words.map(x => `<span class="w">${x.w.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>`).join(' ');
+    const spans = capEl.querySelectorAll('.w'); const t0 = performance.now();
+    if (who === 'b') { capTalk = { t0, env: talkEnvFor(wt) }; }
+    for (let i = 0; i < wt.words.length; i++) {
+      const at = t0 + wt.words[i].t; const d = at - performance.now(); if (d > 0 && !(await sleep(d, tok))) return false;
+      spans[i].classList.add('on');
+    }
+    const ok = await sleep(wt.total - (performance.now() - t0) + 80, tok);
+    return ok;
+  }
+  function parseScript(src) {
+    return src.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#')).map(l => {
+      let m;
+      if ((m = l.match(/^user:\s*(.+)$/i))) return { op: 'user', text: m[1] };
+      if ((m = l.match(/^b:\s*(.+)$/i))) return { op: 'b', text: m[1] };
+      if ((m = l.match(/^(connecting|think|wait)\s*(\d+)?$/i))) return { op: m[1].toLowerCase(), ms: m[2] ? +m[2] : ({ connecting: 1400, think: 2000, wait: 800 })[m[1].toLowerCase()] };
+      if ((m = l.match(/^sheet\s+(products|card|cart|none)$/i))) return { op: 'sheet', which: m[1].toLowerCase() };
+      if (/^(connected|default)$/i.test(l)) return { op: l.toLowerCase() };
+      return { op: 'bad', line: l };
+    });
+  }
+  async function runScenario() {
+    stopScenario(false);
+    const tok = ++scn.token; scn.running = true; document.getElementById('scn-play').classList.add('on');
+    const beats = parseScript(document.getElementById('script').value);
+    const bad = beats.find(b => b.op === 'bad'); if (bad) { stRoute.textContent = 'script: cannot read "' + bad.line + '"'; scn.running = false; return; }
+    for (let i = 0; i < beats.length; i++) { const b = beats[i];
+      if (scn.token !== tok) return;
+      switch (b.op) {
+        case 'connecting': if (i === 0 && current === 'default') cutToConnecting(); else if (!await scnGo('connecting', tok)) return; if (!await sleep(b.ms, tok)) return; break;
+        case 'connected':  if (!await scnGo('default', tok)) return; break;
+        case 'default':    if (!await scnGo('default', tok)) return; break;
+        case 'wait':       if (!await sleep(b.ms, tok)) return; break;
+        case 'sheet':      scnSheet(b.which); if (!await sleep(650, tok)) return; break;
+        case 'user':
+          phone.classList.add('captioned'); capEl.classList.add('hide');
+          if (!await scnGo('listening', tok)) return; if (!await sleep(450, tok)) return;
+          capEl.classList.remove('hide'); if (!await speak(b.text, 'user', tok)) return; if (!await sleep(450, tok)) return; break;
+        case 'think':
+          if (!await scnGo('thinking', tok)) return; if (!await sleep(b.ms, tok)) return; break;
+        case 'b':
+          phone.classList.add('captioned');
+          if (!await scnGo('talking', tok)) return; if (!await sleep(250, tok)) return;
+          if (!await speak(b.text, 'b', tok)) return; capTalk = null; if (!await sleep(350, tok)) return;
+          if (!await scnGo('default', tok)) return; break;
+      }
+    }
+    scn.running = false; document.getElementById('scn-play').classList.remove('on');
+    if (scn.token === tok) stRoute.textContent = 'script: finished';
+  }
+  function stopScenario(reset) {
+    scn.token++; scn.running = false; capTalk = null; document.getElementById('scn-play').classList.remove('on');
+    if (reset) { capEl.classList.add('hide'); phone.classList.remove('captioned'); scnSheet('none'); scnGo('default', scn.token); }
+  }
+  document.getElementById('scn-play').addEventListener('click', runScenario);
+  document.getElementById('scn-stop').addEventListener('click', () => stopScenario(true));
+  // a manual press while a script runs stops the script (captions stay where they are until Stop / reset)
+  const _go = go; go = async function (target) { if (scn.running && !scn.driving) { scn.token++; scn.running = false; capTalk = null; document.getElementById('scn-play').classList.remove('on'); } return _go(target); };
+  const _showSheet = showSheet; showSheet = function (w) { if (scn.running && !scn.driving) { scn.token++; scn.running = false; capTalk = null; document.getElementById('scn-play').classList.remove('on'); } return _showSheet(w); };
+
+  const KEYS = { '1':'connecting', '2':'connected', '3':'listening', '4':'thinking', '5':'talking', '0':'default' };
+  const SHEETS = { q:'products', w:'card', e:'cart', r:'none' };
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key.toLowerCase();
+    if (k === 'p') { runScenario(); e.preventDefault(); return; }
+    if (k === 'escape') { stopScenario(true); e.preventDefault(); return; }
+    if (KEYS[k]) { go(KEYS[k]); e.preventDefault(); }
+    else if (SHEETS[k]) { showSheet(SHEETS[k]); e.preventDefault(); }
+    else if (k === 'h') { document.getElementById('panel').classList.toggle('hidden'); e.preventDefault(); }
+  });
+
+  // frame readout
+  (function tick(){
+    if (current) {
+      const p = players[current];
+      stFrame.textContent = Math.round(p.currentFrame) + ' / ' + Math.round(p.totalFrames);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+
+  // =====================================================================================
+  // B SCALE: the B breathes with the state. One value drives every copy of the B (the base layer and Talking's
+  // own B+fill), smoothed exponentially so switching states never jumps.
+  //   listening — breathes in/out on the reference's 1 s rhythm · thinking — sits slightly smaller
+  //   talking   — follows a long, speech-like envelope (24 s, non-repeating to the eye) · others — 1
+  // =====================================================================================
+  const bsEls = [layers.default, layers.talking]; bsEls.forEach(el => { el.style.transformOrigin = '49.8% 50%'; });
+  const bsAmpL = document.getElementById('bs-ampl'), bsPerL = document.getElementById('bs-perl'), bsThink = document.getElementById('bs-think'), bsTalk = document.getElementById('bs-talk');
+  const TALK_LEN = 24, TALK_HZ = 100, TALK = new Float32Array(TALK_LEN * TALK_HZ);
+  (function genTalk() { let seed = 7; const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+    const bump = (t0, dur, amp) => { const a = Math.round(t0 * TALK_HZ), b = Math.min(TALK.length, Math.round((t0 + dur) * TALK_HZ));
+      for (let i = a; i < b; i++) { const u = (i - a) / Math.max(1, b - a); TALK[i] = Math.max(TALK[i], amp * 0.5 * (1 - Math.cos(2 * Math.PI * u))); } };
+    let t = 0.35;
+    while (t < TALK_LEN - 0.9) {
+      const words = 2 + Math.floor(rnd() * 5);
+      for (let w = 0; w < words && t < TALK_LEN - 0.9; w++) {
+        const syl = 1 + Math.floor(rnd() * 3), stress = Math.floor(rnd() * syl);
+        for (let k = 0; k < syl; k++) { const dur = 0.11 + rnd() * 0.13, amp = (k === stress ? 0.7 : 0.35) + rnd() * 0.3; bump(t, dur, amp); t += dur * 0.85; }
+        t += 0.06 + rnd() * 0.14;
+      }
+      t += 0.3 + rnd() * 0.55;
+    }
+    for (let pass = 0; pass < 2; pass++) for (let i = 1; i < TALK.length - 1; i++) TALK[i] = (TALK[i - 1] + TALK[i] + TALK[i + 1]) / 3;   // soften
+  })();
+  const talkEnv = t => { const x = ((t % TALK_LEN) + TALK_LEN) % TALK_LEN * TALK_HZ, i = Math.floor(x), f = x - i; return TALK[i] + (TALK[(i + 1) % TALK.length] - TALK[i]) * f; };
+  const bs = { cur: 1, stateAt: performance.now(), state: null, talkOffset: 0, last: performance.now() };
+  let scaleState = 'default';                      // the state whose B-scale pattern is driving right now (set at the press, not at the end of the transition)
+  function bsTarget(now) {
+    if (bs.state !== scaleState) { bs.state = scaleState; bs.stateAt = now; if (scaleState === 'talking') bs.talkOffset = Math.random() * TALK_LEN; }
+    const t = (now - bs.stateAt) / 1000;
+    switch (scaleState) {
+      case 'listening': return 1 - (+bsAmpL.value / 100) * (0.5 - 0.5 * Math.cos(2 * Math.PI * t / +bsPerL.value));
+      case 'thinking':  return +bsThink.value / 100;
+      case 'talking':   if (capTalk) { const x = Math.max(0, (now - capTalk.t0) / 1000) * TALK_HZ, i = Math.floor(x); const e = capTalk.env; return 1 + (+bsTalk.value / 100) * (i + 1 < e.length ? e[i] + (e[i + 1] - e[i]) * (x - i) : 0); }
+                        return 1 + (+bsTalk.value / 100) * talkEnv(t + bs.talkOffset);
+      default:          return 1;
+    }
+  }
+  (function bsTick() {
+    const now = performance.now(), dt = Math.min(0.05, (now - bs.last) / 1000); bs.last = now;
+    const target = bsTarget(now), tau = scaleState === 'talking' ? 0.045 : 0.16;
+    bs.cur += (target - bs.cur) * (1 - Math.exp(-dt / tau));
+    const tf = `scale(${bs.cur.toFixed(4)})`; bsEls.forEach(el => { el.style.transform = tf; });
+    requestAnimationFrame(bsTick);
+  })();
+
+  // expose for scripted drives (used when rendering a video from this page)
+  window.B = { go, showSheet, players, layers, get state(){ return current; }, _pathPoints: pathPoints, _readRing: readRing, _resample: resampleClosed, _toShape: toShape, _THINK: THINK, _ringAt: ringAt };
+  setBase(true); status('default');
+  buildRingTable();
+})();
+</script>
+
+</body></html>

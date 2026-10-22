@@ -105,7 +105,7 @@
 /* the numbers: two panels, the feature's impact in the folded card's dark, the reasons for it in the card's own grey */
 .cs4-stats { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3); border-radius: calc(var(--r) - .6cqw); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
 .cs4-stats.dark { background: var(--pcard-fold); color: var(--pcard-fold-ink); }
-.cs4-stats ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2) var(--s3); } /* two by two (22 Oct), so the numbers take the display size */
+.cs4-stats ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2) var(--s3); } .cs4-stats ul:has(li:only-child) { grid-template-columns: 1fr; } /* one number takes the width */ /* two by two (22 Oct), so the numbers take the display size */
 .cs4-stats li { display: flex; flex-direction: column; gap: .25em; min-width: 0; }
 .cs4-stats .n { font: 500 clamp(18px, 2.2cqw, 28px)/1 var(--f-head); letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; } /* the display size, as a section's heading */
 .cs4-stats-body { display: grid; } .cs4-stats-body > * { grid-area: 1 / 1; } /* the numbers and the paragraph share one cell: the panel is as tall as the taller of the two, so its padding holds in both states (22 Oct) */
@@ -126,6 +126,80 @@
 .cs4-col { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3); border-radius: calc(var(--r) - .6cqw); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
 
 .cs4-soon { flex: 1; display: grid; place-items: center; border-radius: var(--r); border: 1px dashed color-mix(in srgb, var(--line-ink) 22%, transparent); font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; color: var(--line-ink); opacity: .5; } /* as a tab not built yet */
+
+/* ---- the B study's parts (22 Oct, lenskart-b.ts; the state machine's in BMachine.tsx below) ---- */
+/* the hero as three phones (his page): the middle one in front and higher, the others under its edges */
+.cs4-hero.block { padding: var(--s3) var(--s3) var(--s4); }
+.cs4-hero.block .cs4-media.phone { border-radius: clamp(14px, 1.6cqw, 22px); } /* the hero's rule flattens a wide clip's corners; these are phones */
+.cs4-trio { display: flex; justify-content: center; align-items: flex-start; }
+.cs4-trio .cs4-fig { width: var(--ph-w); flex: none; }
+.cs4-trio .cs4-fig:nth-child(1) { margin-top: calc(.08 * var(--ph-h)); }
+.cs4-trio .cs4-fig:nth-child(2) { z-index: 2; margin: 0 calc(-.11 * var(--ph-w)); }
+.cs4-trio .cs4-fig:nth-child(3) { margin-top: calc(.17 * var(--ph-h)); }
+/* a Lottie on its own in a slot: nothing behind it */
+.cs4-media.lot { background: none; }
+/* a phone's top, cut (his FAQ screens): the corners of a phone, a hairline instead of the device's edge, the top of the picture */
+.cs4-media.screen { border-radius: clamp(12px, 1.3cqw, 18px); }
+.cs4-media.screen > img { object-position: top; }
+.cs4-media.screen::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pcard-open-ink) 18%, transparent); pointer-events: none; z-index: 2; }
+/* a layer that runs past its slot (the nudge pills) */
+.cs4-over { position: relative; width: 100%; } .cs4-over > .cs4-layer { z-index: 3; }
+/* his FAQ panel: four columns, a screen over the questions, each under its label */
+.cs4-faq { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); padding: var(--s3); border-radius: calc(var(--r) - .6cqw); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
+.cs4-faq-col { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+.cs4-faq-q { display: flex; flex-direction: column; gap: .5em; align-items: flex-start; }
+.cs4-faq-label { padding: .3em .75em; border-radius: 999px; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); } /* his green label, in the folded card's dark */
+.cs4-faq-ask { margin: 0; display: flex; gap: .6em; align-items: flex-start; width: 100%; padding: .7em .8em; border-radius: calc(var(--r) - 1.2cqw); background: var(--pcard-open); font: var(--copy-w) var(--t-body)/1.4 var(--f-copy); } /* body */
+.cs4-faq-ask i { flex: none; width: 1.3em; height: 1.3em; margin-top: .05em; border-radius: 50%; background: color-mix(in srgb, var(--pcard-open-ink) 14%, transparent); } /* his customer's disc */
+/* the screens meeting at one: the labels over the screens as his page had them, room at the sides for the pills */
+.cs4-conv { position: relative; display: flex; flex-direction: column; gap: calc(var(--s5) + var(--s3)); padding-top: var(--s2); }
+.cs4-conv-row { display: flex; justify-content: center; gap: calc(var(--s5) * 1.5); }
+.cs4-conv-to { display: flex; justify-content: center; }
+.cs4-conv .cs4-fig figcaption { order: -1; }
+/* a version of the feature: its number and name as his two chips, a line, the screens in a row */
+.cs4-ver { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s3); border-radius: calc(var(--r) - .6cqw); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
+.cs4-ver-head { display: flex; gap: var(--s1); }
+.cs4-ver-chip { padding: .5em .9em; border-radius: 999px; background: var(--pcard-open); font: 600 var(--t-title)/1.2 var(--f-copy); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); } /* title */
+.cs4-ver-chip.name { font-weight: 500; }
+.cs4-phones.ver { padding: var(--s1) 0 0; gap: var(--s3) var(--s4); }
+
+/* ---- the state machine (BMachine.tsx): two tabs over one panel ---- */
+.bm { display: flex; flex-direction: column; gap: var(--s3); }
+.bm-tabs { display: flex; gap: 2px; align-self: flex-start; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); }
+.bm-tabs button { border: 0; padding: .55em 1.1em; border-radius: 999px; background: none; color: inherit; font: 500 var(--t-title)/1.2 var(--f-copy); cursor: pointer; opacity: .7; transition: opacity .2s, background-color .2s, color .2s; } /* title */
+.bm-tabs button:hover { opacity: 1; } .bm-tabs button.on { background: var(--pcard-fold); color: var(--pcard-fold-ink); opacity: 1; }
+.bm-panel { display: flex; flex-direction: column; gap: var(--s3); padding: var(--s3); border-radius: calc(var(--r) - .6cqw); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
+/* the map: his drawing's parts in the card's ink — boxes, lines with a dot at their label, open chevrons */
+.bmap-wrap { overflow-x: auto; } .bmap { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; }
+.bmap path { fill: none; stroke: color-mix(in srgb, var(--pcard-open-ink) 42%, transparent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.bmap .dot { fill: color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); }
+.bmap .lbl { font: 500 10.5px/1.2 var(--f-copy); fill: color-mix(in srgb, var(--pcard-open-ink) 78%, transparent); }
+.bmap .node rect { fill: var(--pcard-open); stroke: color-mix(in srgb, var(--pcard-open-ink) 55%, transparent); stroke-width: 1.4; }
+.bmap .node text { font: 600 12.5px/1 var(--f-copy); fill: var(--pcard-open-ink); } .bmap .node text.sub { font-weight: 400; font-size: 9.5px; opacity: .65; }
+.bmap .cursor path { fill: var(--pcard-fold); stroke: var(--pcard-open); stroke-width: 1.2; }
+.bmap .cursor rect { fill: var(--pcard-fold); stroke: none; } .bmap .cursor text { font: 600 11px/1 var(--f-copy); fill: var(--pcard-fold-ink); }
+.bm-notes { justify-content: flex-start; } .bm-notes li::before { content: '→'; opacity: .45; }
+/* the states in a row: the B's scale over a state, the state under it, what happens between two over the arrow */
+.bsr { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr) minmax(0, 1.15fr)) minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: var(--s1); row-gap: var(--s1); align-items: center; padding-top: var(--s2); }
+.bsr-item, .bsr-cell, .bsr-arrow { display: contents; } /* each part placed by its row, in its item's column (--col, BMachine.tsx) */
+.bsr-cell > *, .bsr-arrow > * { grid-column: var(--col); }
+.bsr-scale, .bsr-to { grid-row: 1; align-self: end; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; text-align: center; } /* meta */
+.bst { grid-row: 2; position: relative; width: 100%; aspect-ratio: 460 / 500; } /* the canvas's crop (CROP in BMachine.tsx) */
+.bsr-name { grid-row: 3; align-self: start; font: 600 var(--t-body)/1.3 var(--f-copy); text-align: center; } /* body, emphasised */
+.bsr-arrow svg { grid-row: 2; display: block; width: 100%; height: 12px; overflow: visible; color: color-mix(in srgb, var(--pcard-open-ink) 30%, transparent); }
+.bsr-arrow path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+/* a state's layers, stacked as the rig stacks them; the B scaled as the rig scales it */
+.bst-l { position: absolute; inset: 0; } .bst-l svg { display: block; width: 100% !important; height: 100% !important; }
+.bst-l.bg { z-index: 0; transform-origin: 51% 41%; transform: translateX(-7.6%) scale(1.2); } /* the blob a fifth bigger about its centre, nudged left (the rig) */
+.bst-l.b { z-index: 2; transform-origin: 49.8% 50%; }
+.bst-l.breath { animation: bst-breath 1s ease-in-out infinite; } @keyframes bst-breath { 0%, 100% { transform: scale(1); } 50% { transform: scale(.95); } }
+.bst-l.held { transform: scale(.9); }
+.bst-l.swell { animation: bst-swell 2.7s linear infinite; } @keyframes bst-swell { 0% { transform: scale(1); } 6% { transform: scale(1.06); } 12% { transform: scale(1.01); } 18% { transform: scale(1.08); } 25% { transform: scale(1.02); } 30% { transform: scale(1.05); } 38% { transform: scale(1); } 50% { transform: scale(1.07); } 56% { transform: scale(1.03); } 62% { transform: scale(1.08); } 70% { transform: scale(1.01); } 76% { transform: scale(1.04); } 84% { transform: scale(1); } 92% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .bst-l.breath, .bst-l.swell { animation: none; } }
+/* the rig in its frame, the page's greys handed to it (BMachine.tsx) */
+.brig { display: flex; flex-direction: column; gap: var(--s2); }
+.brig-frame { display: block; width: 100%; border: 0; background: transparent; opacity: 0; transition: opacity .3s; } .brig.ready .brig-frame { opacity: 1; }
+.brig-hint { margin: 0; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
 
 @media (max-width: 700px) {
   .cs4 { --s1: 8px; --s2: 12px; --s3: 16px; --s4: 24px; --s5: 36px; --ph-w: 150px; }
@@ -148,4 +222,12 @@
   .cs4-stats ul { grid-template-columns: 1fr 1fr; } .cs4-stats .n { font-size: 26px; }
   .cs4-legend { justify-content: flex-start; }
   .cs4-cols { grid-template-columns: 1fr; }
+  .cs4-trio .cs4-fig { width: 36%; } .cs4-hero.block { padding: 16px 12px 24px; }
+  .cs4-faq { grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; } .cs4-faq-ask i { display: none; } .cs4-faq-ask { padding: .6em .7em; }
+  .cs4-conv-row { gap: 20px; } .cs4-conv-row .cs4-fig.phone { width: 30%; } .cs4-conv .cs4-over .cs4-layer { display: none; } /* no room for the pills past the phones */
+  .cs4-ver { padding: 12px; }
+  .bm-panel { padding: 12px; } .bmap { min-width: 720px; }
+  .bsr { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: none; gap: 16px 12px; }
+  .bsr-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; } .bsr-scale, .bst, .bsr-name { grid-row: auto; } .bst { width: 80%; }
+  .bsr-arrow { display: none; } /* the moves between the states read off the map on a phone */
 }

@@ -1,9 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Lottie } from '../../components/micro/Lottie';
 import Signature04 from './Signature04';
+import BMachine from './BMachine';
+import { useInView } from './inview';
 import desk from '../../assets/nitish-desk.webp';
 import { PROJECTS } from '../../lib/data';
-import { CASES, type Block, type Media, type Rich, type Step } from './cases';
+import { CASES, type Block, type Layer, type Media, type Rich, type Step } from './cases';
 import { MAIL, SOCIAL } from './social';
 import './case.css';
 
@@ -22,15 +24,7 @@ import './case.css';
 
 const f2 = (n: number) => n.toFixed(1);
 const text = (r: Rich): ReactNode => r.map((x, i) => (typeof x === 'string' ? x : <b key={i}>{x.b}</b>));
-const RATIO: Record<Media['shape'], string> = { wide: '2 / 1', video: '16 / 9', image: '4 / 3', phone: '9 / 19.5', 'phone-land': '19.5 / 9', small: '3 / 2' };
-
-/* whether an element is on screen (the study scrolls in its own column; the observer's viewport root still accounts for
-   that clipping) — clips and Lotties play only while they are */
-function useInView(ref: React.RefObject<HTMLElement | null>) {
-  const [on, setOn] = useState(false);
-  useEffect(() => { const el = ref.current; if (!el) return; const io = new IntersectionObserver(([e]) => setOn(e.isIntersecting), { threshold: .05 }); io.observe(el); return () => io.disconnect(); }, [ref]);
-  return on;
-}
+const RATIO: Record<Media['shape'], string> = { wide: '2 / 1', video: '16 / 9', image: '4 / 3', phone: '9 / 19.5', 'phone-land': '19.5 / 9', small: '3 / 2', screen: '9 / 14.5' };
 function Clip({ src, poster, on, crop }: { src: string; poster?: string; on: boolean; crop?: number }) {
   const ref = useRef<HTMLVideoElement>(null);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -43,21 +37,68 @@ function Slot({ m, fl }: { m: Media; fl?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref);
   const clip = !!m.src && /\.mp4$/.test(m.src);
+  const filled = !!(m.src || m.lottie);
   return (
-    <div ref={ref} className={`cs4-media ${m.shape}${m.src ? ' filled' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape] }} role="img" aria-label={m.src ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
-      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { left: `-${m.crop}%`, top: `-${m.crop}%`, width: `${100 + 2 * m.crop}%`, height: `${100 + 2 * m.crop}%` } : undefined} />) : <span className="cs4-slot">{m.label}</span>}
-      {m.layers?.map((l, i) => (
-        <div key={i} className="cs4-layer" style={{ left: `${l.box[0]}%`, top: `${l.box[1]}%`, width: `${l.box[2]}%`, height: `${l.box[3]}%` }}>
-          {l.kind === 'lottie' ? <Lottie className="cs4-lot" src={l.src} playing={on} /> : <img src={l.src} alt="" />}
-        </div>
-      ))}
+    <div ref={ref} className={`cs4-media ${m.shape}${filled ? ' filled' : ''}${m.lottie ? ' lot' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape] }} role="img" aria-label={filled ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
+      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { left: `-${m.crop}%`, top: `-${m.crop}%`, width: `${100 + 2 * m.crop}%`, height: `${100 + 2 * m.crop}%` } : undefined} />) : m.lottie ? <Lottie className="cs4-lot" src={m.lottie} playing={on} /> : <span className="cs4-slot">{m.label}</span>}
+      {m.layers?.filter(l => !l.over).map((l, i) => <LayerBox key={i} l={l} on={on} />)}
     </div>
   );
 }
-
-const Fig = ({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) => (
-  <figure className={`cs4-fig ${m.shape}${cls ? ' ' + cls : ''}`} data-fl={fl}><Slot m={m} fl={fl && fl + '.m'} />{m.cap && <figcaption>{m.cap}</figcaption>}</figure>
+/* a layer by its box: a Lottie or a picture */
+const LayerBox = ({ l, on }: { l: Layer; on: boolean }) => (
+  <div className="cs4-layer" style={{ left: `${l.box[0]}%`, top: `${l.box[1]}%`, width: `${l.box[2]}%`, height: `${l.box[3]}%` }}>
+    {l.kind === 'lottie' ? <Lottie className="cs4-lot" src={l.src} playing={on} /> : <img src={l.src} alt="" />}
+  </div>
 );
+
+/* a figure: the slot and its caption; a layer that runs past the slot (`over`) sits beside the slot, outside its clipping */
+function Fig({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) {
+  const over = m.layers?.filter(l => l.over);
+  const ref = useRef<HTMLElement>(null);
+  const on = useInView(ref);
+  return (
+    <figure ref={ref} className={`cs4-fig ${m.shape}${cls ? ' ' + cls : ''}`} data-fl={fl}>
+      {over?.length ? <div className="cs4-over"><Slot m={m} fl={fl && fl + '.m'} />{over.map((l, i) => <LayerBox key={i} l={l} on={on} />)}</div> : <Slot m={m} fl={fl && fl + '.m'} />}
+      {m.cap && <figcaption>{m.cap}</figcaption>}
+    </figure>
+  );
+}
+
+/* screens in a row, their wires meeting at one screen under them (his nudges converging on the help menu): a node on
+   each screen's bottom edge, the three curves dropping to one chevron over the screen below */
+function Converge({ of, to }: { of: Media[]; to: Media }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [wires, setWires] = useState<{ d: string; node: [number, number] }[]>([]);
+  const [head, setHead] = useState<[number, number] | null>(null);
+  const [size, setSize] = useState<[number, number]>([0, 0]);
+  useLayoutEffect(() => {
+    const root = ref.current; if (!root) return;
+    const draw = () => {
+      const R = root.getBoundingClientRect(); const box = (sel: string) => { const el = root.querySelector<HTMLElement>(`[data-fl="${sel}"]`); if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left - R.left, y: r.top - R.top, w: r.width, h: r.height }; };
+      const t = box('to.m'); if (!t) return;
+      const tx = t.x + t.w / 2, ty = t.y - 8, GAP = 1.5;
+      const out: typeof wires = [];
+      of.forEach((_, i) => {
+        const a = box(`${i}.m`); if (!a) return;
+        const sx = a.x + a.w / 2, sy = a.y + a.h; const my = sy + (ty - sy) * .55;
+        out.push({ d: `M${f2(sx)} ${f2(sy)} C${f2(sx)} ${f2(my)}, ${f2(tx)} ${f2(my - (ty - sy) * .15)}, ${f2(tx)} ${f2(ty - GAP)}`, node: [sx, sy] });
+      });
+      setWires(out); setHead([tx, ty]); setSize([R.width, R.height]);
+    };
+    draw(); const ro = new ResizeObserver(draw); ro.observe(root); root.querySelectorAll('[data-fl]').forEach(el => ro.observe(el)); return () => ro.disconnect();
+  }, [of, to]);
+  return (
+    <div className="cs4-conv" ref={ref}>
+      <svg className="cs4-wires" width={size[0]} height={size[1]} viewBox={`0 0 ${size[0]} ${size[1]}`} aria-hidden="true">
+        {wires.map((w, i) => <g key={i}><path d={w.d} /><circle className="ring" cx={w.node[0]} cy={w.node[1]} r="5" /><circle className="core" cx={w.node[0]} cy={w.node[1]} r="3" /></g>)}
+        {head && <path className="head" d="M-5.4 -5.9 L0 0 L-5.4 5.9" transform={`translate(${f2(head[0])} ${f2(head[1])}) rotate(90)`} />}
+      </svg>
+      <div className="cs4-conv-row">{of.map((m, i) => <Fig key={i} m={m} fl={`${i}`} />)}</div>
+      <div className="cs4-conv-to"><Fig m={to} fl="to" /></div>
+    </div>
+  );
+}
 
 /* the flow: steps in a column, wired as his page drew them (21 Oct, "the knots should be exactly as they are seen"):
    from a step's last screen to the next step's first screen a 2px line that leaves a ring node inside the screen near
@@ -148,6 +189,29 @@ function Render({ b }: { b: Block }) {
       </div>
     );
     case 'flow': return <Flow steps={b.steps} />;
+    /* three phones overlapping, the middle in front and raised (his hero) */
+    case 'trio': return <div className="cs4-trio">{b.of.map((m, i) => <Fig key={i} m={m} />)}</div>;
+    /* his FAQ panel: a cut screen, then the questions it raised under their labels */
+    case 'faq': return (
+      <div className="cs4-faq">
+        {b.of.map((c, i) => (
+          <div key={i} className="cs4-faq-col">
+            <Slot m={c.m} />
+            {c.qs.map(q => <div key={q.label} className="cs4-faq-q"><span className="cs4-faq-label">{q.label}</span>{q.q.map(t => <p key={t} className="cs4-faq-ask"><i aria-hidden="true" />{t}</p>)}</div>)}
+          </div>
+        ))}
+      </div>
+    );
+    case 'converge': return <Converge of={b.of} to={b.to} />;
+    /* a version: its number and its name as chips, a line, its screens */
+    case 'version': return (
+      <div className="cs4-ver">
+        <div className="cs4-ver-head"><span className="cs4-ver-chip">{b.v}</span><span className="cs4-ver-chip name">{b.name}</span></div>
+        <p className="cs4-p">{text(b.text)}</p>
+        <div className="cs4-phones ver">{b.of.map((m, i) => <Fig key={i} m={m} />)}</div>
+      </div>
+    );
+    case 'machine': return <BMachine />;
   }
 }
 
@@ -182,7 +246,7 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
       <div className="cs4-main">
       <div className="cs4-body">
         {c ? (<>
-          {c.hero && <div className="cs4-hero"><Slot m={c.hero} /></div>}
+          {c.hero && <div className={`cs4-hero${c.hero.k === 'media' ? '' : ' block'}`}>{c.hero.k === 'media' ? <Slot m={c.hero} /> : <Render b={c.hero} />}</div>}
           {/* the information strip under the hero, as his page had it: the facts in a row (22 Oct: no tags — the facts say it) */}
           <dl className="cs4-strip">
             <div><dt>Client</dt><dd>{p.client} · {p.year}</dd></div>
