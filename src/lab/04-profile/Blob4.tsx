@@ -1,14 +1,16 @@
 import { useEffect, useRef } from 'react';
 
-/* The assistant's mark (Nitish, 22 Oct): a wavy ring that never stops changing shape — three slow waves of different
-   counts and speeds added to a circle — with its name in the middle. Drawn as one path, redrawn every frame; held
-   still under reduced motion. Dots, or a second ring turning the other way, may follow. */
-const N = 96, R = 40;
+/* The assistant's mark (Nitish, 22 Oct): a ring that never stops changing shape, with its name in the middle. A circle
+   leaning into ovals (second pass, his note: "smooth bends, a circle changing into different ovals, not crumbled little
+   waves"): the biggest bend is a two-lobed wave turning slowly, so the ring reads as an oval wandering round; a gentler
+   three-lobed one turning the other way keeps it from ever being the same oval twice; a faint four-lobed one under
+   them. Slow speeds, nothing finer. Drawn as one path, redrawn every frame; held still under reduced motion. */
+const N = 128, R = 40;
 const outline = (t: number) => {
   let d = '';
   for (let i = 0; i < N; i++) {
     const a = (i / N) * Math.PI * 2;
-    const r = R * (1 + .07 * Math.sin(3 * a + t * 1.1) + .05 * Math.sin(5 * a - t * .75 + 1) + .03 * Math.sin(8 * a + t * 1.6 + 2));
+    const r = R * (1 + .11 * Math.sin(2 * a + t * .7) + .055 * Math.sin(3 * a - t * .45 + 1) + .025 * Math.sin(4 * a + t * .3 + 2));
     d += (i ? 'L' : 'M') + (50 + r * Math.cos(a)).toFixed(2) + ' ' + (50 + r * Math.sin(a)).toFixed(2);
   }
   return d + 'Z';
