@@ -16,7 +16,7 @@ const help = phone('help-lens.webp', 'The help menu over the lens package', { la
 export const lenskartB: Case = {
   id: 'lenskart-b',
   title: 'Lenskart Copilot',
-  sub: 'An AI copilot for smarter eyewear decisions — an assisted flow first, then Lensa, Claire and B.',
+  sub: 'An AI copilot for smarter eyewear decisions and an assisted flow.', /* one line, so the bar keeps the height Magic Scale's has (22 Oct) */
   chips: ['App feature', 'AI', 'UX/UI', 'Interaction/Motion'],
   facts: [
     { k: 'Role', v: 'Product designer — motion' },

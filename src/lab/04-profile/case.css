@@ -36,7 +36,7 @@
 .it04 .cs4-head { position: absolute; top: var(--s2); left: .2cqw; right: .2cqw; z-index: 5; display: block; padding: var(--s2) var(--s3) var(--s3); border-radius: var(--r); } /* a floating card across the page (22 Oct), room above it; the one-liner and the tags at its far right */
 .cs4-glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); } /* the home page's glass, without its tint: nothing at rest, frosted when something scrolls under */
 .cs4-head-in { display: flex; align-items: flex-start; justify-content: space-between; gap: 2cqw; }
-.cs4-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--s2); max-width: 34ch; text-align: right; }
+.cs4-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--s2); max-width: 40ch; text-align: right; } /* room for a one-liner of ~70 characters on one line (22 Oct) */
 .cs4-side .cs4-chips { justify-content: flex-end; color: var(--line-ink); } .cs4-side .cs4-chips li { background: color-mix(in srgb, var(--line-ink) 10%, transparent); }
 .cs4-title { display: flex; flex-direction: column; gap: .3cqw; }
 .cs4-back { align-self: flex-start; display: inline-flex; align-items: center; gap: .4em; margin: 0 0 0 -.4em; padding: .3em .6em .3em .4em; border: 0; border-radius: 999px; background: none; color: var(--line-ink); opacity: .7; cursor: pointer; font: 500 var(--t-meta)/1 var(--f-copy); transition: opacity .2s, background-color .2s; } /* meta */
