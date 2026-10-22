@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { Lottie } from '../../components/micro/Lottie';
 import { PROJECTS } from '../../lib/data';
 import { CASES, type Block, type Media, type Rich, type Step } from './cases';
 import { MAIL, SOCIAL } from './social';
-import desk from '../../assets/nitish-desk.webp';
 import './case.css';
 
 /* 04's case study (Nitish, 21 Oct): a company project opened from the Projects row or the home stack. His Framer site
@@ -22,13 +22,37 @@ const f2 = (n: number) => n.toFixed(1);
 const text = (r: Rich): ReactNode => r.map((x, i) => (typeof x === 'string' ? x : <b key={i}>{x.b}</b>));
 const RATIO: Record<Media['shape'], string> = { wide: '2 / 1', video: '16 / 9', image: '4 / 3', phone: '9 / 19.5', 'phone-land': '19.5 / 9', small: '3 / 2' };
 
+/* whether an element is on screen (the study scrolls in its own column; the observer's viewport root still accounts for
+   that clipping) — clips and Lotties play only while they are */
+function useInView(ref: React.RefObject<HTMLElement | null>) {
+  const [on, setOn] = useState(false);
+  useEffect(() => { const el = ref.current; if (!el) return; const io = new IntersectionObserver(([e]) => setOn(e.isIntersecting), { threshold: .05 }); io.observe(el); return () => io.disconnect(); }, [ref]);
+  return on;
+}
+function Clip({ src, poster, on }: { src: string; poster?: string; on: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  useEffect(() => { const v = ref.current; if (!v) return; if (on && !still) v.play().catch(() => {}); else v.pause(); }, [on, still]);
+  return <video ref={ref} src={src} poster={poster} muted loop playsInline preload="metadata" aria-hidden="true" />;
+}
+/* a slot: empty, it shows its shape and its name; filled (22 Oct), it holds the page's own picture or clip, with any
+   Lotties layered over it where his page had them */
 function Slot({ m, fl }: { m: Media; fl?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const on = useInView(ref);
+  const clip = !!m.src && /\.mp4$/.test(m.src);
   return (
-    <div className={`cs4-media ${m.shape}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape] }} role="img" aria-label={`${m.label} (to come)`}>
-      {m.src ? null : <span className="cs4-slot">{m.label}</span>}
+    <div ref={ref} className={`cs4-media ${m.shape}${m.src ? ' filled' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape] }} role="img" aria-label={m.src ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
+      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} /> : <img src={m.src} alt="" loading="lazy" decoding="async" />) : <span className="cs4-slot">{m.label}</span>}
+      {m.layers?.map((l, i) => (
+        <div key={i} className="cs4-layer" style={{ left: `${l.box[0]}%`, top: `${l.box[1]}%`, width: `${l.box[2]}%`, height: `${l.box[3]}%` }}>
+          {l.kind === 'lottie' ? <Lottie className="cs4-lot" src={l.src} playing={on} /> : <img src={l.src} alt="" />}
+        </div>
+      ))}
     </div>
   );
 }
+
 const Fig = ({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) => (
   <figure className={`cs4-fig ${m.shape}${cls ? ' ' + cls : ''}`} data-fl={fl}><Slot m={m} fl={fl && fl + '.m'} />{m.cap && <figcaption>{m.cap}</figcaption>}</figure>
 );
@@ -49,7 +73,7 @@ function Flow({ steps }: { steps: Step[] }) {
       const R = root.getBoundingClientRect(); const box = (sel: string) => { const el = root.querySelector<HTMLElement>(`[data-fl="${sel}"]`); if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left - R.left, y: r.top - R.top, w: r.width, h: r.height }; };
       const f = (n: number) => n.toFixed(1);
       const out: typeof wires = [];
-      const GAP = 11; /* the line stops this short of the head's point, so the two never merge (his drawings: air between the line and the head's arms) */
+      const GAP = 1.5; /* the line runs up to the head's point (his drawings: the line ends at the chevron's vertex, the arms wide and short) */
       /* drop, sweep across, drop — the two cubics of his big connectors; the line ends GAP above the head, which points down */
       const dropAcross = (sx: number, sy: number, tx: number, ty: number) => { const my = sy + (ty - sy) * .5, ey = ty - GAP; return { d: `M${f(sx)} ${f(sy)} C${f(sx)} ${f(sy)}, ${f(sx)} ${f(my)}, ${f((sx + tx) / 2)} ${f(my)} C${f(tx)} ${f(my)}, ${f(tx)} ${f(ey)}, ${f(tx)} ${f(ey)}`, head: [tx, ty, 90] as [number, number, number] }; };
       /* the short S between two screens; the line ends GAP before the head, which points right */
@@ -77,8 +101,8 @@ function Flow({ steps }: { steps: Step[] }) {
         {wires.map((w, i) => (
           <g key={i}>
             <path d={w.d} />
-            {/* the head: an open chevron, its point at the end, its arms back along the line (his: 11 long, 6.5 across) */}
-            <path className="head" d="M-8 -4.5 L0 0 L-8 4.5" transform={`translate(${f2(w.head[0])} ${f2(w.head[1])}) rotate(${w.head[2]})`} />
+            {/* the head: an open chevron at the line's end — his: arms about 8 long, 96° apart, the line meeting the vertex */}
+            <path className="head" d="M-5.4 -5.9 L0 0 L-5.4 5.9" transform={`translate(${f2(w.head[0])} ${f2(w.head[1])}) rotate(${w.head[2]})`} />
             <circle className="ring" cx={w.node[0]} cy={w.node[1]} r="5" /><circle className="core" cx={w.node[0]} cy={w.node[1]} r="3" />
           </g>
         ))}
@@ -170,8 +194,8 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
             line, "Let's talk!" and the links — in 04's parts (the intro's photo disc, its CV button's style, the notch's marks) */}
         <article className="cs4-talk" aria-label="Contact">
           <div className="cs4-talk-head">
-            <span className="me4 cs4-me"><img src={desk} alt="" /></span>
-            <div className="cs4-talk-who"><b className="cs4-talk-name">Nitish Bhardwaj</b><span className="cs4-talk-role">Product · motion designer</span></div>
+            <span className="me4 cs4-me"><img src="/cases/magic-scale/me.webp" alt="" /></span> {/* the photo his page's card carries */}
+            <div className="cs4-talk-who"><b className="cs4-talk-name">Nitish Bhardwaj</b><Lottie className="cs4-sign" src="/cases/magic-scale/signature.json" label="Motion designer" /></div> {/* his written "Motion designer", the page's Lottie */}
           </div>
           <p className="cs4-talk-line">If you like what you see or have any questions, feel free to send me an email anytime.</p>
           <div className="cs4-talk-row">
