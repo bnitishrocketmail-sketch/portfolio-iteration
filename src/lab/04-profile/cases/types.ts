@@ -32,8 +32,8 @@ export type Block =
   | { k: 'version'; v: string; name: string; text: Rich; of: Media[] }
   /* the B study's state machine (BMachine.tsx): the framework and the rig, in tabs */
   | { k: 'machine' }
-  /* the fintech study's hero: his two phones in perspective, the screens drawn into them (Fintech3D.tsx) */
-  | { k: 'fintech' };
+  /* a hero of his two phones in perspective, the screens drawn into them (Fintech3D.tsx: the fintech study's, the campaigns') */
+  | { k: 'fintech' } | { k: 'launches' };
 export type Section = { id: string; title: string; blocks: Block[]; tone?: 'white' /* a white card, for a clip whose own background is white (the floating phone) */ };
 export type Case = {
   id: string; title: string; sub: string; chips: string[];

@@ -6,7 +6,7 @@ export const VIEW_ORDER: ViewName[] = ['home', 'projects', 'project', 'micro', '
 export type Project = {
   id: string; title: string; client: string; role: string; year: string;
   letter: string; m1: string; m2: string; wide?: boolean; blurb: string; tags: string[];
-  cover?: { video: string; poster: string } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
+  cover?: { video: string; poster: string } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
 };
 
 /* PLACEHOLDER set: these are projects I know exist; confirm which are showable. */
@@ -22,6 +22,9 @@ export const PROJECTS: Project[] = [
   { id: 'fintech-motion', title: 'Fintech motion', client: 'MobiKwik', role: 'Product designer — motion', year: '2025', letter: 'M', m1: '#2F55E6', m2: '#7A4DF0', wide: true,
     blurb: 'Adaptive loan-journey notifications: contextual motion for every stage of a loan.', tags: ['App feature', 'UX/UI', 'Interaction/Motion'],
     cover: { comp: 'fintech' } }, /* the two phones of its hero, in small (22 Oct) */
+  { id: 'launches', title: 'Launches & campaigns', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'L', m1: '#0B2A15', m2: '#0A1230', wide: true,
+    blurb: 'Landing pages, campaign visuals, a 3D product guide and GenAI characters for launches.', tags: ['Promotional', 'Visual communication', 'UI', 'Interaction/Motion'],
+    cover: { comp: 'launches' } }, /* the two phones of its hero, in small (22 Oct) */
   { id: 'coin-rig', title: 'Coin Rig', client: 'LottieFiles Bazaar', role: 'Design & build', year: '2026', letter: 'C', m1: '#F5BD56', m2: '#C94A3A',
     blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Plugin', 'Faux 3D', 'Tool'] },
   { id: 'rupee-coin', title: 'Rupee coin flight', client: 'Loading & success state', role: 'Motion design', year: '2026', letter: '₹', m1: '#1F8A70', m2: '#BDE6D9',

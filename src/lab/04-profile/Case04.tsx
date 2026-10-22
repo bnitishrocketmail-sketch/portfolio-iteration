@@ -3,7 +3,7 @@ import { animate } from 'motion/react';
 import { Lottie } from '../../components/micro/Lottie';
 import Signature04 from './Signature04';
 import BMachine from './BMachine';
-import Fintech3D from './Fintech3D';
+import Fintech3D, { Launches3D } from './Fintech3D';
 import { useInView } from './inview';
 import desk from '../../assets/nitish-desk.webp';
 import { PROJECTS } from '../../lib/data';
@@ -293,6 +293,7 @@ function Render({ b }: { b: Block }) {
     );
     case 'machine': return <BMachine />;
     case 'fintech': return <Fintech3D />;
+    case 'launches': return <Launches3D />;
   }
 }
 
@@ -328,7 +329,7 @@ export default function Case04({ id, back, onOpen }: { id: string; back: () => v
       <div className="cs4-main">
       <div className="cs4-body">
         {c ? (<>
-          {c.hero && <div ref={heroRef} className={`cs4-hero${c.hero.k === 'media' ? '' : c.hero.k === 'fintech' ? ' fill' : ' block'}`}>{c.hero.k === 'media' ? <Slot m={c.hero} /> : <Render b={c.hero} />}</div>}
+          {c.hero && <div ref={heroRef} className={`cs4-hero${c.hero.k === 'media' ? '' : c.hero.k === 'fintech' || c.hero.k === 'launches' ? ' fill' : ' block'}`}>{c.hero.k === 'media' ? <Slot m={c.hero} /> : <Render b={c.hero} />}</div>}
           {/* the information strip under the hero, as his page had it: the facts in a row (22 Oct: no tags — the facts say it) */}
           <dl className="cs4-strip">
             <div><dt>Client</dt><dd>{p.client} · {p.year}</dd></div>

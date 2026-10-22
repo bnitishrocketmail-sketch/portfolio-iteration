@@ -168,13 +168,13 @@
 
 /* ---- the fintech study's hero (Fintech3D.tsx): his two phones in perspective, the screens projected onto them ---- */
 .cs4-hero.fill { padding: 0; }
-.ft3d { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; border-radius: inherit; background: linear-gradient(100deg, #2b56ec 0%, #4a4df0 55%, #7b3df2 100%); color: #fff; } /* his page's ground for the phones: the brand's blue running to violet */
+.ft3d { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; border-radius: inherit; color: #fff; } /* the ground is the study's own (Phones3D: the brand's blue running to violet; the campaigns' green to navy) */
 .ft3d-logo { position: absolute; left: 4%; top: 7%; z-index: 4; font: 700 clamp(14px, 1.7cqw, 22px)/1 var(--f-head); letter-spacing: -.01em; }
 .ft3d-stage { position: absolute; left: 50%; top: -7.5%; transform-origin: 50% 0; }
 .ft3d-phones, .ft3d-island { position: absolute; left: 0; top: 0; display: block; max-width: none; }
 .ft3d-island { z-index: 3; pointer-events: none; }
 .ft3d-scr { position: absolute; left: 0; top: 0; z-index: 2; transform-origin: 0 0; overflow: hidden; background: #fff; backface-visibility: hidden; } /* a flat box, carried onto the glass by its matrix3d */
-.ft3d-scr > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.ft3d-scr > img, .ft3d-scr > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
 .ft3d-lot { position: absolute; } .ft3d-lot > div, .ft3d-lot svg { display: block; width: 100%; height: 100%; }
 .ft3d-copy { position: absolute; left: 8%; right: 8%; top: 55%; text-align: center; color: #1c1c3a; font-family: var(--f-copy); }
 .ft3d-copy b { display: block; font-size: 26px; line-height: 1.3; font-weight: 700; } .ft3d-copy span { display: block; margin-top: 12px; font-size: 19px; opacity: .6; }
