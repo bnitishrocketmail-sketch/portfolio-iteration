@@ -173,38 +173,45 @@ function Carousel({ of }: { of: Media[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const els = useRef<(HTMLDivElement | null)[]>([]);
   const on = useInView(ref, .3);
-  /* which screen is at the left, in the phone, at the right */
-  const [order, setOrder] = useState<number[]>(() => [of.length - 1, 0, 1].map(i => (i + of.length) % of.length));
+  /* which screen is at the left, in the phone, at the right — kept in a ref for the loop, in state for what plays */
+  const first = [of.length - 1, 0, 1].map(i => (i + of.length) % of.length);
+  const orderRef = useRef<number[]>(first);
+  const [inPhone, setInPhone] = useState(first[1]);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* the three places, from the phone's width: the sides a fifth smaller, a little clear of the bezel */
+  /* the three places, from the phone's width: the sides a fifth smaller, a little clear of the phone */
   const places = () => {
-    const el = ref.current; const w = el?.querySelector<HTMLElement>('.cs4-car-phone')?.offsetWidth ?? 200;
-    const gap = (el?.offsetWidth ?? 900) < w * 2.9 ? w * .1 : w * .22; /* the sides closer in on a phone, where they run past the card */
+    const el = ref.current; const w = el?.querySelector<HTMLElement>('.cs4-car-phone')?.offsetWidth ?? 160;
+    const gap = (el?.offsetWidth ?? 900) < w * 2.9 ? w * .1 : w * .24; /* the sides closer in on a phone, where they run past the card */
     const off = w / 2 + gap + w * CAR.side / 2; /* phone's half, the gap, the side screen's half */
     return { L: -off, C: 0, R: off, out: off + w * .5, in: -off - w * .5 };
   };
-  /* put the screens in their places, without motion (first paint, a resize, reduced motion) */
-  const settle = () => { const P = places(); order.forEach((i, k) => { const el = els.current[i]; if (!el) return; const side = k !== 1; el.style.transform = `translateX(${[P.L, P.C, P.R][k]}px) scale(${side ? CAR.side : 1})`; el.style.filter = side ? 'grayscale(1)' : 'grayscale(0)'; el.style.opacity = '1'; }); };
-  useLayoutEffect(() => { settle(); const ro = new ResizeObserver(settle); if (ref.current) ro.observe(ref.current); return () => ro.disconnect(); }, [order]); // eslint-disable-line react-hooks/exhaustive-deps
+  /* a screen's look in a place: at the sides a fifth smaller, in grayscale */
+  const look = (x: number, side: boolean, opacity = 1) => ({ x, scale: side ? CAR.side : 1, filter: side ? 'grayscale(1)' : 'grayscale(0)', opacity });
+  /* put the screens in their places without motion (first paint, a resize) */
+  const settle = () => { const P = places(); orderRef.current.forEach((i, k) => { const el = els.current[i]; if (el) animate(el, look([P.L, P.C, P.R][k], k !== 1), { duration: 0 }); }); };
+  useLayoutEffect(() => { settle(); const ro = new ResizeObserver(settle); if (ref.current) ro.observe(ref.current); return () => ro.disconnect(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  /* the loop, while on screen: every few seconds the left one slides into the phone, the one inside out to the right,
+     and the right one away and back in at the left */
   useEffect(() => {
     if (!on || still || of.length < 3) return;
-    let dead = false;
-    const t = setTimeout(async () => {
-      const P = places(); const [l, c, r] = order; const E = els.current; if (!E[l] || !E[c] || !E[r]) return;
+    let live = true; let t = 0;
+    const step = async () => {
+      if (!live) return;
+      const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (!E[l] || !E[c] || !E[r]) return;
+      orderRef.current = [r, l, c]; setInPhone(l); /* the one sliding in starts playing as it goes */
       const o = { duration: CAR.slide, ease: CAR.ease };
-      const a1 = animate(E[l], { x: P.C, scale: 1, filter: 'grayscale(0)' }, o);
-      const a2 = animate(E[c], { x: P.R, scale: CAR.side, filter: 'grayscale(1)' }, o);
-      /* the right one: away and gone, then back in from the left */
-      const a3 = (async () => { await animate(E[r]!, { x: P.out, opacity: 0 }, { duration: CAR.slide * .45, ease: 'easeIn' }); if (dead) return; await animate(E[r]!, { x: P.in }, { duration: 0 }); await animate(E[r]!, { x: P.L, opacity: 1 }, { duration: CAR.slide * .5, ease: 'easeOut' }); })();
-      setOrder([r, l, c]); /* the one sliding in starts playing as it goes */
-      await Promise.all([a1, a2, a3]);
-    }, CAR.hold);
-    return () => { dead = true; clearTimeout(t); };
-  }, [on, order, still, of.length]);
+      const away = async () => { await animate(E[r]!, look(P.out, true, 0), { duration: CAR.slide * .45, ease: 'easeIn' }); animate(E[r]!, look(P.in, true, 0), { duration: 0 }); await animate(E[r]!, look(P.L, true, 1), { duration: CAR.slide * .5, ease: 'easeOut' }); };
+      await Promise.all([animate(E[l]!, look(P.C, false), o), animate(E[c]!, look(P.R, true), o), away()]);
+      if (live) t = window.setTimeout(step, CAR.hold);
+    };
+    t = window.setTimeout(step, CAR.hold);
+    return () => { live = false; clearTimeout(t); };
+  }, [on, still, of.length]);
   return (
     <div className="cs4-car" ref={ref}>
-      {of.map((m, i) => <div key={i} ref={el => { els.current[i] = el; }} className={`cs4-car-item${order[1] === i ? ' in' : ''}`} style={{ zIndex: order[1] === i ? 2 : 1 }}><Slot m={m} active={order[1] === i} /></div>)}
-      <div className="cs4-car-phone" aria-hidden="true"><i className="island" /></div>
+      {of.map((m, i) => <div key={i} ref={el => { els.current[i] = el; }} className="cs4-car-item" style={{ zIndex: inPhone === i ? 2 : 1 }}><Slot m={m} active={inPhone === i} /></div>)}
+      {/* the phone: the study's device edge, as every other phone on the page, with an island inside it */}
+      <div className="cs4-car-phone" aria-hidden="true"><i className="cs4-island" /></div>
     </div>
   );
 }

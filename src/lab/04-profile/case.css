@@ -129,16 +129,15 @@
 
 /* ---- the B study's parts (22 Oct, lenskart-b.ts; the state machine's in BMachine.tsx below) ---- */
 /* the hero (22 Oct): one flat phone in the middle, the screens taking turns in it, the other two floating at its sides
-   (Carousel in Case04.tsx). The screen is the phone's inner size; a side one is scaled from it, so the clip inside
-   draws the same. The phone — a bezel ring and its island in the card's ink — is drawn over them. */
+   (Carousel in Case04.tsx). The phone is the study's phone — its width, its corners, its 3px edge — with an island
+   inside, drawn over the screens; a screen is the phone's size, a side one scaled from it, so the clip draws the same. */
 .cs4-hero.block { padding: var(--s4) var(--s3); }
-.cs4-car { --hp-w: calc(var(--ph-w) * 1.3); --hp-r: calc(.11 * var(--hp-w)); --hp-b: calc(.045 * var(--hp-w)); position: relative; height: calc(var(--hp-w) * 19.5 / 9 + 2 * var(--hp-b)); }
-.cs4-car-item { position: absolute; left: 50%; top: var(--hp-b); width: var(--hp-w); margin-left: calc(var(--hp-w) / -2); transform-origin: 50% 50%; will-change: transform, filter, opacity; }
-.cs4-car-item .cs4-media { border-radius: var(--hp-r); box-shadow: 0 12px 32px -16px rgba(0, 0, 0, .35); } /* a screen's corners: the phone's inner corners; floating at the side, the same corners */
-.cs4-hero.block .cs4-car-item .cs4-media { border-radius: var(--hp-r); } /* over the hero's flat corners */
-.cs4-car-item .cs4-media.phone::after { display: none; } /* no device edge of their own: the phone is the frame */
-.cs4-car-phone { position: absolute; left: 50%; top: 0; z-index: 3; width: calc(var(--hp-w) + 2 * var(--hp-b)); height: 100%; margin-left: calc(var(--hp-w) / -2 - var(--hp-b)); border: var(--hp-b) solid var(--pcard-open-ink); border-radius: calc(var(--hp-r) + var(--hp-b)); pointer-events: none; box-shadow: 0 1px 0 rgba(255, 255, 255, .25) inset, 0 20px 50px -24px rgba(0, 0, 0, .5); }
-.cs4-car-phone .island { position: absolute; left: 50%; top: calc(.026 * var(--hp-w)); width: calc(.3 * var(--hp-w)); height: calc(.085 * var(--hp-w)); margin-left: calc(.15 * var(--hp-w) * -1); border-radius: 999px; background: var(--pcard-open-ink); }
+.cs4-car { --hp-w: var(--ph-w); --hp-r: clamp(14px, 1.6cqw, 22px); position: relative; height: calc(var(--hp-w) * 19.5 / 9); }
+.cs4-car-item { position: absolute; left: 50%; top: 0; width: var(--hp-w); margin-left: calc(var(--hp-w) / -2); transform-origin: 50% 50%; will-change: transform, filter, opacity; }
+.cs4-hero.block .cs4-car-item .cs4-media { border-radius: var(--hp-r); box-shadow: 0 10px 26px -14px rgba(0, 0, 0, .35); } /* the phone's corners, floating at the side too; the page's soft shadow behind every screen */
+.cs4-car-item .cs4-media.phone::after { display: none; } /* no edge of their own: the phone is the frame */
+.cs4-car-phone { position: absolute; left: 50%; top: 0; z-index: 3; width: var(--hp-w); height: 100%; margin-left: calc(var(--hp-w) / -2); border-radius: var(--hp-r); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); pointer-events: none; } /* the device's edge, as .cs4-media.phone::after draws it */
+.cs4-car-phone .cs4-island { position: absolute; left: 50%; top: calc(.035 * var(--hp-w)); width: calc(.28 * var(--hp-w)); height: calc(.08 * var(--hp-w)); margin-left: calc(.14 * var(--hp-w) * -1); border-radius: 999px; background: color-mix(in srgb, var(--pcard-open-ink) 90%, transparent); }
 /* a Lottie on its own in a slot: nothing behind it */
 .cs4-media.lot { background: none; }
 /* a phone's top, cut (his FAQ screens): the corners of a phone, a hairline instead of the device's edge, the top of the picture */
@@ -225,7 +224,7 @@
   .cs4-stats ul { grid-template-columns: 1fr 1fr; } .cs4-stats .n { font-size: 26px; }
   .cs4-legend { justify-content: flex-start; }
   .cs4-cols { grid-template-columns: 1fr; }
-  .cs4-hero.block { padding: 20px 12px; overflow: hidden; } .cs4-car { --hp-w: 150px; } /* the sides run past the card's edge on a phone, cut by it */
+  .cs4-hero.block { padding: 20px 12px; overflow: hidden; } /* the sides run past the card's edge on a phone, cut by it */
   .cs4-faq { grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; } .cs4-faq-ask i { display: none; } .cs4-faq-ask { padding: .6em .7em; }
   .cs4-conv-row { gap: 20px; } .cs4-conv-row .cs4-fig.phone { width: 30%; } .cs4-conv .cs4-over .cs4-layer { display: none; } /* no room for the pills past the phones */
   .cs4-ver { padding: 12px; }
