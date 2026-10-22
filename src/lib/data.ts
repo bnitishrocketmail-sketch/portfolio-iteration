@@ -6,14 +6,18 @@ export const VIEW_ORDER: ViewName[] = ['home', 'projects', 'project', 'micro', '
 export type Project = {
   id: string; title: string; client: string; role: string; year: string;
   letter: string; m1: string; m2: string; wide?: boolean; blurb: string; tags: string[];
+  cover?: { video: string; poster: string }; /* the home stack's card plays this on hover (22 Oct) */
 };
 
 /* PLACEHOLDER set: these are projects I know exist; confirm which are showable. */
+/* the order is the stack's and the row's: Magic Scale in front, B behind it, Coin Rig at the back for now (Nitish, 22 Oct;
+   the other company projects to come) */
 export const PROJECTS: Project[] = [
+  { id: 'magic-scale', title: 'Magic Scale', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'M', m1: '#5B8C85', m2: '#CFE0DC',
+    blurb: 'A frame (glasses) size measuring tool — patent pending.', tags: ['App feature', 'UX/UI', 'Interaction/Motion'],
+    cover: { video: '/cases/magic-scale/hero.mp4', poster: '/cases/magic-scale/hero-poster.webp' } },
   { id: 'lenskart-b', title: "B — Lenskart's AI assistant", client: 'Lenskart', role: 'Motion & interaction', year: '2026', letter: 'B', m1: '#7B7EE4', m2: '#DFB3F3', wide: true,
     blurb: 'State Lotties for an AI-assisted eyeglass-buying journey, with the transitions recorded end to end.', tags: ['Lottie', 'State machine', 'Product'] },
-  { id: 'magic-scale', title: 'Magic Scale', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'M', m1: '#5B8C85', m2: '#CFE0DC',
-    blurb: 'A frame (glasses) size measuring tool — patent pending.', tags: ['App feature', 'UX/UI', 'Interaction/Motion'] },
   { id: 'coin-rig', title: 'Coin Rig', client: 'LottieFiles Bazaar', role: 'Design & build', year: '2026', letter: 'C', m1: '#F5BD56', m2: '#C94A3A',
     blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Plugin', 'Faux 3D', 'Tool'] },
   { id: 'rupee-coin', title: 'Rupee coin flight', client: 'Loading & success state', role: 'Motion design', year: '2026', letter: '₹', m1: '#1F8A70', m2: '#BDE6D9',

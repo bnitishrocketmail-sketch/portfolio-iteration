@@ -40,22 +40,46 @@ const WORDS = ['Product', 'Interaction', 'Motion']; /* the title's rolling first
    for now — scrolling and the dots come later. ---- */
 const SHOWN = 3;
 const OFFSET = .575; /* each card peeks 57.5% of a card above the one in front (ref 4 had 58%; compressed to 50% on 21 Oct, then spread 15% the same day) */
+const HOLE = true; /* the pill as a hole punched through the card (Nitish, 22 Oct: "not sure — if it looks good we keep it"); false draws it as a shape */
+/* the pill's geometry, in the card's 165 × 113: 3.6% in, 9.7% wide (12.1% less a fifth, 22 Oct), 25.2% tall, at the middle of the
+   front card and 28% down the ones behind. As a hole it is a mask on the card's face: everything but the pill */
+const PILL = { x: 165 * .036, w: 165 * .097, h: 113 * .252 };
+const holeMask = (back: boolean) => { const r = PILL.w / 2, cy = 113 * (back ? .28 : .5) + (back ? PILL.h / 2 : 0), top = cy - PILL.h / 2 + r; const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 165 113'><path fill-rule='evenodd' d='M0 0H165V113H0Z M${PILL.x} ${top} a${r} ${r} 0 0 1 ${PILL.w} 0 v${PILL.h - 2 * r} a${r} ${r} 0 0 1 -${PILL.w} 0 z'/></svg>`; return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`; };
+/* the hover (Nitish, 22 Oct), by a card's place: the front one stays put and only comes alive — its clip plays and turns from
+   black and white to colour; the middle one rises by half of what the front card hides of it; the back one cannot rise, so
+   the middle one sinks instead, by 40% of what it shows, and more of the back card is seen */
+const RISE = -(1 - OFFSET) * .5 * 100, SINK = OFFSET * .4 * 100;
 function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
+  const [hov, setHov] = useState<number | null>(null);
+  const reduce = useReducedMotion();
   return (
     <div className="stack4">
-      <div className="deck4">
+      <div className="deck4" onPointerLeave={() => setHov(null)}>
         {PROJECTS.slice(0, SHOWN).map((p, k) => {
-          const r = SHOWN - 1 - k; /* 0 = front (bottom), 2 = back (top) */
+          const r = k; /* 0 = front (bottom), 2 = back (top): the list's first is the front card, as it is the row's first (22 Oct) */
+          const y = r === 1 ? (hov === 1 ? `${RISE}%` : hov === 2 ? `${SINK}%` : '0%') : '0%';
           return (
-            <button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r, background: `var(--card-${['front', 'mid', 'back'][r]})` }} onClick={() => onOpen(p.id)}>
-              <i className="tab4" aria-hidden="true" />
+            <motion.button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}${hov === r ? ' hov' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r }}
+              animate={{ y }} transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30 }}
+              onPointerEnter={e => { if (e.pointerType !== 'touch') setHov(r); }} onClick={() => onOpen(p.id)}>
+              <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE ? { WebkitMaskImage: holeMask(r > 0), maskImage: holeMask(r > 0) } : {}) }} aria-hidden="true">
+                {p.cover && <Cover src={p.cover.video} poster={p.cover.poster} on={hov === r} />}
+              </span>
+              {!HOLE && <i className="tab4" aria-hidden="true" />}
               <span className="pc-name"><b>{p.title}</b><small>{p.client} · {p.year}</small></span>
-            </button>
+            </motion.button>
           );
         })}
       </div>
     </div>
   );
+}
+/* a card's clip: held on its first frame in black and white; on hover it plays and turns to colour (the filter eases in CSS) */
+function Cover({ src, poster, on }: { src: string; poster: string; on: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const reduce = useReducedMotion();
+  useEffect(() => { const v = ref.current; if (!v) return; if (on && !reduce) v.play().catch(() => {}); else v.pause(); }, [on, reduce]);
+  return <video ref={ref} className="pc-video" src={src} poster={poster} muted loop playsInline preload="metadata" />;
 }
 
 /* the title's rolling first word: Product → Interaction → Motion (02 v29). The box's width is animated outright, on a
