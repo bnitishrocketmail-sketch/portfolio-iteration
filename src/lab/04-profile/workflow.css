@@ -21,7 +21,7 @@
 .cc4-in { position: relative; box-sizing: border-box; padding: 1.1em 1.2em 1.2em; display: flex; flex-direction: column; gap: .7em; font-size: var(--t-body); }
 .cc4-title { margin: 0; padding-right: 1.6em; font: 600 var(--t-body)/1.25 var(--f-copy); } /* body size, bold: a card's title */
 .cc4-text { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); opacity: .85; }
-.cc4-stage { aspect-ratio: 16 / 9; border-radius: calc(var(--r) * .5); background: color-mix(in srgb, var(--pcard-open-ink) 7%, transparent); display: grid; place-items: center; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .6; text-align: center; padding: 0 1em; }
+.cc4-stage { aspect-ratio: 16 / 9; border-radius: calc(calc(var(--r) * .5) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 7%, transparent); display: grid; place-items: center; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .6; text-align: center; padding: 0 1em; }
 .cc4-x { position: absolute; top: .55em; right: .55em; width: 1.9em; height: 1.9em; border: 0; border-radius: 999px; background: transparent; color: inherit; cursor: pointer; display: grid; place-items: center; opacity: .6; }
 .cc4-x:hover { opacity: 1; background: color-mix(in srgb, var(--pcard-open-ink) 8%, transparent); }
 .cc4-x svg { width: 1em; height: 1em; }
@@ -31,9 +31,9 @@
 
 /* the state machine's card (StateMachine04.tsx): the button above its diagram on one panel, the triggers under it */
 .sm4 { display: flex; flex-direction: column; gap: .6em; }
-.sm4-stage { --sm-bg: color-mix(in srgb, var(--pcard-open-ink) 6%, var(--pcard-open)); background: var(--sm-bg); border-radius: calc(var(--r) * .5); padding: 16px 10px 8px; display: flex; flex-direction: column; gap: 10px; }
+.sm4-stage { --sm-bg: color-mix(in srgb, var(--pcard-open-ink) 6%, var(--pcard-open)); background: var(--sm-bg); border-radius: calc(calc(var(--r) * .5) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); padding: 16px 10px 8px; display: flex; flex-direction: column; gap: 10px; }
 .sm4-ui { height: 52px; display: grid; place-items: center; }
-.smb4 { position: relative; height: 44px; border: 0; border-radius: 22px; padding: 0; overflow: hidden; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 500 15px/1 var(--f-copy); cursor: pointer; box-shadow: var(--shadow-el); }
+.smb4 { position: relative; height: 44px; border: 0; border-radius: calc(22px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); padding: 0; overflow: hidden; background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 500 15px/1 var(--f-copy); cursor: pointer; box-shadow: var(--shadow-el); }
 .smb4.loading, .smb4.success { cursor: default; }
 .smb4-c { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
 .smb4-c svg { width: 18px; height: 18px; flex: none; }

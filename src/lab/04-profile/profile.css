@@ -45,9 +45,17 @@
   /* the frame's own tracks, gap and inset are fractions of --fw, its width: its own container units resolve against the
      viewport (an element is not its own query container) and percentage padding against the parent's width, so both
      made the nav and the column grow with the monitor while the frame stayed put */
-  display: grid; grid-template-columns: calc(.053 * var(--fw)) minmax(0, 1fr) calc(.21 * var(--fw)); /* the nav: ref 5's 9.7% less a quarter, less a fifth, then a touch more so the round tips fit the button (Nitish, 13 Oct) */ gap: calc(.016 * var(--fw)); padding: calc(.014 * var(--fw)); border-radius: 36px; background: var(--frame);
+  display: grid; grid-template-columns: calc(.053 * var(--fw)) minmax(0, 1fr) calc(.21 * var(--fw)); /* the nav: ref 5's 9.7% less a quarter, less a fifth, then a touch more so the round tips fit the button (Nitish, 13 Oct) */ gap: calc(.016 * var(--fw)); padding: calc(.014 * var(--fw)); border-radius: calc(36px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame);
   box-shadow: var(--shadow-frame), 0 0 0 1px rgba(255, 255, 255, .06); }
 
+/* iOS corners (Nitish, 22 Oct: "all the corner radii should be the iOS curve"; a control, Corners, to compare and roll back):
+   iOS's continuous corner is matched by CSS corner-shape superellipse(1.6) at 1.4 × the radius (fitted against Figma's
+   iOS 60% smoothing: within 5px at a 120px radius, about a pixel at the page's sizes). Every finite radius in the profile,
+   the case pages and Workflow is written as radius × --ios-k with corner-shape --ios-shape; pills and circles stay true
+   circles, as iOS's capsules do. Browsers without corner-shape (Safari, Firefox today) keep the plain round corners. */
+@supports (corner-shape: superellipse(1.6)) {
+  .it04.ios { --ios-k: 1.4; --ios-shape: superellipse(1.6); }
+}
 /* the glass version of the main container (a control, 22 Oct): its own colour at a third, the picture behind blurred
    through it, a light edge along the top; the picture behind is less blurred so the glass has something to blur */
 .it04.glassframe .bg4 { filter: blur(14px) brightness(.66); }
@@ -99,14 +107,14 @@
 /* ---- the picture: the intro tile, with the bottom-left corner cut out (the cut-out beside it is the frame, not the tile) ---- */
 .picwrap4 { position: relative; min-width: 0; min-height: 0; }
 .pic4 { position: absolute; inset: 0; filter: var(--shadow-pic); } /* the shadow follows the tile's clipped shape */
-.pic4-in { position: absolute; inset: 0; border-radius: var(--r); overflow: hidden; background: var(--g1); } /* the clip path, set from the boxes, replaces the radius */
+.pic4-in { position: absolute; inset: 0; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: var(--g1); } /* the clip path, set from the boxes, replaces the radius */
 .pic4-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; } /* the picture's bottom edge on the container's bottom edge; what doesn't fit is cut from above (Nitish, 13 Oct) */
 /* his cutout, registered on the illustration (the same box and fit), over the cards behind him */
 .pic4-me { z-index: 2; pointer-events: none; }
 .pic4.bw .pic4-img { filter: grayscale(1); } /* the drawing's black-and-white version (22 Oct, a control) */
 /* the control centre (Controls04.tsx): the design-system page's controls in a panel down the left of the page */
 .ctl4 { align-content: start; position: fixed; left: 18px; top: 16px; bottom: 48px; z-index: 70; width: 300px; max-height: none; overflow: auto; scrollbar-width: thin; }
-.ctl4-sys { display: block; padding: 9px 12px; border-radius: 10px; background: #2a2a2f; color: #f0f0f3; font: 600 12px var(--body); text-decoration: none; text-align: center; }
+.ctl4-sys { display: block; padding: 9px 12px; border-radius: calc(10px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #2a2a2f; color: #f0f0f3; font: 600 12px var(--body); text-decoration: none; text-align: center; }
 .ctl4-sys:hover { background: #34343a; }
 /* the floating Lottie cards: the page's glass (the name box's recipe), sized on the frame; behind him or in front; they
    float (the hero's drift) and lean with the pointer by their depth */
@@ -117,7 +125,7 @@
 .fl4.micro-card { left: var(--c-micro-x); top: var(--c-micro-y); z-index: var(--c-micro-z); display: var(--c-micro-v); }
 .fl4.gold-card { left: var(--c-gold-x); top: var(--c-gold-y); z-index: var(--c-gold-z); display: var(--c-gold-v); }
 .fl4.pers-card { left: var(--c-pers-x); top: var(--c-pers-y); z-index: var(--c-pers-z); display: var(--c-pers-v); }
-.fl4-in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1cqw; padding: 1.1cqw 1.3cqw; border-radius: calc(var(--r) * .7); color: var(--glass-ink);
+.fl4-in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1cqw; padding: 1.1cqw 1.3cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
   border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el);
   animation: float4 var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
@@ -133,7 +141,7 @@
 /* the micro-interactions card: a wide Lottie (1920 × 300) that paints its own background, so its corners are rounded —
    at half the standard radius; the name below it, left-aligned like the others' */
 .micro-card .fl4-in { gap: .8cqw; }
-.fl4 .mli { width: 17cqw; aspect-ratio: 1920 / 300; border-radius: calc(var(--r) / 2); overflow: hidden; } .fl4 .mli svg { display: block; } /* half the standard radius (Nitish, 13 Oct: corners, not round ends — the file's own background is square-cornered, so the ends are ours). .mli, not .mi: the Micro view owns that class */
+.fl4 .mli { width: 17cqw; aspect-ratio: 1920 / 300; border-radius: calc(calc(var(--r) / 2) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; } .fl4 .mli svg { display: block; } /* half the standard radius (Nitish, 13 Oct: corners, not round ends — the file's own background is square-cornered, so the ends are ours). .mli, not .mi: the Micro view owns that class */
 .micro-card .cap { white-space: nowrap; }
 /* the Gold membership card: the glass is padded to the rounded card inside the Lottie, not to its canvas — the canvas
    (square, --cw wide) is laid with negative margins of the canvas's own fractions (--gx/--gy/--gw/--gh, measured), so
@@ -152,8 +160,8 @@
 /* the notch: the links sit on the frame in a cut-out at the tile's top-centre (its shape follows this box, the radius being
    the notch's inner corners); no background of their own (Nitish, 13 Oct). The assistant opens here, from the nav's button. */
 .notch4 { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: flex; justify-content: center; }
-.links4 { display: flex; gap: 2px; padding: 4px 10px 6px; border-radius: 0 0 16px 16px; position: relative; }
-.links4 a { width: 30px; height: 26px; display: grid; place-items: center; color: var(--social-ink); border-radius: 8px; transition: background .2s; }
+.links4 { display: flex; gap: 2px; padding: 4px 10px 6px; border-radius: 0 0 calc(16px * var(--ios-k, 1)) calc(16px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); position: relative; }
+.links4 a { width: 30px; height: 26px; display: grid; place-items: center; color: var(--social-ink); border-radius: calc(8px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); transition: background .2s; }
 .links4 a:hover { background: rgba(255, 255, 255, .1); }
 .links4 a svg { width: 15px; height: 15px; }
 .notch4 .island-wrap { position: absolute; }
@@ -161,13 +169,13 @@
 /* the cut-out at the bottom-left: no background of its own — the frame shows through, and the tile's shadow falls onto it
    (Nitish, 13 Oct: a painted box hid the shadow and read as a card behind the name); its top-right radius is only what the
    tile's clip path reads for its inner corner. The name, the title, the line, the CV and the photo sit in it. */
-.cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: none; border-radius: 0 var(--r) 0 0; z-index: 3;
+.cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: none; border-radius: 0 calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); z-index: 3;
   display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name me" "role me" "sub sub" "cv cv"; column-gap: 1cqw; row-gap: .5cqw; align-items: start; }
 .nm4 { grid-area: name; } .role4, .sig4 { grid-area: role; } .sub4 { grid-area: sub; } .cv4 { grid-area: cv; justify-self: end; }
 /* the corner bracket: a short 2.5px stroke along the blank area's bottom and left edges — where the tile's corner would
    be — turning the corner with the tile's radius; its legs run 12px past the curve, no further, and end in round caps
    (a dot the stroke's width on each end) */
-.corner4 { --sw: 2.5px; position: absolute; left: var(--sw); bottom: var(--sw); width: calc(var(--r) + 12px); height: calc(var(--r) + 12px); border: var(--sw) solid var(--corner-ink); border-top: 0; border-right: 0; border-bottom-left-radius: calc(var(--r) - var(--sw)); pointer-events: none; }
+.corner4 { --sw: 2.5px; position: absolute; left: var(--sw); bottom: var(--sw); width: calc(var(--r) + 12px); height: calc(var(--r) + 12px); border: var(--sw) solid var(--corner-ink); border-top: 0; border-right: 0; border-bottom-left-radius: calc(calc(var(--r) - var(--sw)) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); pointer-events: none; }
 /* an inside stroke (Nitish, 21 Oct: "they are centred rather than inside or outside; make them inside, both"): the bracket
    sits one stroke-width in from the lines it aligns to — the picture's bottom and the cut-out's left — so the line stays
    clear past it and the stroke reads as inside the corner, not on it; its radius shrinks by the same so the curve stays concentric */
@@ -176,7 +184,7 @@
 .corner4::after { right: calc(-.5 * var(--sw)); bottom: calc(-1 * var(--sw)); } /* the bottom leg's right end */
 /* the mirror at the top right of the Projects row: the same bracket turned, its top leg level with the picture's top (the
    row starts on that line) and its right leg on the column's right edge, where the cards' edge is */
-.corner4.tr { left: auto; right: var(--sw); bottom: auto; top: var(--sw); border: var(--sw) solid var(--corner-ink); border-bottom: 0; border-left: 0; border-bottom-left-radius: 0; border-top-right-radius: calc(var(--r) - var(--sw)); }
+.corner4.tr { left: auto; right: var(--sw); bottom: auto; top: var(--sw); border: var(--sw) solid var(--corner-ink); border-bottom: 0; border-left: 0; border-bottom-left-radius: 0; border-top-right-radius: calc(calc(var(--r) - var(--sw)) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); }
 .corner4.tr::before { left: auto; top: auto; right: calc(-1 * var(--sw)); bottom: calc(-.5 * var(--sw)); } /* the right leg's bottom end */
 .corner4.tr::after { right: auto; bottom: auto; left: calc(-.5 * var(--sw)); top: calc(-1 * var(--sw)); } /* the top leg's left end */
 /* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
@@ -184,7 +192,7 @@
 .me4 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transform: scale(2.2); transform-origin: 50% 60%; display: block; } /* the stand-in desk photo, zoomed to his face */
 .lede4 { color: var(--glass-ink); font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); max-width: 36ch; } /* body */
 /* the name box: the reference's glass box at the bottom-right, the name in the marker lettering (ref 6) */
-.name4 { position: absolute; right: 1.8cqw; bottom: 7.2cqw; width: 36%; min-width: 230px; padding: 1.4cqw 1.6cqw 1.5cqw; border-radius: calc(var(--r) * .8); z-index: 3; display: var(--name-box-v, flex); flex-direction: column; gap: .5cqw; /* lifted: four times its earlier clearance from the bottom (Nitish, 13 Oct) */
+.name4 { position: absolute; right: 1.8cqw; bottom: 7.2cqw; width: 36%; min-width: 230px; padding: 1.4cqw 1.6cqw 1.5cqw; border-radius: calc(calc(var(--r) * .8) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); z-index: 3; display: var(--name-box-v, flex); flex-direction: column; gap: .5cqw; /* lifted: four times its earlier clearance from the bottom (Nitish, 13 Oct) */
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 18px 40px -18px rgba(0, 0, 0, .6); }
 /* the name, in a Deco face for now (Nitish, 13 Oct — "something as minimal as deco"; the font iterations come later):
    Josefin Sans, the first name light and the surname bold, uppercase with air between the letters */
@@ -227,10 +235,10 @@
    mid grey on every card; centred on the front card, 28% from the top on the ones behind (whole above the card in front). */
 .stack4 { position: relative; min-height: 0; aspect-ratio: 165 / 243; width: 100%; } /* a card 165 × 113, each behind peeking 57.5% of a card: 113 × (1 + 2 × .575) = 243 (21 Oct) */
 .deck4 { position: absolute; inset: 0; }
-.pcard4 { position: absolute; left: 0; width: 100%; aspect-ratio: 165 / 113; /* 21 Oct: a card and the Off duty box one size, between the old card (165 × 127) and the old box (165 × 69) */ display: block; padding: 0; border: 0; border-radius: var(--r); color: var(--card-front-ink); font: inherit; text-align: left; cursor: pointer; overflow: visible;
+.pcard4 { position: absolute; left: 0; width: 100%; aspect-ratio: 165 / 113; /* 21 Oct: a card and the Off duty box one size, between the old card (165 × 127) and the old box (165 × 69) */ display: block; padding: 0; border: 0; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--card-front-ink); font: inherit; text-align: left; cursor: pointer; overflow: visible;
   box-shadow: 0 0 16px rgba(0, 0, 0, .3); } /* ref 4's: a soft halo about 16px out, darkest at the edge, seen on the card behind above each card's top (Nitish, 13 Oct — copied as it is, spill above included) */
 .pcard4.back { color: var(--ink); }
-.pc-face { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; } /* the card's surface and its clip, under the name; the pill is a hole in it (the shadow stays on the button, outside the mask) */
+.pc-face { position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; overflow: hidden; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; } /* the card's surface and its clip, under the name; the pill is a hole in it (the shadow stays on the button, outside the mask) */
 .pc-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1); transition: filter .5s ease; } /* black and white until the hover (22 Oct) */
 .pcard4.hov .pc-video { filter: grayscale(0); }
 .pcard4 { background: none; } /* the button's own ground gone (22 Oct): the pill's hole shows the card behind, not a button's grey */
@@ -244,7 +252,7 @@
 .pc-name small { opacity: .72; font: 500 var(--t-meta)/1.3 var(--f-copy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* meta */
 
 /* Off duty: the lo-fi's fanned cards in a tile — 01's photo stack */
-.off4 { display: flex; flex-direction: column; gap: 6px; padding: 1.2cqw 1.4cqw; border-radius: var(--r); background: var(--g2); min-height: 0; box-shadow: var(--shadow-el); }
+.off4 { display: flex; flex-direction: column; gap: 6px; padding: 1.2cqw 1.4cqw; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--g2); min-height: 0; box-shadow: var(--shadow-el); }
 /* the box's head: the front photo's caption as the title, the count as the meta — the same pair as the project cards
    (the heading, "Off duty", is outside the box now, an H2 like Projects — 21 Oct). The box is a size container of its
    own, so the frame's type tokens shrink inside it; these take the sizes the cards resolve to, passed in from the column */
@@ -260,9 +268,9 @@
 .off4 { position: relative; container-type: size; }
 .off4 .tile-head { position: relative; z-index: 2; }
 .off4 .stack { position: absolute; inset: 0; margin: 0; z-index: 1; }
-.off4 .stack-bg { position: absolute; inset: 0; z-index: 0; border-radius: inherit; overflow: hidden; } /* the front photo as the box's ground (22 Oct): filled, blurred, a little darker so the head reads */
+.off4 .stack-bg { position: absolute; inset: 0; z-index: 0; border-radius: inherit; corner-shape: inherit; overflow: hidden; } /* the front photo as the box's ground (22 Oct): filled, blurred, a little darker so the head reads */
 .off4 .stack-bg img { position: absolute; inset: -8%; width: 116%; height: 116%; object-fit: cover; display: block; filter: blur(22px) brightness(.68) saturate(1.1); }
-.off4 .stack.fan figure { inset: auto; left: 34%; top: 29%; /* 22 Oct: the fan lifted 15% of the box, then let down 7% */ height: 78%; aspect-ratio: 4 / 3; width: auto; border-radius: 12px; transform-origin: 50% 50%; } /* 22 Oct: 20% smaller (98 → 78% of the box), so more of each photo shows */ /* 4 : 3 (Nitish, 21 Oct), the height as set on p70; the fan unchanged */ /* 21 Oct: 15% bigger (85 → 98% of the box, square) and up 12% of where they sat (42 → 37%); the fan itself unchanged */
+.off4 .stack.fan figure { inset: auto; left: 34%; top: 29%; /* 22 Oct: the fan lifted 15% of the box, then let down 7% */ height: 78%; aspect-ratio: 4 / 3; width: auto; border-radius: calc(12px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); transform-origin: 50% 50%; } /* 22 Oct: 20% smaller (98 → 78% of the box), so more of each photo shows */ /* 4 : 3 (Nitish, 21 Oct), the height as set on p70; the fan unchanged */ /* 21 Oct: 15% bigger (85 → 98% of the box, square) and up 12% of where they sat (42 → 37%); the fan itself unchanged */
 .off4 { overflow: hidden; }
 .off4 .hint { display: none; }
 .off4 .stack figcaption { display: none; } /* the caption is the box's head, not written on the photo */
@@ -273,12 +281,12 @@
 .pp4-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 2cqw; padding: 0 .4cqw; }
 .pp4-right { display: flex; flex-direction: column; align-items: flex-start; gap: .8cqw; max-width: 34ch; }
 .pp4-note { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: var(--line-ink); } /* body */
-.soon4 { flex: 1; min-height: 0; display: grid; place-items: center; border-radius: var(--r); border: 1px dashed color-mix(in srgb, var(--line-ink) 22%, transparent); font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; color: var(--line-ink); opacity: .5; } /* a tab not built yet */
+.soon4 { flex: 1; min-height: 0; display: grid; place-items: center; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); border: 1px dashed color-mix(in srgb, var(--line-ink) 22%, transparent); font: 500 var(--t-meta)/1 var(--f-copy); letter-spacing: .06em; text-transform: uppercase; color: var(--line-ink); opacity: .5; } /* a tab not built yet */
 /* the row: every card the row's height; the half card at the end fades out under the mask there; the cards before the
    open one are clipped at the left edge (a fade there would dim the open card's own edge) (Nitish, 14 Oct). The clip box
    runs 40px below the cards so their shadows are not cut (the shadows fall downward; sideways they reach 4px at most). */
 .pp4-row { position: relative; flex: 1; min-height: 0; column-gap: 1.4cqw; overflow: hidden; padding-bottom: 40px; margin-bottom: -40px; -webkit-mask-image: linear-gradient(to right, #000 86%, transparent); mask-image: linear-gradient(to right, #000 86%, transparent); }
-.pp4-card { position: absolute; top: 0; bottom: 40px; left: 0; border-radius: var(--r); overflow: hidden; background: var(--pcard-fold); color: var(--pcard-fold-ink); box-shadow: var(--shadow-el); transition: background-color .45s, color .45s; }
+.pp4-card { position: absolute; top: 0; bottom: 40px; left: 0; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: var(--pcard-fold); color: var(--pcard-fold-ink); box-shadow: var(--shadow-el); transition: background-color .45s, color .45s; }
 .pp4-card.open { background: var(--pcard-open); color: var(--pcard-open-ink); }
 /* the cover: the project's letter only — the theme's greys, no picture yet (01's gradients went: not this theme) */
 .pp4-cover { position: absolute; inset: 0; }
@@ -292,7 +300,7 @@
 .pp4-top { position: absolute; left: 2cqw; top: 1.8cqw; right: 34%; display: flex; flex-direction: column; gap: .7cqw; }
 .pp4-title { margin: 0; font: var(--h2-w) clamp(18px, 2.2cqw, 28px)/1.15 var(--f-head); letter-spacing: -.01em; color: var(--pcard-open-ink); } /* a display title, the name's face */
 .pp4-blurb { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: var(--pcard-open-ink); opacity: .82; max-width: 36ch; }
-.pp4-chips { position: absolute; left: 2cqw; bottom: 2cqw; margin: 0; padding: 1cqw; list-style: none; display: flex; flex-wrap: wrap; gap: .6cqw; max-width: 50%; border-radius: calc(var(--r) * .7);
+.pp4-chips { position: absolute; left: 2cqw; bottom: 2cqw; margin: 0; padding: 1cqw; list-style: none; display: flex; flex-wrap: wrap; gap: .6cqw; max-width: 50%; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round);
   background: color-mix(in srgb, var(--pcard-open-ink) 7%, transparent); border: 1px solid color-mix(in srgb, var(--pcard-open-ink) 10%, transparent); } /* a panel of the card's own ink, faint */
 .pp4-chips li { padding: .45em .9em; border-radius: 999px; background: color-mix(in srgb, var(--pcard-open-ink) 10%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); color: var(--pcard-open-ink); } /* meta */
 .pp4-meta { position: absolute; left: 2cqw; bottom: calc(2cqw + 1cqw * 2 + 2.6em + 1.3cqw); font: 500 var(--t-meta)/1.3 var(--f-copy); color: var(--pcard-open-ink); opacity: .7; } /* meta, above the chips */
@@ -304,13 +312,13 @@
 .pp4-vt { font: 600 var(--t-title)/1.2 var(--f-copy); color: var(--pcard-fold-ink); } /* title */
 .pp4-vm { font: 500 var(--t-meta)/1.3 var(--f-copy); color: var(--pcard-fold-ink); opacity: .78; } /* meta */
 .pp4-vm.dim { opacity: .55; }
-.pp4-hit { position: absolute; inset: 0; border: 0; background: none; cursor: pointer; border-radius: inherit; }
+.pp4-hit { position: absolute; inset: 0; border: 0; background: none; cursor: pointer; border-radius: inherit; corner-shape: inherit; }
 .pp4-hit:focus-visible { outline: 2px solid var(--g6); outline-offset: -4px; }
 
 /* the temporary colour controls: a pill at the page's bottom-left; open, a small panel of pickers */
 .tweaks4 { position: fixed; left: 18px; bottom: 10px; z-index: 60; }
 .tw-toggle, .tw-row button { border: 0; border-radius: 999px; padding: 6px 12px; background: var(--g2); color: var(--ink); font: 500 11.5px var(--body); cursor: pointer; letter-spacing: .02em; text-decoration: none; }
-.tw-panel { order: -1; display: grid; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--g1); box-shadow: var(--shadow-el), 0 0 0 1px rgba(255, 255, 255, .08); max-height: calc(100vh - 80px); overflow: auto; scrollbar-width: thin; width: 268px; }
+.tw-panel { order: -1; display: grid; gap: 10px; padding: 12px 14px; border-radius: calc(14px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--g1); box-shadow: var(--shadow-el), 0 0 0 1px rgba(255, 255, 255, .08); max-height: calc(100vh - 80px); overflow: auto; scrollbar-width: thin; width: 268px; }
 .tw-panel section { display: grid; gap: 5px; }
 .tw-panel h4 { margin: 0 0 2px; font: 600 10.5px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--g5); }
 .tw-panel label { display: flex; align-items: center; justify-content: space-between; gap: 10px; font: 500 11.5px var(--body); color: var(--muted); }
@@ -353,12 +361,12 @@
   .ai4 { display: none; }
   .tweaks4 { left: auto; right: 12px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; } /* the dev chip, out of the bar's way */
   /* the intro: the picture, then the name box (his words), then the cut-out's name, role and CV — one container, the tile's grey */
-  .picwrap4 { display: flex; flex-direction: column; border-radius: var(--r); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; } .pic4, .pic4-in { display: contents; }
-  .pic4-img { position: relative; aspect-ratio: 1; height: auto; border-radius: var(--r) var(--r) 0 0; }
+  .picwrap4 { display: flex; flex-direction: column; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; } .pic4, .pic4-in { display: contents; }
+  .pic4-img { position: relative; aspect-ratio: 1; height: auto; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); }
   .pic4-me, .fl4 { display: none !important; } /* the cards and the cutout need the picture's box, which the column has not got; the home page's own layout is next */
   .cut4 { order: 1; } .name4 { order: 2; }
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
-  .it04 .island { border-radius: 0 0 20px 20px !important; max-width: calc(100vw - 100px); }
+  .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
   .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 18px 18px 16px; } .corner4 { display: none; }
   .nm4 { line-height: 1.1; } .role4 { margin-top: 6px; font-size: 15px; } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; } .sub4 { margin-top: 8px; max-width: none; } .cv4 { margin-top: 12px; font-size: 14px; padding: .65em 1.1em; }
@@ -369,7 +377,7 @@
   .page4 { display: block; }
   .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; gap: 8px; padding: 4px 4px 0; } .pp4-right { max-width: none; }
   .pp4-head .h2-4 { color: var(--name-ink); } .pp4-head .pp4-note { color: var(--glass-ink); } /* on the picture: the name's and the lede's inks, which already sit on it */
-  .pp4 > :not(.pp4-head) { border-radius: var(--r); background: var(--frame); box-shadow: var(--shadow-frame); padding: 16px 14px 18px; }
+  .pp4 > :not(.pp4-head) { border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); padding: 16px 14px 18px; }
   .cr4 > .cm4-wrap { background: none; box-shadow: none; padding: 0; }
   /* the projects: the desktop's fan of cards, one open, becomes a plain list — every card open, its content in flow
      (title, blurb, meta, chips, the arrow), the letter faint behind; the pieces were absolutely placed for the fan */

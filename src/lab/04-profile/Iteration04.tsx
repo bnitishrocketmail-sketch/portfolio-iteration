@@ -204,6 +204,7 @@ export default function Iteration04() {
      mode change, and when the system page writes them from another tab */
   const [tweaks, setTweaks] = useState<Record<string, string>>(() => readTweaks(isDark));
   const picV = tweaks['--pic-v'] ?? 'illo';
+  const ios = (tweaks['--corners'] ?? 'ios') === 'ios'; /* iOS corners (a control, 22 Oct) */
   const glass = tweaks['--frame-v'] === 'glass'; /* the main container as glass (a control, 22 Oct) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
@@ -228,7 +229,7 @@ export default function Iteration04() {
   useEffect(() => { if (!ask) return; const id = window.setTimeout(() => document.querySelector<HTMLButtonElement>('.it04 .island-pill')?.click(), 0); return () => window.clearTimeout(id); }, [ask]);
 
   return (
-    <div className={`it04${isDark ? '' : ' light'}${glass ? ' glassframe' : ''}`} style={{ '--gx': GOLD_RECT.x, '--gy': GOLD_RECT.y, '--gw': GOLD_RECT.w, '--gh': GOLD_RECT.h, ...tweaks } as React.CSSProperties}>
+    <div className={`it04${isDark ? '' : ' light'}${glass ? ' glassframe' : ''}${ios ? ' ios' : ''}`} style={{ '--gx': GOLD_RECT.x, '--gy': GOLD_RECT.y, '--gw': GOLD_RECT.w, '--gh': GOLD_RECT.h, ...tweaks } as React.CSSProperties}>
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${picV === 'photo' ? desk : illustration})`, filter: picV === 'illo-bw' ? `blur(${glass ? 14 : 44}px) brightness(${glass && isDark ? .66 : isDark ? .45 : 1.02}) grayscale(1)` : undefined }} />
       <div className="frame4">
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}

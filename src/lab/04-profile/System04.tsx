@@ -26,7 +26,7 @@ function Sheet({ dark, values }: { dark: boolean; values: Record<string, string>
   return (
     <section className="sys-sheet">
       <h2>{dark ? 'Dark' : 'Light'}</h2>
-      <div className={`it04 sys${dark ? '' : ' light'}`} style={values as React.CSSProperties}>
+      <div className={`it04 sys${dark ? '' : ' light'}${(values['--corners'] ?? 'ios') === 'ios' ? ' ios' : ''}`} style={values as React.CSSProperties}>
         <div className="sys-page-in sys-grid">
           {/* type */}
           <div className="sys-block">
