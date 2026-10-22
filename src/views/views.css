@@ -24,6 +24,8 @@
 .life .stack.bleed figcaption { bottom: calc(15% + 9px); }
 .stack figure { position: absolute; inset: 0; margin: 0; border-radius: 16px; background: linear-gradient(135deg, var(--g1), var(--g2)); box-shadow: 0 10px 24px -14px rgba(0, 0, 0, .5); cursor: grab; overflow: hidden; user-select: none; -webkit-user-select: none; }
 .stack figure:active { cursor: grabbing; }
+.stack figure img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; user-select: none; -webkit-user-select: none; } /* a photo fills the card (22 Oct) */
+.stack figure.photo::before { display: none; }
 .stack figcaption { position: absolute; left: 12px; bottom: 10px; right: 12px; color: #fff; font: 500 clamp(11.5px, 1.05cqw, 14px)/1.3 var(--body); letter-spacing: .01em; text-shadow: 0 1px 8px rgba(0, 0, 0, .4); }
 .stack figure::before { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 90% at 20% 0%, rgba(255, 255, 255, .35), transparent 55%); }
 .life .hint { color: var(--muted); }
