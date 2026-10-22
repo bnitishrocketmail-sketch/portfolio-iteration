@@ -168,7 +168,7 @@ function Flow({ steps }: { steps: Step[] }) {
    white and held still. Every few seconds the left one slides into the phone, growing and turning to colour as it goes,
    the one inside slides out to the right, and the right one fades away to come back in at the left — round and round.
    The phone is drawn over the screens, so a screen passes under its bezel on its way in and out. */
-const CAR = { hold: 3800, slide: .9, side: .8, ease: [.2, .8, .2, 1] as [number, number, number, number] };
+const CAR = { hold: 3800, slide: .9, side: .8, tilt: 16, ease: [.2, .8, .2, 1] as [number, number, number, number] };
 function Carousel({ of }: { of: Media[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const els = useRef<(HTMLDivElement | null)[]>([]);
@@ -178,20 +178,22 @@ function Carousel({ of }: { of: Media[] }) {
   const orderRef = useRef<number[]>(first);
   const [inPhone, setInPhone] = useState(first[1]);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* the three places, from the phone's width: the sides a fifth smaller, a little clear of the phone */
+  /* the three places, from the phone's width: the sides a fifth smaller, close to the phone (22 Oct: the gap 60% less) */
   const places = () => {
     const el = ref.current; const w = el?.querySelector<HTMLElement>('.cs4-car-phone')?.offsetWidth ?? 160;
-    const gap = (el?.offsetWidth ?? 900) < w * 2.9 ? w * .1 : w * .24; /* the sides closer in on a phone, where they run past the card */
+    const gap = (el?.offsetWidth ?? 900) < w * 2.9 ? w * .05 : w * .096;
     const off = w / 2 + gap + w * CAR.side / 2; /* phone's half, the gap, the side screen's half */
-    return { L: -off, C: 0, R: off, out: off + w * .5, in: -off - w * .5 };
+    return { L: -off, C: 0, R: off, w };
   };
-  /* a screen's look in a place: at the sides a fifth smaller, in grayscale */
-  const look = (x: number, side: boolean, opacity = 1) => ({ x, scale: side ? CAR.side : 1, filter: side ? 'grayscale(1)' : 'grayscale(0)', opacity });
+  /* a screen's look in a place: at the sides a fifth smaller, in grayscale, turned a little away — the left one's left
+     edge back, the right one's right edge back (22 Oct), as if facing the phone */
+  const look = (x: number, at: 'L' | 'C' | 'R', opacity = 1) => ({ x, scale: at === 'C' ? 1 : CAR.side, rotateY: at === 'L' ? CAR.tilt : at === 'R' ? -CAR.tilt : 0, filter: at === 'C' ? 'grayscale(0)' : 'grayscale(1)', opacity });
   /* put the screens in their places without motion (first paint, a resize) */
-  const settle = () => { const P = places(); orderRef.current.forEach((i, k) => { const el = els.current[i]; if (el) animate(el, look([P.L, P.C, P.R][k], k !== 1), { duration: 0 }); }); };
+  const settle = () => { const P = places(); orderRef.current.forEach((i, k) => { const el = els.current[i]; if (el) animate(el, look([P.L, P.C, P.R][k], (['L', 'C', 'R'] as const)[k]), { duration: 0 }); }); };
   useLayoutEffect(() => { settle(); const ro = new ResizeObserver(settle); if (ref.current) ro.observe(ref.current); return () => ro.disconnect(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  /* the loop, while on screen: every few seconds the left one slides into the phone, the one inside out to the right,
-     and the right one away and back in at the left */
+  /* the loop, while on screen: every few seconds the left one slides into the phone and the one inside out to the right,
+     while the right one fades away sliding further right; then, a beat later, a new screen fades in at the left, sliding
+     in from further left (22 Oct: it must not read as the right one coming round the back) */
   useEffect(() => {
     if (!on || still || of.length < 3) return;
     let live = true; let t = 0;
@@ -200,8 +202,11 @@ function Carousel({ of }: { of: Media[] }) {
       const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (!E[l] || !E[c] || !E[r]) return;
       orderRef.current = [r, l, c]; setInPhone(l); /* the one sliding in starts playing as it goes */
       const o = { duration: CAR.slide, ease: CAR.ease };
-      const away = async () => { await animate(E[r]!, look(P.out, true, 0), { duration: CAR.slide * .45, ease: 'easeIn' }); animate(E[r]!, look(P.in, true, 0), { duration: 0 }); await animate(E[r]!, look(P.L, true, 1), { duration: CAR.slide * .5, ease: 'easeOut' }); };
-      await Promise.all([animate(E[l]!, look(P.C, false), o), animate(E[c]!, look(P.R, true), o), away()]);
+      await Promise.all([animate(E[l]!, look(P.C, 'C'), o), animate(E[c]!, look(P.R, 'R'), o), animate(E[r]!, look(P.R + P.w * .3, 'R', 0), { duration: CAR.slide * .6, ease: 'easeIn' })]);
+      if (!live) return;
+      /* the new one at the left: carried over unseen (a 0-length first keyframe — a 0 s animate takes motion's default time), then in from further left */
+      const from = look(P.R + P.w * .3, 'R', 0), at = look(P.L - P.w * .3, 'L', 0), to = look(P.L, 'L', 1);
+      await animate(E[r]!, { x: [from.x, at.x, to.x], scale: [from.scale, at.scale, to.scale], rotateY: [from.rotateY, at.rotateY, to.rotateY], filter: [from.filter, at.filter, to.filter], opacity: [0, 0, 1] }, { duration: CAR.slide * .68, times: [0, .04, 1], ease: 'easeOut', delay: .12 });
       if (live) t = window.setTimeout(step, CAR.hold);
     };
     t = window.setTimeout(step, CAR.hold);

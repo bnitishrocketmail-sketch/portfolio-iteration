@@ -132,7 +132,7 @@
    (Carousel in Case04.tsx). The phone is the study's phone — its width, its corners, its 3px edge — with an island
    inside, drawn over the screens; a screen is the phone's size, a side one scaled from it, so the clip draws the same. */
 .cs4-hero.block { padding: var(--s4) var(--s3); }
-.cs4-car { --hp-w: var(--ph-w); --hp-r: clamp(14px, 1.6cqw, 22px); position: relative; height: calc(var(--hp-w) * 19.5 / 9); }
+.cs4-car { --hp-w: var(--ph-w); --hp-r: clamp(14px, 1.6cqw, 22px); position: relative; height: calc(var(--hp-w) * 19.5 / 9); perspective: 1100px; } /* the sides turn in 3D (Carousel: rotateY) */
 .cs4-car-item { position: absolute; left: 50%; top: 0; width: var(--hp-w); margin-left: calc(var(--hp-w) / -2); transform-origin: 50% 50%; will-change: transform, filter, opacity; }
 .cs4-hero.block .cs4-car-item .cs4-media { border-radius: var(--hp-r); box-shadow: 0 10px 26px -14px rgba(0, 0, 0, .35); } /* the phone's corners, floating at the side too; the page's soft shadow behind every screen */
 .cs4-car-item .cs4-media.phone::after { display: none; } /* no edge of their own: the phone is the frame */
