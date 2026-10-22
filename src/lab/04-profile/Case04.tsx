@@ -168,51 +168,61 @@ function Flow({ steps }: { steps: Step[] }) {
    white and held still. Every few seconds the left one slides into the phone, growing and turning to colour as it goes,
    the one inside slides out to the right, and the right one fades away to come back in at the left — round and round.
    The phone is drawn over the screens, so a screen passes under its bezel on its way in and out. */
-const CAR = { hold: 3800, slide: 1, side: .8, tilt: 16, ease: [.3, .1, .25, 1] as [number, number, number, number] };
+const CAR = { hold: 3800, slide: 1, side: .92, tilt: 16, ease: [.3, .1, .25, 1] as [number, number, number, number] };
 function Carousel({ of }: { of: Media[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const els = useRef<(HTMLDivElement | null)[]>([]);
+  const ghost = useRef<HTMLDivElement>(null);
   const on = useInView(ref, .3);
-  /* which screen is at the left, in the phone, at the right — kept in a ref for the loop, in state for what plays */
+  /* which screen is at the left, in the phone, at the right — kept in a ref for the loop, in state for what plays and
+     for the ghost: a second copy of the right screen, which is what leaves the stage, while the screen itself comes
+     back in at the left in the same move (22 Oct: both the leaving and the arriving travel a whole step, together) */
   const first = [of.length - 1, 0, 1].map(i => (i + of.length) % of.length);
   const orderRef = useRef<number[]>(first);
   const [inPhone, setInPhone] = useState(first[1]);
+  const [ghostOf, setGhostOf] = useState(first[2]);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* the places, a belt of equal steps: further left (unseen), left, the phone, right, further right (unseen); the sides a
-     fifth smaller, close to the phone (22 Oct: the gap 60% less) */
+  /* the places, a belt of equal steps: further left (unseen), left, the phone, right, further right (unseen); the sides
+     a little smaller, close to the phone (22 Oct: the gap halved again, the sides 15% bigger) */
   const places = () => {
     const el = ref.current; const w = el?.querySelector<HTMLElement>('.cs4-car-phone')?.offsetWidth ?? 160;
-    const gap = (el?.offsetWidth ?? 900) < w * 2.9 ? w * .05 : w * .096;
+    const gap = (el?.offsetWidth ?? 900) < w * 2.9 ? w * .03 : w * .048;
     const off = w / 2 + gap + w * CAR.side / 2; /* phone's half, the gap, the side screen's half */
     return { off, L: -off, R: off };
   };
   /* a screen's look, written straight to its style: its place on the belt (x), its size, its turn in perspective — the
-     sides turned 16° with their inner edge back (22 Oct, the other way round from the first cut) — its colour, opacity */
+     sides turned 16° with their inner edge back — its colour, opacity */
   const put = (el: HTMLElement, x: number, side: number /* 0 in the phone … 1 at a side */, turn: number /* -1 left, 1 right */, opacity = 1) => {
     el.style.transform = `translateX(${x.toFixed(2)}px) scale(${(1 - (1 - CAR.side) * side).toFixed(4)}) rotateY(${(turn * CAR.tilt * side).toFixed(2)}deg)`;
     el.style.filter = `grayscale(${side.toFixed(3)})`; el.style.opacity = opacity.toFixed(3);
   };
-  /* put the screens in their places without motion (first paint, a resize) */
-  const settle = () => { const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (E[l]) put(E[l], P.L, 1, -1); if (E[c]) put(E[c], 0, 0, 0); if (E[r]) put(E[r], P.R, 1, 1); };
+  /* put the screens in their places without motion (first paint, a resize); the ghost waits at the right, unseen */
+  const settle = () => { const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (E[l]) put(E[l], P.L, 1, -1); if (E[c]) put(E[c], 0, 0, 0); if (E[r]) put(E[r], P.R, 1, 1); if (ghost.current) put(ghost.current, P.R, 1, 1, 0); };
   useLayoutEffect(() => { settle(); const ro = new ResizeObserver(settle); if (ref.current) ro.observe(ref.current); return () => ro.disconnect(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  /* the loop, while on screen: every few seconds the whole belt moves one step to the right, as one motion (22 Oct: "the
-     same velocity, keeping the same gap") — the left screen into the phone, turning flat and to colour; the one inside out
-     to the right, turning away and grey; the right one further right, fading out over the first half of the move — and,
-     carried over unseen at the midpoint, the same screen in from further left over the second half, fading in, so a new
-     screen arrives at the left in step with the rest */
+  /* the ghost shows the right screen's clip at the frame the screen itself stopped at, so the two read as one */
+  const syncGhost = () => { const a = els.current[orderRef.current[2]]?.querySelector('video'), g = ghost.current?.querySelector('video'); if (a && g && Math.abs(a.currentTime - g.currentTime) > .05) g.currentTime = a.currentTime; };
+  useEffect(() => { const t = setTimeout(syncGhost, 150); return () => clearTimeout(t); }, [ghostOf]); // eslint-disable-line react-hooks/exhaustive-deps
+  /* the loop, while on screen: every few seconds the whole belt moves one step to the right as one motion (22 Oct: "the
+     same velocity, keeping the same gap") — the left screen into the phone, turning flat and to colour; the one inside
+     out to the right, turning away and grey; the right one's ghost further right, fading out; and the right screen
+     itself in from further left, fading in — every one of them a whole step */
   useEffect(() => {
     if (!on || still || of.length < 3) return;
     let live = true; let t = 0;
     const step = async () => {
       if (!live) return;
-      const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (!E[l] || !E[c] || !E[r]) return;
+      const P = places(); const [l, c, r] = orderRef.current; const E = els.current, G = ghost.current; if (!E[l] || !E[c] || !E[r] || !G) return;
+      syncGhost();
       orderRef.current = [r, l, c]; setInPhone(l); /* the one sliding in starts playing as it goes */
       await animate(0, 1, { duration: CAR.slide, ease: CAR.ease, onUpdate: p => {
         put(E[l]!, P.L + P.off * p, 1 - p, -1);
         put(E[c]!, P.off * p, p, 1);
-        if (p < .5) put(E[r]!, P.R + P.off * p, 1, 1, 1 - 2 * p); else put(E[r]!, P.L - P.off + P.off * p, 1, -1, 2 * p - 1);
+        put(G, P.R + P.off * p, 1, 1, 1 - p);
+        put(E[r]!, P.L - P.off + P.off * p, 1, -1, p);
       } });
-      if (live) t = window.setTimeout(step, CAR.hold);
+      if (!live) return;
+      put(G, P.R, 1, 1, 0); setGhostOf(c); /* the ghost takes the new right screen, unseen, with the hold to load it */
+      t = window.setTimeout(step, CAR.hold);
     };
     t = window.setTimeout(step, CAR.hold);
     return () => { live = false; clearTimeout(t); };
@@ -220,6 +230,7 @@ function Carousel({ of }: { of: Media[] }) {
   return (
     <div className="cs4-car" ref={ref}>
       {of.map((m, i) => <div key={i} ref={el => { els.current[i] = el; }} className="cs4-car-item" style={{ zIndex: inPhone === i ? 2 : 1 }}><Slot m={m} active={inPhone === i} /></div>)}
+      <div ref={ghost} className="cs4-car-item ghost" aria-hidden="true"><Slot key={ghostOf} m={of[ghostOf]} active={false} /></div>
       {/* the phone: the study's device edge, as every other phone on the page, with an island inside it */}
       <div className="cs4-car-phone" aria-hidden="true"><i className="cs4-island" /></div>
     </div>
