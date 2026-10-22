@@ -87,6 +87,11 @@
 .pic4-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; } /* the picture's bottom edge on the container's bottom edge; what doesn't fit is cut from above (Nitish, 13 Oct) */
 /* his cutout, registered on the illustration (the same box and fit), over the cards behind him */
 .pic4-me { z-index: 2; pointer-events: none; }
+.pic4.bw .pic4-img { filter: grayscale(1); } /* the drawing's black-and-white version (22 Oct, a control) */
+/* the control centre (Controls04.tsx): the design-system page's controls in a panel down the left of the page */
+.cc4 { position: fixed; left: 18px; top: 16px; bottom: 48px; z-index: 70; width: 300px; max-height: none; overflow: auto; scrollbar-width: thin; }
+.cc4-sys { display: block; padding: 9px 12px; border-radius: 10px; background: #2a2a2f; color: #f0f0f3; font: 600 12px var(--body); text-decoration: none; text-align: center; }
+.cc4-sys:hover { background: #34343a; }
 /* the floating Lottie cards: the page's glass (the name box's recipe), sized on the frame; behind him or in front; they
    float (the hero's drift) and lean with the pointer by their depth */
 .fl4 { position: absolute; z-index: 1; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }

@@ -60,6 +60,9 @@ export const CONTROLS: Control[] = [
   ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '3', 'block'), ...card('loader', 'Loader', '60%', '59%', '1', 'block'),
   /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */
   { group: 'Intro cards', sub: 'Name box (the one-liner)', kind: 'select', key: '--name-box-v', label: 'Shown', def: 'flex', light: 'flex', options: [['Shown', 'flex'], ['Hidden', 'none']] },
+  /* the intro's picture (Nitish, 22 Oct): the drawing as it is, the drawing in black and white, or his photo — the cutout
+     and the cards in front and behind the same in each */
+  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-v', label: 'Version', def: 'illo', light: 'illo', options: [['The drawing', 'illo'], ['The drawing, black and white', 'illo-bw'], ['The photo', 'photo']] },
 ];
 
 export const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;

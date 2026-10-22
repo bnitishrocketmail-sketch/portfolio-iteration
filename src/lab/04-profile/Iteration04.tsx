@@ -8,6 +8,8 @@ import { PhotoStack } from '../../components/tiles/Tiles';
 import illustration from '../../assets/nitish-desk-illustration.webp';
 import desk from '../../assets/nitish-desk.webp';
 import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.webp';
+import deskCutout from '../../assets/nitish-desk-cutout.webp';
+import Controls04 from './Controls04';
 import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
@@ -198,6 +200,7 @@ export default function Iteration04() {
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
      mode change, and when the system page writes them from another tab */
   const [tweaks, setTweaks] = useState<Record<string, string>>(() => readTweaks(isDark));
+  const picV = tweaks['--pic-v'] ?? 'illo';
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
@@ -222,7 +225,7 @@ export default function Iteration04() {
 
   return (
     <div className={`it04${isDark ? '' : ' light'}`} style={{ '--gx': GOLD_RECT.x, '--gy': GOLD_RECT.y, '--gw': GOLD_RECT.w, '--gh': GOLD_RECT.h, ...tweaks } as React.CSSProperties}>
-      <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${illustration})` }} />
+      <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${picV === 'photo' ? desk : illustration})`, filter: picV === 'illo-bw' ? 'blur(44px) brightness(.45) grayscale(1)' : undefined }} />
       <div className="frame4">
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
@@ -263,9 +266,9 @@ export default function Iteration04() {
           </motion.div>
         ) : (<>
         <div className="picwrap4" ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean}>
-          <section className="pic4">
+          <section className={`pic4${picV === 'illo-bw' ? ' bw' : ''}`}> {/* the picture's version (22 Oct): the drawing, the drawing in black and white, or the photo — a control */}
             <div className="pic4-in" style={clip ? { clipPath: clip } : undefined}>
-              <img className="pic4-img" src={illustration} alt="Nitish at his desk, drawn" />
+              <img className="pic4-img" src={picV === 'photo' ? desk : illustration} alt={picV === 'photo' ? 'Nitish at his desk' : 'Nitish at his desk, drawn'} />
               {/* the floating Lottie cards (01/02b's three), in this page's glass (Nitish, 13 Oct): the coin and the loader
                   behind him — his cutout from the illustration lies over them, so they are a little masked — the assistant's
                   in front, over his hair; each one's place and layer are tokens (the Edit panel moves them). They float, and
@@ -276,7 +279,7 @@ export default function Iteration04() {
               <div className="fl4 loader-card" data-depth=".6" style={{ '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
               </div>
-              <img className="pic4-img pic4-me" src={illustrationCutout} alt="" aria-hidden="true" />
+              <img className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} alt="" aria-hidden="true" />
               <div className="fl4 ai-card" data-depth="1.3" style={{ '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
               </div>
@@ -335,7 +338,8 @@ export default function Iteration04() {
         </>)}
       </div>
       {/* the design system — the type, the colours, the cards' places, in both modes, with their controls — is its own page */}
-      <Link className="tweaks4 tw-toggle" to="/lab/04-system">Design system</Link>
+      {/* the control centre (22 Oct, back from the first cut): a panel at the side of the page, with the way to the whole design-system page at its top */}
+      <Controls04 values={tweaks} onChange={setTweaks} dark={isDark} toggle={toggle} />
       <Link className="labtag" to="/lab">Lab · 04 Profile</Link>
     </div>
   );
