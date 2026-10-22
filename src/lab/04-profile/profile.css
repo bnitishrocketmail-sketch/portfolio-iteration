@@ -222,7 +222,7 @@
 .off4 { position: relative; container-type: size; }
 .off4 .tile-head { position: relative; z-index: 2; }
 .off4 .stack { position: absolute; inset: 0; margin: 0; }
-.off4 .stack.fan figure { inset: auto; left: 34%; top: 37%; height: 98%; aspect-ratio: 4 / 3; width: auto; border-radius: 12px; transform-origin: 50% 50%; } /* 4 : 3 (Nitish, 21 Oct), the height as set on p70; the fan unchanged */ /* 21 Oct: 15% bigger (85 → 98% of the box, square) and up 12% of where they sat (42 → 37%); the fan itself unchanged */
+.off4 .stack.fan figure { inset: auto; left: 34%; top: 37%; height: 78%; aspect-ratio: 4 / 3; width: auto; border-radius: 12px; transform-origin: 50% 50%; } /* 22 Oct: 20% smaller (98 → 78% of the box), so more of each photo shows */ /* 4 : 3 (Nitish, 21 Oct), the height as set on p70; the fan unchanged */ /* 21 Oct: 15% bigger (85 → 98% of the box, square) and up 12% of where they sat (42 → 37%); the fan itself unchanged */
 .off4 { overflow: hidden; }
 .off4 .hint { display: none; }
 .off4 .stack figcaption { display: none; } /* the caption is the box's head, not written on the photo */
