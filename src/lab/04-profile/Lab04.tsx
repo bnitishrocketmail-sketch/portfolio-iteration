@@ -3,6 +3,7 @@ import { Lottie } from '../../components/micro/Lottie';
 import { LOTTIES, STILL } from '../../lib/lotties';
 import { PROJECTS } from '../../lib/data';
 import './lab.css';
+import { MotionThumb } from './MotionV2_04';
 
 /* 04's Lab (Nitish, 20 Oct): the experiments — not the company work, which is Projects' (B is Lenskart's and stays
    there; the Lenskart, MobiKwik and Milkbasket work is still to come). A grid after Iteration 1's project page: a media
@@ -18,11 +19,7 @@ type Exp = { id: string; title: string; line: string; meta: string; wide?: boole
 const P = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
 
 /* the visuals: each takes `on` and animates only then (CSS plays on .on; a Lottie plays on `playing`) */
-const Drawer = ({ on }: { on: boolean }) => (
-  <div className={`lv lv-drawer${on ? ' on' : ''}`} aria-hidden="true">
-    <div className="ph"><i className="h" /><i className="c" /><i className="c" /><div className="scrim" /><div className="sheet"><i /><i /><i /><b /></div></div>
-  </div>
-);
+/* (the drawer sketch that was the motion system's visual is replaced by MotionThumb, 23 Oct) */
 const Coin = ({ on }: { on: boolean }) => <div className="lv lv-coin" aria-hidden="true"><Lottie className="lot" src={LOTTIES.coin} still={STILL.coin} playing={on} /></div>;
 const Ride = ({ on }: { on: boolean }) => (
   <div className={`lv lv-ride${on ? ' on' : ''}`} aria-hidden="true"><div className="road"><i /><i /><i /><i /><i /><i /></div><div className="car"><b /><s /><s /></div></div>
@@ -32,7 +29,7 @@ const Nav = ({ on }: { on: boolean }) => (
 );
 
 const EXPS: Exp[] = [
-  { id: 'motion-system', title: 'Motion design system', line: 'One set of motion decisions, defined once and inherited by every screen — with the drawer, the cascade and the token phone running.', meta: 'System · 2026', visual: on => <Drawer on={on} />, to: 'motion' },
+  { id: 'motion-system', title: 'Motion design system', line: 'One set of motion decisions, defined once and inherited by every screen — with the drawer, the cascade and the token phone running.', meta: 'System · 2026', visual: on => <MotionThumb on={on} />, to: 'motion' },
   { id: 'coin-rig', title: P['coin-rig'].title, line: P['coin-rig'].blurb, meta: `${P['coin-rig'].client} · ${P['coin-rig'].year}`, visual: on => <Coin on={on} /> },
   { id: 'rupee-coin', title: P['rupee-coin'].title, line: P['rupee-coin'].blurb, meta: `${P['rupee-coin'].client} · ${P['rupee-coin'].year}`, visual: on => <Coin on={on} /> },
   { id: 'ridequest', title: P['ridequest'].title, line: P['ridequest'].blurb, meta: `${P['ridequest'].client} · ${P['ridequest'].year}`, visual: on => <Ride on={on} /> },

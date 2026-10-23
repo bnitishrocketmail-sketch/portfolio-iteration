@@ -144,6 +144,87 @@ const V = {
 type Mode = 'raw' | 'sys';
 const REST = { chip: false, card: false, open: false, closing: false, tab: 0, pushed: false, popping: false };
 
+/* the journey's phone (the drawer, the tabs, opening an item) — the demo below and the Lab's thumbnail draw the same one */
+function JourneyPhone({ cls, ph, phoneRef }: { cls: string; ph: typeof REST; phoneRef?: RefObject<HTMLDivElement | null> }) {
+  return (
+  <div className={cls} data-tab={ph.tab} ref={phoneRef}>
+    <div className="screen">
+      <div className="list-wrap">
+        <div className={`page pageA${ph.tab === 0 ? ' active' : ''}`}>
+          <div className="pagegut">
+            <Status /><AppHeader />
+            <div className={`chip${ph.chip ? ' pressed' : ''}`}>Filters ↓</div>
+            <div className="cards" style={{ marginTop: 62 }}><Item className={`tapcard${ph.card ? ' press' : ''}`} /><Item /></div>
+          </div>
+        </div>
+        <div className={`page pageB${ph.tab !== 0 ? ' active' : ''}`}>
+          <div className="pagegut"><Status /><AppHeader q="Saved for later" /><div className="pgB-hero" /><div className="pgB-row" /><div className="pgB-row" /><div className="pgB-row" /></div>
+        </div>
+      </div>
+      <div className="bnav">
+        <div className="navind"><i /></div>
+        {[0, 1, 2, 3].map(i => <div key={i} className={`item${ph.tab === i ? ' on' : ''}`}><div className="ic" /><div className="lb" /></div>)}
+      </div>
+      <div className="dimmer" />
+      <div className="detail">
+        <div className="d-img"><div className="d-back" /></div>
+        <div className="d-body">
+          <div className="l1" style={{ width: '80%' }} /><div className="l2" style={{ width: '55%' }} /><div className="price" style={{ width: '42%' }} />
+          <div className="srow" style={{ marginTop: 14 }}><i /><s className="a" /></div>
+          <div className="srow"><i /><s className="c" /></div>
+        </div>
+        <div className="d-cta" />
+      </div>
+      <div className="scrim" />
+      <div className="drawer"><SheetBody /></div>
+    </div>
+    <div className="homebar" />
+  </div>
+  );
+}
+
+/* ---- the Lab's thumbnail for the motion system (Nitish, 23 Oct): the journey running with the system, over and over
+   while the card plays, and the three levels peeking in from the left ---- */
+export function MotionThumb({ on }: { on: boolean }) {
+  const [ph, setPh] = useState(REST);
+  const run = useRef(0);
+  useEffect(() => {
+    const id = ++run.current;
+    if (!on) { setPh(REST); return; }
+    const set = (p: Partial<typeof REST>) => setPh(o => ({ ...o, ...p }));
+    const w = (ms: number) => wait(ms).then(() => id === run.current);
+    (async () => {
+      for (;;) { // the demo's journey, with the system (no lag), on a loop
+        if (!await w(500)) return;
+        set({ chip: true }); if (!await w(150)) return; set({ chip: false });
+        if (!await w(80)) return; set({ open: true }); if (!await w(1500)) return;
+        set({ closing: true, open: false }); if (!await w(350)) return; set({ closing: false }); if (!await w(350)) return;
+        set({ tab: 1 }); if (!await w(1200)) return; set({ tab: 0 }); if (!await w(650)) return;
+        set({ card: true }); if (!await w(160)) return; set({ card: false });
+        if (!await w(60)) return; set({ pushed: true }); if (!await w(1600)) return;
+        set({ popping: true, pushed: false }); if (!await w(450)) return; set({ popping: false });
+      }
+    })();
+    return () => { run.current++; };
+  }, [on]);
+  const cls = ['phone tokphone sysmode', ph.open && 'sheet-open', ph.closing && 'sheet-closing', ph.pushed && 'pushed', ph.popping && 'popping'].filter(Boolean).join(' ');
+  return (
+    <div className="dt4 mthumb" aria-hidden="true">
+      <div className="mthumb-levels">
+        <div className="cascade">
+          {LEVELS.map((l, i) => (
+            <div key={l.n}>
+              {i > 0 && <div className="bandsep"><span className="arr">↓</span> {i === 1 ? 'compose into' : 'applied by'}</div>}
+              <div className="band"><div className="bandlabel"><b>{l.n}</b>{l.name}</div><div className="chipset">{l.toks.map(t => <span key={t.id} className="ctok">{t.id}{t.small && <> <small>{t.small}</small></>}</span>)}</div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mthumb-phone"><JourneyPhone cls={cls} ph={ph} /></div>
+    </div>
+  );
+}
+
 function TokenDemo({ root }: { root: RefObject<HTMLElement | null> }) {
   const [mode, setMode] = useState<Mode>('raw');
   const [pace, setPace] = useState<'calm' | 'brisk'>('calm');
@@ -197,39 +278,7 @@ function TokenDemo({ root }: { root: RefObject<HTMLElement | null> }) {
       <h2>One definition. Every screen follows.</h2>
       <p className="body">The same structure, running. This phone plays one journey — drawer, tabs, opening an item. The panel holds three of the system’s semantic tokens. <strong>Without</strong> them, every surface answers on its own: mixed timings, no acknowledgment. <strong>With</strong> them, one shared definition tunes every surface at once — and retuning a single token re-tunes the whole app.</p>
       <div className="tokstage">
-        <div className={cls} data-tab={ph.tab} ref={phone}>
-          <div className="screen">
-            <div className="list-wrap">
-              <div className={`page pageA${ph.tab === 0 ? ' active' : ''}`}>
-                <div className="pagegut">
-                  <Status /><AppHeader />
-                  <div className={`chip${ph.chip ? ' pressed' : ''}`}>Filters ↓</div>
-                  <div className="cards" style={{ marginTop: 62 }}><Item className={`tapcard${ph.card ? ' press' : ''}`} /><Item /></div>
-                </div>
-              </div>
-              <div className={`page pageB${ph.tab !== 0 ? ' active' : ''}`}>
-                <div className="pagegut"><Status /><AppHeader q="Saved for later" /><div className="pgB-hero" /><div className="pgB-row" /><div className="pgB-row" /><div className="pgB-row" /></div>
-              </div>
-            </div>
-            <div className="bnav">
-              <div className="navind"><i /></div>
-              {[0, 1, 2, 3].map(i => <div key={i} className={`item${ph.tab === i ? ' on' : ''}`}><div className="ic" /><div className="lb" /></div>)}
-            </div>
-            <div className="dimmer" />
-            <div className="detail">
-              <div className="d-img"><div className="d-back" /></div>
-              <div className="d-body">
-                <div className="l1" style={{ width: '80%' }} /><div className="l2" style={{ width: '55%' }} /><div className="price" style={{ width: '42%' }} />
-                <div className="srow" style={{ marginTop: 14 }}><i /><s className="a" /></div>
-                <div className="srow"><i /><s className="c" /></div>
-              </div>
-              <div className="d-cta" />
-            </div>
-            <div className="scrim" />
-            <div className="drawer"><SheetBody /></div>
-          </div>
-          <div className="homebar" />
-        </div>
+        <JourneyPhone cls={cls} ph={ph} phoneRef={phone} />
         <div className={`tokpanel${sys ? ' with' : ''}`}>
           <div className="segs" role="group" aria-label="The system">
             <button type="button" aria-pressed={!sys} className={!sys ? 'on' : ''} onClick={() => pick('raw')}>Without the system</button>
