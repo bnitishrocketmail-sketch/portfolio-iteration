@@ -208,9 +208,28 @@ export function MotionThumb({ on }: { on: boolean }) {
     return () => { run.current++; };
   }, [on]);
   const cls = ['phone tokphone sysmode', ph.open && 'sheet-open', ph.closing && 'sheet-closing', ph.pushed && 'pushed', ph.popping && 'popping'].filter(Boolean).join(' ');
+  /* the layout (Nitish, 23 Oct: "the levels' container centred with equal padding; the phone must not hide any value"):
+     the panel and the phone side by side, never overlapping — both scaled to the tile's height less an equal padding,
+     the panel narrowed further if the width runs short, the pair centred in the tile */
+  const root = useRef<HTMLDivElement>(null), lv = useRef<HTMLDivElement>(null);
+  const [fit, setFit] = useState<{ s: number; t: number; x: number; y: number; px: number; py: number } | null>(null);
+  useLayoutEffect(() => {
+    const el = root.current, pan = lv.current; if (!el || !pan) return;
+    const PW = 212, PH = 446; /* the phone's own size */
+    const lay = () => {
+      const W = el.clientWidth, H = el.clientHeight; if (!W || !H) return;
+      const pad = Math.round(Math.min(W, H) * .07), gap = pad;
+      const s = (H - 2 * pad) / PH, phoneW = PW * s;
+      const pw = pan.offsetWidth, ph = pan.offsetHeight;
+      const t = Math.min((H - 2 * pad) / ph, (W - 2 * pad - gap - phoneW) / pw);
+      const total = pw * t + gap + phoneW, x0 = (W - total) / 2;
+      setFit({ s, t, x: x0, y: (H - ph * t) / 2, px: x0 + pw * t + gap, py: pad });
+    };
+    lay(); const ro = new ResizeObserver(lay); ro.observe(el); return () => ro.disconnect();
+  }, []);
   return (
-    <div className="dt4 mthumb" aria-hidden="true">
-      <div className="mthumb-levels">
+    <div className="dt4 mthumb" ref={root} aria-hidden="true">
+      <div className="mthumb-levels" ref={lv} style={fit ? { transform: `translate(${fit.x}px, ${fit.y}px) scale(${fit.t})` } : { opacity: 0 }}>
         <div className="cascade">
           {LEVELS.map((l, i) => (
             <div key={l.n}>
@@ -220,7 +239,7 @@ export function MotionThumb({ on }: { on: boolean }) {
           ))}
         </div>
       </div>
-      <div className="mthumb-phone"><JourneyPhone cls={cls} ph={ph} /></div>
+      <div className="mthumb-phone" style={fit ? { transform: `translate(${fit.px}px, ${fit.py}px) scale(${fit.s})` } : { opacity: 0 }}><JourneyPhone cls={cls} ph={ph} /></div>
     </div>
   );
 }

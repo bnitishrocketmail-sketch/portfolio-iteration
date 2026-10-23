@@ -33,9 +33,13 @@
 /* the motion system (MotionThumb in MotionV2_04.tsx, 23 Oct): its journey phone running with the system, and the three
    levels peeking in from the left — the page's own pieces, drawn in the card's inks and scaled down */
 .lb4-media .dt4.mthumb { --line-ink: var(--pcard-open-ink); position: absolute; inset: 0; flex: none; overflow: hidden; border: 0; border-radius: 0; background: none; }
-.mthumb-phone { position: absolute; z-index: 1; left: 68%; top: 50%; transform: translate(-50%, -50%) scale(.46); transform-origin: 50% 50%; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .18)); }
-.mthumb-levels { position: absolute; left: 5%; top: 50%; width: 640px; transform: translateY(-50%) scale(.5); transform-origin: 0 50%; } /* its level names in view at the left, its values running on behind the phone */
-.mthumb-levels .cascade { margin: 0; }
+.mthumb-phone { position: absolute; z-index: 1; left: 0; top: 0; transform-origin: 0 0; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .18)); }
+.mthumb-levels { position: absolute; left: 0; top: 0; width: 330px; transform-origin: 0 0; } /* placed and scaled by MotionThumb beside the phone */
+/* the panel: an equal padding all round, the level's name above its values (narrow, so it scales up larger) */
+.dt4.mthumb .cascade { margin: 0; padding: 22px; }
+.dt4.mthumb .band { flex-direction: column; gap: 8px; } .dt4.mthumb .bandlabel { flex-basis: auto; padding-top: 0; }
+.dt4.mthumb .bandsep { margin: 12px 0; }
+
 .mthumb .ctok { cursor: default; }
 /* the coin: the Lottie, held on its still frame until it plays */
 .lv-coin .lot { width: 72%; height: 86%; transform: translateY(-10%); } /* the coin sits low in its own frame */
