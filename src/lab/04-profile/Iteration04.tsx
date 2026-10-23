@@ -225,12 +225,14 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
       if (getComputedStyle(c).position !== 'absolute') { setClip(null); return; }
       const W = w.clientWidth, H = w.clientHeight, cw = c.offsetWidth, ch = c.offsetHeight, r = parseFloat(getComputedStyle(c).borderTopRightRadius) || 0;
       const wr = w.getBoundingClientRect(), lr = l.getBoundingClientRect(); const nx = lr.left - wr.left, nw = lr.width, nh = lr.height, rn = parseFloat(getComputedStyle(l).borderBottomLeftRadius) || 0;
+      const { K } = sysCurve(w); /* the radii are already the system's (× --ios-k, computed); the curve too (24 Oct: they were round arcs) */
       const d = [
-        `M ${r} 0 L ${nx - rn} 0 A ${rn} ${rn} 0 0 1 ${nx} ${rn} L ${nx} ${nh - rn} A ${rn} ${rn} 0 0 0 ${nx + rn} ${nh}`, /* the top edge to the notch, down its left side */
-        `L ${nx + nw - rn} ${nh} A ${rn} ${rn} 0 0 0 ${nx + nw} ${nh - rn} L ${nx + nw} ${rn} A ${rn} ${rn} 0 0 1 ${nx + nw + rn} 0`, /* along its bottom, up its right side */
-        `L ${W - r} 0 A ${r} ${r} 0 0 1 ${W} ${r} L ${W} ${H - r} A ${r} ${r} 0 0 1 ${W - r} ${H}`, /* the top-right and bottom-right corners */
-        `L ${cw + r} ${H} A ${r} ${r} 0 0 1 ${cw} ${H - r} L ${cw} ${H - ch + r} A ${r} ${r} 0 0 0 ${cw - r} ${H - ch} L ${r} ${H - ch} A ${r} ${r} 0 0 1 0 ${H - ch - r}`, /* the cut-out */
-        `L 0 ${r} A ${r} ${r} 0 0 1 ${r} 0 Z`,
+        `M ${r} 0`,
+        sCorner([nx, 0], [1, 0], [0, 1], rn, K), sCorner([nx, nh], [0, 1], [1, 0], rn, K), /* the top edge to the notch, down its left side */
+        sCorner([nx + nw, nh], [1, 0], [0, -1], rn, K), sCorner([nx + nw, 0], [0, -1], [1, 0], rn, K), /* along its bottom, up its right side */
+        sCorner([W, 0], [1, 0], [0, 1], r, K), sCorner([W, H], [0, 1], [-1, 0], r, K), /* the top-right and bottom-right corners */
+        sCorner([cw, H], [-1, 0], [0, -1], r, K), sCorner([cw, H - ch], [0, -1], [-1, 0], r, K), sCorner([0, H - ch], [-1, 0], [0, -1], r, K), /* the cut-out */
+        sCorner([0, 0], [0, -1], [1, 0], r, K), 'Z',
       ].join(' ');
       setClip(`path("${d}")`);
     };
