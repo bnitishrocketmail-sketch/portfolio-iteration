@@ -95,10 +95,10 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
             <motion.button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}${hov === r ? ' hov' : ''}${p.cover && 'bg' in p.cover ? ' lit' : ''}`} style={rail ? undefined : { bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r }}
               animate={{ y }} transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30 }}
               onPointerEnter={e => { if (e.pointerType !== 'touch' && !rail) setHov(r); }} onClick={() => onOpen(p.id)}>
-              <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE ? { WebkitMaskImage: holeMask(r > 0 && !rail, nm.x, nm.b), maskImage: holeMask(r > 0 && !rail, nm.x, nm.b) } : {}) }} aria-hidden="true">
+              <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE && !rail ? { WebkitMaskImage: holeMask(r > 0, nm.x, nm.b), maskImage: holeMask(r > 0, nm.x, nm.b) } : {}) /* no hole on the phone (24 Oct, Nitish) */ }} aria-hidden="true">
                 {p.cover && ('video' in p.cover ? <Cover src={p.cover.video} poster={p.cover.poster} on={hov === r} /> : 'lottie' in p.cover ? <span className="pc-video pc-lot" style={{ background: p.cover.bg }}><Lottie className="pc-lot-in" src={p.cover.lottie} still={p.cover.still} playing={hov === r} /></span> : <span className="pc-video pc-comp">{p.cover.comp === 'fintech' ? <Fintech3D mini on={hov === r} /> : <Launches3D mini on={hov === r} />}</span>)}
               </span>
-              {!HOLE && <i className="tab4" aria-hidden="true" />}
+              {!HOLE && !rail && <i className="tab4" aria-hidden="true" />}
               <span className="pc-name"><b>{p.title}</b><small>{p.client} · {p.year}</small></span>
             </motion.button>
           );
