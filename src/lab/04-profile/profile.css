@@ -344,7 +344,7 @@
 /* open (Nitish, 21 Oct): the letter at the bottom right, clear of the meta and the chips at the bottom left (it had sat
    under them); the folded card keeps it where it was. Iteration 1's shared .pletter rule set left: 14px on both, which
    had been winning over this one. */
-.pp4-card.open .pp4-cover .pletter { left: auto; right: calc(1.4cqw + clamp(40px, 4cqw, 56px) + 1cqw); } /* past the arrow */
+.pp4-card.open .pp4-cover .pletter { left: auto; right: calc(1.4cqw + clamp(40px, 4cqw, 56px) + 1cqw); opacity: .05; } /* past the arrow; half as strong as the folded cards' (.1) — Nitish, 23 Oct, open cards only */
 /* the open layout */
 .pp4-open { position: absolute; inset: 0; }
 .pp4-top { position: absolute; left: 2cqw; top: 1.8cqw; right: 34%; display: flex; flex-direction: column; gap: .7cqw; }
