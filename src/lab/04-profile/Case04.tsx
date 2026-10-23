@@ -47,6 +47,11 @@ function Slot({ m, fl, active = true }: { m: Media; fl?: string; active?: boolea
     </div>
   );
 }
+/* the customer asking (his FAQ panel's icon): a head over shoulders, in the pastel tones his page gave them in turn */
+const ASKER = ['#f0dafb', '#cce4ff', '#f7d5d5', '#d4f7dc', '#d5e6f7', '#d5eef7', '#f0d5f7', '#f7d5d5', '#cde4ff'];
+function Asker({ tone }: { tone: number }) {
+  return <svg className="cs4-faq-asker" viewBox="0 0 22 30" aria-hidden="true" fill={ASKER[tone % ASKER.length]}><circle cx="11" cy="6.5" r="6" /><rect x="0" y="14" width="22" height="16" rx="7" /></svg>;
+}
 /* a layer by its box: a Lottie or a picture; a Lottie is fetched once its slot has been on screen (the fintech page's
    six cells carry 3 MB of them) */
 function LayerBox({ l, on }: { l: Layer; on: boolean }) {
@@ -271,17 +276,24 @@ function Render({ b }: { b: Block }) {
     );
     case 'flow': return <Flow steps={b.steps} />;
     case 'carousel': return <Carousel of={b.of} />;
-    /* his FAQ panel: a cut screen, then the questions it raised under their labels */
-    case 'faq': return (
+    /* his FAQ panel (rebuilt 23 Oct from his Framer page: "it doesn't look like UI, the questions lost the user icon,
+       no space hygiene"): each step's screen whole, in a white screen card, then the questions it raised — a white card
+       per kind of question, its label inside, every question with the asker in front of it */
+    case 'faq': { let n = 0; return (
       <div className={`cs4-faq n${b.of.length}`}>
         {b.of.map((c, i) => (
           <div key={i} className="cs4-faq-col">
-            <Slot m={c.m} />
-            {c.qs.map(q => <div key={q.label} className="cs4-faq-q"><span className="cs4-faq-label">{q.label}</span>{q.q.map(t => <p key={t} className="cs4-faq-ask"><i aria-hidden="true" />{t}</p>)}</div>)}
+            <div className="cs4-faq-ui">{c.m.src && <img src={c.m.src} alt={c.m.label} loading="lazy" decoding="async" />}</div>
+            {c.qs.map(q => (
+              <div key={q.label} className="cs4-faq-card">
+                <span className="cs4-faq-label">{q.label}</span>
+                {q.q.map(t => <p key={t} className="cs4-faq-ask"><Asker tone={n++} /><span>{t}</span></p>)}
+              </div>
+            ))}
           </div>
         ))}
       </div>
-    );
+    ); }
     case 'converge': return <Converge of={b.of} to={b.to} />;
     /* a version: its number and its name as chips, a line, its screens */
     case 'version': return (
