@@ -84,7 +84,7 @@
    cos(2 × the angle off the light's axis), clamped, to the power 1.5 — a fit to the widgets' corners. --edge-angle turns
    the axis (0: top and bottom lit; 90: the sides), as tilting the phone does. ---- */
 .edge4 { display: none; }
-.it04.edgelit { --rim-a: .52; --la: var(--edge-angle, 8deg); }
+.it04.edgelit { --rim-a: .52; --la: var(--edge-angle, 24deg); } /* 24° by default (24 Oct, Nitish) */
 .it04.edgelit.light { --rim-a: .75; }
 .it04.edgelit .frame4, .it04.edgelit.light.glassframe .frame4 { isolation: isolate; box-shadow: var(--shadow-frame); } /* the old hairline and top line go (the light glass one's selector is stronger, so named) */
 .it04.edgelit .edge4 { display: block; position: absolute; inset: 0; z-index: 7; pointer-events: none; /* over the frame's contents: they never reach its edge, but their shadows do, and dimmed the bottom rim */ border-radius: inherit; corner-shape: inherit;

@@ -295,7 +295,7 @@ export default function Iteration04() {
   const glass = tweaks['--frame-v'] === 'glass'; /* the main container as glass (a control, 22 Oct) */
   const edge = tweaks['--edge-light'] ?? 'rim'; /* the container's edge light, iOS's rim or off (a control, 23 Oct) */
   const frameRef = useRef<HTMLDivElement>(null);
-  usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '8') || 0); /* the phone's rims, at the Light angle (24 Oct) */
+  usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '24') || 0); /* the phone's rims, at the Light angle (24 Oct) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
