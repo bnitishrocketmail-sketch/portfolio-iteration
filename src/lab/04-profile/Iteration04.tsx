@@ -1,5 +1,5 @@
-import { useId, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, LINKS, NAV04 as NAV, PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
@@ -110,35 +110,30 @@ function Cover({ src, poster, on }: { src: string; poster: string; on: boolean }
    carries the selected name itself — the old name goes out quickly, the new one comes in on the way — so the name is
    always inside the pill, and the pill hides the names it passes. */
 const NAV_SPRING = { type: 'spring', stiffness: 400, damping: 38, mass: 1 } as const;
-/* the cavity-ball selection (Nitish, 23 Oct; a control): the selected tab sits on a ball in the bar's colour, a little
-   wider than the bar, in a socket that swells out of the bar round it, a thin ring cut between socket and ball showing
-   what is behind. The bar is drawn here (an SVG under the names) instead of by the column's background: the bar and the
-   socket merge through a goo filter (blur, then a hard alpha step at half), so the swell meets the bar's sides in smooth
-   fillets wherever the ball is, the bar's rounded ends included; the ring is a mask, the ball a circle over it. Sizes are
-   fractions of the bar's width: ball 1.1, ring 5%, rim 9%. The ball travels on the pill's spring. */
-function Cavity({ w, h, x, y, cy, tr }: { w: number; h: number; x: number; y: number; cy: number; tr: object }) {
-  const id = useId().replace(/:/g, '');
-  const rb = w * .55, g = w * .05, rs = rb + g + w * .09, sd = w * .085;
-  const pad = rs; /* room for the swell past the bar's sides and ends */
+/* the cavity-ball selection (Nitish, 23 Oct; a control) — his Swiggy bottom nav's B1 "Cavity ball", turned to run down
+   the bar: the bar's edge facing the page (the right; the Swiggy bar's top) dips into a smooth valley beside the selected
+   tab and a small ball rides in it, sliding along the edge to the next tab, the highlight pill staying on the tab. The
+   valley is his: two cubics, half-width HW, depth DP, handles at .45 / .55 of HW; the ball's centre 7.35 in from the
+   edge, radius 5.75; the slide 340ms on an ease-out cubic. His sizes were for a 93.5-tall floating bar; here they scale
+   by the bar's width / 93.5. The ball is the bar's colour (his ask here; on Swiggy it took the store's), lifted by a
+   small shadow. The bar is drawn as this path, so the column's own fill and shadow step aside. */
+const CAV = { HW: 19.5, DP: 15.6, BALLR: 5.75, BALLIN: 7.35, REF: 93.5, SLIDE: .34 };
+function CavityBar({ w, h, x, y, cy }: { w: number; h: number; x: number; y: number; cy: number }) {
+  const reduce = useReducedMotion();
+  const k = w / CAV.REF, HW = CAV.HW * k, DP = CAV.DP * k, R = w / 2;
+  const clamp = (v: number) => Math.max(R + HW, Math.min(h - R - HW, v));
+  const mv = useMotionValue(clamp(cy));
+  useEffect(() => { const c = animate(mv, clamp(cy), reduce ? { duration: 0 } : { duration: CAV.SLIDE, ease: [.33, 1, .68, 1] }); return () => c.stop(); }, [cy, h, w]); // eslint-disable-line react-hooks/exhaustive-deps
+  const f = (n: number) => n.toFixed(2);
+  const d = useTransform(mv, c => `M0 ${f(R)} A${f(R)} ${f(R)} 0 0 1 ${f(w)} ${f(R)} V${f(c - HW)}`
+    + ` C${f(w)} ${f(c - HW * .45)} ${f(w - DP)} ${f(c - HW * .55)} ${f(w - DP)} ${f(c)}`
+    + ` C${f(w - DP)} ${f(c + HW * .55)} ${f(w)} ${f(c + HW * .45)} ${f(w)} ${f(c + HW)}`
+    + ` V${f(h - R)} A${f(R)} ${f(R)} 0 0 1 0 ${f(h - R)} Z`);
+  const pad = 12;
   return (
     <svg className="cav4" style={{ left: x - pad, top: y - pad }} width={w + 2 * pad} height={h + 2 * pad} viewBox={`${-pad} ${-pad} ${w + 2 * pad} ${h + 2 * pad}`} aria-hidden="true">
-      <defs>
-        <filter id={`goo${id}`} x="-20%" y="-5%" width="140%" height="110%" colorInterpolationFilters="sRGB">
-          <feGaussianBlur stdDeviation={sd} />
-          <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -12" />
-        </filter>
-        <mask id={`ring${id}`} maskUnits="userSpaceOnUse" x={-pad} y={-pad} width={w + 2 * pad} height={h + 2 * pad}>
-          <rect x={-pad} y={-pad} width={w + 2 * pad} height={h + 2 * pad} fill="#fff" />
-          <motion.circle cx={w / 2} r={rb + g} fill="#000" initial={false} animate={{ cy }} transition={tr} />
-        </mask>
-      </defs>
-      <g mask={`url(#ring${id})`}>
-        <g filter={`url(#goo${id})`}>
-          <rect x={0} y={0} width={w} height={h} rx={w / 2} />
-          <motion.circle cx={w / 2} r={rs} initial={false} animate={{ cy }} transition={tr} />
-        </g>
-      </g>
-      <motion.circle className="cav4-ball" cx={w / 2} r={rb} initial={false} animate={{ cy }} transition={tr} />
+      <motion.path className="cav4-bar" d={d} />
+      <motion.circle className="cav4-ball" cx={w - CAV.BALLIN * k} cy={mv} r={CAV.BALLR * k} />
     </svg>
   );
 }
@@ -163,14 +158,14 @@ function Nav({ tab, go, sig, cav }: { tab: Tab; go: (v: ViewName) => void; sig?:
   const i = NAV.findIndex(n => n.id === tab);
   const box = boxes?.[tab] ?? null;
   const pill = box ? { top: box.top, height: box.height, width: box.width } : null;
-  const tr = reduce ? { duration: 0 } : NAV_SPRING;
+  const tr = reduce ? { duration: 0 } : cav ? { duration: .34, ease: [.22, 1, .36, 1] as const } : NAV_SPRING; /* cavity version: the pill glides with the ball, as on Swiggy (340ms, his ease) */
   const out = reduce ? { duration: 0 } : { duration: .1, ease: 'easeOut' as const }; /* the old name goes quickly … */
   const inn = reduce ? { duration: 0 } : { duration: .22, ease: 'easeOut' as const }; /* … the new one comes in while the pill is still arriving */
   return (
     <nav className={`nav4${sig ? ' sig' : ''}${cav ? ' cav' : ''}`} aria-label="Sections">
       <ul ref={ulRef}>
-        {cav && bar && box && <Cavity w={bar.w} h={bar.h} x={bar.x} y={bar.y} cy={box.top + box.height / 2 - bar.y} tr={tr} />}
-        {pill && !cav && (
+        {cav && bar && box && <CavityBar w={bar.w} h={bar.h} x={bar.x} y={bar.y} cy={box.top + box.height / 2 - bar.y} />}
+        {pill && (
           <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
             <AnimatePresence initial={false} mode="wait">
               <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
