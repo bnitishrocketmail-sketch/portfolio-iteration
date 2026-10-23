@@ -226,7 +226,14 @@
 .brig-hint { margin: 0; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .62; } /* meta */
 
 @media (max-width: 700px) {
-  .cs4 { --s1: 8px; --s2: 12px; --s3: 16px; --s4: 24px; --s5: 36px; --ph-w: 150px; }
+  /* the phone's spacing (24 Oct, Nitish: "the spacing hygiene throughout is messed up — phones and other containers could
+     have been reduced to cater a healthy spacing"): one surface per section — the section's card; a grey panel inside it
+     (the FAQ panel, a version, a column) had added a second inset, and its white cards a third, squeezing the text to
+     ~250px of a 402px screen — so those panels lose their own ground and inset here, their cards sit on the section's
+     card, versions are split by a hairline. The steps a little roomier (a card's inset and the blocks' gap 20, a
+     section's parts 28), and the screens smaller, so there is air round them: an upright phone 132px (was 150), the
+     FAQ panel's screens half their card (was 62%) */
+  .cs4 { --s1: 8px; --s2: 12px; --s3: 20px; --s4: 28px; --s5: 40px; --ph-w: 132px; }
   .cs4-main { display: flex; flex-direction: column; gap: 12px; }
   .cs4-aside { display: flex; flex-direction: column; gap: 12px; padding: 0; } .cs4-next { box-shadow: var(--shadow-frame); padding: 16px 16px 18px; min-height: 180px; } .cs4-next-arrow { right: 14px; bottom: 14px; }
   .cs4-talk { box-shadow: var(--shadow-frame); padding: 16px 16px 18px; gap: 12px; } .cs4-talk-line { font-size: var(--t-body); }
@@ -239,16 +246,19 @@
   .cs4-strip { grid-template-columns: 1fr 1fr; } .cs4-strip > div:nth-child(5) { grid-column: 1 / -1; }
     .cs4-row { grid-template-columns: 1fr !important; }
   .cs4-media, .cs4-faq-ui, .cs4-faq-card { border-radius: calc(calc(var(--r) - 8px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); }
-  .cs4-fig.phone { width: min(100%, var(--ph-w)); } .cs4-fig.phone-land { width: min(100%, var(--ph-h)); } .cs4-fig.half { width: 80%; }
-  .cs4-phones { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); padding: 0; } .cs4-phones .cs4-fig.phone { width: 100%; }
+  .cs4-fig.phone { width: min(100%, var(--ph-w)); } .cs4-fig.phone-land { width: min(100%, var(--ph-h)); }
+  .cs4-phones { display: grid; grid-template-columns: repeat(2, minmax(0, var(--ph-w))); justify-content: center; gap: var(--s3) var(--s4); padding: 0; } .cs4-phones .cs4-fig.phone { width: 100%; } /* two to a row, each a phone's width, centred with air between */
   .cs4-step.with-text, .cs4-step.with-side { grid-template-columns: 1fr; }
   .cs4-screens { flex-direction: column; gap: var(--s4); }
   .cs4-stats ul { grid-template-columns: 1fr 1fr; }   .cs4-legend { justify-content: flex-start; }
   .cs4-cols { grid-template-columns: 1fr; }
   .cs4-hero.block { padding: 20px 12px; overflow: hidden; } /* the sides run past the card's edge on a phone, cut by it */
-  .cs4-faq, .cs4-faq.n6 { grid-template-columns: 1fr; gap: var(--s4); } .cs4-faq-ui > img { width: 62%; margin: 0 auto; } /* one step under another (two columns were too narrow for the system's body size and chips); the screen centred in its card at a phone's width; the steps --s4 apart, a section's parts */
-  .cs4-conv-row { gap: 20px; } .cs4-conv-row .cs4-fig.phone { width: 30%; } .cs4-conv .cs4-over .cs4-layer { display: none; } /* no room for the pills past the phones */
-  .cs4-ver { padding: 12px; }
+  .cs4-faq, .cs4-faq.n6 { grid-template-columns: 1fr; gap: var(--s4); padding: 0; background: none; border-radius: 0; } .cs4-faq-ui > img { width: 52%; margin: 0 auto; } /* one step under another (two columns were too narrow for the system's body size and chips); the screen centred in its card at a phone's width; the steps --s4 apart, a section's parts */
+  .cs4-conv-row { gap: 12px; } .cs4-conv-row .cs4-fig.phone { width: 28%; } .cs4-conv .cs4-over .cs4-layer { display: none; } /* no room for the pills past the phones */
+  .cs4-ver { padding: 0; background: none; border-radius: 0; } .cs4-ver + .cs4-ver { padding-top: var(--s3); border-top: 1px solid color-mix(in srgb, var(--pcard-open-ink) 12%, transparent); }
+  .cs4-col { padding: 0; background: none; border-radius: 0; } .cs4-cols { gap: var(--s4); }
+  .cs4-stats { padding: 16px; } .cs4-next, .cs4-talk { padding: 20px; }
+  .cs4-fig.half { width: 72%; }
   .bm-panel { padding: 12px; } .bmap { min-width: 720px; }
   .bsr { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: none; gap: 16px 12px; }
   .bsr-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; } .bsr-scale, .bst, .bsr-name { grid-row: auto; } .bst { width: 80%; }

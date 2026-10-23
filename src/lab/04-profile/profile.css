@@ -520,7 +520,7 @@
   .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; gap: 8px; padding: 4px 4px 0; } .pp4-right { max-width: none; }
   .pp4-head .h2-4 { color: var(--name-ink); } .pp4-head .pp4-note { color: var(--glass-ink); } /* on the picture: the name's and the lede's inks, which already sit on it */
   .it04.light .pp4-head .pp4-note, .it04.light .cs4-head .pp4-note { color: var(--line-ink); } /* light: the page is light here, so the line's dark ink (the glass's light ink was for over the dark picture) */
-  .pp4 > :not(.pp4-head) { border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); padding: 16px 14px 18px; }
+  .pp4 > :not(.pp4-head) { border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); padding: 12px; } /* the container's inset the cards' gap, all round (24 Oct: was 16 / 14 / 18) */
   .cr4 > .cm4-wrap { background: none; box-shadow: none; padding: 0; }
   /* the projects: the desktop's fan of cards, one open, becomes a plain list — every card open, its content in flow
      (title, blurb, meta, chips, the arrow), the letter faint behind; the pieces were absolutely placed for the fan */
