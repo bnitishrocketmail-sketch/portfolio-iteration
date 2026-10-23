@@ -464,7 +464,13 @@
   /* the gutter, 16px, as apps keep it; the body's own 16px went (base.css) — it had boxed the picture in and left a strip of
      the body's colour down each side, "one more container" (Nitish, 18 Oct) */
   .bg4 { position: fixed; inset: -6%; filter: blur(34px) brightness(.5); }
-  .it04.light .bg4 { filter: blur(34px) brightness(1.02); opacity: .3; } /* light (24 Oct): the page's own light grey through a faint picture — the picture's dark top had left the headings above the cards, dark on dark */ /* the picture is the background (desktop: .45 behind the frame) */
+  .it04.light .bg4 { filter: blur(34px) brightness(1.02); opacity: .3; }
+  /* the desktop's container and nav versions do not reach the phone (24 Oct, Nitish: "the nav bar still weirdly aligned,
+     a big shape in the middle of the screen"): the signature version's padding had made the bar a tall pill mid-screen,
+     the cavity version had taken its ground away, and the glass container's backdrop filter had pinned the fixed bar
+     to the page's foot instead of the screen. Here the frame has no surface, so the glass version has nothing to do */
+  .it04.glassframe .frame4, .it04.light.glassframe .frame4 { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+  .it04.glassframe .bg4 { filter: blur(34px) brightness(.5); } .it04.light.glassframe .bg4 { filter: blur(34px) brightness(1.02); } /* light (24 Oct): the page's own light grey through a faint picture — the picture's dark top had left the headings above the cards, dark on dark */ /* the picture is the background (desktop: .45 behind the frame) */
   /* the frame: a size container on the desktop; a size container's height is contained (it ignores its children), so as a
      column it collapsed to its padding — 28px — and everything hung out of it (found 18 Oct). Here it contains width only
      (cqw still resolves) and has no surface of its own: no grey, no padding, no shadow */
@@ -473,7 +479,7 @@
   /* the bar (Nitish, 19 Oct, styled from a recording of Instagram's): a dark pill, about 6.3 : 1, the icons white and
      outlined, the selected one filled on a lighter pill two-thirds of the bar's height; it blurs what passes behind it.
      The desktop column (.nav4, .ai4) is hidden here; PhoneNav04 draws the phone's bar (PhoneNav04.tsx). */
-  .navcol4 { --bar-h: 64px; --inset: 10px; position: fixed; z-index: 40; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(calc(100vw - 32px), 380px); height: var(--bar-h); padding: 0; gap: 0; border-radius: 999px; background: var(--nav-bg); box-shadow: 0 10px 28px -10px rgba(0, 0, 0, .5), 0 2px 6px -2px rgba(0, 0, 0, .18); } /* the desktop column's bar (24 Oct): the nav's grey, its shadow falling below it */
+  .it04 .navcol4, .it04 .navcol4:has(.nav4.cav), .it04 .navcol4:has(.nav4.sig) { --bar-h: 64px; --inset: 10px; position: fixed; z-index: 40; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(calc(100vw - 32px), 380px); height: var(--bar-h); padding: 0; gap: 0; border-radius: 999px; background: var(--nav-bg); box-shadow: 0 10px 28px -10px rgba(0, 0, 0, .5), 0 2px 6px -2px rgba(0, 0, 0, .18); } /* the desktop column's bar (24 Oct): the nav's grey, its shadow falling below it */
   /* an app's bar: 64px tall; the pill (bar − 2 × inset) sits the same inset from the bar's top, bottom and ends — one value
      — and the targets fill the bar's height, so a tap anywhere across the bar lands (Nitish, 20 Oct: "space and padding
      hygiene, especially the top and bottom compared to left and right"; "too small, take an app's bottom nav size") */
