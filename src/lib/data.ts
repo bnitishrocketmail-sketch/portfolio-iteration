@@ -27,8 +27,12 @@ export const PROJECTS: Project[] = [
   { id: 'launches', title: 'Launches & campaigns', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'L', m1: '#0B2A15', m2: '#0A1230', wide: true,
     blurb: 'Landing pages, campaign visuals, a 3D product guide and GenAI characters for launches.', tags: ['Promotional', 'Visual communication', 'UI', 'Interaction/Motion'],
     cover: { comp: 'launches' } }, /* the two phones of its hero, in small (22 Oct) */
-  { id: 'coin-rig', title: 'Coin Rig', client: 'LottieFiles Bazaar', role: 'Design & build', year: '2026', letter: 'C', m1: '#F5BD56', m2: '#C94A3A',
-    blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Plugin', 'Faux 3D', 'Tool'] },
+  { id: 'coin-rig', title: 'Coin Rig', client: 'Lottie Creator plugin', role: 'Design & build', year: '2026', letter: 'C', m1: '#F5BD56', m2: '#C94A3A', /* the plugin named where the client was (23 Oct: "mention it is a Lottie Creator plugin") */
+    blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Lottie Creator plugin', 'Faux 3D', 'Tool'],
+    /* his recording of the plugin in Creator, cropped to its panel at square pixels (the recording's are 571:640) (23 Oct) */
+    cover: { video: '/cases/coin-rig/panel.mp4', poster: '/cases/coin-rig/panel-poster.webp', side: true, bg: '#111111' },
+    featuresTitle: 'A Lottie Creator plugin',
+    features: ['A live preview drawn with the projection the build uses', 'Any viewing angle: front, isometric, below', 'Spin or tumble, from any start to any end', 'Timing: once or ping-pong, duration and easing', 'Builds native, editable Creator layers; nothing is baked'] },
   { id: 'rupee-coin', title: 'Rupee coin flight', client: 'Loading & success state', role: 'Motion design', year: '2026', letter: '₹', m1: '#1F8A70', m2: '#BDE6D9',
     blurb: 'Loading and success states: a coin over a grid road, one rig, two outcomes.', tags: ['Loader', 'Lottie'] },
   { id: 'ridequest', title: 'RideQuest', client: 'Concept', role: 'Interaction & prototype', year: '2026', letter: 'R', m1: '#2E5E8E', m2: '#9A82D6',

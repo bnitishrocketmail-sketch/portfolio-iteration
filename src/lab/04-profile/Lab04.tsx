@@ -21,15 +21,17 @@ const P = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
 /* the visuals: each takes `on` and animates only then (CSS plays on .on; a Lottie plays on `playing`) */
 /* (the drawer sketch that was the motion system's visual is replaced by MotionThumb, 23 Oct) */
 const Coin = ({ on }: { on: boolean }) => <div className="lv lv-coin" aria-hidden="true"><Lottie className="lot" src={LOTTIES.coin} still={STILL.coin} playing={on} /></div>;
-/* RideQuest: his recording of the prototype (23 Oct), the phone on white, playing while the tile plays */
-const Ride = ({ on }: { on: boolean }) => {
+/* a recording beside its list (23 Oct): RideQuest's phone on white, Coin Rig's plugin panel on Creator's dark — the clip
+   at the right, whole and at its own proportion, playing while the tile plays; the project's parts at the left, under
+   its heading, in the ink that reads on the clip's ground */
+const SideClip = ({ id, on }: { id: string; on: boolean }) => {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}); else v.pause(); }, [on]);
-  const c = P['ridequest'].cover as { video: string; poster: string };
-  /* the phone at the right, whole and at its own proportion; the project's parts listed at the left (23 Oct) */
+  const p = P[id], c = p.cover as { video: string; poster: string; bg?: string };
+  const dark = (c.bg ?? '#fff').toLowerCase() < '#7'; /* a ground starting #0–#6 is dark */
   return (
-    <div className="lv lv-rq" aria-hidden="true">
-      <div className="lv-feat"><b>{P['ridequest'].featuresTitle}</b><ol>{(P['ridequest'].features ?? []).map(f => <li key={f}>{f}</li>)}</ol></div>
+    <div className={`lv lv-rq${dark ? ' dark' : ''}`} style={{ background: c.bg }} aria-hidden="true">
+      <div className="lv-feat"><b>{p.featuresTitle}</b><ol>{(p.features ?? []).map(f => <li key={f}>{f}</li>)}</ol></div>
       <video ref={ref} src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />
     </div>
   );
@@ -40,9 +42,9 @@ const Nav = ({ on }: { on: boolean }) => (
 
 const EXPS: Exp[] = [
   { id: 'motion-system', title: 'Motion design system', line: 'One set of motion decisions, defined once and inherited by every screen — with the drawer, the cascade and the token phone running.', meta: 'System · 2026', visual: on => <MotionThumb on={on} />, to: 'motion' },
-  { id: 'coin-rig', title: P['coin-rig'].title, line: P['coin-rig'].blurb, meta: `${P['coin-rig'].client} · ${P['coin-rig'].year}`, visual: on => <Coin on={on} /> },
+  { id: 'coin-rig', title: P['coin-rig'].title, line: P['coin-rig'].blurb, meta: `${P['coin-rig'].client} · ${P['coin-rig'].year}`, visual: on => <SideClip id="coin-rig" on={on} /> },
   { id: 'rupee-coin', title: P['rupee-coin'].title, line: P['rupee-coin'].blurb, meta: `${P['rupee-coin'].client} · ${P['rupee-coin'].year}`, visual: on => <Coin on={on} /> },
-  { id: 'ridequest', title: P['ridequest'].title, line: P['ridequest'].blurb, meta: `${P['ridequest'].client} · ${P['ridequest'].year}`, visual: on => <Ride on={on} /> },
+  { id: 'ridequest', title: P['ridequest'].title, line: P['ridequest'].blurb, meta: `${P['ridequest'].client} · ${P['ridequest'].year}`, visual: on => <SideClip id="ridequest" on={on} /> },
   { id: 'swiggy-nav', title: P['swiggy-nav'].title, line: P['swiggy-nav'].blurb, meta: `${P['swiggy-nav'].client} · ${P['swiggy-nav'].year}`, visual: on => <Nav on={on} /> },
 ];
 
