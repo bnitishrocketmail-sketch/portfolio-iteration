@@ -56,7 +56,12 @@ export default function PhoneNav04({ items, tab, go, photo }: { items: Item[]; t
   const [box, setBox] = useState<Record<string, { left: number; width: number }> | null>(null);
   useLayoutEffect(() => {
     const el = ul.current; if (!el) return;
-    const measure = () => { const u = el.getBoundingClientRect(); const b: Record<string, { left: number; width: number }> = {}; el.querySelectorAll<HTMLElement>('li[data-id] button').forEach(bt => { const r = bt.getBoundingClientRect(); b[bt.closest('li')!.dataset.id!] = { left: r.left - u.left, width: r.width }; }); setBox(b); };
+    const measure = () => {
+      /* the pill a perfect circle at rest (24 Oct, Nitish: "the selection pill a perfect ellipse"): as wide as it is tall (the
+         bar less its inset above and below), centred on its tab; it still stretches between two tabs as it moves */
+      const u = el.getBoundingClientRect(), cs = getComputedStyle(el), d = el.clientHeight - 2 * (parseFloat(cs.getPropertyValue('--inset')) || 10);
+      const b: Record<string, { left: number; width: number }> = {}; el.querySelectorAll<HTMLElement>('li[data-id] button').forEach(bt => { const r = bt.getBoundingClientRect(); b[bt.closest('li')!.dataset.id!] = { left: r.left - u.left + (r.width - d) / 2, width: d }; }); setBox(b);
+    };
     measure(); const ro = new ResizeObserver(measure); ro.observe(el); return () => ro.disconnect();
   }, []);
   /* the pill's two edges are two motion values; on a move the edge nearer the target takes the quick spring and the
