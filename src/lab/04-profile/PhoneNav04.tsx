@@ -12,7 +12,11 @@ import type { ViewName } from '../../lib/data';
    - the bar is the same wherever it sits; it fades with the screen behind it.
    Here: the two edges of the pill are two springs — the near edge quick, the far edge a little behind it — which
    gives the stretch and the settle; the icons swap on the tap with no transition. Reduced motion: no stretch, the pill
-   just appears on the new icon. Icon drawings are placeholders in the recording's line weight (his own to come). */
+   just appears on the new icon. Icon drawings are placeholders in the recording's line weight (his own to come).
+   24 Oct (Nitish: "fix the bottom navigation with the new changes; the profile picture for Home, not the signature"):
+   the bar takes the desktop column's system — the nav's light grey, its dark ink, the highlighter's dark pill with
+   light ink on the selected tab — and Home is his photo, as on the desktop: selected, it shrinks a little inside the
+   dark pill, so the pill rings it. */
 
 type Item = { id: ViewName; label: string };
 /* each icon: an outline (stroked) and a filled version, on a 24 box */
@@ -46,7 +50,7 @@ const ICON: Record<string, { line: React.ReactNode; fill: React.ReactNode }> = {
 const LEAD = { type: 'spring', stiffness: 560, damping: 42, mass: 1 } as const;   // the edge heading for the target
 const TRAIL = { type: 'spring', stiffness: 240, damping: 30, mass: 1 } as const;  // the edge leaving the old icon, behind it
 
-export default function PhoneNav04({ items, tab, go }: { items: Item[]; tab: ViewName; go: (v: ViewName) => void }) {
+export default function PhoneNav04({ items, tab, go, photo }: { items: Item[]; tab: ViewName; go: (v: ViewName) => void; photo: string }) {
   const reduce = useReducedMotion();
   const ul = useRef<HTMLUListElement>(null);
   const [box, setBox] = useState<Record<string, { left: number; width: number }> | null>(null);
@@ -79,7 +83,9 @@ export default function PhoneNav04({ items, tab, go }: { items: Item[]; tab: Vie
           return (
             <li key={it.id} data-id={it.id}>
               <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} aria-label={it.label} onClick={() => go(it.id)}>
-                <svg className={`pn4-ico${on ? ' fill' : ''}`} viewBox="0 0 24 24" aria-hidden="true">{on ? ICON[it.id]?.fill : ICON[it.id]?.line}</svg>
+                {it.id === 'home'
+                  ? <span className="pn4-me" aria-hidden="true"><img src={photo} alt="" /></span>
+                  : <svg className={`pn4-ico${on ? ' fill' : ''}`} viewBox="0 0 24 24" aria-hidden="true">{on ? ICON[it.id]?.fill : ICON[it.id]?.line}</svg>}
               </button>
             </li>
           );

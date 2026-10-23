@@ -285,7 +285,7 @@ export default function Iteration04() {
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
           <Nav tab={navTab} go={go} sig={tweaks['--home-tab'] === 'sig'} cav={tweaks['--nav-sel'] === 'cavity'} />
-          <PhoneNav04 items={NAV} tab={navTab} go={go} />
+          <PhoneNav04 items={NAV} tab={navTab} go={go} photo={desk} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
             <Blob4 /> {/* the assistant's wavy mark (22 Oct), in place of the sparkle */}
           </button>
