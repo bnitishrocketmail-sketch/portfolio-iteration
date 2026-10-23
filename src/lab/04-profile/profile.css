@@ -506,6 +506,19 @@
   .it04 .navcol4, .it04 .navcol4:has(.nav4.cav), .it04 .navcol4:has(.nav4.sig) { --bar-h: 64px; --inset: 10px; position: fixed; z-index: 40; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(calc(100vw - 32px), 380px); height: var(--bar-h); padding: 0; gap: 0; border-radius: 999px;
     background: color-mix(in srgb, #121212 86%, transparent); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); /* the design's dark grey — the dark main container's #121212 (24 Oct, darker than the highlighter's #2f2e30), in both themes */
     box-shadow: 0 10px 28px -10px rgba(0, 0, 0, .55), 0 2px 6px -2px rgba(0, 0, 0, .2); --bar-rim: .52; }
+  /* the iOS rim on the phone's containers (24 Oct, Nitish: "the iOS rim on all containers — the cards inside the main
+     containers not affected"): the top-level boxes of each page — the intro tile, the home's project cards and Off duty,
+     a page's container (Projects, Lab, Notes, the motion system, Workflow, a case study's main box, which holds its Next
+     project and Let's talk too) — get the desktop container's rim (p149): 1px, the top and bottom lit, fading round the
+     corners (cos(2φ)^1.5, gone 45° in), the sides bare. On a rounded box that depends on x alone (x = R(1 − sin φ)
+     from the side), so one horizontal gradient per box draws it, at the box's radius (--rr); white at .52, .75 on the
+     home's light project cards (the desktop's dark and light rims). Off with Edge light: Off */
+  .it04.edgelit :is(.picwrap4, .deck4.rail .pcard4, .off4, .pp4 > :not(.pp4-head)) { --rim-a: .52; --rr: calc(var(--r) * var(--ios-k, 1)); }
+  .it04.edgelit .deck4.rail .pcard4 { --rim-a: .75; }
+  .it04.edgelit .pp4 > :not(.pp4-head) { position: relative; }
+  .it04.edgelit :is(.picwrap4, .deck4.rail .pcard4, .off4, .pp4 > :not(.pp4-head))::after { content: ""; position: absolute; inset: 0; z-index: 6; pointer-events: none; border-radius: inherit; corner-shape: inherit; padding: 1px;
+    background: linear-gradient(90deg, transparent 0, rgb(255 255 255 / calc(var(--rim-a) * 0.000)) calc(var(--rr) * 0.293), rgb(255 255 255 / calc(var(--rim-a) * 0.132)) calc(var(--rr) * 0.391), rgb(255 255 255 / calc(var(--rim-a) * 0.354)) calc(var(--rr) * 0.500), rgb(255 255 255 / calc(var(--rim-a) * 0.670)) calc(var(--rr) * 0.658), rgb(255 255 255 / calc(var(--rim-a) * 0.911)) calc(var(--rr) * 0.826), rgb(255 255 255 / calc(var(--rim-a) * 1.000)) calc(var(--rr) * 1.000), rgb(255 255 255 / calc(var(--rim-a) * 1.000)) calc(100% - var(--rr) * 1.000), rgb(255 255 255 / calc(var(--rim-a) * 0.911)) calc(100% - var(--rr) * 0.826), rgb(255 255 255 / calc(var(--rim-a) * 0.670)) calc(100% - var(--rr) * 0.658), rgb(255 255 255 / calc(var(--rim-a) * 0.354)) calc(100% - var(--rr) * 0.500), rgb(255 255 255 / calc(var(--rim-a) * 0.132)) calc(100% - var(--rr) * 0.391), rgb(255 255 255 / calc(var(--rim-a) * 0.000)) calc(100% - var(--rr) * 0.293), transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
   /* the bar dark (24 Oct, Nitish: "the bottom nav's ground dark instead of light, a tiny bit of transparency and a
      blur behind it, with the iOS rim we finalised on the desktop — the phone only"): the highlighter's dark at 86%, what
      passes under it blurred; the rim as the desktop container's (p149) — a 1px edge lit by the way it faces, the top and
