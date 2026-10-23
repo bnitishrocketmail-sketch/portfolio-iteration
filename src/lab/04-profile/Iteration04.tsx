@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { COPY, LINKS, NAV04 as NAV, PROJECTS, type ViewName } from '../../lib/data';
+import { COPY, LAB04, LINKS, NAV04 as NAV, PROJECTS04 as PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import Island from '../../components/island/Island';
 import { PhotoStack } from '../../components/tiles/Tiles';
@@ -14,7 +14,6 @@ import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
 import Soon04 from './Soon04';
-import Lab04 from './Lab04';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
 import Blob4 from './Blob4';
@@ -231,14 +230,15 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
 
 
 export default function Iteration04() {
-  const { view: v0, pid } = useParams();
-  const view = v0 ?? (pid ? 'projects' : undefined); /* /projects/:pid is a case study on the Projects tab */
+  const { view: v0, pid: ppid, lid } = useParams();
+  const view = v0 ?? (ppid ? 'projects' : lid ? 'lab' : undefined); /* /projects/:pid is a case study on the Projects tab, /lab/:lid one on the Lab tab (23 Oct) */
+  const pid = ppid;
   const navigate = useNavigate();
   const { isDark, toggle } = useTheme();
   /* the Motion system has no nav entry (20 Oct: a Lab project) but keeps its route; while it is open the nav shows Lab */
   const tab: Tab = (NAV.some(n => n.id === view) || view === 'motion' ? view : 'home') as Tab;
   const navTab: Tab = tab === 'motion' ? 'lab' : tab;
-  const go = (v: ViewName, id?: string) => { if (v === 'project' && id) { navigate(`/lab/04-profile/projects/${id}`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
+  const go = (v: ViewName, id?: string) => { if (v === 'project' && id) { navigate(`/lab/04-profile/projects/${id}`); return; } if (v === 'lab' && id) { navigate(`/lab/04-profile/lab/${id}`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
   const [ask, setAsk] = useState(0);
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
      mode change, and when the system page writes them from another tab */
@@ -297,8 +297,10 @@ export default function Iteration04() {
           </motion.div>
         ) : tab === 'lab' ? (
           /* the experiments (Lab04.tsx); the Motion system's card opens its page */
-          <motion.div key="lab" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
-            <Lab04 onOpen={v => go(v as ViewName)} />
+          <motion.div key={lid ? `lab-${lid}` : 'lab'} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+            {/* the Lab is the Projects page with the Lab's list (23 Oct); the Motion system's arrow opens its page */}
+            {lid ? <Case04 id={lid} items={LAB04} back={() => go('lab')} onOpen={id => (id === 'motion-system' ? go('motion') : go('lab', id))} />
+              : <Projects04 items={LAB04} title="Lab" note="Experiments: the rigs, the plugin, the systems and the concepts, built to be played with." onOpen={id => (id === 'motion-system' ? go('motion') : go('lab', id))} />}
           </motion.div>
         ) : tab === 'articles' ? (
           <motion.div key={tab} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>

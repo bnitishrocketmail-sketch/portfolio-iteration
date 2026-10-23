@@ -321,6 +321,7 @@
 .pp4-vl { position: absolute; inset: 0; }
 .pp4-vl-in { position: absolute; left: 40%; right: 2%; top: 8%; bottom: 8%; display: grid; place-items: center; }
 .pp4-vl-in svg { display: block; width: auto !important; height: 100% !important; max-width: 100%; }
+.pp4-vms { position: absolute; left: 2cqw; right: 3%; top: 21%; bottom: 23%; } /* the Motion system's thumbnail (MotionThumb): its levels panel in the text column's middle, where the other Lab cards list their parts, the phone at the right */
 .pp4-vc { position: absolute; inset: 0; }
 .pp4-vc .ft3d { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; }
 .pp4-vc .ft3d-logo { display: none; } .pp4-vc .ft3d-stage { top: 3%; } /* the phones smaller and to the right, clear of the title */

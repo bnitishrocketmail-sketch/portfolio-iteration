@@ -8,7 +8,7 @@ export type Project = {
   letter: string; m1: string; m2: string; wide?: boolean; blurb: string; tags: string[];
   features?: string[]; /* listed beside the visual where there's room (RideQuest's, 23 Oct) */
   featuresTitle?: string; /* the list's heading */
-  cover?: { video: string; poster: string; side?: boolean; bg?: string } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
+  cover?: { video: string; poster: string; side?: boolean; bg?: string } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' | 'motion' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
 };
 
 /* PLACEHOLDER set: these are projects I know exist; confirm which are showable. */
@@ -33,8 +33,6 @@ export const PROJECTS: Project[] = [
     cover: { video: '/cases/coin-rig/panel.mp4', poster: '/cases/coin-rig/panel-poster.webp', side: true, bg: '#111111' },
     featuresTitle: 'A Lottie Creator plugin',
     features: ['A live preview drawn with the projection the build uses', 'Any viewing angle: front, isometric, below', 'Spin or tumble, from any start to any end', 'Timing: once or ping-pong, duration and easing', 'Builds native, editable Creator layers; nothing is baked'] },
-  { id: 'rupee-coin', title: 'Rupee coin flight', client: 'Loading & success state', role: 'Motion design', year: '2026', letter: '₹', m1: '#1F8A70', m2: '#BDE6D9',
-    blurb: 'Loading and success states: a coin over a grid road, one rig, two outcomes.', tags: ['Loader', 'Lottie'] },
   { id: 'ridequest', title: 'RideQuest', client: 'Concept', role: 'Interaction & prototype', year: '2026', letter: 'R', m1: '#2E5E8E', m2: '#9A82D6',
     blurb: 'A gamified in-ride experience for a rideshare app, prototyped as a playable concept.', tags: ['Concept', 'Prototype'],
     cover: { video: '/cases/ridequest/thumb.mp4', poster: '/cases/ridequest/thumb-poster.webp', side: true, bg: '#fff' }, /* his screen recording of the prototype, cropped to the phone on white at its true proportion (the recording's pixels are not square: 27:32) (23 Oct) */
@@ -49,6 +47,16 @@ export const PROJECTS: Project[] = [
     featuresTitle: 'One bar, five stores',
     features: ['Interaction hygiene first: the base every idea sits on', 'Card shuffle: the new bar comes forward from the stack', 'Directional slide: bars exchange the way you moved', 'Cavity ball: one element that never leaves', 'Colour drop: the store’s colour crosses the gap'] },
 ];
+
+/* 04's two lists (Nitish, 23 Oct): Projects holds only the work done on products he worked for; the experiments move to
+   the Lab, which takes the Projects page's layout and interaction as they are, in this order. The rupee coin is gone (no
+   such project); the Motion system joins the Lab as a project (its page is the Motion system tab) */
+const pick = (ids: string[]) => ids.map(id => PROJECTS.find(p => p.id === id)!);
+export const PROJECTS04: Project[] = pick(['magic-scale', 'lenskart-b', 'fintech-motion', 'launches']);
+export const MOTION_SYSTEM: Project = { id: 'motion-system', title: 'Motion design system', client: 'Motion & interaction system', role: 'Design & build', year: '2026', letter: 'M', m1: '#2f2e30', m2: '#e0e0e0',
+  blurb: 'One set of motion decisions, defined once and inherited by every screen.', tags: ['Motion tokens', 'Interaction', 'System'],
+  cover: { comp: 'motion' } }; /* its open card plays the system's journey phone beside the three levels (MotionThumb) */
+export const LAB04: Project[] = [pick(['swiggy-nav'])[0], MOTION_SYSTEM, ...pick(['coin-rig', 'ridequest'])];
 
 export const TOOLS = ['After Effects', 'Lottie', 'Rive', 'Figma', 'Framer', 'Blender', 'JavaScript', 'Spline']; // PLACEHOLDER list
 

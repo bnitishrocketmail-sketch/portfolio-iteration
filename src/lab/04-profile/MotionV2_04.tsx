@@ -224,7 +224,7 @@ export function MotionThumb({ on }: { on: boolean }) {
       const s = (H - 2 * pad) / PH, phoneW = PW * s;
       const aw = W - 2 * pad - gap - phoneW, ah = H - 2 * pad;
       let t = .9;
-      for (; t > .3; t -= .01) { pan.style.width = `${aw / t}px`; pan.style.height = 'auto'; if (pan.offsetHeight <= ah / t) break; }
+      for (; t > .2; t -= .01) { pan.style.width = `${aw / t}px`; pan.style.height = 'auto'; if (pan.offsetHeight <= ah / t && pan.scrollWidth <= aw / t + 1) break; } /* its values must fit across as well as down (a narrow box, the Lab's open card, had a long token run under the phone) */
       pan.style.height = `${ah / t}px`;
       setFit({ s, t, x: pad, y: pad, px: W - pad - phoneW, py: pad });
     };

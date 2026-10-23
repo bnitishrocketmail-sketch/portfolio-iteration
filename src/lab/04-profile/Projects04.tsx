@@ -1,9 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { PROJECTS, type Project } from '../../lib/data';
+import { PROJECTS04, type Project } from '../../lib/data';
 import { Lottie } from '../../components/micro/Lottie';
-import { LOTTIES, STILL } from '../../lib/lotties';
 import Fintech3D, { FIN_BG, LAU_BG, Launches3D } from './Fintech3D';
+import { MotionThumb } from './MotionV2_04';
+import './lab.css';
 
 /* 04's project page, first iteration (Nitish, 14 Oct), after ref 7: "Projects" at the top-left, a line and the CV at the
    right; below, every project in one row — the selected one open wide, laid out as the reference's wide card (the cover,
@@ -22,7 +23,6 @@ import Fintech3D, { FIN_BG, LAU_BG, Launches3D } from './Fintech3D';
    letter, the arrow), playing while the card is open. A clip fills the card; a Lottie or the two-phone scene sits in
    its right part, clear of the text; RideQuest and the Swiggy nav have no visual of their own yet, so they keep the
    letter alone. */
-const LAB_LOTTIE: Record<string, string> = { 'coin-rig': LOTTIES.coin, 'rupee-coin': LOTTIES.coin };
 function Visual({ p, on }: { p: Project; on: boolean }) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduce = useReducedMotion();
@@ -33,8 +33,8 @@ function Visual({ p, on }: { p: Project; on: boolean }) {
     ? <div className="pp4-vl" style={{ background: c.bg }}><video ref={ref} className="pp4-vid side" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" /></div>
     : <video ref={ref} className="pp4-vid" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />;
   if (c && 'lottie' in c) return <div className="pp4-vl" style={{ background: c.bg }}><Lottie className="pp4-vl-in" src={c.lottie} still={c.still} playing={on && !reduce} /></div>;
+  if (c && 'comp' in c && c.comp === 'motion') return <div className="pp4-vms"><MotionThumb on={on} /></div>;
   if (c && 'comp' in c) return <div className="pp4-vc">{c.comp === 'fintech' ? <Fintech3D on={on} fit={.95} at={66} /> : <Launches3D on={on} fit={.95} at={66} />}</div>;
-  if (LAB_LOTTIE[p.id]) return <div className="pp4-vl"><Lottie className="pp4-vl-in" src={LAB_LOTTIE[p.id]} still={STILL.coin} playing={on && !reduce} /></div>;
   return null;
 }
 
@@ -46,7 +46,7 @@ const lum = (hex: string) => { const n = parseInt(hex.slice(1), 16); const c = [
 const lumOf = (css: string) => { const hs = css.match(/#[0-9a-f]{6}/gi) ?? []; return hs.length ? hs.reduce((a, h) => a + lum(h), 0) / hs.length : 1; };
 function useDark(p: Project) {
   const c = p.cover;
-  const known = c && 'comp' in c ? lumOf(c.comp === 'fintech' ? FIN_BG : LAU_BG) < .35 : c && 'lottie' in c && c.bg ? lumOf(c.bg) < .35 : false;
+  const known = c && 'comp' in c ? c.comp !== 'motion' && lumOf(c.comp === 'fintech' ? FIN_BG : LAU_BG) < .35 : c && 'lottie' in c && c.bg ? lumOf(c.bg) < .35 : false;
   const [dark, setDark] = useState(known);
   useEffect(() => {
     if (!(c && 'video' in c)) return;
@@ -63,7 +63,9 @@ function Card({ children, p, open, ...rest }: { children: React.ReactNode; p: Pr
 const OPEN = .58; /* the open card, of the viewport's width (ref 7: 66% with two folded; five here) */
 const SPRING = { type: 'spring', stiffness: 260, damping: 32, mass: 1 } as const;
 
-export default function Projects04({ onOpen }: { onOpen: (id: string) => void }) {
+/* the Lab uses this page as it is (23 Oct): `items`, `title` and `note` are its list and its words */
+export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projects', note = 'Product work: features, motion and campaigns for the companies I’ve worked with.' }: { onOpen: (id: string) => void; items?: Project[]; title?: string; note?: string }) {
+  const PROJECTS = items;
   const reduce = useReducedMotion();
   const [sel, setSel] = useState(PROJECTS[0].id);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -86,11 +88,11 @@ export default function Projects04({ onOpen }: { onOpen: (id: string) => void })
   const shift = geo ? Math.max(0, Math.min(k < 2 ? 0 : laid[k - 2].x + C / 2, total - geo.w)) : 0;
   const place = laid.map(c => ({ ...c, x: c.x - shift }));
   return (
-    <section className="pp4" aria-label="Projects">
+    <section className="pp4" aria-label={title}>
       <header className="pp4-head">
-        <h2 className="h2-4">Projects</h2>
+        <h2 className="h2-4">{title}</h2>
         <div className="pp4-right">
-          <p className="pp4-note">Product work, motion systems and the tools built along the way.</p>
+          <p className="pp4-note">{note}</p>
         </div>
       </header>
       <div className="pp4-row" ref={rowRef}>

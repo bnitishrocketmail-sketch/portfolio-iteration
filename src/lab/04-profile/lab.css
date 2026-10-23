@@ -32,7 +32,7 @@
 @keyframes lv-scrim { 0%, 8% { opacity: 0; } 24%, 70% { opacity: 1; } 82%, 100% { opacity: 0; } }
 /* the motion system (MotionThumb in MotionV2_04.tsx, 23 Oct): its journey phone running with the system, and the three
    levels peeking in from the left — the page's own pieces, drawn in the card's inks and scaled down */
-.lb4-media .dt4.mthumb { --line-ink: var(--pcard-open-ink); position: absolute; inset: 0; flex: none; overflow: hidden; border: 0; border-radius: 0; background: none; }
+.dt4.mthumb { --line-ink: var(--pcard-open-ink); position: absolute; inset: 0; flex: none; overflow: hidden; border: 0; border-radius: 0; background: none; }
 .mthumb-phone { position: absolute; z-index: 1; left: 0; top: 0; transform-origin: 0 0; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .18)); }
 .mthumb-levels { position: absolute; left: 0; top: 0; width: 330px; display: flex; transform-origin: 0 0; } /* sized, placed and scaled by MotionThumb: the width left of the phone, the full height */
 /* the panel: an equal padding all round, the level's name above its values (narrow, so it scales up larger) */

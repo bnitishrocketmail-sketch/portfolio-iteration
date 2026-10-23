@@ -6,7 +6,7 @@ import BMachine from './BMachine';
 import Fintech3D, { Launches3D } from './Fintech3D';
 import { useInView } from './inview';
 import desk from '../../assets/nitish-desk.webp';
-import { PROJECTS } from '../../lib/data';
+import { PROJECTS04, type Project } from '../../lib/data';
 import { CASES, type Block, type Layer, type Media, type Rich, type Step } from './cases';
 import { MAIL, SOCIAL } from './social';
 import './case.css';
@@ -297,7 +297,9 @@ function Render({ b }: { b: Block }) {
   }
 }
 
-export default function Case04({ id, back, onOpen }: { id: string; back: () => void; onOpen: (id: string) => void }) {
+/* `items`: the list it belongs to (Projects, or the Lab's), for its next card (23 Oct) */
+export default function Case04({ id, back, onOpen, items = PROJECTS04 }: { id: string; back: () => void; onOpen: (id: string) => void; items?: Project[] }) {
+  const PROJECTS = items;
   const k = PROJECTS.findIndex(p => p.id === id); const p = PROJECTS[k];
   const c = CASES[id];
   const next = PROJECTS[(k + 1) % PROJECTS.length]; /* the column's top card: the next project (what else it holds, later) */
