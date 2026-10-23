@@ -41,7 +41,8 @@ const MAT = Q.quads.map(project);
 
 /* the scene: the phones' picture on a ground, the two screens' content (drawn flat, SW × SH) carried onto the glass, the
    islands over them. `on` plays the clips and Lotties (in view, or the card's hover); `mini` is the stack card's version */
-export function Phones3D({ on: onProp, mini, cls, bg, logo, label, left, right }: { on?: boolean; mini?: boolean; cls: string; bg: string; logo?: string; label: string; left: (on: boolean) => ReactNode; right: (on: boolean) => ReactNode }) {
+/* `fit` scales the phones' height against the card's (the default is 1.15, the mini 1.35); `at` is where their middle sits, as a percentage of the card's width (the Projects page's open card puts them right of its text) */
+export function Phones3D({ on: onProp, mini, fit, at, cls, bg, logo, label, left, right }: { on?: boolean; mini?: boolean; fit?: number; at?: number; cls: string; bg: string; logo?: string; label: string; left: (on: boolean) => ReactNode; right: (on: boolean) => ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, .2);
   const on = onProp ?? inView;
@@ -49,14 +50,14 @@ export function Phones3D({ on: onProp, mini, cls, bg, logo, label, left, right }
   /* the picture scaled so the phones stand 115% of the card's height (his page cut the top and the foot the same way) */
   useLayoutEffect(() => {
     const el = ref.current; if (!el) return;
-    const set = () => setK((el.clientHeight * (mini ? 1.35 : 1.15)) / Q.H / Q.k);
+    const set = () => setK((el.clientHeight * (fit ?? (mini ? 1.35 : 1.15))) / Q.H / Q.k);
     set(); const ro = new ResizeObserver(set); ro.observe(el); return () => ro.disconnect();
-  }, [mini]);
+  }, [mini, fit]);
   const W = Q.W * Q.k, H = Q.H * Q.k; /* the picture's pixels */
   return (
     <div ref={ref} className={`ft3d ${cls}${mini ? ' mini' : ''}`} style={{ background: bg }} aria-label={label}>
       {logo && <span className="ft3d-logo" aria-hidden="true">{logo}</span>}
-      <div className="ft3d-stage" style={{ width: W, height: H, transform: `translate(-50%, 0) scale(${k.toFixed(4)})` }}>
+      <div className="ft3d-stage" style={{ width: W, height: H, transform: `translate(-50%, 0) scale(${k.toFixed(4)})`, ...(at != null ? { left: `${at}%` } : {}) }}>
         <img className="ft3d-phones" src="/cases/fintech/phones.webp" alt="" width={W} height={H} draggable={false} />
         <div className="ft3d-scr" style={{ width: SW, height: SH, borderRadius: R, transform: MAT[0] }}>{left(on)}</div>
         <div className="ft3d-scr" style={{ width: SW, height: SH, borderRadius: R, transform: MAT[1] }}>{right(on)}</div>
@@ -74,9 +75,9 @@ function ScreenClip({ src, on }: { src: string; on: boolean }) {
 }
 
 /* MobiKwik: the home screen with the loan nudge in the left phone, the card being prepared in the right */
-export default function Fintech3D({ on, mini }: { on?: boolean; mini?: boolean }) {
+export default function Fintech3D({ on, mini, fit, at }: { on?: boolean; mini?: boolean; fit?: number; at?: number }) {
   return (
-    <Phones3D on={on} mini={mini} cls="fin" bg="linear-gradient(100deg, #2b56ec 0%, #4a4df0 55%, #7b3df2 100%)" logo="MobiKwik" label="MobiKwik: the home screen with the loan nudge, and a card being prepared, on two phones"
+    <Phones3D on={on} mini={mini} fit={fit} at={at} cls="fin" bg="linear-gradient(100deg, #2b56ec 0%, #4a4df0 55%, #7b3df2 100%)" logo="MobiKwik" label="MobiKwik: the home screen with the loan nudge, and a card being prepared, on two phones"
       left={on => <>
         <img src={`${A}/home.webp`} alt="" draggable={false} />
         <div className="ft3d-lot" style={{ left: '2%', top: '33.4%', width: '96%', height: `${(96 * (150 / 344) * SW / SH).toFixed(1)}%` }}><Lottie src={`${A}/first-user.lottie`} playing={on} /></div>
@@ -92,9 +93,9 @@ export default function Fintech3D({ on, mini }: { on?: boolean; mini?: boolean }
 /* Launches & campaigns (22 Oct): the Phonic guide scrolling in the left phone, the T20 × Hustlr landing in the right,
    on his page's dark ground (green at the left running to navy) */
 const L = '/cases/launches';
-export function Launches3D({ on, mini }: { on?: boolean; mini?: boolean }) {
+export function Launches3D({ on, mini, fit, at }: { on?: boolean; mini?: boolean; fit?: number; at?: number }) {
   return (
-    <Phones3D on={on} mini={mini} cls="lau" bg="linear-gradient(100deg, #07170c 0%, #0b2a15 38%, #0a1230 100%)" label="The Phonic smart-glasses guide and the T20 × Hustlr landing page, on two phones"
+    <Phones3D on={on} mini={mini} fit={fit} at={at} cls="lau" bg="linear-gradient(100deg, #07170c 0%, #0b2a15 38%, #0a1230 100%)" label="The Phonic smart-glasses guide and the T20 × Hustlr landing page, on two phones"
       left={on => <ScreenClip src={`${L}/phonic-guide`} on={on} />}
       right={() => <img src={`${L}/hustlr.webp`} alt="" draggable={false} />} />
   );

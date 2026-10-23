@@ -1,6 +1,9 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { PROJECTS } from '../../lib/data';
+import { PROJECTS, type Project } from '../../lib/data';
+import { Lottie } from '../../components/micro/Lottie';
+import { LOTTIES, STILL } from '../../lib/lotties';
+import Fintech3D, { Launches3D } from './Fintech3D';
 
 /* 04's project page, first iteration (Nitish, 14 Oct), after ref 7: "Projects" at the top-left, a line and the CV at the
    right; below, every project in one row — the selected one open wide, laid out as the reference's wide card (the cover,
@@ -14,6 +17,24 @@ import { PROJECTS } from '../../lib/data';
    third, the card two before the open one goes half into the left edge (see `shift`). The
    geometry is explicit — the row is measured, each card's x and width are animated on a spring — so nothing scales:
    covers are cropped by their cards and reveal as they widen. The arrow opens the case study (Case04.tsx), in the page's place. */
+/* the open card's visual (Nitish, 23 Oct): the project's main visual — the one its card in the home stack plays, or
+   the Lab's for the coin projects — in the background of the open card, under everything (the text, the chips, the big
+   letter, the arrow), playing while the card is open. A clip fills the card; a Lottie or the two-phone scene sits in
+   its right part, clear of the text; RideQuest and the Swiggy nav have no visual of their own yet, so they keep the
+   letter alone. */
+const LAB_LOTTIE: Record<string, string> = { 'coin-rig': LOTTIES.coin, 'rupee-coin': LOTTIES.coin };
+function Visual({ p, on }: { p: Project; on: boolean }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const reduce = useReducedMotion();
+  const c = p.cover;
+  useEffect(() => { const v = ref.current; if (!v) return; if (on && !reduce) v.play().catch(() => {}); else v.pause(); }, [on, reduce]);
+  if (c && 'video' in c) return <video ref={ref} className="pp4-vid" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />;
+  if (c && 'lottie' in c) return <div className="pp4-vl" style={{ background: c.bg }}><Lottie className="pp4-vl-in" src={c.lottie} still={c.still} playing={on && !reduce} /></div>;
+  if (c && 'comp' in c) return <div className="pp4-vc">{c.comp === 'fintech' ? <Fintech3D on={on} fit={.95} at={66} /> : <Launches3D on={on} fit={.95} at={66} />}</div>;
+  if (LAB_LOTTIE[p.id]) return <div className="pp4-vl"><Lottie className="pp4-vl-in" src={LAB_LOTTIE[p.id]} still={STILL.coin} playing={on && !reduce} /></div>;
+  return null;
+}
+
 const OPEN = .58; /* the open card, of the viewport's width (ref 7: 66% with two folded; five here) */
 const SPRING = { type: 'spring', stiffness: 260, damping: 32, mass: 1 } as const;
 
@@ -50,7 +71,10 @@ export default function Projects04({ onOpen }: { onOpen: (id: string) => void })
       <div className="pp4-row" ref={rowRef}>
         {geo && place.map(({ p, open, x, w }) => (
           <motion.article key={p.id} className={`pp4-card${open ? ' open' : ''}`} initial={false} animate={{ x, width: w }} transition={tr}>
-            <div className="pp4-cover" aria-hidden="true"><span className="pletter">{p.letter}</span></div>
+            <div className="pp4-cover" aria-hidden="true">
+              <motion.div className="pp4-vis" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }}>{open && <Visual p={p} on={open} />}</motion.div>
+              <span className="pletter">{p.letter}</span>
+            </div>
             {/* the open layout: ref 7's wide card */}
             <motion.div className="pp4-open" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }} style={{ pointerEvents: open ? 'auto' : 'none' }}>
               <div className="pp4-top"><h3 className="pp4-title">{p.title}</h3><p className="pp4-blurb">{p.blurb}</p></div>
