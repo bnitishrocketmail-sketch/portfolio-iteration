@@ -380,6 +380,15 @@
 .pc-face, .nt4-thumb { -webkit-mask-image: linear-gradient(#000 0 0); }
 .off4 .stack-bg, .off4 .stack { border-radius: inherit; corner-shape: inherit; overflow: hidden; -webkit-mask-image: linear-gradient(#000 0 0); }
 .pp4-cover { border-radius: inherit; corner-shape: inherit; overflow: hidden; -webkit-mask-image: linear-gradient(#000 0 0); }
+/* the mask was not enough (24 Oct, Nitish: "the Off duty corners appear for a moment during the transition after a tap,
+   then go to 0") — Safari clipped while the layers were animating and dropped it once they settled. A clip path
+   clips whatever is drawn; it is round only, so it goes where the iOS curve is not supported (Safari today), whose
+   corners are round anyway — each layer cut at its box's radius */
+@supports not (corner-shape: superellipse(1.6)) {
+  .off4 .stack-bg, .off4 .stack, .pc-face, .pp4-cover { clip-path: inset(0 round calc(var(--r) * var(--ios-k, 1))); }
+  .nt4-thumb { clip-path: inset(0 round calc(calc(var(--r) - .8cqw) * var(--ios-k, 1))); }
+  @media (max-width: 700px) { .pp4-vis { clip-path: inset(0 round calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0); } }
+}
 .off4 .hint { display: none; }
 .off4 .stack figcaption { display: none; } /* the caption is the box's head, not written on the photo */
 
