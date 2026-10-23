@@ -105,6 +105,10 @@
 /* the cavity-ball version (CavityBar in Iteration04.tsx, after his Swiggy nav): the bar is drawn by the SVG under the
    names, so the column's own fill and shadow step aside; the shadow goes on the drawing, into the valley as well */
 .navcol4:has(.nav4.cav) { background: none; box-shadow: none; }
+/* no selection fill in this version: the ball marks the tab, and the names that are not selected step back so the
+   selected one reads by its ink (as Swiggy's labels changed colour) */
+.nav4.cav ul button { color: color-mix(in srgb, var(--nav-ink) 50%, transparent); }
+.nav4.cav ul button.on, .nav4.cav ul button:hover { color: var(--nav-ink); }
 .cav4 { position: absolute; z-index: -1; pointer-events: none; overflow: visible; }
 .cav4-bar { fill: var(--nav-bg); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .16)) drop-shadow(0 4px 10px rgba(0, 0, 0, .18)); }
 .cav4-ball { fill: var(--nav-bg); filter: drop-shadow(0 1.5px 4.5px rgba(0, 0, 0, .28)); }

@@ -165,7 +165,7 @@ function Nav({ tab, go, sig, cav }: { tab: Tab; go: (v: ViewName) => void; sig?:
     <nav className={`nav4${sig ? ' sig' : ''}${cav ? ' cav' : ''}`} aria-label="Sections">
       <ul ref={ulRef}>
         {cav && bar && box && <CavityBar w={bar.w} h={bar.h} x={bar.x} y={bar.y} cy={box.top + box.height / 2 - bar.y} />}
-        {pill && (
+        {pill && !cav && ( /* the cavity version has no selection fill (Nitish, 23 Oct: two versions of the bar) */
           <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
             <AnimatePresence initial={false} mode="wait">
               <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
