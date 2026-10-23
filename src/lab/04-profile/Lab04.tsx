@@ -32,7 +32,7 @@ const Nav = ({ on }: { on: boolean }) => (
 );
 
 const EXPS: Exp[] = [
-  { id: 'motion-system', title: 'Motion design system', line: 'One set of motion decisions, defined once and inherited by every screen — with the drawer, the cascade and the token phone running.', meta: 'System · 2026', wide: true, visual: on => <Drawer on={on} />, to: 'motion' },
+  { id: 'motion-system', title: 'Motion design system', line: 'One set of motion decisions, defined once and inherited by every screen — with the drawer, the cascade and the token phone running.', meta: 'System · 2026', visual: on => <Drawer on={on} />, to: 'motion' },
   { id: 'coin-rig', title: P['coin-rig'].title, line: P['coin-rig'].blurb, meta: `${P['coin-rig'].client} · ${P['coin-rig'].year}`, visual: on => <Coin on={on} /> },
   { id: 'rupee-coin', title: P['rupee-coin'].title, line: P['rupee-coin'].blurb, meta: `${P['rupee-coin'].client} · ${P['rupee-coin'].year}`, visual: on => <Coin on={on} /> },
   { id: 'ridequest', title: P['ridequest'].title, line: P['ridequest'].blurb, meta: `${P['ridequest'].client} · ${P['ridequest'].year}`, visual: on => <Ride on={on} /> },
