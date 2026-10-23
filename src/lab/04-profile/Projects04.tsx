@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { PROJECTS, type Project } from '../../lib/data';
 import { Lottie } from '../../components/micro/Lottie';
 import { LOTTIES, STILL } from '../../lib/lotties';
-import Fintech3D, { Launches3D } from './Fintech3D';
+import Fintech3D, { FIN_BG, LAU_BG, Launches3D } from './Fintech3D';
 
 /* 04's project page, first iteration (Nitish, 14 Oct), after ref 7: "Projects" at the top-left, a line and the CV at the
    right; below, every project in one row — the selected one open wide, laid out as the reference's wide card (the cover,
@@ -33,6 +33,28 @@ function Visual({ p, on }: { p: Project; on: boolean }) {
   if (c && 'comp' in c) return <div className="pp4-vc">{c.comp === 'fintech' ? <Fintech3D on={on} fit={.95} at={66} /> : <Launches3D on={on} fit={.95} at={66} />}</div>;
   if (LAB_LOTTIE[p.id]) return <div className="pp4-vl"><Lottie className="pp4-vl-in" src={LAB_LOTTIE[p.id]} still={STILL.coin} playing={on && !reduce} /></div>;
   return null;
+}
+
+/* is the visual dark? (Nitish, 23 Oct: on a dark visual the card's text, chips, letter and arrow go to the lighter,
+   inverted colours, automatically.) Read from the visual itself: a ground's colours (the scenes' gradients, a Lottie's
+   ground) averaged, or a clip's poster averaged in a small canvas; dark when the relative luminance is under .35. A
+   visual with no ground of its own sits on the card's light grey. */
+const lum = (hex: string) => { const n = parseInt(hex.slice(1), 16); const c = [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const lumOf = (css: string) => { const hs = css.match(/#[0-9a-f]{6}/gi) ?? []; return hs.length ? hs.reduce((a, h) => a + lum(h), 0) / hs.length : 1; };
+function useDark(p: Project) {
+  const c = p.cover;
+  const known = c && 'comp' in c ? lumOf(c.comp === 'fintech' ? FIN_BG : LAU_BG) < .35 : c && 'lottie' in c && c.bg ? lumOf(c.bg) < .35 : false;
+  const [dark, setDark] = useState(known);
+  useEffect(() => {
+    if (!(c && 'video' in c)) return;
+    const img = new Image(); img.src = c.poster;
+    img.onload = () => { try { const cv = document.createElement('canvas'); cv.width = cv.height = 16; const g = cv.getContext('2d')!; g.drawImage(img, 0, 0, 16, 16); const d = g.getImageData(0, 0, 16, 16).data; let L = 0; for (let i = 0; i < d.length; i += 4) { const h = '#' + [d[i], d[i + 1], d[i + 2]].map(v => v.toString(16).padStart(2, '0')).join(''); L += lum(h); } setDark(L / (d.length / 4) < .35); } catch { /* a cross-origin poster can't be read: keep light */ } };
+  }, [c]);
+  return dark;
+}
+function Card({ children, p, open, ...rest }: { children: React.ReactNode; p: Project; open: boolean } & React.ComponentProps<typeof motion.article>) {
+  const dark = useDark(p);
+  return <motion.article {...rest} className={`pp4-card${open ? ' open' : ''}${open && dark ? ' inv' : ''}`}>{children}</motion.article>;
 }
 
 const OPEN = .58; /* the open card, of the viewport's width (ref 7: 66% with two folded; five here) */
@@ -70,7 +92,7 @@ export default function Projects04({ onOpen }: { onOpen: (id: string) => void })
       </header>
       <div className="pp4-row" ref={rowRef}>
         {geo && place.map(({ p, open, x, w }) => (
-          <motion.article key={p.id} className={`pp4-card${open ? ' open' : ''}`} initial={false} animate={{ x, width: w }} transition={tr}>
+          <Card key={p.id} p={p} open={open} initial={false} animate={{ x, width: w }} transition={tr}>
             <div className="pp4-cover" aria-hidden="true">
               <motion.div className="pp4-vis" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }}>{open && <Visual p={p} on={open} />}</motion.div>
               <span className="pletter">{p.letter}</span>
@@ -89,7 +111,7 @@ export default function Projects04({ onOpen }: { onOpen: (id: string) => void })
               <span className="pp4-vm dim">{p.tags.join(' · ')}</span>
             </motion.div>
             {!open && <button type="button" className="pp4-hit" aria-label={`Show ${p.title}`} onClick={() => setSel(p.id)} />}
-          </motion.article>
+          </Card>
         ))}
       </div>
     </section>

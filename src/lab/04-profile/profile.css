@@ -306,6 +306,12 @@
 /* the open card's visual (Projects04 Visual, 23 Oct): under the letter and the open layout, with nothing over it (the
    wash from the left came off the same day, Nitish) */
 .pp4-vis { position: absolute; inset: 0; }
+/* on a dark visual (Projects04 useDark): the open layout's ink becomes the card's light grey — title, blurb, meta, the
+   chips and their panel (all drawn from the ink) — the letter too, and the arrow turns light with a dark mark */
+.pp4-card.inv { --ink-dark: var(--pcard-open-ink); }
+.pp4-card.inv .pp4-open { --pcard-open-ink: var(--pcard-open); }
+.pp4-card.inv .pletter { color: var(--pcard-open); }
+.pp4-card.inv .pp4-arrow { color: var(--ink-dark); }
 .pp4-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .pp4-vl { position: absolute; inset: 0; }
 .pp4-vl-in { position: absolute; left: 40%; right: 2%; top: 8%; bottom: 8%; display: grid; place-items: center; }

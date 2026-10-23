@@ -14,6 +14,9 @@ import Q from './cases/fintech-quads.json';
    card it is the same scene, small (`mini`). `on` plays the Lotties (in view, or the card's hover). */
 
 const A = '/cases/fintech';
+/* the two scenes' grounds (exported for the Projects page, which reads whether a visual is dark from them) */
+export const FIN_BG = 'linear-gradient(100deg, #2b56ec 0%, #4a4df0 55%, #7b3df2 100%)';
+export const LAU_BG = 'linear-gradient(100deg, #07170c 0%, #0b2a15 38%, #0a1230 100%)';
 const SW = 600, SH = 1304; /* a screen's flat box, in the picture's pixels: ~9 : 19.5, the glass's own shape */
 const R = SW * .11; /* the glass's corner, from the mock */
 
@@ -77,7 +80,7 @@ function ScreenClip({ src, on }: { src: string; on: boolean }) {
 /* MobiKwik: the home screen with the loan nudge in the left phone, the card being prepared in the right */
 export default function Fintech3D({ on, mini, fit, at }: { on?: boolean; mini?: boolean; fit?: number; at?: number }) {
   return (
-    <Phones3D on={on} mini={mini} fit={fit} at={at} cls="fin" bg="linear-gradient(100deg, #2b56ec 0%, #4a4df0 55%, #7b3df2 100%)" logo="MobiKwik" label="MobiKwik: the home screen with the loan nudge, and a card being prepared, on two phones"
+    <Phones3D on={on} mini={mini} fit={fit} at={at} cls="fin" bg={FIN_BG} logo="MobiKwik" label="MobiKwik: the home screen with the loan nudge, and a card being prepared, on two phones"
       left={on => <>
         <img src={`${A}/home.webp`} alt="" draggable={false} />
         <div className="ft3d-lot" style={{ left: '2%', top: '33.4%', width: '96%', height: `${(96 * (150 / 344) * SW / SH).toFixed(1)}%` }}><Lottie src={`${A}/first-user.lottie`} playing={on} /></div>
@@ -95,7 +98,7 @@ export default function Fintech3D({ on, mini, fit, at }: { on?: boolean; mini?: 
 const L = '/cases/launches';
 export function Launches3D({ on, mini, fit, at }: { on?: boolean; mini?: boolean; fit?: number; at?: number }) {
   return (
-    <Phones3D on={on} mini={mini} fit={fit} at={at} cls="lau" bg="linear-gradient(100deg, #07170c 0%, #0b2a15 38%, #0a1230 100%)" label="The Phonic smart-glasses guide and the T20 × Hustlr landing page, on two phones"
+    <Phones3D on={on} mini={mini} fit={fit} at={at} cls="lau" bg={LAU_BG} label="The Phonic smart-glasses guide and the T20 × Hustlr landing page, on two phones"
       left={on => <ScreenClip src={`${L}/phonic-guide`} on={on} />}
       right={() => <img src={`${L}/hustlr.webp`} alt="" draggable={false} />} />
   );
