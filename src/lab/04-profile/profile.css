@@ -504,7 +504,7 @@
      outlined, the selected one filled on a lighter pill two-thirds of the bar's height; it blurs what passes behind it.
      The desktop column (.nav4, .ai4) is hidden here; PhoneNav04 draws the phone's bar (PhoneNav04.tsx). */
   .it04 .navcol4, .it04 .navcol4:has(.nav4.cav), .it04 .navcol4:has(.nav4.sig) { --bar-h: 64px; --inset: 10px; position: fixed; z-index: 40; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(calc(100vw - 32px), 380px); height: var(--bar-h); padding: 0; gap: 0; border-radius: 999px;
-    background: color-mix(in srgb, var(--nav-hl) 86%, transparent); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4);
+    background: color-mix(in srgb, #121212 86%, transparent); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); /* the design's dark grey — the dark main container's #121212 (24 Oct, darker than the highlighter's #2f2e30), in both themes */
     box-shadow: 0 10px 28px -10px rgba(0, 0, 0, .55), 0 2px 6px -2px rgba(0, 0, 0, .2); --bar-rim: .52; }
   /* the bar dark (24 Oct, Nitish: "the bottom nav's ground dark instead of light, a tiny bit of transparency and a
      blur behind it, with the iOS rim we finalised on the desktop — the phone only"): the highlighter's dark at 86%, what
