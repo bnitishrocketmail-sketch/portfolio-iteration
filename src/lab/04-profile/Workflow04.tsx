@@ -135,8 +135,8 @@ export default function Workflow04() {
   const show = (id: string) => {
     const map = mapRef.current; const el = map?.querySelector<HTMLElement>(`[data-id="${id}"]`); if (!map || !el) return;
     hold(); if (open?.id === id) return;
-    const m = map.getBoundingClientRect(), b = el.getBoundingClientRect(), cs = getComputedStyle(el), ms = getComputedStyle(map);
-    const from = { left: b.left - m.left, top: b.top - m.top, width: b.width, height: b.height };
+    const m0 = map.getBoundingClientRect(), z = m0.width / (map.offsetWidth || m0.width || 1), m = { width: m0.width / z, height: m0.height / z }, b = el.getBoundingClientRect(), cs = getComputedStyle(el), ms = getComputedStyle(map); /* in the page's own px under the phone's scale (24 Oct) */
+    const from = { left: (b.left - m0.left) / z, top: (b.top - m0.top) / z, width: b.width / z, height: b.height / z };
     const W = widthOf(at[id]), H = heights.current[id] ?? 200;
     /* it grows toward the map's centre from the node's nearer corner, and is kept inside the map */
     const toRight = from.left + from.width / 2 < m.width / 2, down = from.top + from.height / 2 < m.height / 2;

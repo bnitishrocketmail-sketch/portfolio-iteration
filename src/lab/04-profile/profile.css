@@ -459,6 +459,12 @@
      blurred picture, full-bleed, the tile and the pages each on their own grey container; a 12px gutter; a type scale
      set in pixels for the phone (the desktop's scales with the frame's width and bottomed out at its 11px floor here);
      the bar at the bottom carries the six icons only, laid out from one spacing rule. */
+  /* the phone's scale (24 Oct, Nitish: "when I reduced the text size in Safari it looked better — adapt that as the
+     standard; keep the bottom navigation the same size"): he had iOS Safari two steps down, 75% — Safari's page zoom,
+     which draws every px at three-quarters and gives the layout a third more room. The same here, on the page's content
+     only: the intro, the home column and the pages (zoom: --ph-zoom, the system page's Phone scale); the bottom bar
+     and the controls outside it, at their size */
+  .picwrap4, .col4, .page4 { zoom: var(--ph-zoom, .75); }
   .it04 > * { --copy-w: var(--ph-copy-w); } /* the phone's body weight, on .it04's children so it holds over a weight the controls set on .it04 itself */
   .it04 { --t-h1: var(--ph-t-h1); --t-h2: var(--ph-t-h2); --t-display: var(--ph-t-display); --t-title: var(--ph-t-title); --t-body: var(--ph-t-body); --t-meta: var(--ph-t-meta); --r: 20px; --gut: 16px; position: static; display: block; padding: 12px var(--gut) calc(92px + env(safe-area-inset-bottom)); overflow: visible; background: var(--bg); }
   /* the gutter, 16px, as apps keep it; the body's own 16px went (base.css) — it had boxed the picture in and left a strip of
@@ -502,10 +508,11 @@
   .picwrap4 { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto 18px; grid-template-areas: "pic pic pic pic" ". name me ." ". role me ." ". lede lede ." ". sub sub ." ". cv cv ."; padding-bottom: 18px; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; }
   .pic4, .pic4-in, .cut4 { display: contents; } .corner4 { display: none; }
   .pic4-img { grid-area: pic; position: relative; aspect-ratio: 1; height: auto; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); }
-  .pic4-img { clip-path: var(--pic-clip, none); } /* the notch on the right edge (usePhoneNotch) */
+  .pic4-img:not(.pic4-me) { -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, linear-gradient(#000 0 0); } /* the notch on the right edge: the pocket's shape (usePhoneNotch) taken out of the picture */
   .notch4 { pointer-events: none; } .notch4 .links4, .notch4 .island-wrap { pointer-events: auto; }
-  .links4 { position: absolute; right: 0; top: calc((100vw - 2 * var(--gut)) / 2); transform: translateY(-50%); flex-direction: column; gap: 2px; padding: 8px 6px; border-radius: 0; } /* the links stacked, centred on the picture's height (the picture is square, the tile's width) */
-  .links4 a { width: 36px; height: 34px; } .links4 a svg { width: 17px; height: 17px; } /* a finger's target */
+  .notch4 { aspect-ratio: 1; } /* the picture's square, so the links centre on it */
+  .notch4 .links4 { position: absolute; right: 0; top: 50%; transform: translateY(-50%); flex-direction: column; gap: 2px; padding: 8px 6px; border-radius: 0; } /* the links stacked, centred on the picture's height */
+  .notch4 .links4 a { width: 36px; height: 34px; } .notch4 .links4 a svg { width: 17px; height: 17px; } /* a finger's target; the notch's links only — the case pages' Let's talk card uses .links4 too (found 24 Oct: p172 had pulled its icons to the screen's edge) */
   .pic4-me, .fl4 { display: none !important; } /* the floating Lotties come back later (his note, 24 Oct) */
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }

@@ -258,30 +258,19 @@ function sysCurve(el: Element) { const cs = getComputedStyle(el), k = parseFloat
 /* the phone's notch (24 Oct, Nitish: "on the phone the handles sit where they do on the desktop, but with no cavity —
    add one on the centre right of the image container and align the icons vertically"): the desktop's notch turned onto
    the picture's right edge — a pocket cut into the picture, vertically centred, its inner corners rounded and its joins
-   curving out as the desktop's do, the links stacked in it on the container's own ground. The clip is the picture's
-   (set on the tile as --pic-clip, used by the phone's CSS); its top corners square, the tile's own corners round them */
-function usePhoneNotch(wrap: React.RefObject<HTMLDivElement | null>, links: React.RefObject<HTMLDivElement | null>, key: string) {
+   curving out as the desktop's do, the links stacked in it on the container's own ground. */
+function usePhoneNotch(wrap: React.RefObject<HTMLDivElement | null>, key: string) {
+  /* drawn once, not measured (24 Oct, for the phone's scale): the pocket's shape as a mask image of a fixed size — the
+     links' column (48 × 158px: 36px targets, 6px each side; four 34px rows, 2px apart, 8px above and below) and the
+     curves at its ends (16 × --ios-k) — laid at the picture's right, centred on its height (profile.css) */
   useLayoutEffect(() => {
-    const w = wrap.current, l = links.current; if (!w || !l) return;
-    const q = matchMedia('(max-width: 700px)');
-    const measure = () => {
-      const img = w.querySelector<HTMLElement>('.pic4-img:not(.pic4-me)');
-      if (!q.matches || !img) { w.style.removeProperty('--pic-clip'); return; }
-      const ir = img.getBoundingClientRect(), lr = l.getBoundingClientRect(); if (!ir.width || !lr.width) return;
-      const W = ir.width, H = ir.height, nx = lr.left - ir.left, ny = lr.top - ir.top, nh = lr.height;
-      const { k, K } = sysCurve(w), R = 16 * k; /* the desktop notch's radius (16, as .links4's), on the system's curve */
-      const d = [
-        `M 0 0 L ${W} 0`,
-        sCorner([W, ny], [0, 1], [-1, 0], R, K), sCorner([nx, ny], [-1, 0], [0, 1], R, K), /* into the pocket, its top-left corner */
-        sCorner([nx, ny + nh], [0, 1], [1, 0], R, K), sCorner([W, ny + nh], [1, 0], [0, 1], R, K), /* down its side, out again */
-        `L ${W} ${H} L 0 ${H} Z`,
-      ].join(' ');
-      w.style.setProperty('--pic-clip', `path("${d}")`);
-    };
-    measure();
-    const ro = new ResizeObserver(measure); ro.observe(w); ro.observe(l); q.addEventListener('change', measure);
-    return () => { ro.disconnect(); q.removeEventListener('change', measure); };
-  }, [wrap, links, key]);
+    const w = wrap.current; if (!w) return;
+    const { k, K } = sysCurve(w), R = 16 * k, D = 48, NH = 158, HH = NH + 2 * R;
+    const d = `M ${D} 0 ${sCorner([D, R], [0, 1], [-1, 0], R, K)} ${sCorner([0, R], [-1, 0], [0, 1], R, K)} ${sCorner([0, R + NH], [0, 1], [1, 0], R, K)} ${sCorner([D, R + NH], [1, 0], [0, 1], R, K)} Z`;
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${D}' height='${HH.toFixed(2)}' viewBox='0 0 ${D} ${HH.toFixed(2)}'><path d='${d}'/></svg>`;
+    w.style.setProperty('--pic-notch', `url("data:image/svg+xml,${encodeURIComponent(svg)}")`); w.style.setProperty('--pic-notch-h', `${HH.toFixed(2)}px`);
+    return () => { w.style.removeProperty('--pic-notch'); w.style.removeProperty('--pic-notch-h'); };
+  }, [wrap, key]);
 }
 
 
@@ -307,7 +296,7 @@ export default function Iteration04() {
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
-  usePhoneNotch(wrapRef, linksRef, tab);
+  usePhoneNotch(wrapRef, `${tab}${ios}`);
   const tilt = useTilt(wrapRef, depthOn && tab === 'home');
   /* the build: the latest, or the milestone — p147 as it shipped, frozen (a control, 23 Oct) */
   const m147 = tweaks['--pic-depth-ver'] === 'v147';

@@ -86,7 +86,7 @@ function Converge({ of, to }: { of: Media[]; to: Media }) {
   useLayoutEffect(() => {
     const root = ref.current; if (!root) return;
     const draw = () => {
-      const R = root.getBoundingClientRect(); const box = (sel: string) => { const el = root.querySelector<HTMLElement>(`[data-fl="${sel}"]`); if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left - R.left, y: r.top - R.top, w: r.width, h: r.height }; };
+      const R0 = root.getBoundingClientRect(), z = R0.width / (root.offsetWidth || R0.width || 1), R = { left: R0.left, top: R0.top, width: R0.width / z, height: R0.height / z }; /* in the page's own px: a zoomed page (the phone's scale, 24 Oct) reports boxes on screen in screen px in some browsers */ const box = (sel: string) => { const el = root.querySelector<HTMLElement>(`[data-fl="${sel}"]`); if (!el) return null; const r = el.getBoundingClientRect(); return { x: (r.left - R.left) / z, y: (r.top - R.top) / z, w: r.width / z, h: r.height / z }; };
       const t = box('to.m'); if (!t) return;
       const tx = t.x + t.w / 2, ty = t.y - 8, GAP = 1.5;
       const out: typeof wires = [];
@@ -124,7 +124,7 @@ function Flow({ steps }: { steps: Step[] }) {
   useLayoutEffect(() => {
     const root = ref.current; if (!root) return;
     const draw = () => {
-      const R = root.getBoundingClientRect(); const box = (sel: string) => { const el = root.querySelector<HTMLElement>(`[data-fl="${sel}"]`); if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left - R.left, y: r.top - R.top, w: r.width, h: r.height }; };
+      const R0 = root.getBoundingClientRect(), z = R0.width / (root.offsetWidth || R0.width || 1), R = { left: R0.left, top: R0.top, width: R0.width / z, height: R0.height / z }; /* in the page's own px: a zoomed page (the phone's scale, 24 Oct) reports boxes on screen in screen px in some browsers */ const box = (sel: string) => { const el = root.querySelector<HTMLElement>(`[data-fl="${sel}"]`); if (!el) return null; const r = el.getBoundingClientRect(); return { x: (r.left - R.left) / z, y: (r.top - R.top) / z, w: r.width / z, h: r.height / z }; };
       const f = (n: number) => n.toFixed(1);
       const out: typeof wires = [];
       const GAP = 1.5; /* the line runs up to the head's point (his drawings: the line ends at the chevron's vertex, the arms wide and short) */
