@@ -76,6 +76,7 @@
 .cs4-fig.phone .cs4-media, .cs4-fig.phone-land .cs4-media { box-shadow: 0 10px 26px -14px rgba(0, 0, 0, .35); } /* a soft shadow behind every screen (22 Oct) */
 /* filled: the picture or clip covers the slot; layers sit over it by their boxes */
 .cs4-media.filled { background: color-mix(in srgb, var(--pcard-open-ink) 10%, var(--pcard-open)); }
+.cs4-media > img, .cs4-media > video { border-radius: inherit; corner-shape: inherit; } /* the picture or clip rounded itself, for Safari's clip (profile.css, 24 Oct) — the box keeps its shadow */
 .cs4-media > img, .cs4-media > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .cs4-layer { position: absolute; z-index: 1; pointer-events: none; } .cs4-layer img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .cs4-lot, .cs4-lot svg { width: 100%; height: 100%; display: block; }

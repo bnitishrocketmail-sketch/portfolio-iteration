@@ -371,6 +371,15 @@
 .off4 .stack-bg img { position: absolute; inset: -8%; width: 116%; height: 116%; object-fit: cover; display: block; filter: blur(22px) brightness(.68) saturate(1.1); }
 .off4 .stack.fan figure { inset: auto; left: 34%; top: 29%; /* 22 Oct: the fan lifted 15% of the box, then let down 7% */ height: 78%; aspect-ratio: 4 / 3; width: auto; border-radius: calc(12px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); transform-origin: 50% 50%; } /* 22 Oct: 20% smaller (98 → 78% of the box), so more of each photo shows */ /* 4 : 3 (Nitish, 21 Oct), the height as set on p70; the fan unchanged */ /* 21 Oct: 15% bigger (85 → 98% of the box, square) and up 12% of where they sat (42 → 37%); the fan itself unchanged */
 .off4 { overflow: hidden; }
+/* Safari's rounded clip (24 Oct, Nitish: "the Off duty container's corner radius isn't there anymore"): Safari does not
+   clip a composited child — a blurred or filtered picture, a rotated photo, a playing video — to its rounded,
+   overflow-hidden parent, so the corners square off. A mask on the parent (any; this one shows all of it) makes it clip
+   them. Not on a box with a shadow of its own (a mask clips the shadow too) — there, on the layer inside it that holds
+   the pictures, rounded as the box. No change in other browsers. (The project cards' face keeps its own mask where it
+   has the punched hole — on the desktop.) */
+.pc-face, .nt4-thumb { -webkit-mask-image: linear-gradient(#000 0 0); }
+.off4 .stack-bg, .off4 .stack { border-radius: inherit; corner-shape: inherit; overflow: hidden; -webkit-mask-image: linear-gradient(#000 0 0); }
+.pp4-cover { border-radius: inherit; corner-shape: inherit; overflow: hidden; -webkit-mask-image: linear-gradient(#000 0 0); }
 .off4 .hint { display: none; }
 .off4 .stack figcaption { display: none; } /* the caption is the box's head, not written on the photo */
 
@@ -557,7 +566,7 @@
      the text under it on the card's light grey in its own ink — no longer over the visual, so no inverted text — then the
      big letter at the card's foot, faint, past the text */
   .pp4-cover { display: contents; }
-  .pp4-vis { position: relative; inset: auto; aspect-ratio: 16 / 10; overflow: hidden; background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); }
+  .pp4-vis { position: relative; inset: auto; aspect-ratio: 16 / 10; overflow: hidden; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); -webkit-mask-image: linear-gradient(#000 0 0); /* the card's top corners, for Safari's clip */ background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); }
   .pp4-vid.side { right: auto; left: 50%; transform: translate(-50%, -50%); } .pp4-vl-in { left: 4%; right: 4%; } .pp4-vms { left: 12px; right: 12px; top: 12px; bottom: 12px; } /* each scene centred in its box */
   .pp4-cover .pletter, .pp4-card.open .pp4-cover .pletter { left: auto; right: 10px; bottom: -6%; font-size: 140px; opacity: .06; color: currentColor; }
   .pp4-open { position: relative; z-index: 1; }
