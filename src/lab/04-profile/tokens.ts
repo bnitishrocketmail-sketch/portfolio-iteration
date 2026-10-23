@@ -63,6 +63,8 @@ export const CONTROLS: Control[] = [
   /* the intro's picture (Nitish, 22 Oct): the drawing as it is, the drawing in black and white, or his photo — the cutout
      and the cards in front and behind the same in each */
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-v', label: 'Version', def: 'illo', light: 'illo', options: [['The drawing', 'illo'], ['The drawing, black and white', 'illo-bw'], ['The photo', 'photo']] },
+  /* the picture as a spatial scene (23 Oct): the depth-map warp, or still; the layered version is to come */
+  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth', label: 'Depth', def: 'warp', light: 'warp', options: [['Depth-map warp', 'warp'], ['Still', 'off']] },
   /* the first tab of the nav: his photo, or his signature from the Framer site (22 Oct) */
   { group: 'Nav bar', sub: 'Home tab', kind: 'select', key: '--home-tab', label: 'Version', def: 'photo', light: 'photo', options: [['The photo', 'photo'], ['The signature', 'sig']] },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
