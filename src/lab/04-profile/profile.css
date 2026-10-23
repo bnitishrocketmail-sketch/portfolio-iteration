@@ -303,10 +303,9 @@
 .pp4-card.open { background: var(--pcard-open); color: var(--pcard-open-ink); }
 /* the cover: the project's letter only — the theme's greys, no picture yet (01's gradients went: not this theme) */
 .pp4-cover { position: absolute; inset: 0; }
-/* the open card's visual (Projects04 Visual, 23 Oct): under the letter and the open layout; a wash of the card's own
-   colour from the left keeps the title, the blurb and the chips legible over it */
+/* the open card's visual (Projects04 Visual, 23 Oct): under the letter and the open layout, with nothing over it (the
+   wash from the left came off the same day, Nitish) */
 .pp4-vis { position: absolute; inset: 0; }
-.pp4-vis::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--pcard-open) 0%, color-mix(in srgb, var(--pcard-open) 88%, transparent) 26%, color-mix(in srgb, var(--pcard-open) 0%, transparent) 58%); pointer-events: none; }
 .pp4-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .pp4-vl { position: absolute; inset: 0; }
 .pp4-vl-in { position: absolute; left: 40%; right: 2%; top: 8%; bottom: 8%; display: grid; place-items: center; }
