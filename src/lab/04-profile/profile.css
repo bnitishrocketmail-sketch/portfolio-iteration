@@ -313,6 +313,7 @@
 .pp4-card.inv .pletter { color: var(--pcard-open); }
 .pp4-card.inv .pp4-arrow { color: var(--ink-dark); }
 .pp4-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.pp4-vid.side { inset: auto; top: 6%; height: 88%; width: auto; aspect-ratio: 16 / 9; left: 66%; transform: translateX(-50%); object-fit: contain; } /* the recording's middle (its phone) at 66% of the card */
 .pp4-vl { position: absolute; inset: 0; }
 .pp4-vl-in { position: absolute; left: 40%; right: 2%; top: 8%; bottom: 8%; display: grid; place-items: center; }
 .pp4-vl-in svg { display: block; width: auto !important; height: 100% !important; max-width: 100%; }

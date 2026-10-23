@@ -28,7 +28,10 @@ function Visual({ p, on }: { p: Project; on: boolean }) {
   const reduce = useReducedMotion();
   const c = p.cover;
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !reduce) v.play().catch(() => {}); else v.pause(); }, [on, reduce]);
-  if (c && 'video' in c) return <video ref={ref} className="pp4-vid" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />;
+  /* a clip of a phone on its own ground (RideQuest's, `side`) sits whole at the right on that ground, clear of the text */
+  if (c && 'video' in c) return c.side
+    ? <div className="pp4-vl" style={{ background: c.bg }}><video ref={ref} className="pp4-vid side" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" /></div>
+    : <video ref={ref} className="pp4-vid" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />;
   if (c && 'lottie' in c) return <div className="pp4-vl" style={{ background: c.bg }}><Lottie className="pp4-vl-in" src={c.lottie} still={c.still} playing={on && !reduce} /></div>;
   if (c && 'comp' in c) return <div className="pp4-vc">{c.comp === 'fintech' ? <Fintech3D on={on} fit={.95} at={66} /> : <Launches3D on={on} fit={.95} at={66} />}</div>;
   if (LAB_LOTTIE[p.id]) return <div className="pp4-vl"><Lottie className="pp4-vl-in" src={LAB_LOTTIE[p.id]} still={STILL.coin} playing={on && !reduce} /></div>;

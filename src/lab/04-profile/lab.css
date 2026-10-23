@@ -43,6 +43,8 @@
 .mthumb .ctok { cursor: default; }
 /* the coin: the Lottie, held on its still frame until it plays */
 .lv-coin .lot { width: 72%; height: 86%; transform: translateY(-10%); } /* the coin sits low in its own frame */
+/* a clip filling the tile (RideQuest's recording, 23 Oct): its white ground to the tile's edges */
+.lv-clip { position: absolute; inset: 0; background: #fff; } .lv-clip video { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* RideQuest: a road's dashes scroll under a car that sways; the sketch of a gamified ride */
 .lv-ride { position: relative; overflow: hidden; }
 .lv-ride .road { position: absolute; left: 50%; top: 0; bottom: 0; width: 42px; margin-left: -21px; background: color-mix(in srgb, var(--vi) 16%, transparent); display: flex; flex-direction: column; align-items: center; gap: 14px; padding-top: 6px; }

@@ -21,9 +21,13 @@ const P = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
 /* the visuals: each takes `on` and animates only then (CSS plays on .on; a Lottie plays on `playing`) */
 /* (the drawer sketch that was the motion system's visual is replaced by MotionThumb, 23 Oct) */
 const Coin = ({ on }: { on: boolean }) => <div className="lv lv-coin" aria-hidden="true"><Lottie className="lot" src={LOTTIES.coin} still={STILL.coin} playing={on} /></div>;
-const Ride = ({ on }: { on: boolean }) => (
-  <div className={`lv lv-ride${on ? ' on' : ''}`} aria-hidden="true"><div className="road"><i /><i /><i /><i /><i /><i /></div><div className="car"><b /><s /><s /></div></div>
-);
+/* RideQuest: his recording of the prototype (23 Oct), the phone on white, playing while the tile plays */
+const Ride = ({ on }: { on: boolean }) => {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => { const v = ref.current; if (!v) return; if (on && !matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}); else v.pause(); }, [on]);
+  const c = P['ridequest'].cover as { video: string; poster: string };
+  return <div className="lv lv-clip" aria-hidden="true"><video ref={ref} src={c.video} poster={c.poster} muted loop playsInline preload="metadata" /></div>;
+};
 const Nav = ({ on }: { on: boolean }) => (
   <div className={`lv lv-nav${on ? ' on' : ''}`} aria-hidden="true"><div className="bar"><div className="pill" /><i /><i /><i /><i /></div></div>
 );
