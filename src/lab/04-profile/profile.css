@@ -324,7 +324,7 @@
 .col4 > .pill4.off { margin-top: 0; } /* ref 4: the pill 7.9% of the column; the stack as tall as its three cards need; Off duty the rest */
 /* the Projects heading: no container of its own (Nitish, 14 Oct) — an H2 in the name's face, on the column's row */
 .pill4 { position: relative; display: flex; align-items: center; padding: 1.1cqw .4cqw 0; min-height: 0; } .pill4 .h2-4 { margin: 0; }
-.pill4.off { padding-top: 0; }
+.pill4.off { padding-top: 0; } .seeall4 { display: none; }
 /* "more" at the row's right end (Nitish, 21 Oct), with a chevron; its text ends on the bracket's right leg, and it sits
    inside the bracket's corner, below its top leg */
 
@@ -527,4 +527,14 @@
   .pp4-cover .pletter { font-size: 160px; right: -2%; bottom: -12%; }
   /* the right column: Projects' pill and the stack and Off duty, each a container */
   .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 6px 4px; } .stack4 { flex: none; } .off4 { flex: none; min-height: 240px; }
+  /* the home's projects on the phone (24 Oct): a row that scrolls sideways, edge to edge with the gutter as its inset, a
+     card and a quarter in view (78% of the column), snapping card by card; each card whole, at its desktop proportion,
+     its name 14px in */
+  .pill4 { justify-content: space-between; margin-top: 12px; }
+  .seeall4 { display: inline-flex; align-items: center; gap: .35em; padding: .45em .2em .45em .8em; border: 0; background: none; color: var(--line-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); opacity: .8; cursor: pointer; }
+  .stack4 { aspect-ratio: auto; width: auto; margin: 0 calc(-1 * var(--gut)); } /* edge to edge: the gutter as the row's inset */
+  .deck4.rail { position: static; display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gut); padding: 0 var(--gut) 4px; scrollbar-width: none; } .deck4.rail::-webkit-scrollbar { display: none; }
+  .deck4.rail .pcard4 { position: relative; bottom: auto; flex: 0 0 78%; scroll-snap-align: start; transform: none !important; z-index: auto; box-shadow: var(--shadow-el); }
+  .deck4.rail .pc-name { left: 14px; right: 14px; top: 12px; gap: 3px; }
+
 }

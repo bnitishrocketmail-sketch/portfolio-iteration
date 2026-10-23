@@ -61,6 +61,17 @@ const RISE = -(1 - OFFSET) * .5 * 100, SINK = OFFSET * .4 * 100;
 function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   const [hov, setHov] = useState<number | null>(null);
   const reduce = useReducedMotion();
+  /* the phone (24 Oct, Nitish: "the three projects in a grid with a little horizontal scroll, as apps do"): the deck
+     becomes a row that scrolls sideways, a card and a quarter in view, snapping card by card; the card in view comes
+     alive as a hovered one does on the desktop (its clip plays, in colour) */
+  const [rail, setRail] = useState(() => typeof window !== 'undefined' && matchMedia('(max-width: 700px)').matches);
+  useEffect(() => { const q = matchMedia('(max-width: 700px)'), on = () => setRail(q.matches); q.addEventListener('change', on); return () => q.removeEventListener('change', on); }, []);
+  useEffect(() => {
+    const d = deck.current; if (!d || !rail) return;
+    const seen = new Map<Element, number>();
+    const io = new IntersectionObserver(es => { es.forEach(e => seen.set(e.target, e.intersectionRatio)); let best = -1, k = -1; [...d.querySelectorAll('.pcard4')].forEach((c, i) => { const v = seen.get(c) ?? 0; if (v > best) { best = v; k = i; } }); setHov(best > .6 ? k : null); }, { root: d, threshold: [0, .25, .5, .6, .75, .9, 1] });
+    d.querySelectorAll('.pcard4').forEach(c => io.observe(c)); return () => io.disconnect();
+  }, [rail]);
   /* where a card's name ends, handed to the card (--name-b): B's Lottie is centred in the band from there to the card's
      foot, the same room above it as below (Nitish, 22 Oct) */
   const deck = useRef<HTMLDivElement>(null);
@@ -76,15 +87,15 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   }, []);
   return (
     <div className="stack4">
-      <div className="deck4" ref={deck} onPointerLeave={() => setHov(null)}>
+      <div className={`deck4${rail ? ' rail' : ''}`} ref={deck} onPointerLeave={() => { if (!rail) setHov(null); }}>
         {PROJECTS.slice(0, SHOWN).map((p, k) => {
           const r = k; /* 0 = front (bottom), 2 = back (top): the list's first is the front card, as it is the row's first (22 Oct) */
-          const y = r === 1 ? (hov === 1 ? `${RISE}%` : hov === 2 ? `${SINK}%` : '0%') : '0%';
+          const y = rail ? '0%' : r === 1 ? (hov === 1 ? `${RISE}%` : hov === 2 ? `${SINK}%` : '0%') : '0%';
           return (
-            <motion.button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}${hov === r ? ' hov' : ''}${p.cover && 'bg' in p.cover ? ' lit' : ''}`} style={{ bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r }}
+            <motion.button key={p.id} type="button" className={`pcard4${r ? ' back' : ''}${hov === r ? ' hov' : ''}${p.cover && 'bg' in p.cover ? ' lit' : ''}`} style={rail ? undefined : { bottom: `calc(${r * OFFSET} * ${100 / (1 + (SHOWN - 1) * OFFSET)}%)`, zIndex: 10 - r }}
               animate={{ y }} transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30 }}
-              onPointerEnter={e => { if (e.pointerType !== 'touch') setHov(r); }} onClick={() => onOpen(p.id)}>
-              <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE ? { WebkitMaskImage: holeMask(r > 0, nm.x, nm.b), maskImage: holeMask(r > 0, nm.x, nm.b) } : {}) }} aria-hidden="true">
+              onPointerEnter={e => { if (e.pointerType !== 'touch' && !rail) setHov(r); }} onClick={() => onOpen(p.id)}>
+              <span className="pc-face" style={{ background: `var(--card-${['front', 'mid', 'back'][r]})`, ...(HOLE ? { WebkitMaskImage: holeMask(r > 0 && !rail, nm.x, nm.b), maskImage: holeMask(r > 0 && !rail, nm.x, nm.b) } : {}) }} aria-hidden="true">
                 {p.cover && ('video' in p.cover ? <Cover src={p.cover.video} poster={p.cover.poster} on={hov === r} /> : 'lottie' in p.cover ? <span className="pc-video pc-lot" style={{ background: p.cover.bg }}><Lottie className="pc-lot-in" src={p.cover.lottie} still={p.cover.still} playing={hov === r} /></span> : <span className="pc-video pc-comp">{p.cover.comp === 'fintech' ? <Fintech3D mini on={hov === r} /> : <Launches3D mini on={hov === r} />}</span>)}
               </span>
               {!HOLE && <i className="tab4" aria-hidden="true" />}
@@ -391,6 +402,7 @@ export default function Iteration04() {
         <aside className="col4" ref={colRef}>
           <div className="pill4">
             <h2 className="h2-4">Projects</h2>
+            <button type="button" className="seeall4" onClick={() => go('projects')}>See all <span aria-hidden="true">→</span></button> {/* the phone only (24 Oct): a row that scrolls sideways gets an app's "See all", to the Projects tab */}
             <i className="corner4 tr" aria-hidden="true" /> {/* the bracket's mirror at the top right (Nitish, 21 Oct): its top leg on the picture's top line, its right leg on the column's right edge, the cards' */}
           </div>
           <ProjectStack onOpen={id => go('project', id)} />
