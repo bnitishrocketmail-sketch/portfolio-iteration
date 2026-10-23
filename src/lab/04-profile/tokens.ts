@@ -30,7 +30,7 @@ export const CONTROLS: Control[] = [
   /* the phone's scale (24 Oct): px, Apple's iPhone text styles as the reference; the body a weight heavier there */
   ...([['--ph-t-h1', 'H1 — the name', '32px', 24, 40], ['--ph-t-h2', 'H2 — page and section headings', '28px', 20, 34], ['--ph-t-display', 'Display — card titles, a study’s headings', '24px', 18, 30], ['--ph-t-title', 'Title', '17px', 14, 22], ['--ph-t-body', 'Body', '17px', 14, 20], ['--ph-t-meta', 'Meta', '13px', 11, 16]] as const).map(([key, label, def, min, max]): Control => ({ group: 'Type', sub: 'Phone sizes (px)', kind: 'range', key, label, def, light: def, min, max, step: 1, unit: 'px' })),
   w('--ph-copy-w', 'Body on the phone', '400', '400', 'Phone sizes (px)'),
-  { group: 'Type', sub: 'Phone sizes (px)', kind: 'select', key: '--ph-zoom', label: 'Phone scale (the content; the bar stays)', def: '.75', light: '.75', options: [['75% (Safari two steps down)', '.75'], ['85%', '.85'], ['100%', '1']] },
+  { group: 'Type', sub: 'Phone sizes (px)', kind: 'select', key: '--ph-zoom', label: 'Phone scale (the content; the bar stays)', def: '.85', light: '.85', options: [['85% (Safari one step down)', '.85'], ['75% (two steps down)', '.75'], ['100%', '1']] },
   /* colours: surfaces */
   col('Surfaces', '--bg', 'Page background', '#141416', '#d4d4d7'),
   col('Surfaces', '--frame', 'Main container', '#121212', '#b5b5b5'),

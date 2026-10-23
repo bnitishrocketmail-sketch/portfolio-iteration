@@ -464,7 +464,7 @@
      which draws every px at three-quarters and gives the layout a third more room. The same here, on the page's content
      only: the intro, the home column and the pages (zoom: --ph-zoom, the system page's Phone scale); the bottom bar
      and the controls outside it, at their size */
-  .picwrap4, .col4, .page4 { zoom: var(--ph-zoom, .75); }
+  .picwrap4, .col4, .page4 { zoom: var(--ph-zoom, .85); } /* 85% (24 Oct, Nitish: one step down in Safari looked better than two) */
   .it04 > * { --copy-w: var(--ph-copy-w); } /* the phone's body weight, on .it04's children so it holds over a weight the controls set on .it04 itself */
   .it04 { --t-h1: var(--ph-t-h1); --t-h2: var(--ph-t-h2); --t-display: var(--ph-t-display); --t-title: var(--ph-t-title); --t-body: var(--ph-t-body); --t-meta: var(--ph-t-meta); --r: 20px; --gut: 16px; position: static; display: block; padding: 12px var(--gut) calc(92px + env(safe-area-inset-bottom)); overflow: visible; background: var(--bg); }
   /* the gutter, 16px, as apps keep it; the body's own 16px went (base.css) — it had boxed the picture in and left a strip of
