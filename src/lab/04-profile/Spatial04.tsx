@@ -7,7 +7,8 @@ import { useEffect, useRef, type RefObject } from 'react';
    his cutout (made solid inside, its stray specks dropped); the near things (the bar, the camera, the pole, the desk)
    found on the depth and snapped to the picture's edges; the wall with both painted out by LaMa; his and their colours
    with the wall taken out of their edge pixels. Behind him the wall drifts with the pointer (or the tilt), the near
-   things move against it, he stays put. Subtle, like iOS, or pronounced (2.5×).
+   things move against it, he stays put — each of the near things and he moving as one rigid piece (a plane fitted to its
+   depth), so nothing bends: his face, by its own depth, had stretched at the nose (p150). Subtle, like iOS, or pronounced (2.5×).
    The picture and his cutout (which lies over the cards behind him) are drawn by the same shader and the same offset,
    so they stay in register. Off under reduced motion or without WebGL: the plain images. */
 

@@ -53,7 +53,19 @@ for name, pic, cut in [('illustration', 'nitish-desk-illustration.webp', 'nitish
     gone = cv2.dilate(((him > .02) | (near > .02)).astype(np.uint8), np.ones((3, 3), np.uint8), iterations=int(W * .008))
     bg = ext(d, 1 - gone, W * .03)
     nd = np.maximum(planes(d, near, W * .02), bg + .2)
-    hd = np.maximum(ext(d, him, W * .03), bg + .12)
+    # him as one rigid piece too (24 Oct, Nitish: "my nose stretches in and out"): his own depth, smoothed only 3% of the
+    # width, still had the nose and cheek in it, and moving by it pulled his face up to 28% out of shape at the strong
+    # setting; a plane fitted to his depth (robustly) tilts him as a whole — no more than 2.6% across all of him, evenly
+    m = him > .5; yy, xx = np.mgrid[0:H, 0:W].astype(np.float32); xx /= W; yy /= H
+    X = np.stack([np.ones(m.sum()), xx[m], yy[m]], 1); y = d[m]; c = np.linalg.lstsq(X, y, rcond=None)[0]
+    for _ in range(3):
+        r = np.abs(X @ c - y); w = 1 / (1 + (r / (np.median(r) + 1e-3)) ** 2); c = np.linalg.lstsq(X * w[:, None], y * w, rcond=None)[0]
+    hd = (c[0] + c[1] * xx + c[2] * yy).astype(np.float32)
+    # and his head held where nothing moves (the shader's focus, .55), as Spatial Scenes hold the subject's face: the plane's
+    # value at the middle of his head (the top third of him) set to it
+    ys_, xs_ = np.nonzero(m); top = ys_ < ys_.min() + (ys_.max() - ys_.min()) / 3
+    hd += .55 - (c[0] + c[1] * xs_[top].mean() / W + c[2] * ys_[top].mean() / H)
+    print('   him plane', np.round(c, 3))
     dep = np.stack([bg, nd, hd], -1)
     Image.fromarray((np.clip(dep, 0, 1) * 255 + .5).astype(np.uint8)).save(OUT + f'{name}.png', optimize=True)
     # his colours, with the wall and the desk taken out of his edge pixels (ML foreground estimation)
