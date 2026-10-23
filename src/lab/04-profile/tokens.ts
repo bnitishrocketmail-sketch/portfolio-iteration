@@ -67,6 +67,8 @@ export const CONTROLS: Control[] = [
   { group: 'Nav bar', sub: 'Home tab', kind: 'select', key: '--home-tab', label: 'Version', def: 'photo', light: 'photo', options: [['The photo', 'photo'], ['The signature', 'sig']] },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
   { group: 'Main container', sub: 'Corners', kind: 'select', key: '--corners', label: 'Curve', def: 'ios', light: 'ios', options: [['iOS (continuous)', 'ios'], ['Round', 'round']] },
+  /* the selection: the dark pill, or a ball in the bar's colour in a cavity (23 Oct) */
+  { group: 'Nav bar', sub: 'Selection', kind: 'select', key: '--nav-sel', label: 'Version', def: 'pill', light: 'pill', options: [['The pill', 'pill'], ['Cavity ball', 'cavity']] },
   /* the main container solid, as it was, or glass: the picture behind showing through it, blurred (22 Oct) */
   { group: 'Main container', sub: 'Background', kind: 'select', key: '--frame-v', label: 'Version', def: 'solid', light: 'solid', options: [['Solid', 'solid'], ['Glass', 'glass']] },
 ];

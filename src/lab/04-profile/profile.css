@@ -102,6 +102,16 @@
 /* the bar over the column beside it (23 Oct): the intro picture's drop shadow fell across the bar's right half and
    darkened it, so the gap at the pill's right read narrower than at its left and top though all three are 18.5px */
 .navcol4 { position: relative; z-index: 3; }
+/* the cavity-ball version (Cavity in Iteration04.tsx): the bar is drawn by the SVG under the names, so the column's own
+   fill and shadow step aside; the shadow goes on the drawing, round the swell as well */
+.navcol4:has(.nav4.cav) { background: none; box-shadow: none; }
+.cav4 { position: absolute; z-index: -1; pointer-events: none; overflow: visible; fill: var(--nav-bg); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .16)) drop-shadow(0 4px 8px rgba(0, 0, 0, .16)); }
+.nav4.cav ul button.on { color: var(--nav-ink); }
+/* the tabs in equal slots, each 1.3 × the bar's width tall, so the ring (1.2 ×) clears the names either side of it,
+   short or long; the first slot starts so the socket's top meets the bar's top (socket radius .69 of the width) */
+.navcol4.navcol4:has(.nav4.cav) { padding-top: 4%; } /* over the photo's and the signature's top paddings */
+.nav4.cav li { aspect-ratio: 1 / 1.3; align-items: center; }
+.nav4.cav li + li, .nav4.cav li[data-id="home"] + li { margin-top: 0; }
 .navcol4:has(.nav4.sig) { padding-top: calc(50% - var(--pill-w) / 2); }
 .navsig4 { position: relative; display: block; width: 15px; height: 60px; }
 .navsig4 svg { position: absolute; left: 50%; top: 50%; width: 60px; height: 15.2px; transform: translate(-50%, -50%) rotate(-90deg); }

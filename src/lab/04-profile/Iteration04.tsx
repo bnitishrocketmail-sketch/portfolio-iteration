@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useId, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, LINKS, NAV04 as NAV, PROJECTS, type ViewName } from '../../lib/data';
@@ -110,10 +110,44 @@ function Cover({ src, poster, on }: { src: string; poster: string; on: boolean }
    carries the selected name itself — the old name goes out quickly, the new one comes in on the way — so the name is
    always inside the pill, and the pill hides the names it passes. */
 const NAV_SPRING = { type: 'spring', stiffness: 400, damping: 38, mass: 1 } as const;
-function Nav({ tab, go, sig }: { tab: Tab; go: (v: ViewName) => void; sig?: boolean }) {
+/* the cavity-ball selection (Nitish, 23 Oct; a control): the selected tab sits on a ball in the bar's colour, a little
+   wider than the bar, in a socket that swells out of the bar round it, a thin ring cut between socket and ball showing
+   what is behind. The bar is drawn here (an SVG under the names) instead of by the column's background: the bar and the
+   socket merge through a goo filter (blur, then a hard alpha step at half), so the swell meets the bar's sides in smooth
+   fillets wherever the ball is, the bar's rounded ends included; the ring is a mask, the ball a circle over it. Sizes are
+   fractions of the bar's width: ball 1.1, ring 5%, rim 9%. The ball travels on the pill's spring. */
+function Cavity({ w, h, x, y, cy, tr }: { w: number; h: number; x: number; y: number; cy: number; tr: object }) {
+  const id = useId().replace(/:/g, '');
+  const rb = w * .55, g = w * .05, rs = rb + g + w * .09, sd = w * .085;
+  const pad = rs; /* room for the swell past the bar's sides and ends */
+  return (
+    <svg className="cav4" style={{ left: x - pad, top: y - pad }} width={w + 2 * pad} height={h + 2 * pad} viewBox={`${-pad} ${-pad} ${w + 2 * pad} ${h + 2 * pad}`} aria-hidden="true">
+      <defs>
+        <filter id={`goo${id}`} x="-20%" y="-5%" width="140%" height="110%" colorInterpolationFilters="sRGB">
+          <feGaussianBlur stdDeviation={sd} />
+          <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -12" />
+        </filter>
+        <mask id={`ring${id}`} maskUnits="userSpaceOnUse" x={-pad} y={-pad} width={w + 2 * pad} height={h + 2 * pad}>
+          <rect x={-pad} y={-pad} width={w + 2 * pad} height={h + 2 * pad} fill="#fff" />
+          <motion.circle cx={w / 2} r={rb + g} fill="#000" initial={false} animate={{ cy }} transition={tr} />
+        </mask>
+      </defs>
+      <g mask={`url(#ring${id})`}>
+        <g filter={`url(#goo${id})`}>
+          <rect x={0} y={0} width={w} height={h} rx={w / 2} />
+          <motion.circle cx={w / 2} r={rs} initial={false} animate={{ cy }} transition={tr} />
+        </g>
+      </g>
+      <motion.circle className="cav4-ball" cx={w / 2} r={rb} initial={false} animate={{ cy }} transition={tr} />
+    </svg>
+  );
+}
+
+function Nav({ tab, go, sig, cav }: { tab: Tab; go: (v: ViewName) => void; sig?: boolean; cav?: boolean }) {
   const reduce = useReducedMotion();
   const ulRef = useRef<HTMLUListElement>(null);
   const [boxes, setBoxes] = useState<Record<string, { top: number; height: number; width: number; left: number }> | null>(null);
+  const [bar, setBar] = useState<{ w: number; h: number; x: number; y: number } | null>(null); /* the bar's box, from the list's corner (the cavity version draws the bar) */
   useLayoutEffect(() => {
     const ul = ulRef.current; if (!ul) return;
     const measure = () => {
@@ -121,9 +155,10 @@ function Nav({ tab, go, sig }: { tab: Tab; go: (v: ViewName) => void; sig?: bool
       const u = ul.getBoundingClientRect(); /* sub-pixel boxes, so the pill sits exactly on its name (offsetTop rounds); left too, for the phone's row */
       ul.querySelectorAll<HTMLElement>('li[data-id]').forEach(li => { const r = li.querySelector('button')!.getBoundingClientRect(); b[li.dataset.id!] = { top: r.top - u.top, height: r.height, width: r.width, left: r.left - u.left }; });
       setBoxes(b);
+      const col = ul.closest<HTMLElement>('.navcol4'); if (col) { const c = col.getBoundingClientRect(); setBar({ w: c.width, h: c.height, x: c.left - u.left, y: c.top - u.top }); }
     };
     measure();
-    const ro = new ResizeObserver(measure); ro.observe(ul); return () => ro.disconnect();
+    const ro = new ResizeObserver(measure); ro.observe(ul); const col = ul.closest('.navcol4'); if (col) ro.observe(col); return () => ro.disconnect();
   }, []);
   const i = NAV.findIndex(n => n.id === tab);
   const box = boxes?.[tab] ?? null;
@@ -132,9 +167,10 @@ function Nav({ tab, go, sig }: { tab: Tab; go: (v: ViewName) => void; sig?: bool
   const out = reduce ? { duration: 0 } : { duration: .1, ease: 'easeOut' as const }; /* the old name goes quickly … */
   const inn = reduce ? { duration: 0 } : { duration: .22, ease: 'easeOut' as const }; /* … the new one comes in while the pill is still arriving */
   return (
-    <nav className={`nav4${sig ? ' sig' : ''}`} aria-label="Sections">
+    <nav className={`nav4${sig ? ' sig' : ''}${cav ? ' cav' : ''}`} aria-label="Sections">
       <ul ref={ulRef}>
-        {pill && (
+        {cav && bar && box && <Cavity w={bar.w} h={bar.h} x={bar.x} y={bar.y} cy={box.top + box.height / 2 - bar.y} tr={tr} />}
+        {pill && !cav && (
           <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
             <AnimatePresence initial={false} mode="wait">
               <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
@@ -234,7 +270,7 @@ export default function Iteration04() {
       <div className="frame4">
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
-          <Nav tab={navTab} go={go} sig={tweaks['--home-tab'] === 'sig'} />
+          <Nav tab={navTab} go={go} sig={tweaks['--home-tab'] === 'sig'} cav={tweaks['--nav-sel'] === 'cavity'} />
           <PhoneNav04 items={NAV} tab={navTab} go={go} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
             <Blob4 /> {/* the assistant's wavy mark (22 Oct), in place of the sparkle */}
