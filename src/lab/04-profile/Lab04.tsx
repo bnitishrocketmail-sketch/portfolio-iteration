@@ -36,16 +36,14 @@ const SideClip = ({ id, on }: { id: string; on: boolean }) => {
     </div>
   );
 };
-const Nav = ({ on }: { on: boolean }) => (
-  <div className={`lv lv-nav${on ? ' on' : ''}`} aria-hidden="true"><div className="bar"><div className="pill" /><i /><i /><i /><i /></div></div>
-);
+/* (the pill-sliding sketch that stood in for the Swiggy nav is replaced by his recording, 23 Oct) */
 
 const EXPS: Exp[] = [
   { id: 'motion-system', title: 'Motion design system', line: 'One set of motion decisions, defined once and inherited by every screen — with the drawer, the cascade and the token phone running.', meta: 'System · 2026', visual: on => <MotionThumb on={on} />, to: 'motion' },
   { id: 'coin-rig', title: P['coin-rig'].title, line: P['coin-rig'].blurb, meta: `${P['coin-rig'].client} · ${P['coin-rig'].year}`, visual: on => <SideClip id="coin-rig" on={on} /> },
   { id: 'rupee-coin', title: P['rupee-coin'].title, line: P['rupee-coin'].blurb, meta: `${P['rupee-coin'].client} · ${P['rupee-coin'].year}`, visual: on => <Coin on={on} /> },
   { id: 'ridequest', title: P['ridequest'].title, line: P['ridequest'].blurb, meta: `${P['ridequest'].client} · ${P['ridequest'].year}`, visual: on => <SideClip id="ridequest" on={on} /> },
-  { id: 'swiggy-nav', title: P['swiggy-nav'].title, line: P['swiggy-nav'].blurb, meta: `${P['swiggy-nav'].client} · ${P['swiggy-nav'].year}`, visual: on => <Nav on={on} /> },
+  { id: 'swiggy-nav', title: P['swiggy-nav'].title, line: P['swiggy-nav'].blurb, meta: `${P['swiggy-nav'].client} · ${P['swiggy-nav'].year}`, visual: on => <SideClip id="swiggy-nav" on={on} /> },
 ];
 
 export default function Lab04({ onOpen }: { onOpen: (view: string) => void }) {

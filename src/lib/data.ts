@@ -42,7 +42,12 @@ export const PROJECTS: Project[] = [
     featuresTitle: 'Gamified Uber ride experience', /* his heading for the list (23 Oct) */
     features: ['Your route as a 3D street-view world', 'A garage: choose, customise and flex your car', 'Riders nearby: wave, challenge, play', 'Route chat rooms: travel updates, nearby picks', 'Live ads: hoardings, banners and store signs from real locations'] },
   { id: 'swiggy-nav', title: 'Swiggy bottom navigation', client: 'Swiggy', role: 'Interaction design', year: '2026', letter: 'S', m1: '#4A4C56', m2: '#F5BD56',
-    blurb: 'One hybrid nav across five sub-apps, made consistent through motion.', tags: ['Interaction', 'Navigation'] },
+    blurb: 'One hybrid nav across five sub-apps, made consistent through motion.', tags: ['Interaction', 'Navigation'],
+    /* his recording of the case study's A1 card shuffle prototype, cropped to the phone on its frame's ground (23 Oct) */
+    cover: { video: '/cases/swiggy-nav/nav.mp4', poster: '/cases/swiggy-nav/nav-poster.webp', side: true, bg: '#f3f5f9' },
+    /* the case study's heading and its pieces: the hygiene base and the four explorations (A1, A2, B1, B2) */
+    featuresTitle: 'One bar, five stores',
+    features: ['Interaction hygiene first: the base every idea sits on', 'Card shuffle: the new bar comes forward from the stack', 'Directional slide: bars exchange the way you moved', 'Cavity ball: one element that never leaves', 'Colour drop: the store’s colour crosses the gap'] },
 ];
 
 export const TOOLS = ['After Effects', 'Lottie', 'Rive', 'Figma', 'Framer', 'Blender', 'JavaScript', 'Spline']; // PLACEHOLDER list
