@@ -41,7 +41,7 @@
 /* the frame takes 01's device sizing (ref 1's 1000 × 590, at most 1320 wide, 24px + 10px clear of the viewport's edges, so
    there is air above and below) — Nitish, 13 Oct. Inside, ref 5's split: the nav at its 9.7% less a quarter, the right
    column at its 21%, the picture the rest. */
-.frame4 { --fw: min(calc(100vw - 32px), 1320px, calc((100vh - 68px) * 1.695)); position: relative; width: var(--fw); aspect-ratio: 1000 / 590; container-type: size;
+.frame4 { --fw: min(calc(100vw - 32px), 1320px, calc((100vh - 68px) * 1.695)); position: relative; width: round(var(--fw), 2px); height: round(calc(var(--fw) * 590 / 1000), 2px); container-type: size; /* whole, even pixels (23 Oct), so the frame sits on the pixel grid and its 1px edge light is as crisp at the bottom as at the top; 1000 : 590 to within a pixel */
   /* the frame's own tracks, gap and inset are fractions of --fw, its width: its own container units resolve against the
      viewport (an element is not its own query container) and percentage padding against the parent's width, so both
      made the nav and the column grow with the monitor while the frame stayed put */
@@ -64,52 +64,70 @@
   box-shadow: var(--shadow-frame), inset 0 1px 0 rgba(255, 255, 255, .14), 0 0 0 1px rgba(255, 255, 255, .1); }
 .it04.light.glassframe .frame4 { box-shadow: var(--shadow-frame), inset 0 1px 0 rgba(255, 255, 255, .5), 0 0 0 1px rgba(255, 255, 255, .35); }
 
-/* ---- the edge light (Nitish, 23 Oct: "the strokes, the highlights and the light leaks on iOS's latest cards — replicate how
-   it looks, not the glass itself"). iOS 26's Liquid Glass defines its silhouette with light: a light in the scene catches
-   the rim where it faces it and again on the far side (the light through the glass, off its back edge), the sides between
-   left almost bare; inside the rim the glass glows a little where the light comes in; and the light spills a little onto
-   what is around it. So, from one direction (--la, the angle; --lx/--ly, the same as a unit vector; the top-left corner by
-   default, or the pointer's direction — useEdgeLight in Iteration04):
-   · the rim (.edge4::before): a hairline whose brightness goes round it — strongest facing the light, about half on the far
-     side, a faint even line elsewhere; a ring cut from the frame's own shape, so it follows the iOS corner
-   · the bloom (.edge4::after): a soft glow just inside the edge, only where the rim is lit
-   · the bevel, the leak and the spill (.edge4's shadows): a 1px inner highlight on the lit sides, a wide faint glow
-     inside them, and a soft light outside the frame toward the light
-   The glass version takes them stronger (the glass is the edge's whole look) with a hint of colour where the rim's light
-   fades, as light through a glass edge splits; the light theme stronger again, white on the light grey. ---- */
-.it04.edgelit { --la: 300deg; --lx: -.86; --ly: -.51; /* toward the top-left corner of a 1000 × 590 frame */
-  --spec-a: .55; --spec-b: .26; --rim-0: .07; --bloom: .3; --bevel: .08; --leak: .06; --spill: .08; --tint: 0; }
-.it04.edgelit.glassframe { --spec-a: .8; --spec-b: .38; --rim-0: .1; --bloom: .45; --bevel: .14; --leak: .09; --spill: .1; --tint: .5; }
-.it04.edgelit.light { --spec-a: .95; --spec-b: .6; --rim-0: .32; --bloom: .5; --bevel: .5; --leak: .22; --spill: .3; }
-.it04.edgelit.light.glassframe { --spec-a: 1; --spec-b: .7; --rim-0: .4; --bloom: .6; --bevel: .6; --leak: .28; --spill: .35; --tint: .35; }
-/* drawn on a layer of its own (.edge4, the frame's first child, under everything in it; the frame isolated so the layer
-   sits on the frame's surface), so the light moving repaints only the layer, not the frame and all it holds */
+/* ---- the edge light (Nitish, 23 Oct). First pass (p148) had a rim lit from one corner plus a bloom inside it and light
+   spilling out — "too much". Second pass, measured on his iPhone's own screenshots (the Batteries and Weather widgets and
+   the dock, at 3 device pixels to the point): the edge is one rim and nothing else —
+   · 1pt wide, its outer pixel brightest and fading inward across the point (white at about .65, .48, .3 over the fill)
+   · lit by the edge's facing, not by where along it: every straight edge is lit evenly along its length; the top and the
+     bottom are lit (equally — the light's axis runs through both), the left and right sides not at all, and in the
+     corners the rim fades as the curve turns away from the axis, gone about 45° off it
+   · no glow inside, none outside, no line on the unlit sides
+   So the rim (.edge4::before, a 1px ring) is cut from the frame's own shape, and painted
+   by facing: each straight edge one value, through each corner the facings swept round its curve; the value
+   cos(2 × the angle off the light's axis), clamped, to the power 1.5 — a fit to the widgets' corners. --edge-angle turns
+   the axis (0: top and bottom lit; 90: the sides), as tilting the phone does. ---- */
 .edge4 { display: none; }
-.it04.edgelit .frame4 { isolation: isolate; box-shadow: var(--shadow-frame); }
-.it04.edgelit .edge4 { display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; corner-shape: inherit; will-change: transform;
-  box-shadow: inset calc(var(--lx) * -1px) calc(var(--ly) * -1px) 0 rgba(255, 255, 255, var(--bevel)),
-    inset calc(var(--lx) * -22px) calc(var(--ly) * -22px) 44px -26px rgba(255, 255, 255, var(--leak)),
-    calc(var(--lx) * 18px) calc(var(--ly) * 18px) 56px -20px rgba(255, 255, 255, var(--spill)); }
-.it04.edgelit .edge4::before, .it04.edgelit .edge4::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; corner-shape: inherit; }
-.it04.edgelit .edge4::before { padding: 1.25px;
-  background: conic-gradient(from var(--la),
-    rgba(255, 255, 255, var(--spec-a)) 0deg,
-    rgba(255, 255, 255, calc(var(--spec-a) * .45)) 16deg,
-    rgba(150, 200, 255, calc(var(--spec-a) * .3 * var(--tint) + var(--rim-0))) 34deg,
-    rgba(255, 255, 255, var(--rim-0)) 62deg 118deg,
-    rgba(255, 190, 210, calc(var(--spec-b) * .4 * var(--tint) + var(--rim-0))) 150deg,
-    rgba(255, 255, 255, calc(var(--spec-b) * .5)) 166deg,
-    rgba(255, 255, 255, var(--spec-b)) 180deg,
-    rgba(255, 255, 255, calc(var(--spec-b) * .5)) 194deg,
-    rgba(150, 200, 255, calc(var(--spec-b) * .4 * var(--tint) + var(--rim-0))) 210deg,
-    rgba(255, 255, 255, var(--rim-0)) 242deg 298deg,
-    rgba(255, 190, 210, calc(var(--spec-a) * .3 * var(--tint) + var(--rim-0))) 326deg,
-    rgba(255, 255, 255, calc(var(--spec-a) * .45)) 344deg,
-    rgba(255, 255, 255, var(--spec-a)) 360deg);
+.it04.edgelit { --rim-a: .52; --la: var(--edge-angle, 8deg); }
+.it04.edgelit.light { --rim-a: .75; }
+.it04.edgelit .frame4, .it04.edgelit.light.glassframe .frame4 { isolation: isolate; box-shadow: var(--shadow-frame); } /* the old hairline and top line go (the light glass one's selector is stronger, so named) */
+.it04.edgelit .edge4 { display: block; position: absolute; inset: 0; z-index: 7; pointer-events: none; /* over the frame's contents: they never reach its edge, but their shadows do, and dimmed the bottom rim */ border-radius: inherit; corner-shape: inherit;
+  --cr: calc(36px * var(--ios-k, 1)); /* the frame's corner */
+  --f0: pow(clamp(0, cos(2 * (0deg - var(--la))), 1), 1.5); --f15: pow(clamp(0, cos(2 * (15deg - var(--la))), 1), 1.5);
+  --f30: pow(clamp(0, cos(2 * (30deg - var(--la))), 1), 1.5); --f45: pow(clamp(0, cos(2 * (45deg - var(--la))), 1), 1.5);
+  --f60: pow(clamp(0, cos(2 * (60deg - var(--la))), 1), 1.5); --f75: pow(clamp(0, cos(2 * (75deg - var(--la))), 1), 1.5);
+  --f90: pow(clamp(0, cos(2 * (90deg - var(--la))), 1), 1.5); --f105: pow(clamp(0, cos(2 * (105deg - var(--la))), 1), 1.5);
+  --f120: pow(clamp(0, cos(2 * (120deg - var(--la))), 1), 1.5); --f135: pow(clamp(0, cos(2 * (135deg - var(--la))), 1), 1.5);
+  --f150: pow(clamp(0, cos(2 * (150deg - var(--la))), 1), 1.5); --f165: pow(clamp(0, cos(2 * (165deg - var(--la))), 1), 1.5);
+  /* one conic gradient round the frame's centre: constant along each straight edge (one facing), and through each corner
+     the facings swept in 15° steps, each placed at the angle (from the centre) of the point on the corner's curve that
+     faces that way — atan2 of the point's offset, from the frame's own width (--fw) and height — so one layer, no seams */
+  --W: var(--fw); --H: calc(var(--fw) * 590 / 1000);
+  --rim: conic-gradient(from 0deg,
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f0))) 0deg,
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f0))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.0), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 1.0))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f15))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.2588), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.9659))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f30))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.5), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.866))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f45))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.7071), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.7071))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f60))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.866), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.5))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f75))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.9659), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.2588))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f90))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 1.0), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.0))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f90))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 1.0), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * 0.0))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f105))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.9659), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.2588))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f120))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.866), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.5))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f135))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.7071), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.7071))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f150))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.5), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.866))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f165))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.2588), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.9659))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f0))) atan2(calc(calc(.5 * var(--W) - var(--cr)) + var(--cr) * 0.0), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -1.0))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f0))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * 0.0), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -1.0)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f15))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.2588), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.9659)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f30))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.5), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.866)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f45))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.7071), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.7071)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f60))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.866), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.5)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f75))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.9659), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.2588)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f90))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -1.0), calc(-1 * calc(calc(.5 * var(--H) - var(--cr)) - var(--cr) * -0.0)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f90))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -1.0), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * -0.0)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f105))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.9659), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.2588)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f120))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.866), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.5)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f135))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.7071), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.7071)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f150))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.5), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.866)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f165))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr)) + var(--cr) * -0.2588), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr) * 0.9659)))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f0))) calc(360deg + atan2(calc(calc(-.5 * var(--W) + var(--cr))), calc(-1 * calc(calc(-.5 * var(--H) + var(--cr)) - var(--cr))))),
+    rgb(255 255 255 / calc(var(--rim-a) * var(--f0))) 360deg); }
+.it04.edgelit .edge4::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; corner-shape: inherit; background: var(--rim);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
-.it04.edgelit .edge4::after { box-shadow: inset 0 0 16px 1px rgba(255, 255, 255, var(--bloom)), inset 0 0 3px 0 rgba(255, 255, 255, var(--bloom));
-  -webkit-mask: conic-gradient(from var(--la), #000 0deg, rgba(0, 0, 0, .35) 24deg, transparent 58deg 122deg, rgba(0, 0, 0, .45) 168deg 192deg, transparent 238deg 302deg, rgba(0, 0, 0, .35) 336deg, #000 360deg);
-  mask: conic-gradient(from var(--la), #000 0deg, rgba(0, 0, 0, .35) 24deg, transparent 58deg 122deg, rgba(0, 0, 0, .45) 168deg 192deg, transparent 238deg 302deg, rgba(0, 0, 0, .35) 336deg, #000 360deg); }
+/* one pixel wide — a point; the widgets' rim fades inward across its point (.65, .48, .3 on a 3× screen), which a ring a
+   pixel wide cannot hold (half-pixel rings snap away), so it takes their average */
+.it04.edgelit .edge4::before { padding: 1px; }
 
 /* ---- Notes (Notes04.tsx, 23 Oct): the old site's "Recent articles" cards — the thumbnail inset at the top, the title and
    a line under it — in 04's open-card grey, radii and type; three to a row, the row filling the page's width ---- */
