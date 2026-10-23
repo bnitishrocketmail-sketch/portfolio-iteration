@@ -13,7 +13,7 @@ import Controls04 from './Controls04';
 import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
-import Soon04 from './Soon04';
+import Notes04 from './Notes04';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
 import Blob4 from './Blob4';
@@ -304,7 +304,7 @@ export default function Iteration04() {
           </motion.div>
         ) : tab === 'articles' ? (
           <motion.div key={tab} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
-            <Soon04 id={tab} label={NAV.find(n => n.id === tab)!.label} />
+            <Notes04 /> {/* the old site's recent articles, as Notes (23 Oct) */}
           </motion.div>
         ) : tab === 'workflow' ? (
           /* the "how I work" map (Workflow04.tsx), in the same place */
