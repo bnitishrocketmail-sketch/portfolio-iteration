@@ -240,6 +240,19 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
   return clip;
 }
 
+/* a corner on the system's curve, for a drawn clip path (24 Oct, Nitish: "the curve is not the standard one"): the
+   corner from the line coming in along d1 to the line going out along d2, meeting at V, as CSS draws a corner with
+   corner-shape superellipse(K) — |x|^n + |y|^n = 1 with n = 2^K (K 1.6 for the iOS curve, 1 for round) — over a radius
+   R (the base radius × --ios-k, as every radius in the system); sampled finely, as line segments */
+type P2 = [number, number];
+function sCorner(V: P2, d1: P2, d2: P2, R: number, K: number, steps = 14) {
+  const n = 2 ** K, C: P2 = [V[0] - R * d1[0] + R * d2[0], V[1] - R * d1[1] + R * d2[1]], out: string[] = [];
+  for (let i = 0; i <= steps; i++) { const t = (i / steps) * Math.PI / 2, a = Math.cos(t) ** (2 / n), b = Math.sin(t) ** (2 / n); out.push(`${(C[0] + R * (-a * d2[0] + b * d1[0])).toFixed(2)} ${(C[1] + R * (-a * d2[1] + b * d1[1])).toFixed(2)}`); }
+  return 'L ' + out.join(' L ');
+}
+/* the system's curve as the page has it now: the radius factor and the superellipse's K (iOS corners on), or round */
+function sysCurve(el: Element) { const cs = getComputedStyle(el), k = parseFloat(cs.getPropertyValue('--ios-k')) || 1, m = cs.getPropertyValue('--ios-shape').match(/superellipse\(([\d.]+)\)/); return { k, K: m ? parseFloat(m[1]) : 1 }; }
+
 /* the phone's notch (24 Oct, Nitish: "on the phone the handles sit where they do on the desktop, but with no cavity —
    add one on the centre right of the image container and align the icons vertically"): the desktop's notch turned onto
    the picture's right edge — a pocket cut into the picture, vertically centred, its inner corners rounded and its joins
@@ -253,11 +266,12 @@ function usePhoneNotch(wrap: React.RefObject<HTMLDivElement | null>, links: Reac
       const img = w.querySelector<HTMLElement>('.pic4-img:not(.pic4-me)');
       if (!q.matches || !img) { w.style.removeProperty('--pic-clip'); return; }
       const ir = img.getBoundingClientRect(), lr = l.getBoundingClientRect(); if (!ir.width || !lr.width) return;
-      const W = ir.width, H = ir.height, nx = lr.left - ir.left, ny = lr.top - ir.top, nh = lr.height, rn = 14;
+      const W = ir.width, H = ir.height, nx = lr.left - ir.left, ny = lr.top - ir.top, nh = lr.height;
+      const { k, K } = sysCurve(w), R = 16 * k; /* the desktop notch's radius (16, as .links4's), on the system's curve */
       const d = [
-        `M 0 0 L ${W} 0 L ${W} ${ny - rn}`,
-        `A ${rn} ${rn} 0 0 1 ${W - rn} ${ny} L ${nx + rn} ${ny} A ${rn} ${rn} 0 0 0 ${nx} ${ny + rn}`, /* into the pocket, its top-left corner */
-        `L ${nx} ${ny + nh - rn} A ${rn} ${rn} 0 0 0 ${nx + rn} ${ny + nh} L ${W - rn} ${ny + nh} A ${rn} ${rn} 0 0 1 ${W} ${ny + nh + rn}`, /* down its side, out again */
+        `M 0 0 L ${W} 0`,
+        sCorner([W, ny], [0, 1], [-1, 0], R, K), sCorner([nx, ny], [-1, 0], [0, 1], R, K), /* into the pocket, its top-left corner */
+        sCorner([nx, ny + nh], [0, 1], [1, 0], R, K), sCorner([W, ny + nh], [1, 0], [0, 1], R, K), /* down its side, out again */
         `L ${W} ${H} L 0 ${H} Z`,
       ].join(' ');
       w.style.setProperty('--pic-clip', `path("${d}")`);
