@@ -100,8 +100,11 @@ export default function Projects04({ onOpen }: { onOpen: (id: string) => void })
             {/* the open layout: ref 7's wide card */}
             <motion.div className="pp4-open" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }} style={{ pointerEvents: open ? 'auto' : 'none' }}>
               <div className="pp4-top"><h3 className="pp4-title">{p.title}</h3><p className="pp4-blurb">{p.blurb}</p></div>
-              <ul className="pp4-chips">{p.tags.map(t => <li key={t}>{t}</li>)}</ul>
-              <span className="pp4-meta">{p.client} · {p.role} · {p.year}</span>
+              {/* the meta above the chips' panel, stacked from the foot, so the gap holds however many rows the chips take (23 Oct) */}
+              <div className="pp4-foot">
+                <span className="pp4-meta">{p.client} · {p.role} · {p.year}</span>
+                <ul className="pp4-chips">{p.tags.map(t => <li key={t}>{t}</li>)}</ul>
+              </div>
               <button type="button" className="pp4-arrow" aria-label={`Open ${p.title}`} onClick={() => onOpen(p.id)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
             </motion.div>
             {/* the folded layout: 01's card's lines, set vertically at the bottom-left */}

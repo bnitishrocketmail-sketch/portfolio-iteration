@@ -329,10 +329,13 @@
 .pp4-top { position: absolute; left: 2cqw; top: 1.8cqw; right: 34%; display: flex; flex-direction: column; gap: .7cqw; }
 .pp4-title { margin: 0; font: var(--h2-w) clamp(18px, 2.2cqw, 28px)/1.15 var(--f-head); letter-spacing: -.01em; color: var(--pcard-open-ink); } /* a display title, the name's face */
 .pp4-blurb { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: var(--pcard-open-ink); opacity: .82; max-width: 36ch; }
-.pp4-chips { position: absolute; left: 2cqw; bottom: 2cqw; margin: 0; padding: 1cqw; list-style: none; display: flex; flex-wrap: wrap; gap: .6cqw; max-width: 50%; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round);
+.pp4-chips { position: relative; margin: 0; padding: 1cqw; list-style: none; display: flex; flex-wrap: wrap; gap: .6cqw; max-width: 100%; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round);
   background: color-mix(in srgb, var(--pcard-open-ink) 7%, transparent); border: 1px solid color-mix(in srgb, var(--pcard-open-ink) 10%, transparent); } /* a panel of the card's own ink, faint */
 .pp4-chips li { padding: .45em .9em; border-radius: 999px; background: color-mix(in srgb, var(--pcard-open-ink) 10%, transparent); font: 500 var(--t-meta)/1.2 var(--f-copy); color: var(--pcard-open-ink); } /* meta */
-.pp4-meta { position: absolute; left: 2cqw; bottom: calc(2cqw + 1cqw * 2 + 2.6em + 1.3cqw); font: 500 var(--t-meta)/1.3 var(--f-copy); color: var(--pcard-open-ink); opacity: .7; } /* meta, above the chips */
+.pp4-meta { font: 500 var(--t-meta)/1.3 var(--f-copy); color: var(--pcard-open-ink); opacity: .7; } /* meta, above the chips */
+/* the foot: the meta, then the chips' panel, from the card's bottom-left; it ends short of the arrow, so a panel of many
+   chips wraps inside it and the meta rises with it at the same gap (Launches has four; it had run into the meta) */
+.pp4-foot { position: absolute; left: 2cqw; bottom: 2cqw; right: calc(1.4cqw + clamp(40px, 4cqw, 56px) + 2cqw); display: flex; flex-direction: column; align-items: flex-start; gap: 1.3cqw; }
 .pp4-arrow { position: absolute; right: 1.4cqw; bottom: 1.4cqw; width: clamp(40px, 4cqw, 56px); height: clamp(40px, 4cqw, 56px); border-radius: 50%; border: 0; background: var(--pcard-open-ink); color: var(--pcard-open); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-el); transition: transform .2s; } /* inverted within the card */
 .pp4-arrow:hover { transform: translateY(-1px); } .pp4-arrow svg { width: 44%; height: 44%; }
 /* the folded layout: the lines set vertically, reading bottom to top, at the bottom-left */
@@ -415,7 +418,7 @@
   .pp4-fold, .pp4-hit { display: none; }
   .pp4-open { position: relative; inset: auto; opacity: 1 !important; pointer-events: auto !important; display: flex; flex-direction: column; gap: 12px; padding: 18px 18px 18px; }
   .pp4-top { position: static; right: auto; gap: 8px; padding-right: 52px; } .pp4-title { font-size: 22px; } /* room for the arrow */ .pp4-blurb { max-width: none; }
-  .pp4-meta { position: static; order: 1; }
+  .pp4-foot { display: contents; } .pp4-meta { position: static; order: 1; }
   .pp4-chips { position: static; order: 2; max-width: none; padding: 0; gap: 6px; background: none; border: 0; }
   .pp4-arrow { position: absolute; right: 14px; top: 14px; bottom: auto; width: 40px; height: 40px; }
   .pp4-cover .pletter { font-size: 160px; right: -2%; bottom: -12%; }
