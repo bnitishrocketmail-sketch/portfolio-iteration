@@ -312,7 +312,7 @@
 /* the row: every card the row's height; the half card at the end fades out under the mask there; the cards before the
    open one are clipped at the left edge (a fade there would dim the open card's own edge) (Nitish, 14 Oct). The clip box
    runs 40px below the cards so their shadows are not cut (the shadows fall downward; sideways they reach 4px at most). */
-.pp4-row { position: relative; flex: 1; min-height: 0; column-gap: 1.4cqw; overflow: hidden; padding-bottom: 40px; margin-bottom: -40px; -webkit-mask-image: linear-gradient(to right, #000 86%, transparent); mask-image: linear-gradient(to right, #000 86%, transparent); }
+.pp4-row { position: relative; flex: 1; min-height: 0; column-gap: 1.4cqw; overflow: hidden; padding-bottom: 40px; margin-bottom: -40px; } /* no fade at the right end (Nitish, 23 Oct): the half card there is cut by the frame as it is */
 .pp4-card { position: absolute; top: 0; bottom: 40px; left: 0; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: var(--pcard-fold); color: var(--pcard-fold-ink); box-shadow: var(--shadow-el); transition: background-color .45s, color .45s; }
 .pp4-card.open { background: var(--pcard-open); color: var(--pcard-open-ink); }
 /* the cover: the project's letter only — the theme's greys, no picture yet (01's gradients went: not this theme) */
