@@ -487,17 +487,25 @@
   .pn4-pill { position: absolute; top: var(--inset); height: calc(var(--bar-h) - 2 * var(--inset)); border-radius: 999px; background: var(--nav-hl); pointer-events: none; } /* the highlighter's dark, as the desktop's selection */
   .ai4 { display: none; }
   .tweaks4 { left: auto; right: 12px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; } /* the dev chip, out of the bar's way */
-  /* the intro: the picture, then the name box (his words), then the cut-out's name, role and CV — one container, the tile's grey */
-  .picwrap4 { display: flex; flex-direction: column; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; } .pic4, .pic4-in { display: contents; }
-  .pic4-img { position: relative; aspect-ratio: 1; height: auto; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); }
-  .pic4-me, .fl4 { display: none !important; } /* the cards and the cutout need the picture's box, which the column has not got; the home page's own layout is next */
-  .cut4 { order: 1; } .name4 { order: 2; }
+  /* the intro (24 Oct, Nitish: "my name in one line; my profile picture in the ellipse on its right; the floating box's
+     paragraph as a description below the name"): one container, the tile's grey — the picture on top, full bleed; then
+     a grid inset by 18px: the name on one line with his photo at its right, level with the name and the title under it;
+     the description (the box's paragraph, as plain text now); his one-liner; the CV. The picture's wrappers and the
+     cut-out step aside (display: contents) so their pieces sit in the one grid */
+  .picwrap4 { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto 18px; grid-template-areas: "pic pic pic pic" ". name me ." ". role me ." ". lede lede ." ". sub sub ." ". cv cv ."; padding-bottom: 18px; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; }
+  .pic4, .pic4-in, .cut4 { display: contents; } .corner4 { display: none; }
+  .pic4-img { grid-area: pic; position: relative; aspect-ratio: 1; height: auto; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); }
+  .pic4-me, .fl4 { display: none !important; } /* the floating Lotties come back later (his note, 24 Oct) */
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
-  .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 18px 18px 16px; } .corner4 { display: none; }
-  .nm4 { line-height: 1.1; } .role4 { margin-top: 6px; font-size: var(--t-title); } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; } .sub4 { margin-top: 8px; max-width: none; } .cv4 { margin-top: 12px; font-size: var(--t-title); padding: .65em 1.1em; }
-  .name4 { position: static; width: auto; margin: 0 18px 18px; padding: 14px 16px; } .lede4 { max-width: none; }
+  .nm4 { grid-area: name; align-self: end; margin-top: 18px; white-space: nowrap; font-size: min(var(--t-h1), 8.2vw); line-height: 1.1; } .nm4 br { display: none; } .nm4 b { margin-left: .26em; } /* one line: the surname after a word space; sized down only if a narrow phone can't hold it beside the photo */
+  .me4 { grid-area: me; align-self: center; width: 64px; margin: 18px 0 0 12px; }
+  .role4, .sig4 { grid-area: role; } .role4 { margin-top: 6px; font-size: var(--t-title); } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; }
+  .name4 { grid-area: lede; position: static; width: auto; min-width: 0; margin: 14px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
+  .lede4 { max-width: none; color: var(--line-ink); } /* the description: the page's body, in the line's ink (the glass's light ink was for over the picture) */
+  .sub4 { grid-area: sub; margin-top: 10px; max-width: none; } /* the one-liner after it */
+  .cv4 { grid-area: cv; justify-self: start; margin-top: 16px; font-size: var(--t-title); padding: .65em 1.1em; }
   /* the pages: the heading and its note on the background, above the content (an app's section heading: outside the card,
      at the content's edge — Nitish, 18 Oct); the content on its own grey container, the frame's; Workflow's map goes
      straight on the picture, no container ("it looks much better directly placed over the blurred background") */
