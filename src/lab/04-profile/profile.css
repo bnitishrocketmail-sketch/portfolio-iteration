@@ -127,8 +127,8 @@
 .cav4-bar { fill: var(--nav-bg); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .16)) drop-shadow(0 4px 10px rgba(0, 0, 0, .18)); }
 .cav4-ball { fill: var(--nav-bg); filter: drop-shadow(0 1.5px 4.5px rgba(0, 0, 0, .28)); }
 .navcol4:has(.nav4.sig) { padding-top: calc(50% - var(--pill-w) / 2); }
-.navsig4 { position: relative; display: block; width: 15px; height: 60px; }
-.navsig4 svg { position: absolute; left: 50%; top: 50%; width: 60px; height: 15.2px; transform: translate(-50%, -50%) rotate(-90deg); }
+.navsig4 { position: relative; display: block; width: 15px; height: 48px; } /* the box keeps the names' thickness, so the pill stays 33 wide; shorter with the smaller mark */
+.navsig4 svg { position: absolute; left: 50%; top: 50%; width: 45px; height: 11.4px; transform: translate(-50%, -50%) rotate(-90deg); } /* a quarter smaller (Nitish, 23 Oct: "reduce it 0.5x" — his scale words are ~20–25%, not literal) — it was 60px and read larger than the names */
 .pn4 { display: none; } /* the phone's bar (PhoneNav04.tsx); shown at the phone breakpoint, where the column hides */
 
 /* ---- the picture: the intro tile, with the bottom-left corner cut out (the cut-out beside it is the frame, not the tile) ---- */
