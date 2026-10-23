@@ -23,7 +23,7 @@ import './lab.css';
    letter, the arrow), playing while the card is open. A clip fills the card; a Lottie or the two-phone scene sits in
    its right part, clear of the text; RideQuest and the Swiggy nav have no visual of their own yet, so they keep the
    letter alone. */
-function Visual({ p, on }: { p: Project; on: boolean }) {
+function Visual({ p, on, mid = false }: { p: Project; on: boolean; mid?: boolean /* the phone: a scene centred in its own box, no text beside it */ }) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduce = useReducedMotion();
   const c = p.cover;
@@ -34,7 +34,7 @@ function Visual({ p, on }: { p: Project; on: boolean }) {
     : <video ref={ref} className="pp4-vid" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />;
   if (c && 'lottie' in c) return <div className="pp4-vl" style={{ background: c.bg }}><Lottie className="pp4-vl-in" src={c.lottie} still={c.still} playing={on && !reduce} /></div>;
   if (c && 'comp' in c && c.comp === 'motion') return <div className="pp4-vms"><MotionThumb on={on} /></div>;
-  if (c && 'comp' in c) return <div className="pp4-vc">{c.comp === 'fintech' ? <Fintech3D on={on} fit={.95} at={66} /> : <Launches3D on={on} fit={.95} at={66} />}</div>;
+  if (c && 'comp' in c) return <div className="pp4-vc">{c.comp === 'fintech' ? <Fintech3D on={on} fit={.95} at={mid ? 50 : 66} /> : <Launches3D on={on} fit={.95} at={mid ? 50 : 66} />}</div>;
   return null;
 }
 
@@ -55,9 +55,9 @@ function useDark(p: Project) {
   }, [c]);
   return dark;
 }
-function Card({ children, p, open, ...rest }: { children: React.ReactNode; p: Project; open: boolean } & React.ComponentProps<typeof motion.article>) {
+function Card({ children, p, open, flat = false, ...rest }: { children: React.ReactNode; p: Project; open: boolean; flat?: boolean /* the phone: the text sits under the visual, not on it, so it keeps its ink */ } & React.ComponentProps<typeof motion.article>) {
   const dark = useDark(p);
-  return <motion.article {...rest} className={`pp4-card${open ? ' open' : ''}${open && dark ? ' inv' : ''}`}>{children}</motion.article>;
+  return <motion.article {...rest} data-id={p.id} className={`pp4-card${open ? ' open' : ''}${open && dark && !flat ? ' inv' : ''}`}>{children}</motion.article>;
 }
 
 const OPEN = .58; /* the open card, of the viewport's width (ref 7: 66% with two folded; five here) */
@@ -68,6 +68,12 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
   const PROJECTS = items;
   const reduce = useReducedMotion();
   const [sel, setSel] = useState(PROJECTS[0].id);
+  /* the phone (24 Oct, Nitish: "the projects page — spacing hygiene and the layouting"): every card whole, one under
+     another, as an app's content card — its visual on top in a box of its own, then the title with the arrow, the line,
+     the Lab cards' parts, the meta and the tags; the card most in view plays its visual */
+  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && matchMedia('(max-width: 700px)').matches);
+  useEffect(() => { const q = matchMedia('(max-width: 700px)'), on = () => setPhone(q.matches); q.addEventListener('change', on); return () => q.removeEventListener('change', on); }, []);
+  const [live, setLive] = useState<string | null>(null);
   const rowRef = useRef<HTMLDivElement>(null);
   const [geo, setGeo] = useState<{ w: number; gap: number } | null>(null);
   useLayoutEffect(() => {
@@ -75,6 +81,13 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
     const measure = () => setGeo({ w: row.clientWidth, gap: parseFloat(getComputedStyle(row).columnGap) || 0 });
     measure(); const ro = new ResizeObserver(measure); ro.observe(row); return () => ro.disconnect();
   }, []);
+  useEffect(() => {
+    const row = rowRef.current; if (!row || !phone) return;
+    const seen = new Map<string, number>();
+    const io = new IntersectionObserver(es => { es.forEach(e => seen.set((e.target as HTMLElement).dataset.id!, e.intersectionRatio)); let best = .5, id: string | null = null; seen.forEach((v, k) => { if (v > best) { best = v; id = k; } }); setLive(id); }, { threshold: [0, .25, .5, .6, .75, .9, 1] });
+    const watch = () => row.querySelectorAll('.pp4-card').forEach(c => io.observe(c)); watch(); const mo = new MutationObserver(watch); mo.observe(row, { childList: true });
+    return () => { io.disconnect(); mo.disconnect(); };
+  }, [phone]);
   const tr = reduce ? { duration: 0 } : SPRING;
   const fade = reduce ? { duration: 0 } : { duration: .28, ease: 'easeOut' as const };
   /* widths from the rule: open + 2.5 folded + 3 gaps = the viewport */
@@ -97,9 +110,9 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
       </header>
       <div className="pp4-row" ref={rowRef}>
         {geo && place.map(({ p, open, x, w }) => (
-          <Card key={p.id} p={p} open={open} initial={false} animate={{ x, width: w }} transition={tr}>
+          <Card key={p.id} p={p} open={open} flat={phone} initial={false} animate={{ x, width: w }} transition={tr}>
             <div className="pp4-cover" aria-hidden="true">
-              <motion.div className="pp4-vis" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }}>{open && <Visual p={p} on={open} />}</motion.div>
+              <motion.div className="pp4-vis" initial={false} animate={{ opacity: open || phone ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }}>{(open || phone) && <Visual p={p} on={phone ? live === p.id : open} mid={phone} />}</motion.div>
               <span className="pletter">{p.letter}</span>
             </div>
             {/* the open layout: ref 7's wide card */}

@@ -463,7 +463,8 @@
   .it04 { --t-h1: var(--ph-t-h1); --t-h2: var(--ph-t-h2); --t-display: var(--ph-t-display); --t-title: var(--ph-t-title); --t-body: var(--ph-t-body); --t-meta: var(--ph-t-meta); --r: 20px; --gut: 16px; position: static; display: block; padding: 12px var(--gut) calc(92px + env(safe-area-inset-bottom)); overflow: visible; background: var(--bg); }
   /* the gutter, 16px, as apps keep it; the body's own 16px went (base.css) — it had boxed the picture in and left a strip of
      the body's colour down each side, "one more container" (Nitish, 18 Oct) */
-  .bg4 { position: fixed; inset: -6%; filter: blur(34px) brightness(.5); } /* the picture is the background (desktop: .45 behind the frame) */
+  .bg4 { position: fixed; inset: -6%; filter: blur(34px) brightness(.5); }
+  .it04.light .bg4 { filter: blur(34px) brightness(1.02); opacity: .3; } /* light (24 Oct): the page's own light grey through a faint picture — the picture's dark top had left the headings above the cards, dark on dark */ /* the picture is the background (desktop: .45 behind the frame) */
   /* the frame: a size container on the desktop; a size container's height is contained (it ignores its children), so as a
      column it collapsed to its padding — 28px — and everything hung out of it (found 18 Oct). Here it contains width only
      (cqw still resolves) and has no surface of its own: no grey, no padding, no shadow */
@@ -512,6 +513,7 @@
   .page4 { display: block; }
   .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; gap: 8px; padding: 4px 4px 0; } .pp4-right { max-width: none; }
   .pp4-head .h2-4 { color: var(--name-ink); } .pp4-head .pp4-note { color: var(--glass-ink); } /* on the picture: the name's and the lede's inks, which already sit on it */
+  .it04.light .pp4-head .pp4-note, .it04.light .cs4-head .pp4-note { color: var(--line-ink); } /* light: the page is light here, so the line's dark ink (the glass's light ink was for over the dark picture) */
   .pp4 > :not(.pp4-head) { border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); padding: 16px 14px 18px; }
   .cr4 > .cm4-wrap { background: none; box-shadow: none; padding: 0; }
   /* the projects: the desktop's fan of cards, one open, becomes a plain list — every card open, its content in flow
@@ -520,11 +522,19 @@
   .pp4-card { position: relative !important; transform: none !important; width: 100% !important; height: auto; min-height: 0; background: var(--pcard-open); color: var(--pcard-open-ink); }
   .pp4-fold, .pp4-hit { display: none; }
   .pp4-open { position: relative; inset: auto; opacity: 1 !important; pointer-events: auto !important; display: flex; flex-direction: column; gap: 12px; padding: 18px 18px 18px; }
-  .pp4-top { position: static; right: auto; gap: 8px; padding-right: 52px; } /* room for the arrow */ .pp4-blurb { max-width: none; }
+  .pp4-top { position: static; right: auto; gap: 8px; } .pp4-title { padding-right: 52px; } /* room for the arrow beside the title; the line under it takes the card's width */ .pp4-blurb { max-width: none; }
   .pp4-foot { display: contents; } .pp4-meta { position: static; order: 1; }
   .pp4-chips { position: static; order: 2; max-width: none; padding: 0; gap: 6px; background: none; border: 0; }
   .pp4-arrow { position: absolute; right: 14px; top: 14px; bottom: auto; width: 40px; height: 40px; }
-  .pp4-cover .pletter { font-size: 160px; right: -2%; bottom: -12%; }
+  /* each card as an app's content card (24 Oct): its visual on top in a box of its own (16 : 10, the card's corners),
+     the text under it on the card's light grey in its own ink — no longer over the visual, so no inverted text — then the
+     big letter at the card's foot, faint, past the text */
+  .pp4-cover { display: contents; }
+  .pp4-vis { position: relative; inset: auto; aspect-ratio: 16 / 10; overflow: hidden; background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); }
+  .pp4-vid.side { right: auto; left: 50%; transform: translate(-50%, -50%); } .pp4-vl-in { left: 4%; right: 4%; } .pp4-vms { left: 12px; right: 12px; top: 12px; bottom: 12px; } /* each scene centred in its box */
+  .pp4-cover .pletter, .pp4-card.open .pp4-cover .pletter { left: auto; right: 10px; bottom: -6%; font-size: 140px; opacity: .06; color: currentColor; }
+  .pp4-open { position: relative; z-index: 1; }
+  .pp4-feat { position: static; transform: none; width: auto; gap: 10px; color: inherit; } .pp4-feat ol { gap: 8px; } /* the Lab cards' parts, in the card's flow, under the line */
   /* the right column: Projects' pill and the stack and Off duty, each a container */
   .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 6px 4px; } .stack4 { flex: none; } .off4 { flex: none; min-height: 240px; }
   /* the home's projects on the phone (24 Oct): a row that scrolls sideways, edge to edge with the gutter as its inset, a
