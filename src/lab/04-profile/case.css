@@ -154,7 +154,7 @@
 .cs4-faq { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: var(--s3); padding: var(--s3); border-radius: calc(calc(var(--r) - .6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
 .cs4-faq.n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); } /* six cells: two rows of three */
 .cs4-faq-col { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
-.cs4-faq-ui, .cs4-faq-card { border-radius: calc(calc(var(--r) - 1.2cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #fff; }
+.cs4-faq-ui, .cs4-faq-card { border-radius: calc(calc(var(--r) - .8cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #fff; } /* the system's media radius, as every picture in the study (23 Oct: 1.2cqw under --r was a level nothing else uses) */
 .cs4-faq-ui { padding: var(--s1); overflow: hidden; } /* the app's own white, so the screen's white cards read as a screen */
 .cs4-faq-ui > img { display: block; width: 100%; height: auto; }
 .cs4-faq-card { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); padding: var(--s2); }
@@ -238,7 +238,7 @@
   .cs4-strip { grid-template-columns: 1fr 1fr; } .cs4-strip > div:nth-child(5) { grid-column: 1 / -1; }
   .cs4-h { font-size: 22px; }
   .cs4-row { grid-template-columns: 1fr !important; }
-  .cs4-media { border-radius: calc(calc(var(--r) - 8px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); }
+  .cs4-media, .cs4-faq-ui, .cs4-faq-card { border-radius: calc(calc(var(--r) - 8px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); }
   .cs4-fig.phone { width: min(100%, var(--ph-w)); } .cs4-fig.phone-land { width: min(100%, var(--ph-h)); } .cs4-fig.half { width: 80%; }
   .cs4-phones { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); padding: 0; } .cs4-phones .cs4-fig.phone { width: 100%; }
   .cs4-step.with-text, .cs4-step.with-side { grid-template-columns: 1fr; }
