@@ -540,7 +540,11 @@
   /* the home's projects on the phone (24 Oct): a row that scrolls sideways, edge to edge with the gutter as its inset, a
      card and a quarter in view (78% of the column), snapping card by card; each card whole, at its desktop proportion,
      its name 14px in */
-  .pill4 { justify-content: space-between; margin-top: 12px; }
+  /* the home's rhythm on the phone (24 Oct): 28px from a section to the next heading, 12px from a heading to what it
+     heads — a heading sits nearer its own content than the section before it (it had been 24–30 before and 36 after) */
+  .col4 { gap: 0; } .pill4 { justify-content: space-between; padding: 0 4px; margin-top: 16px; } .col4 > .pill4.off { margin-top: 24px; } /* + the frame's 12px gap; + the row's 4px foot */
+  .col4 > .stack4, .col4 > .off4 { margin-top: 12px; }
+  .off4 { padding: 12px 14px; } /* the caption and the count 12 / 14px in, as the project cards' names (the desktop's 1.2 / 1.4cqw is 4–5px here) */
   .seeall4 { display: inline-flex; align-items: center; gap: .35em; padding: .45em .2em .45em .8em; border: 0; background: none; color: var(--line-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); opacity: .8; cursor: pointer; }
   .stack4 { aspect-ratio: auto; width: auto; margin: 0 calc(-1 * var(--gut)); } /* edge to edge: the gutter as the row's inset */
   .deck4.rail { position: static; display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gut); padding: 0 var(--gut) 4px; scrollbar-width: none; } .deck4.rail::-webkit-scrollbar { display: none; }
