@@ -118,22 +118,31 @@ const NAV_SPRING = { type: 'spring', stiffness: 400, damping: 38, mass: 1 } as c
    by the bar's width / 93.5. The ball is the bar's colour (his ask here; on Swiggy it took the store's), lifted by a
    small shadow. The bar is drawn as this path, so the column's own fill and shadow step aside. */
 const CAV = { HW: 19.5, DP: 15.6, BALLR: 5.75, BALLIN: 7.35, REF: 93.5, SLIDE: .34 };
+/* on this bar (Nitish, 23 Oct: "the cavity is very small for the bar, and cramped round the ball"): the valley 1.7 × as
+   long and 1.45 × as deep, the ball 1.3 ×, and the ball set so its gap to the valley's floor is a quarter of the depth
+   (Swiggy's was a sixth) — more room round it */
+const CAVX = { HW: 1.7, DP: 1.45, BALLR: 1.3, FLOOR: .26 };
 function CavityBar({ w, h, x, y, cy }: { w: number; h: number; x: number; y: number; cy: number }) {
   const reduce = useReducedMotion();
-  const k = w / CAV.REF, HW = CAV.HW * k, DP = CAV.DP * k, R = w / 2;
-  const clamp = (v: number) => Math.max(R + HW, Math.min(h - R - HW, v));
+  const k = w / CAV.REF, HW = CAV.HW * k * CAVX.HW, DP = CAV.DP * k * CAVX.DP, BR = CAV.BALLR * k * CAVX.BALLR, BIN = DP * (1 - CAVX.FLOOR) - BR, R = w / 2;
+  /* his edge-item rule: the valley stays on the tab's exact centre and the bar's corner on that side flexes smaller as
+     it comes near, rather than the valley drifting off-centre */
+  const clamp = (v: number) => Math.max(HW + 2, Math.min(h - HW - 2, v));
   const mv = useMotionValue(clamp(cy));
   useEffect(() => { const c = animate(mv, clamp(cy), reduce ? { duration: 0 } : { duration: CAV.SLIDE, ease: [.33, 1, .68, 1] }); return () => c.stop(); }, [cy, h, w]); // eslint-disable-line react-hooks/exhaustive-deps
   const f = (n: number) => n.toFixed(2);
-  const d = useTransform(mv, c => `M0 ${f(R)} A${f(R)} ${f(R)} 0 0 1 ${f(w)} ${f(R)} V${f(c - HW)}`
-    + ` C${f(w)} ${f(c - HW * .45)} ${f(w - DP)} ${f(c - HW * .55)} ${f(w - DP)} ${f(c)}`
-    + ` C${f(w - DP)} ${f(c + HW * .55)} ${f(w)} ${f(c + HW * .45)} ${f(w)} ${f(c + HW)}`
-    + ` V${f(h - R)} A${f(R)} ${f(R)} 0 0 1 0 ${f(h - R)} Z`);
+  const d = useTransform(mv, c => {
+    const Rt = Math.min(R, Math.max(0, c - HW - 2)), Rb = Math.min(R, Math.max(0, h - c - HW - 2));
+    return `M0 ${f(R)} A${f(R)} ${f(R)} 0 0 1 ${f(R)} 0 H${f(w - Rt)} A${f(Rt)} ${f(Rt)} 0 0 1 ${f(w)} ${f(Rt)} V${f(c - HW)}`
+      + ` C${f(w)} ${f(c - HW * .45)} ${f(w - DP)} ${f(c - HW * .55)} ${f(w - DP)} ${f(c)}`
+      + ` C${f(w - DP)} ${f(c + HW * .55)} ${f(w)} ${f(c + HW * .45)} ${f(w)} ${f(c + HW)}`
+      + ` V${f(h - Rb)} A${f(Rb)} ${f(Rb)} 0 0 1 ${f(w - Rb)} ${f(h)} H${f(R)} A${f(R)} ${f(R)} 0 0 1 0 ${f(h - R)} Z`;
+  });
   const pad = 12;
   return (
     <svg className="cav4" style={{ left: x - pad, top: y - pad }} width={w + 2 * pad} height={h + 2 * pad} viewBox={`${-pad} ${-pad} ${w + 2 * pad} ${h + 2 * pad}`} aria-hidden="true">
       <motion.path className="cav4-bar" d={d} />
-      <motion.circle className="cav4-ball" cx={w - CAV.BALLIN * k} cy={mv} r={CAV.BALLR * k} />
+      <motion.circle className="cav4-ball" cx={w - BIN} cy={mv} r={BR} />
     </svg>
   );
 }
