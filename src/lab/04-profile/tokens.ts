@@ -65,6 +65,7 @@ export const CONTROLS: Control[] = [
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-v', label: 'Version', def: 'illo', light: 'illo', options: [['The drawing', 'illo'], ['The drawing, black and white', 'illo-bw'], ['The photo', 'photo']] },
   /* the picture as a spatial scene (23 Oct): the depth-map warp, or still; the layered version is to come */
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth', label: 'Depth', def: 'warp', light: 'warp', options: [['Depth-map warp', 'warp'], ['Still', 'off']] },
+  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth-k', label: 'Depth strength', def: 'subtle', light: 'subtle', options: [['Subtle, like iOS', 'subtle'], ['Pronounced', 'pronounced']] },
   /* the first tab of the nav: his photo, or his signature from the Framer site (22 Oct) */
   { group: 'Nav bar', sub: 'Home tab', kind: 'select', key: '--home-tab', label: 'Version', def: 'photo', light: 'photo', options: [['The photo', 'photo'], ['The signature', 'sig']] },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */

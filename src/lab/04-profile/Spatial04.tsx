@@ -12,6 +12,8 @@ import { useEffect, useRef, type RefObject } from 'react';
 
 export type Tilt = { x: number; y: number; tx: number; ty: number; frame: number };
 const K = .024; /* the offset at full tilt, in the picture's width: a pixel half a depth-unit from the subject moves 1.2% */
+/* the two strengths (23 Oct): subtle, like iOS; pronounced, clearly felt — 2.5 times, about 3% at most */
+export const DEPTH_K = { subtle: K, pronounced: K * 2.5 } as const;
 const FOCUS = .55; /* the subject's depth (him), where nothing moves */
 
 /* the pointer over the picture (or the phone's tilt) as a smoothed offset, -1…1 on each axis */
@@ -51,7 +53,7 @@ void main(){
 }`;
 
 /* one picture drawn with the warp; `tilt` is shared, so the picture and the cutout move as one */
-export function DepthImg({ src, depth, tilt, className, alt }: { src: string; depth: string; tilt: RefObject<Tilt>; className: string; alt: string }) {
+export function DepthImg({ src, depth, tilt, className, alt, k = K }: { src: string; depth: string; tilt: RefObject<Tilt>; className: string; alt: string; k?: number }) {
   const cv = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const c = cv.current; if (!c) return;
@@ -71,15 +73,15 @@ export function DepthImg({ src, depth, tilt, className, alt }: { src: string; de
       raf = requestAnimationFrame(draw);
       if (!ready) return;
       const t = tilt.current, W = c.width, H = c.height;
-      const key = `${W}x${H}:${t.x.toFixed(4)}:${t.y.toFixed(4)}`; if (key === last) return; last = key; /* draw only on change */
+      const key = `${W}x${H}:${k}:${t.x.toFixed(4)}:${t.y.toFixed(4)}`; if (key === last) return; last = key; /* draw only on change */
       const s = Math.max(W / iw, H / ih); /* cover: the picture's displayed size against the canvas */
       gl.viewport(0, 0, W, H); gl.uniform2f(uBox, (iw * s) / W, (ih * s) / H);
-      gl.uniform2f(uOff, t.x * K, t.y * K * (iw / ih) * .6); /* up and down a little less than side to side */
+      gl.uniform2f(uOff, t.x * k, t.y * k * (iw / ih) * .6); /* up and down a little less than side to side */
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     Promise.all([load(src), load(depth)]).then(([a, b]) => { iw = a.naturalWidth; ih = a.naturalHeight; tex(0, a); tex(1, b); ready = true; }).catch(() => {});
     size(); const ro = new ResizeObserver(size); ro.observe(c); raf = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(raf); ro.disconnect(); gl.getExtension('WEBGL_lose_context')?.loseContext(); };
-  }, [src, depth, tilt]);
+  }, [src, depth, tilt, k]);
   return <canvas ref={cv} className={className} role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true} />;
 }
