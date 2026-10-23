@@ -67,16 +67,15 @@
 /* ---- Notes (Notes04.tsx, 23 Oct): the old site's "Recent articles" cards — the thumbnail inset at the top, the title and
    a line under it — in 04's open-card grey, radii and type; three to a row, the row filling the page's width ---- */
 .nt4-grid { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: 1.2cqw; padding: 2px; }
-.nt4-card { display: flex; flex-direction: column; gap: 1.2cqw; padding: .8cqw .8cqw 1.6cqw; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); text-decoration: none; transition: transform .35s cubic-bezier(.3, 1.2, .4, 1); }
+.nt4-card { aspect-ratio: 1; min-height: 0; display: flex; flex-direction: column; gap: 1.2cqw; padding: .8cqw .8cqw 1.6cqw; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); text-decoration: none; transition: transform .35s cubic-bezier(.3, 1.2, .4, 1); }
 .nt4-card.link:hover { transform: translateY(-3px); }
 .nt4-card.link:focus-visible { outline: 2px solid var(--pcard-open-ink); outline-offset: 3px; }
-.nt4-thumb { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: calc(calc(var(--r) - .8cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); } /* square (Nitish, 23 Oct; the old cards' were 388:339) */
+.nt4-thumb { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: calc(calc(var(--r) - .8cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); } /* the card is square, text and all (Nitish, 23 Oct: "the whole card 1:1"); the thumbnail takes what the text leaves */
 .nt4-thumb img, .nt4-thumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.nt4-thumb video.whole { object-fit: contain; object-position: 50% 50%; -webkit-mask-image: linear-gradient(transparent 21.9%, #000 30%, #000 70%, transparent 78.1%); mask-image: linear-gradient(transparent 21.9%, #000 30%, #000 70%, transparent 78.1%); } /* the wide clip whole in the middle of the square (56% of its height), its top and foot faded into the lavender round it */ /* a wide clip (the motion article's) whole, standing on the thumbnail's foot */
-.nt4-body { display: flex; flex-direction: column; gap: .5em; padding: 0 1cqw; }
+.nt4-body { flex: none; display: flex; flex-direction: column; gap: .5em; padding: 0 1cqw; }
 .nt4-by { display: inline-flex; align-items: center; gap: .35em; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .6; } .nt4-by svg { width: 1em; height: 1em; }
-.nt4-body h3 { margin: 0; font: var(--h2-w) clamp(16px, 1.6cqw, 22px)/1.2 var(--f-head); letter-spacing: -.005em; }
-.nt4-body p { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); opacity: .72; }
+.nt4-body h3 { margin: 0; min-height: 2.4em; /* room for two lines on every card, so the thumbnails match */ font: var(--h2-w) clamp(16px, 1.6cqw, 22px)/1.2 var(--f-head); letter-spacing: -.005em; }
+.nt4-body p { margin: 0; min-height: 2.9em; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); opacity: .72; }
 @media (max-width: 700px) { .nt4-grid { grid-template-columns: 1fr; gap: 12px; overflow: visible; padding: 0; } .nt4-card { gap: 12px; padding: 8px 8px 16px; } .nt4-body { padding: 0 8px; } }
 
 /* ---- nav: the names along a bar, a travelling highlighter, the assistant below ---- */
