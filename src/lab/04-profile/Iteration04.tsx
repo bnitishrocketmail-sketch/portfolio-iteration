@@ -240,6 +240,34 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
   return clip;
 }
 
+/* the phone's notch (24 Oct, Nitish: "on the phone the handles sit where they do on the desktop, but with no cavity —
+   add one on the centre right of the image container and align the icons vertically"): the desktop's notch turned onto
+   the picture's right edge — a pocket cut into the picture, vertically centred, its inner corners rounded and its joins
+   curving out as the desktop's do, the links stacked in it on the container's own ground. The clip is the picture's
+   (set on the tile as --pic-clip, used by the phone's CSS); its top corners square, the tile's own corners round them */
+function usePhoneNotch(wrap: React.RefObject<HTMLDivElement | null>, links: React.RefObject<HTMLDivElement | null>, key: string) {
+  useLayoutEffect(() => {
+    const w = wrap.current, l = links.current; if (!w || !l) return;
+    const q = matchMedia('(max-width: 700px)');
+    const measure = () => {
+      const img = w.querySelector<HTMLElement>('.pic4-img:not(.pic4-me)');
+      if (!q.matches || !img) { w.style.removeProperty('--pic-clip'); return; }
+      const ir = img.getBoundingClientRect(), lr = l.getBoundingClientRect(); if (!ir.width || !lr.width) return;
+      const W = ir.width, H = ir.height, nx = lr.left - ir.left, ny = lr.top - ir.top, nh = lr.height, rn = 14;
+      const d = [
+        `M 0 0 L ${W} 0 L ${W} ${ny - rn}`,
+        `A ${rn} ${rn} 0 0 1 ${W - rn} ${ny} L ${nx + rn} ${ny} A ${rn} ${rn} 0 0 0 ${nx} ${ny + rn}`, /* into the pocket, its top-left corner */
+        `L ${nx} ${ny + nh - rn} A ${rn} ${rn} 0 0 0 ${nx + rn} ${ny + nh} L ${W - rn} ${ny + nh} A ${rn} ${rn} 0 0 1 ${W} ${ny + nh + rn}`, /* down its side, out again */
+        `L ${W} ${H} L 0 ${H} Z`,
+      ].join(' ');
+      w.style.setProperty('--pic-clip', `path("${d}")`);
+    };
+    measure();
+    const ro = new ResizeObserver(measure); ro.observe(w); ro.observe(l); q.addEventListener('change', measure);
+    return () => { ro.disconnect(); q.removeEventListener('change', measure); };
+  }, [wrap, links, key]);
+}
+
 
 export default function Iteration04() {
   const { view: v0, pid: ppid, lid } = useParams();
@@ -263,6 +291,7 @@ export default function Iteration04() {
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
+  usePhoneNotch(wrapRef, linksRef, tab);
   const tilt = useTilt(wrapRef, depthOn && tab === 'home');
   /* the build: the latest, or the milestone — p147 as it shipped, frozen (a control, 23 Oct) */
   const m147 = tweaks['--pic-depth-ver'] === 'v147';
