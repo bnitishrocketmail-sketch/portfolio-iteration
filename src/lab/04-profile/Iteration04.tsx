@@ -14,7 +14,7 @@ import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
 import Notes04 from './Notes04';
-import { DEPTH_K, DepthImg, useTilt } from './Spatial04';
+import { DEPTH_K, DepthImg, useTilt, V147 } from './Spatial04';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
 import Blob4 from './Blob4';
@@ -253,7 +253,11 @@ export default function Iteration04() {
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
   const tilt = useTilt(wrapRef, depthOn && tab === 'home');
-  const depthK = tweaks['--pic-depth-k'] === 'pronounced' ? DEPTH_K.pronounced : DEPTH_K.subtle; /* the strength (a control) */
+  /* the build: the latest, or the milestone — p147 as it shipped, frozen (a control, 23 Oct) */
+  const m147 = tweaks['--pic-depth-ver'] === 'v147';
+  const depthK = (m147 ? V147.k : DEPTH_K)[tweaks['--pic-depth-k'] === 'pronounced' ? 'pronounced' : 'subtle']; /* the strength (a control) */
+  const dd = m147 ? V147.dir : '/depth/', dn = picV === 'photo' ? 'desk' : 'illustration'; /* the depth files' folder and name */
+  const dfs = m147 ? { fs: V147.fs, focus: V147.focus } : {};
   const reduce = useReducedMotion();
   /* the cards lean with the pointer by their depth (the hero's chips) */
   const lean = (e: React.PointerEvent) => {
@@ -322,7 +326,7 @@ export default function Iteration04() {
           <section className={`pic4${picV === 'illo-bw' ? ' bw' : ''}`}> {/* the picture's version (22 Oct): the drawing, the drawing in black and white, or the photo — a control */}
             <div className="pic4-in" style={clip ? { clipPath: clip } : undefined}>
               {depthOn
-                ? <DepthImg className="pic4-img" src={picV === 'photo' ? desk : illustration} depth={picV === 'photo' ? '/depth/desk.png' : '/depth/illustration.png'} plate={picV === 'photo' ? '/depth/desk-plate.webp' : '/depth/illustration-plate.webp'} layers={picV === 'photo' ? '/depth/desk-layers.png' : '/depth/illustration-layers.png'} fg={picV === 'photo' ? '/depth/desk-fg.webp' : '/depth/illustration-fg.webp'} fgn={picV === 'photo' ? '/depth/desk-fgn.webp' : '/depth/illustration-fgn.webp'} tilt={tilt} k={depthK} alt={picV === 'photo' ? 'Nitish at his desk' : 'Nitish at his desk, drawn'} />
+                ? <DepthImg className="pic4-img" src={picV === 'photo' ? desk : illustration} depth={`${dd}${dn}.png`} plate={`${dd}${dn}-plate.webp`} layers={`${dd}${dn}-layers.png`} fg={`${dd}${dn}-fg.webp`} fgn={`${dd}${dn}-fgn.webp`} {...dfs} tilt={tilt} k={depthK} alt={picV === 'photo' ? 'Nitish at his desk' : 'Nitish at his desk, drawn'} />
                 : <img className="pic4-img" src={picV === 'photo' ? desk : illustration} alt={picV === 'photo' ? 'Nitish at his desk' : 'Nitish at his desk, drawn'} />}
               {/* the floating Lottie cards (01/02b's three), in this page's glass (Nitish, 13 Oct): the coin and the loader
                   behind him — his cutout from the illustration lies over them, so they are a little masked — the assistant's
@@ -335,7 +339,7 @@ export default function Iteration04() {
                 <div className="fl4-in"><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
               </div>
               {depthOn
-                ? <DepthImg className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} depth={picV === 'photo' ? '/depth/desk.png' : '/depth/illustration.png'} layers={picV === 'photo' ? '/depth/desk-layers.png' : '/depth/illustration-layers.png'} fg={picV === 'photo' ? '/depth/desk-fg.webp' : '/depth/illustration-fg.webp'} tilt={tilt} k={depthK} alt="" />
+                ? <DepthImg className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} depth={`${dd}${dn}.png`} layers={`${dd}${dn}-layers.png`} fg={`${dd}${dn}-fg.webp`} {...dfs} tilt={tilt} k={depthK} alt="" />
                 : <img className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} alt="" aria-hidden="true" />}
               <div className="fl4 ai-card" data-depth="1.3" style={{ '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>

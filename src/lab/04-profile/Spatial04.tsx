@@ -80,14 +80,39 @@ void main(){
   gl_FragColor = vec4(col, 1.);
 }`;
 
+/* the milestone (Nitish, 23 Oct: "keep the first pronounced build as a milestone I can select and make the default — nothing
+   after it in that version"): p147 as it shipped — this shader text, its strengths and focus, and its files frozen in
+   public/depth/v147 (copied from commit 4cf892d). Later changes go to FS and /depth only, never here. */
+export const V147 = { fs: `precision highp float; varying vec2 v; uniform sampler2D img, dep, plate, lay, fgc, fgn; uniform vec2 box, off; uniform float focus, mode;
+vec2 at(vec2 uv, vec3 ch){ vec2 s = uv; for (int i = 0; i < 6; i++) s = uv + off * (focus - dot(texture2D(dep, clamp(s, 0., 1.)).rgb, ch)); return clamp(s, 0., 1.); }
+void main(){
+  vec2 uv = (v - vec2(.5, 1.)) / box + vec2(.5, 1.);
+  /* the edges: a layer moved inward would show past the picture's edge (smeared edge pixels), so the view closes in
+     just enough as it moves — nothing at rest, about 6% at the pronounced setting's corners. The most any layer moves
+     is .48 of the offset (the wall and the desk); the slack the crop already leaves at the sides is counted. */
+  vec2 hs = .5 / box, c = vec2(.5, 1. - hs.y), m = .48 * abs(off);
+  float f = 1. - max(max(m.x - (.5 - hs.x), 0.) / hs.x, m.y / hs.y);
+  uv = c + (uv - c) * f;
+  vec2 sh = at(uv, vec3(0., 0., 1.));
+  if (mode < .5) { gl_FragColor = texture2D(img, sh); return; } /* a cutout without layers: as it is */
+  float ah = texture2D(lay, sh).g;
+  if (mode > 1.5) { gl_FragColor = vec4(texture2D(fgc, sh).rgb * ah, ah); return; } /* the cutout over the cards: exactly his layer of the scene below it */
+  vec2 sb = at(uv, vec3(1., 0., 0.)), sn = at(uv, vec3(0., 1., 0.));
+  vec3 col = texture2D(plate, sb).rgb;
+  col = mix(col, texture2D(fgn, sn).rgb, texture2D(lay, sn).b); /* the near things, carried under him */
+  col = mix(col, texture2D(fgc, sh).rgb, ah); /* him, on top */
+  gl_FragColor = vec4(col, 1.);
+}`, k: { subtle: .024, pronounced: .06 }, focus: .55, dir: '/depth/v147/' } as const;
+
+
 /* one picture drawn with the warp; `tilt` is shared, so the picture and the cutout move as one */
-export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, alt, k = K }: { src: string; depth: string; plate?: string; layers?: string; fg?: string; fgn?: string; tilt: RefObject<Tilt>; className: string; alt: string; k?: number }) {
+export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, alt, k = K, fs = FS, focus = FOCUS }: { src: string; depth: string; plate?: string; layers?: string; fg?: string; fgn?: string; fs?: string; focus?: number; tilt: RefObject<Tilt>; className: string; alt: string; k?: number }) {
   const cv = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const c = cv.current; if (!c) return;
     const gl = c.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false }); if (!gl) return;
     const sh = (type: number, s: string) => { const o = gl.createShader(type)!; gl.shaderSource(o, s); gl.compileShader(o); return o; };
-    const pr = gl.createProgram()!; gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
+    const pr = gl.createProgram()!; gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
     const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
@@ -95,7 +120,7 @@ export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, 
     const load = (u: string) => new Promise<HTMLImageElement>((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = u; });
     let raf = 0, ready = false, iw = 1, ih = 1, last = '';
     const uBox = gl.getUniformLocation(pr, 'box'), uOff = gl.getUniformLocation(pr, 'off');
-    gl.uniform1i(gl.getUniformLocation(pr, 'img'), 0); gl.uniform1i(gl.getUniformLocation(pr, 'dep'), 1); gl.uniform1i(gl.getUniformLocation(pr, 'plate'), 2); gl.uniform1i(gl.getUniformLocation(pr, 'lay'), 3); gl.uniform1i(gl.getUniformLocation(pr, 'fgc'), 4); gl.uniform1i(gl.getUniformLocation(pr, 'fgn'), 5); gl.uniform1f(gl.getUniformLocation(pr, 'mode'), layers && fg ? (plate && fgn ? 1 : 2) : 0); gl.uniform1f(gl.getUniformLocation(pr, 'focus'), FOCUS);
+    gl.uniform1i(gl.getUniformLocation(pr, 'img'), 0); gl.uniform1i(gl.getUniformLocation(pr, 'dep'), 1); gl.uniform1i(gl.getUniformLocation(pr, 'plate'), 2); gl.uniform1i(gl.getUniformLocation(pr, 'lay'), 3); gl.uniform1i(gl.getUniformLocation(pr, 'fgc'), 4); gl.uniform1i(gl.getUniformLocation(pr, 'fgn'), 5); gl.uniform1f(gl.getUniformLocation(pr, 'mode'), layers && fg ? (plate && fgn ? 1 : 2) : 0); gl.uniform1f(gl.getUniformLocation(pr, 'focus'), focus);
     const size = () => { const r = c.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); c.width = Math.max(1, Math.round(r.width * dpr)); c.height = Math.max(1, Math.round(r.height * dpr)); last = ''; };
     const draw = () => {
       raf = requestAnimationFrame(draw);
@@ -110,6 +135,6 @@ export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, 
     Promise.all([load(src), load(depth), layers && fg ? load(layers) : null, layers && fg ? load(fg) : null, plate && layers && fg && fgn ? load(plate) : null, plate && layers && fg && fgn ? load(fgn) : null]).then(([a, b, e, f, c, n]) => { iw = a.naturalWidth; ih = a.naturalHeight; tex(0, a); tex(1, b); if (e && f) { tex(3, e); tex(4, f); } if (c && n) { tex(2, c); tex(5, n); } ready = true; }).catch(() => {});
     size(); const ro = new ResizeObserver(size); ro.observe(c); raf = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(raf); ro.disconnect(); gl.getExtension('WEBGL_lose_context')?.loseContext(); };
-  }, [src, depth, plate, layers, fg, fgn, tilt, k]);
+  }, [src, depth, plate, layers, fg, fgn, tilt, k, fs, focus]);
   return <canvas ref={cv} className={className} role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true} />;
 }

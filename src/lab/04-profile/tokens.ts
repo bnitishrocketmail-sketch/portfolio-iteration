@@ -66,6 +66,8 @@ export const CONTROLS: Control[] = [
   /* the picture as a spatial scene (23 Oct): the depth-map warp, or still; the layered version is to come */
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth', label: 'Depth', def: 'warp', light: 'warp', options: [['Depth-map warp', 'warp'], ['Still', 'off']] },
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth-k', label: 'Depth strength', def: 'subtle', light: 'subtle', options: [['Subtle, like iOS', 'subtle'], ['Pronounced', 'pronounced']] },
+  /* which build of the spatial picture: the latest, or the milestone — the first pronounced build (p147), frozen (23 Oct) */
+  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth-ver', label: 'Depth build', def: 'latest', light: 'latest', options: [['Latest (face held, p151)', 'latest'], ['Milestone: first pronounced (p147)', 'v147']] },
   /* the first tab of the nav: his photo, or his signature from the Framer site (22 Oct) */
   { group: 'Nav bar', sub: 'Home tab', kind: 'select', key: '--home-tab', label: 'Version', def: 'photo', light: 'photo', options: [['The photo', 'photo'], ['The signature', 'sig']] },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
