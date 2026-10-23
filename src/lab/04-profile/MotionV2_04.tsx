@@ -218,12 +218,15 @@ export function MotionThumb({ on }: { on: boolean }) {
     const PW = 212, PH = 446; /* the phone's own size */
     const lay = () => {
       const W = el.clientWidth, H = el.clientHeight; if (!W || !H) return;
+      /* (23 Oct, second pass: "use the full width") the phone at the right, at its own proportion; the panel takes all the
+         width left of it and the full height, the largest scale at which its values still fit */
       const pad = Math.round(Math.min(W, H) * .07), gap = pad;
       const s = (H - 2 * pad) / PH, phoneW = PW * s;
-      const pw = pan.offsetWidth, ph = pan.offsetHeight;
-      const t = Math.min((H - 2 * pad) / ph, (W - 2 * pad - gap - phoneW) / pw);
-      const total = pw * t + gap + phoneW, x0 = (W - total) / 2;
-      setFit({ s, t, x: x0, y: (H - ph * t) / 2, px: x0 + pw * t + gap, py: pad });
+      const aw = W - 2 * pad - gap - phoneW, ah = H - 2 * pad;
+      let t = .9;
+      for (; t > .3; t -= .01) { pan.style.width = `${aw / t}px`; pan.style.height = 'auto'; if (pan.offsetHeight <= ah / t) break; }
+      pan.style.height = `${ah / t}px`;
+      setFit({ s, t, x: pad, y: pad, px: W - pad - phoneW, py: pad });
     };
     lay(); const ro = new ResizeObserver(lay); ro.observe(el); return () => ro.disconnect();
   }, []);

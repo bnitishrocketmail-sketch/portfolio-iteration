@@ -34,9 +34,9 @@
    levels peeking in from the left — the page's own pieces, drawn in the card's inks and scaled down */
 .lb4-media .dt4.mthumb { --line-ink: var(--pcard-open-ink); position: absolute; inset: 0; flex: none; overflow: hidden; border: 0; border-radius: 0; background: none; }
 .mthumb-phone { position: absolute; z-index: 1; left: 0; top: 0; transform-origin: 0 0; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .18)); }
-.mthumb-levels { position: absolute; left: 0; top: 0; width: 330px; transform-origin: 0 0; } /* placed and scaled by MotionThumb beside the phone */
+.mthumb-levels { position: absolute; left: 0; top: 0; width: 330px; display: flex; transform-origin: 0 0; } /* sized, placed and scaled by MotionThumb: the width left of the phone, the full height */
 /* the panel: an equal padding all round, the level's name above its values (narrow, so it scales up larger) */
-.dt4.mthumb .cascade { margin: 0; padding: 22px; }
+.dt4.mthumb .cascade { margin: 0; padding: 22px; flex: 1; display: flex; flex-direction: column; justify-content: center; } /* its values centred in the box, an equal padding round them */
 .dt4.mthumb .band { flex-direction: column; gap: 8px; } .dt4.mthumb .bandlabel { flex-basis: auto; padding-top: 0; }
 .dt4.mthumb .bandsep { margin: 12px 0; }
 
