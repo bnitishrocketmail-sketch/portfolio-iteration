@@ -255,7 +255,9 @@ export default function Iteration04() {
   const tilt = useTilt(wrapRef, depthOn && tab === 'home');
   /* the build: the latest, or the milestone — p147 as it shipped, frozen (a control, 23 Oct) */
   const m147 = tweaks['--pic-depth-ver'] === 'v147';
-  const depthK = (m147 ? V147.k : DEPTH_K)[tweaks['--pic-depth-k'] === 'pronounced' ? 'pronounced' : 'subtle']; /* the strength (a control) */
+  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && matchMedia('(max-width: 700px)').matches);
+  useEffect(() => { const q = matchMedia('(max-width: 700px)'), on = () => setPhone(q.matches); q.addEventListener('change', on); return () => q.removeEventListener('change', on); }, []);
+  const depthK = (m147 ? V147.k : DEPTH_K)[(tweaks['--pic-depth-k'] ?? (phone ? 'pronounced' : 'subtle')) === 'pronounced' ? 'pronounced' : 'subtle']; /* the strength (a control); unset, the phone takes the pronounced one — driven by the phone's tilt (24 Oct) */
   const dd = m147 ? V147.dir : '/depth/', dn = picV === 'photo' ? 'desk' : 'illustration'; /* the depth files' folder and name */
   const dfs = m147 ? { fs: V147.fs, focus: V147.focus } : {};
   const reduce = useReducedMotion();

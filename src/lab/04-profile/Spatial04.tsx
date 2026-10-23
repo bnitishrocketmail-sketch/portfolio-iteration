@@ -25,22 +25,31 @@ export function useTilt(area: RefObject<HTMLElement | null>, on: boolean) {
     const el = area.current; if (!el || !on) return;
     const move = (e: PointerEvent) => { if (e.pointerType === 'touch') return; const r = el.getBoundingClientRect(); t.current.tx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - .5) * 2)); t.current.ty = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - .5) * 2)); };
     const leave = () => { t.current.tx = 0; t.current.ty = 0; };
-    /* the phone: its tilt from where it was first held, ±20° to full; iPhones ask once, on the first touch of the picture */
-    let base: { b: number; g: number } | null = null;
+    /* the phone (24 Oct, Nitish: "the pronounced effect, working with my phone's gyro"): its tilt — turning it left or
+       right (gamma), tipping its top toward or away (beta), turned with the screen if it is held sideways — from a
+       resting position that slowly follows how it is held (a 3 s lag), as iOS's parallax does: a tilt moves the scene,
+       holding still lets it settle back. ±16° is full. A jump of more than 60° (a wrap past upright) resets the rest.
+       iPhones ask for motion access once, on the first tap on the intro (a tap, or a click, is what iOS accepts) */
+    let base: { b: number; g: number } | null = null, last = 0;
     const orient = (e: DeviceOrientationEvent) => {
       if (e.beta == null || e.gamma == null) return;
-      if (!base) base = { b: e.beta, g: e.gamma };
-      t.current.tx = Math.max(-1, Math.min(1, (e.gamma - base.g) / 20)); t.current.ty = Math.max(-1, Math.min(1, (e.beta - base.b) / 20));
+      const now = performance.now(), dt = last ? Math.min(.2, (now - last) / 1000) : 0; last = now;
+      if (!base || Math.abs(e.beta - base.b) > 60 || Math.abs(e.gamma - base.g) > 60) base = { b: e.beta, g: e.gamma };
+      const f = 1 - Math.exp(-dt / 3); base.b += (e.beta - base.b) * f; base.g += (e.gamma - base.g) * f;
+      let x = (e.gamma - base.g) / 16, y = (e.beta - base.b) / 16;
+      const ang = ((screen.orientation?.angle ?? 0) + 360) % 360; /* sideways: the screen's axes are the device's turned */
+      if (ang === 90) [x, y] = [y, -x]; else if (ang === 270) [x, y] = [-y, x]; else if (ang === 180) [x, y] = [-x, -y];
+      t.current.tx = Math.max(-1, Math.min(1, x)); t.current.ty = Math.max(-1, Math.min(1, y));
     };
     const DOE = (window as unknown as { DeviceOrientationEvent?: { requestPermission?: () => Promise<string> } }).DeviceOrientationEvent;
-    const ask = () => { DOE?.requestPermission?.().then(s => { if (s === 'granted') addEventListener('deviceorientation', orient); }).catch(() => {}); };
+    const ask = () => { el.removeEventListener('touchend', ask); el.removeEventListener('click', ask); DOE?.requestPermission?.().then(s => { if (s === 'granted') addEventListener('deviceorientation', orient); }).catch(() => {}); };
     el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave);
-    if (DOE?.requestPermission) el.addEventListener('touchend', ask, { once: true }); else addEventListener('deviceorientation', orient);
+    if (DOE?.requestPermission) { el.addEventListener('touchend', ask); el.addEventListener('click', ask); } else addEventListener('deviceorientation', orient);
     let raf = 0;
     let prev = performance.now();
     const tick = (now: number) => { const s = t.current, k = 1 - Math.exp(-(now - prev) / 190); prev = now; s.x += (s.tx - s.x) * k; s.y += (s.ty - s.y) * k; s.frame++; raf = requestAnimationFrame(tick); }; /* eased by time (~.08 a frame at 60fps), so a slow frame rate settles as soon */
     raf = requestAnimationFrame(tick);
-    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('touchend', ask); removeEventListener('deviceorientation', orient); cancelAnimationFrame(raf); t.current = { x: 0, y: 0, tx: 0, ty: 0, frame: 0 }; };
+    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('touchend', ask); el.removeEventListener('click', ask); removeEventListener('deviceorientation', orient); cancelAnimationFrame(raf); t.current = { x: 0, y: 0, tx: 0, ty: 0, frame: 0 }; };
   }, [area, on]);
   return t;
 }
