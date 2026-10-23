@@ -17,6 +17,13 @@
      the copy face at its weight; meta — a card's client and year, counts, the nav's names — the copy face, 500, smaller */
   --s-h1: 2.8; --s-title: 1.35; --s-body: .94; --s-meta: 1.05; /* the sizes, as percent of the frame's width (tokens.ts) — H1, H2 and Body; Title and Meta are fixed (below) */
   --t-h1: clamp(16px, calc(var(--s-h1) * 1cqw), 44px); --t-h2: clamp(14px, calc(var(--s-h1) * .75cqw), 33px); /* H2: three-quarters of H1 (Nitish, 21 Oct: smaller than the name, a little heavier) */ --t-title: 13px; --t-meta: 11px; --t-body: clamp(10.5px, calc(var(--s-body) * 1cqw), 19px); /* the small end as a ladder (21 Oct: 'the body is bigger than the title'): Title 13, Body a step under it (12px at 1440; it scaled to 16 before), Meta a step under that (11, from 11.5) */ /* Title is the nav's text size and Meta the nav's smaller one, fixed, so a card's name reads as the nav does at any width (Nitish, 21 Oct: 'make the title sizes the same as the text inside the navigation'); Body still scales */ /* H2 is H1's size (Nitish, 14 Oct) */
+  --t-display: clamp(18px, 2.2cqw, 28px); /* the display title (24 Oct, named): a project card's title, a case study's section heading, the next project's name, a study's big number — the name's face at H2's weight */
+  /* the phone's scale (24 Oct, Nitish: "the text on the phone is too small — headings, titles, body; take how apps
+     handle it"): Apple's iPhone text styles as the reference (Large Title 34, Title 1 28, Title 2 22, Headline 17
+     semibold, Body 17, Footnote 13; and, for a custom face with a thin weight, larger or heavier). So H1 32, H2 28,
+     display 24, title 17, body 17, meta 13 — and the body a weight heavier (Outfit Light reads thin at phone size).
+     Used by the phone breakpoint below; tunable on the system page like the rest */
+  --ph-t-h1: 32px; --ph-t-h2: 28px; --ph-t-display: 24px; --ph-t-title: 17px; --ph-t-body: 17px; --ph-t-meta: 13px; --ph-copy-w: 400;
   --f-head: var(--name-font), 'Outfit', sans-serif; --f-copy: var(--copy-font), 'Outfit', sans-serif;
   --c-ai-x: 11%; --c-ai-y: 38%; --c-ai-z: 3; --c-coin-x: 59%; --c-coin-y: 10%; --c-coin-z: 1; --c-loader-x: 60%; --c-loader-y: 59%; --c-loader-z: 1; --c-micro-x: 3%; --c-micro-y: 51%; --c-micro-z: 3; --c-gold-x: 18%; --c-gold-y: 12%; --c-gold-z: 3;
   --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 3;
@@ -141,7 +148,7 @@
 .nt4-by { display: inline-flex; align-items: center; gap: .35em; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .6; } .nt4-by svg { width: 1em; height: 1em; }
 .nt4-body h3 { margin: 0; min-height: 2.4em; /* room for two lines on every card, so the thumbnails match */ font: var(--h2-w) clamp(16px, 1.6cqw, 22px)/1.2 var(--f-head); letter-spacing: -.005em; }
 .nt4-body p { margin: 0; min-height: 2.9em; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); opacity: .72; }
-@media (max-width: 700px) { .nt4-grid { grid-template-columns: 1fr; gap: 12px; overflow: visible; padding: 0; } .nt4-card { gap: 12px; padding: 8px 8px 16px; } .nt4-body { padding: 0 8px; } }
+@media (max-width: 700px) { .nt4-grid { grid-template-columns: 1fr; gap: 12px; overflow: visible; padding: 0; } .nt4-card { gap: 12px; padding: 8px 8px 16px; } .nt4-body { padding: 0 8px; } .nt4-body h3 { font-size: var(--t-display); min-height: 0; } } /* the phone: an article's title at the display size, as a project card's (24 Oct); one card to a row, so no shared height to keep */
 
 /* ---- nav: the names along a bar, a travelling highlighter, the assistant below ---- */
 /* the nav column: a bar in the assistant button's colour with round tips, the column's full height; the section names run
@@ -412,7 +419,7 @@
 /* the open layout */
 .pp4-open { position: absolute; inset: 0; }
 .pp4-top { position: absolute; left: 2cqw; top: 1.8cqw; right: 34%; display: flex; flex-direction: column; gap: .7cqw; }
-.pp4-title { margin: 0; font: var(--h2-w) clamp(18px, 2.2cqw, 28px)/1.15 var(--f-head); letter-spacing: -.01em; color: var(--pcard-open-ink); } /* a display title, the name's face */
+.pp4-title { margin: 0; font: var(--h2-w) var(--t-display)/1.15 var(--f-head); letter-spacing: -.01em; color: var(--pcard-open-ink); } /* a display title, the name's face */
 .pp4-blurb { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: var(--pcard-open-ink); opacity: .82; max-width: 36ch; }
 .pp4-chips { position: relative; margin: 0; padding: 1cqw; list-style: none; display: flex; flex-wrap: wrap; gap: .6cqw; max-width: 100%; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round);
   background: color-mix(in srgb, var(--pcard-open-ink) 7%, transparent); border: 1px solid color-mix(in srgb, var(--pcard-open-ink) 10%, transparent); } /* a panel of the card's own ink, faint */
@@ -452,7 +459,8 @@
      blurred picture, full-bleed, the tile and the pages each on their own grey container; a 12px gutter; a type scale
      set in pixels for the phone (the desktop's scales with the frame's width and bottomed out at its 11px floor here);
      the bar at the bottom carries the six icons only, laid out from one spacing rule. */
-  .it04 { --t-h1: 30px; --t-h2: 26px; --t-title: 17px; --t-body: 16px; --t-meta: 13px; --r: 20px; --gut: 16px; position: static; display: block; padding: 12px var(--gut) calc(92px + env(safe-area-inset-bottom)); overflow: visible; background: var(--bg); }
+  .it04 > * { --copy-w: var(--ph-copy-w); } /* the phone's body weight, on .it04's children so it holds over a weight the controls set on .it04 itself */
+  .it04 { --t-h1: var(--ph-t-h1); --t-h2: var(--ph-t-h2); --t-display: var(--ph-t-display); --t-title: var(--ph-t-title); --t-body: var(--ph-t-body); --t-meta: var(--ph-t-meta); --r: 20px; --gut: 16px; position: static; display: block; padding: 12px var(--gut) calc(92px + env(safe-area-inset-bottom)); overflow: visible; background: var(--bg); }
   /* the gutter, 16px, as apps keep it; the body's own 16px went (base.css) — it had boxed the picture in and left a strip of
      the body's colour down each side, "one more container" (Nitish, 18 Oct) */
   .bg4 { position: fixed; inset: -6%; filter: blur(34px) brightness(.5); } /* the picture is the background (desktop: .45 behind the frame) */
@@ -488,7 +496,7 @@
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
   .cut4 { position: static; width: 100%; min-width: 0; border-radius: 0; padding: 18px 18px 16px; } .corner4 { display: none; }
-  .nm4 { line-height: 1.1; } .role4 { margin-top: 6px; font-size: 15px; } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; } .sub4 { margin-top: 8px; max-width: none; } .cv4 { margin-top: 12px; font-size: 14px; padding: .65em 1.1em; }
+  .nm4 { line-height: 1.1; } .role4 { margin-top: 6px; font-size: var(--t-title); } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; } .sub4 { margin-top: 8px; max-width: none; } .cv4 { margin-top: 12px; font-size: var(--t-title); padding: .65em 1.1em; }
   .name4 { position: static; width: auto; margin: 0 18px 18px; padding: 14px 16px; } .lede4 { max-width: none; }
   /* the pages: the heading and its note on the background, above the content (an app's section heading: outside the card,
      at the content's edge — Nitish, 18 Oct); the content on its own grey container, the frame's; Workflow's map goes
@@ -504,7 +512,7 @@
   .pp4-card { position: relative !important; transform: none !important; width: 100% !important; height: auto; min-height: 0; background: var(--pcard-open); color: var(--pcard-open-ink); }
   .pp4-fold, .pp4-hit { display: none; }
   .pp4-open { position: relative; inset: auto; opacity: 1 !important; pointer-events: auto !important; display: flex; flex-direction: column; gap: 12px; padding: 18px 18px 18px; }
-  .pp4-top { position: static; right: auto; gap: 8px; padding-right: 52px; } .pp4-title { font-size: 22px; } /* room for the arrow */ .pp4-blurb { max-width: none; }
+  .pp4-top { position: static; right: auto; gap: 8px; padding-right: 52px; } /* room for the arrow */ .pp4-blurb { max-width: none; }
   .pp4-foot { display: contents; } .pp4-meta { position: static; order: 1; }
   .pp4-chips { position: static; order: 2; max-width: none; padding: 0; gap: 6px; background: none; border: 0; }
   .pp4-arrow { position: absolute; right: 14px; top: 14px; bottom: auto; width: 40px; height: 40px; }
