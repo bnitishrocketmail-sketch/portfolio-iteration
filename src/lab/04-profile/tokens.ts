@@ -74,6 +74,9 @@ export const CONTROLS: Control[] = [
   { group: 'Nav bar', sub: 'Selection', kind: 'select', key: '--nav-sel', label: 'Version', def: 'pill', light: 'pill', options: [['The pill', 'pill'], ['Cavity ball', 'cavity']] },
   /* the main container solid, as it was, or glass: the picture behind showing through it, blurred (22 Oct) */
   { group: 'Main container', sub: 'Background', kind: 'select', key: '--frame-v', label: 'Version', def: 'solid', light: 'solid', options: [['Solid', 'solid'], ['Glass', 'glass']] },
+  /* the container's edge lit as iOS 26's glass is (23 Oct): a specular rim, a bloom inside it, a little light spilling out —
+     still, from the top-left, or following the pointer; or the plain hairline as before */
+  { group: 'Main container', sub: 'Edge light', kind: 'select', key: '--edge-light', label: 'Version', def: 'fixed', light: 'fixed', options: [['Fixed, top-left', 'fixed'], ['Follows the pointer', 'pointer'], ['Off (as before)', 'off']] },
 ];
 
 export const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;

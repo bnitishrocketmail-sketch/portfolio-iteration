@@ -64,6 +64,53 @@
   box-shadow: var(--shadow-frame), inset 0 1px 0 rgba(255, 255, 255, .14), 0 0 0 1px rgba(255, 255, 255, .1); }
 .it04.light.glassframe .frame4 { box-shadow: var(--shadow-frame), inset 0 1px 0 rgba(255, 255, 255, .5), 0 0 0 1px rgba(255, 255, 255, .35); }
 
+/* ---- the edge light (Nitish, 23 Oct: "the strokes, the highlights and the light leaks on iOS's latest cards — replicate how
+   it looks, not the glass itself"). iOS 26's Liquid Glass defines its silhouette with light: a light in the scene catches
+   the rim where it faces it and again on the far side (the light through the glass, off its back edge), the sides between
+   left almost bare; inside the rim the glass glows a little where the light comes in; and the light spills a little onto
+   what is around it. So, from one direction (--la, the angle; --lx/--ly, the same as a unit vector; the top-left corner by
+   default, or the pointer's direction — useEdgeLight in Iteration04):
+   · the rim (.edge4::before): a hairline whose brightness goes round it — strongest facing the light, about half on the far
+     side, a faint even line elsewhere; a ring cut from the frame's own shape, so it follows the iOS corner
+   · the bloom (.edge4::after): a soft glow just inside the edge, only where the rim is lit
+   · the bevel, the leak and the spill (.edge4's shadows): a 1px inner highlight on the lit sides, a wide faint glow
+     inside them, and a soft light outside the frame toward the light
+   The glass version takes them stronger (the glass is the edge's whole look) with a hint of colour where the rim's light
+   fades, as light through a glass edge splits; the light theme stronger again, white on the light grey. ---- */
+.it04.edgelit { --la: 300deg; --lx: -.86; --ly: -.51; /* toward the top-left corner of a 1000 × 590 frame */
+  --spec-a: .55; --spec-b: .26; --rim-0: .07; --bloom: .3; --bevel: .08; --leak: .06; --spill: .08; --tint: 0; }
+.it04.edgelit.glassframe { --spec-a: .8; --spec-b: .38; --rim-0: .1; --bloom: .45; --bevel: .14; --leak: .09; --spill: .1; --tint: .5; }
+.it04.edgelit.light { --spec-a: .95; --spec-b: .6; --rim-0: .32; --bloom: .5; --bevel: .5; --leak: .22; --spill: .3; }
+.it04.edgelit.light.glassframe { --spec-a: 1; --spec-b: .7; --rim-0: .4; --bloom: .6; --bevel: .6; --leak: .28; --spill: .35; --tint: .35; }
+/* drawn on a layer of its own (.edge4, the frame's first child, under everything in it; the frame isolated so the layer
+   sits on the frame's surface), so the light moving repaints only the layer, not the frame and all it holds */
+.edge4 { display: none; }
+.it04.edgelit .frame4 { isolation: isolate; box-shadow: var(--shadow-frame); }
+.it04.edgelit .edge4 { display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; corner-shape: inherit; will-change: transform;
+  box-shadow: inset calc(var(--lx) * -1px) calc(var(--ly) * -1px) 0 rgba(255, 255, 255, var(--bevel)),
+    inset calc(var(--lx) * -22px) calc(var(--ly) * -22px) 44px -26px rgba(255, 255, 255, var(--leak)),
+    calc(var(--lx) * 18px) calc(var(--ly) * 18px) 56px -20px rgba(255, 255, 255, var(--spill)); }
+.it04.edgelit .edge4::before, .it04.edgelit .edge4::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; corner-shape: inherit; }
+.it04.edgelit .edge4::before { padding: 1.25px;
+  background: conic-gradient(from var(--la),
+    rgba(255, 255, 255, var(--spec-a)) 0deg,
+    rgba(255, 255, 255, calc(var(--spec-a) * .45)) 16deg,
+    rgba(150, 200, 255, calc(var(--spec-a) * .3 * var(--tint) + var(--rim-0))) 34deg,
+    rgba(255, 255, 255, var(--rim-0)) 62deg 118deg,
+    rgba(255, 190, 210, calc(var(--spec-b) * .4 * var(--tint) + var(--rim-0))) 150deg,
+    rgba(255, 255, 255, calc(var(--spec-b) * .5)) 166deg,
+    rgba(255, 255, 255, var(--spec-b)) 180deg,
+    rgba(255, 255, 255, calc(var(--spec-b) * .5)) 194deg,
+    rgba(150, 200, 255, calc(var(--spec-b) * .4 * var(--tint) + var(--rim-0))) 210deg,
+    rgba(255, 255, 255, var(--rim-0)) 242deg 298deg,
+    rgba(255, 190, 210, calc(var(--spec-a) * .3 * var(--tint) + var(--rim-0))) 326deg,
+    rgba(255, 255, 255, calc(var(--spec-a) * .45)) 344deg,
+    rgba(255, 255, 255, var(--spec-a)) 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.it04.edgelit .edge4::after { box-shadow: inset 0 0 16px 1px rgba(255, 255, 255, var(--bloom)), inset 0 0 3px 0 rgba(255, 255, 255, var(--bloom));
+  -webkit-mask: conic-gradient(from var(--la), #000 0deg, rgba(0, 0, 0, .35) 24deg, transparent 58deg 122deg, rgba(0, 0, 0, .45) 168deg 192deg, transparent 238deg 302deg, rgba(0, 0, 0, .35) 336deg, #000 360deg);
+  mask: conic-gradient(from var(--la), #000 0deg, rgba(0, 0, 0, .35) 24deg, transparent 58deg 122deg, rgba(0, 0, 0, .45) 168deg 192deg, transparent 238deg 302deg, rgba(0, 0, 0, .35) 336deg, #000 360deg); }
+
 /* ---- Notes (Notes04.tsx, 23 Oct): the old site's "Recent articles" cards — the thumbnail inset at the top, the title and
    a line under it — in 04's open-card grey, radii and type; three to a row, the row filling the page's width ---- */
 .nt4-grid { flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: 1.2cqw; padding: 2px; }
@@ -395,6 +442,7 @@
      column it collapsed to its padding — 28px — and everything hung out of it (found 18 Oct). Here it contains width only
      (cqw still resolves) and has no surface of its own: no grey, no padding, no shadow */
   .frame4 { container-type: inline-size; height: auto; aspect-ratio: auto; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 0; border-radius: 0; background: none; box-shadow: none; }
+  .it04.edgelit .frame4 { box-shadow: none; isolation: auto; } .it04.edgelit .edge4 { display: none; } /* no frame here, so no edge to light */
   /* the bar (Nitish, 19 Oct, styled from a recording of Instagram's): a dark pill, about 6.3 : 1, the icons white and
      outlined, the selected one filled on a lighter pill two-thirds of the bar's height; it blurs what passes behind it.
      The desktop column (.nav4, .ai4) is hidden here; PhoneNav04 draws the phone's bar (PhoneNav04.tsx). */
