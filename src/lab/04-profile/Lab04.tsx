@@ -26,7 +26,13 @@ const Ride = ({ on }: { on: boolean }) => {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}); else v.pause(); }, [on]);
   const c = P['ridequest'].cover as { video: string; poster: string };
-  return <div className="lv lv-clip" aria-hidden="true"><video ref={ref} src={c.video} poster={c.poster} muted loop playsInline preload="metadata" /></div>;
+  /* the phone at the right, whole and at its own proportion; the project's parts listed at the left (23 Oct) */
+  return (
+    <div className="lv lv-rq" aria-hidden="true">
+      <ol className="lv-feat">{(P['ridequest'].features ?? []).map(f => <li key={f}>{f}</li>)}</ol>
+      <video ref={ref} src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />
+    </div>
+  );
 };
 const Nav = ({ on }: { on: boolean }) => (
   <div className={`lv lv-nav${on ? ' on' : ''}`} aria-hidden="true"><div className="bar"><div className="pill" /><i /><i /><i /><i /></div></div>
