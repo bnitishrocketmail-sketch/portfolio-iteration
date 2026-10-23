@@ -374,7 +374,7 @@ export default function Iteration04() {
               </div>
               <div className="name4">
                 {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}
-                <p className="lede4">{COPY.lede}</p>
+                <p className="lede4">{COPY.lede}<span className="lede4-more"> I design feedback{'\u00a0'}rich interfaces powered by motion.</span></p> {/* the phone (24 Oct): the one-liner joins the description as one paragraph; hidden on the desktop, where it sits under the title */}
               </div>
             </div>
           </section>

@@ -289,7 +289,7 @@
 /* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
 .me4 { grid-area: me; align-self: start; width: clamp(60px, 7cqw, 96px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; background: var(--g2); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18); }
 .me4 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transform: scale(2.2); transform-origin: 50% 60%; display: block; } /* the stand-in desk photo, zoomed to his face */
-.lede4 { color: var(--glass-ink); font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); max-width: 36ch; } /* body */
+.lede4 { color: var(--glass-ink); font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); max-width: 36ch; } /* body */ .lede4-more { display: none; }
 /* the name box: the reference's glass box at the bottom-right, the name in the marker lettering (ref 6) */
 .name4 { position: absolute; right: 1.8cqw; bottom: 7.2cqw; width: 36%; min-width: 230px; padding: 1.4cqw 1.6cqw 1.5cqw; border-radius: calc(calc(var(--r) * .8) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); z-index: 3; display: var(--name-box-v, flex); flex-direction: column; gap: .5cqw; /* lifted: four times its earlier clearance from the bottom (Nitish, 13 Oct) */
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 18px 40px -18px rgba(0, 0, 0, .6); }
@@ -511,8 +511,8 @@
   .role4, .sig4 { grid-area: role; } .role4 { margin-top: 6px; font-size: var(--t-title); } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; }
   .name4 { grid-area: lede; position: static; width: auto; min-width: 0; margin: 14px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
   .lede4 { max-width: none; color: var(--line-ink); } /* the description: the page's body, in the line's ink (the glass's light ink was for over the picture) */
-  .sub4 { grid-area: sub; margin-top: 10px; max-width: none; } /* the one-liner after it */
-  .cv4 { grid-area: cv; justify-self: start; margin-top: 16px; font-size: var(--t-title); padding: .65em 1.1em; }
+  .sub4 { display: none; } .lede4-more { display: inline; } /* the one-liner merged into the description, one paragraph (24 Oct, Nitish) */
+  .cv4 { grid-area: cv; justify-self: start; margin-top: 20px; font-size: var(--t-title); padding: .65em 1.1em; } /* on the text's left edge, 20px under the paragraph; the container's foot 18px under it, as its sides */
   /* the pages: the heading and its note on the background, above the content (an app's section heading: outside the card,
      at the content's edge — Nitish, 18 Oct); the content on its own grey container, the frame's; Workflow's map goes
      straight on the picture, no container ("it looks much better directly placed over the blurred background") */
