@@ -48,7 +48,9 @@
    project's parts listed at the left, centred on the phone */
 .lv-rq { position: absolute; inset: 0; background: #fff; display: flex; align-items: center; gap: 4%; padding: 0 3% 0 7%; }
 .lv-rq video { order: 2; flex: none; height: 100%; width: auto; aspect-ratio: 640 / 1080; display: block; -webkit-mask-image: linear-gradient(#000 90%, transparent); mask-image: linear-gradient(#000 90%, transparent); }
-.lv-feat { order: 1; flex: 1; min-width: 0; margin: 0; padding: 0; list-style: none; counter-reset: f; display: flex; flex-direction: column; gap: .6em; color: #121212; font: 500 calc(var(--t-meta) * .9)/1.3 var(--f-copy); }
+.lv-feat { order: 1; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .9em; color: #121212; font: 500 calc(var(--t-meta) * .85)/1.3 var(--f-copy); }
+.lv-feat b { font: 600 var(--t-meta)/1.25 var(--f-copy); } /* the list's heading, a step up from its lines */
+.lv-feat ol { margin: 0; padding: 0; list-style: none; counter-reset: f; display: flex; flex-direction: column; gap: .5em; }
 .lv-feat li { counter-increment: f; display: flex; gap: .6em; }
 .lv-feat li::before { content: counter(f, decimal-leading-zero); flex: none; opacity: .4; font-variant-numeric: tabular-nums; }
 /* RideQuest: a road's dashes scroll under a car that sways; the sketch of a gamified ride */

@@ -7,6 +7,7 @@ export type Project = {
   id: string; title: string; client: string; role: string; year: string;
   letter: string; m1: string; m2: string; wide?: boolean; blurb: string; tags: string[];
   features?: string[]; /* listed beside the visual where there's room (RideQuest's, 23 Oct) */
+  featuresTitle?: string; /* the list's heading */
   cover?: { video: string; poster: string; side?: boolean; bg?: string } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
 };
 
@@ -34,6 +35,7 @@ export const PROJECTS: Project[] = [
     blurb: 'A gamified in-ride experience for a rideshare app, prototyped as a playable concept.', tags: ['Concept', 'Prototype'],
     cover: { video: '/cases/ridequest/thumb.mp4', poster: '/cases/ridequest/thumb-poster.webp', side: true, bg: '#fff' }, /* his screen recording of the prototype, cropped to the phone on white at its true proportion (the recording's pixels are not square: 27:32) (23 Oct) */
     /* its five parts, as he set them out for the case study (Aug) */
+    featuresTitle: 'Gamified Uber ride experience', /* his heading for the list (23 Oct) */
     features: ['Your route as a 3D street-view world', 'A garage: choose, customise and flex your car', 'Riders nearby: wave, challenge, play', 'Route chat rooms: travel updates, nearby picks', 'Live ads: hoardings, banners and store signs from real locations'] },
   { id: 'swiggy-nav', title: 'Swiggy bottom navigation', client: 'Swiggy', role: 'Interaction design', year: '2026', letter: 'S', m1: '#4A4C56', m2: '#F5BD56',
     blurb: 'One hybrid nav across five sub-apps, made consistent through motion.', tags: ['Interaction', 'Navigation'] },

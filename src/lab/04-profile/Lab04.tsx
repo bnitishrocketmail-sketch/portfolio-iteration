@@ -29,7 +29,7 @@ const Ride = ({ on }: { on: boolean }) => {
   /* the phone at the right, whole and at its own proportion; the project's parts listed at the left (23 Oct) */
   return (
     <div className="lv lv-rq" aria-hidden="true">
-      <ol className="lv-feat">{(P['ridequest'].features ?? []).map(f => <li key={f}>{f}</li>)}</ol>
+      <div className="lv-feat"><b>{P['ridequest'].featuresTitle}</b><ol>{(P['ridequest'].features ?? []).map(f => <li key={f}>{f}</li>)}</ol></div>
       <video ref={ref} src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />
     </div>
   );
