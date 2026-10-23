@@ -69,12 +69,12 @@ export const CLIENTS = ['Blinkit', 'Lenskart', 'MobiKwik'];
    cards' 4:3 with the subject anchored (public/off-duty). The captions are first drafts to rename; the tints stay for
    the iterations that draw the cards as gradients. */
 export const LIFE = [
+  { src: '/off-duty/husky.webp', g1: '#4A4C56', g2: '#DFB3F3', caption: 'A husky and the hill lights' }, /* first (Nitish, 24 Oct: "the one of me with the husky the default first") */
   { src: '/off-duty/spiti-road.webp', g1: '#5A7BD6', g2: '#DFB3F3', caption: 'A breather on the Spiti road' },
   { src: '/off-duty/chandratal.webp', g1: '#2E5E8E', g2: '#BDE6D9', caption: 'Chandratal, sat still' },
   { src: '/off-duty/summit.webp', g1: '#8CA6C9', g2: '#F4F1FA', caption: 'Summit, first light' },
   { src: '/off-duty/shimla-dusk.webp', g1: '#C94A3A', g2: '#F5BD56', caption: 'Tailing a bus at dusk, Shimla' },
   { src: '/off-duty/orchard.webp', g1: '#1F8A70', g2: '#F5BD56', caption: 'Chasing light in an orchard' },
-  { src: '/off-duty/husky.webp', g1: '#4A4C56', g2: '#DFB3F3', caption: 'A husky and the hill lights' },
   { src: '/off-duty/ninh-binh.webp', g1: '#5A7BD6', g2: '#BDE6D9', caption: 'Feet up, Ninh Bình' },
   { src: '/off-duty/non-la.webp', g1: '#2E5E8E', g2: '#F4F1FA', caption: 'Kung fu in a nón lá' },
   { src: '/off-duty/karst-cave.webp', g1: '#1F8A70', g2: '#DFB3F3', caption: 'Ducking through a karst cave' },
