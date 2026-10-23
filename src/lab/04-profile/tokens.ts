@@ -79,7 +79,9 @@ export const CONTROLS: Control[] = [
   /* the container's edge lit as iOS 26 lights its cards (23 Oct): a 1pt rim on the edges facing the light's axis, measured
      on his iPhone's screenshots — or the plain hairline as before; and the axis turned, as tilting the phone turns it */
   { group: 'Main container', sub: 'Edge light', kind: 'select', key: '--edge-light', label: 'Version', def: 'rim', light: 'rim', options: [['iOS rim', 'rim'], ['Off (as before)', 'off']] },
-  { group: 'Main container', sub: 'Edge light', kind: 'range', key: '--edge-angle', label: 'Light angle', def: '8deg', light: '8deg', min: 0, max: 180, step: 1, unit: 'deg' },
+  /* the slider slides the light along the outline (p153): 0 top and bottom, 90 the sides, 180 round again; 1° is about
+     11px of outline, so the default 1 sets it a little clockwise, as on his phone */
+  { group: 'Main container', sub: 'Edge light', kind: 'range', key: '--edge-angle', label: 'Light angle', def: '1deg', light: '1deg', min: 0, max: 180, step: .5, unit: 'deg' },
 ];
 
 export const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;

@@ -15,6 +15,7 @@ import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
 import Notes04 from './Notes04';
 import { DEPTH_K, DepthImg, useTilt, V147 } from './Spatial04';
+import { useEdgeRim } from './EdgeRim04';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
 import Blob4 from './Blob4';
@@ -249,6 +250,8 @@ export default function Iteration04() {
   const ios = (tweaks['--corners'] ?? 'ios') === 'ios'; /* iOS corners (a control, 22 Oct) */
   const glass = tweaks['--frame-v'] === 'glass'; /* the main container as glass (a control, 22 Oct) */
   const edge = tweaks['--edge-light'] ?? 'rim'; /* the container's edge light, iOS's rim or off (a control, 23 Oct) */
+  const frameRef = useRef<HTMLDivElement>(null), edgeRef = useRef<HTMLSpanElement>(null);
+  useEdgeRim(frameRef, edgeRef, parseFloat(tweaks['--edge-angle'] ?? '1') || 0, edge !== 'off'); /* the rim's light, slid round the outline by the slider (p153) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
@@ -280,8 +283,8 @@ export default function Iteration04() {
   return (
     <div className={`it04${isDark ? '' : ' light'}${glass ? ' glassframe' : ''}${ios ? ' ios' : ''}${edge !== 'off' ? ' edgelit' : ''}`} style={{ '--gx': GOLD_RECT.x, '--gy': GOLD_RECT.y, '--gw': GOLD_RECT.w, '--gh': GOLD_RECT.h, ...tweaks } as React.CSSProperties}>
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${picV === 'photo' ? desk : illustration})`, filter: picV === 'illo-bw' ? `blur(${glass ? 14 : 44}px) brightness(${glass && isDark ? .66 : isDark ? .45 : 1.02}) grayscale(1)` : undefined }} />
-      <div className="frame4">
-        <span className="edge4" aria-hidden="true" /> {/* the edge light (profile.css, 23 Oct) */}
+      <div className="frame4" ref={frameRef}>
+        <span className="edge4" ref={edgeRef} aria-hidden="true" /> {/* the edge light (profile.css, 23 Oct) */}
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
           <Nav tab={navTab} go={go} sig={tweaks['--home-tab'] === 'sig'} cav={tweaks['--nav-sel'] === 'cavity'} />
