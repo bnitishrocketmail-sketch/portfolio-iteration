@@ -160,20 +160,27 @@
 .cs4-faq-ui > img { display: block; width: 100%; height: auto; }
 .cs4-faq-card { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); padding: var(--s2); }
 .cs4-faq-label { padding: .45em .9em; border-radius: 999px; background: var(--nav-hl); color: var(--nav-hl-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); } /* the system's chip, inverted (23 Oct): the highlighter's dark with its light text, as the nav's selection — a label that marks */
-/* the nudges' strip (Peek, 24 Oct): two phones at his page's size (1.6 × the study's phones), only their foot in view,
-   their tops fading into the card's grey; a white screen, the device's edge and the page's soft shadow, as every phone
-   here (the window lets the shadow out below and at the sides); the pill between, the FAQ panel's label with arrows,
-   level with the nudges (the middle column's rows, set by Peek) */
-.cs4-peek { --peek-w: calc(var(--ph-w) * 1.6); display: grid; grid-template-columns: minmax(0, var(--peek-w)) auto minmax(0, var(--peek-w)); justify-content: center; column-gap: var(--s4); margin: calc(var(--s4) - var(--s3)) 0; } /* a step more air above and below than the card's other blocks (--s4, not --s3): a figure, and its faded top kept clear of the heading */
-.cs4-peek-win { position: relative; container-type: inline-size; clip-path: inset(0 -40px -48px -40px); }
-.cs4-peek-win::before { content: ''; position: absolute; inset: -1px -40px auto; height: 46%; z-index: 3; pointer-events: none; background: linear-gradient(var(--pcard-open) 0 22%, color-mix(in srgb, var(--pcard-open) 0%, transparent)); } /* the top fades into the card: solid at the very top, clear before the nudges */
-.cs4-peek-ph { position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 9 / 19.5; border-radius: calc(13.9cqw * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #fff; box-shadow: 0 10px 26px -14px rgba(0, 0, 0, .35); }
-.cs4-peek-ph::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 2cqw color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); pointer-events: none; z-index: 2; } /* the device's edge, as the study's phones (3px at their width — 2% — in proportion here) */
-.cs4-peek-nudge { position: absolute; left: 3%; width: 94%; transform: translateY(-50%); z-index: 1; }
+/* the nudges' strip (Peek, 24 Oct): two phones of the study's size (--ph-w, its radius and 3px edge), only their foot in
+   view, their tops fading into the card's grey (solid at the very top, clear above the nudges); the screen picture
+   behind, the page's soft shadow let out below; each nudge at 132% of the screen's width, 16% past each side, over the
+   device's edge. The pill between, the FAQ panel's label with arrows, level with the nudges (the middle column's rows,
+   set by Peek); the columns spaced so the clear gap from each nudge's outer edge to the pill is one step (--s4) */
+.cs4-peek { --spill: calc(var(--ph-w) * .16); display: grid; grid-template-columns: minmax(0, var(--ph-w)) auto minmax(0, var(--ph-w)); justify-content: center; column-gap: calc(var(--s4) + var(--spill)); margin: calc(var(--s4) - var(--s3)) 0; } /* a step more air above and below than the card's other blocks (--s4, not --s3): a figure, and its faded top kept clear of the heading */
+.cs4-peek-win { position: relative; clip-path: inset(0 -48px -48px -48px); } /* the part in view: cut at the top only */
+.cs4-peek-win::before { content: ''; position: absolute; inset: -1px -20% auto; height: 40%; z-index: 4; pointer-events: none; background: linear-gradient(var(--pcard-open) 0 20%, color-mix(in srgb, var(--pcard-open) 0%, transparent)); } /* the top fades into the card; 20% past the sides (the nudges spill 16%), not more — near the card's edge on the phone it ran onto the page */
+.cs4-peek-ph { position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 9 / 19.5; border-radius: calc(clamp(14px, 1.6cqw, 22px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #fff; box-shadow: 0 10px 26px -14px rgba(0, 0, 0, .35); }
+.cs4-peek-scr { position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; overflow: hidden; -webkit-mask-image: linear-gradient(#000 0 0); } /* the screen, clipped to the phone's corners (the mask for Safari's clip) */
+.cs4-peek-scr img { position: absolute; left: 0; width: 100%; height: auto; display: block; }
+.cs4-peek-ph::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); pointer-events: none; z-index: 2; } /* the device's edge, as every phone in the study */
+.cs4-peek-nudge { position: absolute; left: -16%; width: 132%; transform: translateY(-50%); z-index: 3; }
 .cs4-peek-nudge .cs4-lot { position: absolute; inset: 0; width: 100%; height: 100%; }
 .cs4-peek-mid { display: grid; justify-items: center; } /* its rows set by Peek: the pill on the nudges' line */
 .cs4-peek-pill { grid-row: 2; display: inline-flex; align-items: center; gap: .5em; padding: .45em .9em; border-radius: 999px; background: var(--nav-hl); color: var(--nav-hl-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); white-space: nowrap; } /* the FAQ panel's label (.cs4-faq-label), with its arrows */
 .cs4-peek-pill svg { width: 1.1em; height: 1.1em; flex: none; }
+@media (max-width: 700px) { /* the phone: no room for three across — the pill over the two phones, its arrows pointing to each */
+  .cs4-peek { grid-template-columns: repeat(2, minmax(0, var(--ph-w))); column-gap: calc(var(--s3) + 2 * var(--spill)); row-gap: var(--s1); }
+  .cs4-peek-mid { grid-column: 1 / -1; grid-row: 1; grid-template-rows: auto !important; } .cs4-peek-pill { grid-row: 1; }
+}
 .cs4-faq-ask { margin: 0; display: flex; gap: .8em; align-items: flex-start; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); } /* body, in the page's ink, as .cs4-p */
 .cs4-faq-asker { flex: none; width: 1.3em; height: 1.77em; margin-top: -.05em; fill: var(--nav-hl); } /* the customer, a line and a half tall, beside the question; the system's dark (the highlighter's), as the labels (23 Oct) */
 /* the screens meeting at one: the labels over the screens as his page had them, room at the sides for the pills */

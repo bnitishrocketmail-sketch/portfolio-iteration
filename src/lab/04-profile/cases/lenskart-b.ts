@@ -55,8 +55,9 @@ export const lenskartB: Case = {
     ] },
     { id: 'nudges', title: 'Nudges at the hesitation points', blocks: [
       /* his strip (24 Oct, rebuilt): the two nudges on the foot of their phones, B's at the left, Copilot's at the right
-         (Nitish's order), the label in a pill between them */
-      { k: 'peek', label: 'Copilot motion nudges', of: [
+         (Nitish's order), the label in a pill between them; the product list behind (Nitish: "a PLP screen background"),
+         shown from halfway down — its own foot carries a baked-in nudge, which would sit behind these */
+      { k: 'peek', label: 'Copilot motion nudges', screen: `${A}/nudge-plp.webp`, at: .5, of: [
         { label: 'B’s nudge: Talk to B in 8 languages', lottie: `${A}/nudge-talk.json`, ratio: 360 / 80 },
         { label: 'Copilot’s nudge: Curious? Just ask me', lottie: `${A}/nudge-curious.json`, ratio: 1032 / 192 },
       ] },

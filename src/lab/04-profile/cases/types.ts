@@ -27,9 +27,9 @@ export type Block =
   /* his FAQ panel: a cut screen over the questions it drew, each under a label */
   | { k: 'faq'; of: { m: Media; qs: { label: string; q: string[] }[] }[] }
   /* two phones seen only at their foot (`show`: the part of the phone in view, 25 by default), their tops fading into the
-     card, each with its nudge Lottie across the screen near the bottom as his page placed them, a pill between them
-     (the B study's nudges, 24 Oct). `ratio`: the Lottie comp's width / height */
-  | { k: 'peek'; label: string; show?: number; of: { label: string; lottie: string; ratio: number }[] }
+     card, each with its nudge Lottie near the bottom, running past the screen's sides, a pill between them (the B
+     study's nudges, 24 Oct). `ratio`: the Lottie comp's width / height; `screen`: a 720 × 1600 picture behind */
+  | { k: 'peek'; label: string; show?: number; screen?: string; at?: number /* the screen picture's fraction (0–1) at the top of the part in view; its foot by default */; of: { label: string; lottie: string; ratio: number }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */
   | { k: 'converge'; of: Media[]; to: Media }
   /* a version of the feature: its number and name as chips, a line about it, its screens */

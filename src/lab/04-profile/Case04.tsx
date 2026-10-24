@@ -78,25 +78,32 @@ function Fig({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) {
 
 /* his nudges at the hesitation points (24 Oct, Nitish: "the phones with only the 25% of the bottom part visible, fading
    out from the top with a gradient of the same background colour … in between, Copilot motion nudges with arrows
-   pointing both ways, inside a pill"): two phones seen at their foot only — the part his page showed, to keep the eye
-   on the nudge — each nudge across its screen's width a little above the bottom edge, as his page placed them (so the
-   two read at one size: each comp at the screen's width, the way his page drew them), the label in the system's
-   marking pill between them, level with the nudges */
+   pointing both ways, inside a pill"; then: "the phones the same standard size as the page's … the nudges a little
+   bigger and spilled out from both sides of the screens … a PLP screen behind … the spacing round the capsule clean"):
+   two phones of the study's size seen at their foot only, a screen behind; each nudge a little above the bottom edge,
+   as his page placed it, at 132% of the screen's width — running 16% past each side, as the nudge pills of the
+   converging phones below do — so the two read at one size; the label in the system's marking pill between them,
+   level with the nudges, the same clear gap from each nudge's edge */
 const PEEK_AT = .894; /* the nudge's middle, down the phone (his page: 61px over the foot of a 576px phone) */
-function Peek({ label, show = 25, of }: { label: string; show?: number; of: { label: string; lottie: string; ratio: number }[] }) {
+const PHONE = 19.5 / 9, SHOT = 1600 / 720; /* the phone's height / width; a screen picture's */
+function Peek({ label, show = 25, screen, at, of }: { label: string; show?: number; screen?: string; at?: number; of: { label: string; lottie: string; ratio: number }[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref);
-  const f = show / 100, mid = (PEEK_AT - (1 - f)) / f; /* the nudges' line, down the part in view */
+  const f = show / 100, mid = (PEEK_AT - (1 - f)) / f; /* the nudges' line, down the part in view; the rows mid : 1 − mid round the pill put its middle short of it by (2·mid − 1)/2 of its height, which the pill's translate gives back */
+  const a = at ?? (1 - f) * PHONE / SHOT, imgTop = (1 - f) - a * SHOT / PHONE; /* the picture's fraction `a` at the top of the view */
   const arrow = (d: string) => <svg viewBox="0 0 16 16" aria-hidden="true"><path d={d} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
   const phone = (n: { label: string; lottie: string; ratio: number }) => (
     <div className="cs4-peek-win" style={{ aspectRatio: `9 / ${(19.5 * f).toFixed(3)}` }} role="img" aria-label={n.label}>
-      <div className="cs4-peek-ph"><div className="cs4-peek-nudge" style={{ aspectRatio: n.ratio, top: `${PEEK_AT * 100}%` }}><Lottie className="cs4-lot" src={n.lottie} playing={on} /></div></div>
+      <div className="cs4-peek-ph">
+        <div className="cs4-peek-scr">{screen && <img src={screen} alt="" loading="lazy" decoding="async" style={{ top: `${(imgTop * 100).toFixed(2)}%` }} />}</div>
+        <div className="cs4-peek-nudge" style={{ aspectRatio: n.ratio, top: `${PEEK_AT * 100}%` }}><Lottie className="cs4-lot" src={n.lottie} playing={on} /></div>
+      </div>
     </div>
   );
   return (
     <div ref={ref} className="cs4-peek">
       {phone(of[0])}
-      <div className="cs4-peek-mid" style={{ gridTemplateRows: `${mid.toFixed(4)}fr auto ${(1 - mid).toFixed(4)}fr` }}><span className="cs4-peek-pill">{arrow('M13 8H3M7 4 3 8l4 4')}<span>{label}</span>{arrow('M3 8h10M9 4l4 4-4 4')}</span></div>
+      <div className="cs4-peek-mid" style={{ gridTemplateRows: `${mid.toFixed(4)}fr auto ${(1 - mid).toFixed(4)}fr` }}><span className="cs4-peek-pill" style={{ transform: `translateY(${((2 * mid - 1) * 50).toFixed(2)}%)` }}>{arrow('M13 8H3M7 4 3 8l4 4')}<span>{label}</span>{arrow('M3 8h10M9 4l4 4-4 4')}</span></div>
       {phone(of[1])}
     </div>
   );
@@ -320,7 +327,7 @@ function Render({ b }: { b: Block }) {
       </div>
     );
     case 'converge': return <Converge of={b.of} to={b.to} />;
-    case 'peek': return <Peek label={b.label} show={b.show} of={b.of} />;
+    case 'peek': return <Peek label={b.label} show={b.show} screen={b.screen} at={b.at} of={b.of} />;
     /* a version: its number and its name as chips, a line, its screens */
     case 'version': return (
       <div className="cs4-ver">
