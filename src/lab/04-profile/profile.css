@@ -630,6 +630,13 @@
   .pp4-meta { margin-top: 13.2px; } .pp4-feat + .pp4-foot > .pp4-meta { margin-top: 14px; }
   .pp4-chips { margin-top: 8px; }
   .pp4-open .pp4-arrow { right: 24px; top: calc(28px + .35 * var(--t-display) - 20px); }
+  /* Notes' cards (24 Oct), the same anatomy: each thumbnail one shape, 16 : 10 as a project card's visual (the square
+     card had squeezed it by its text — 300 to 340px tall), the card's height its content's; the text 24px in (was 16),
+     28px under the thumbnail to the label's capitals (was 16); the label 12px over the title (baseline to capitals,
+     was 17), a label and its title one line of thought; the title and its line one group, 14px (was 20); 28px under
+     the last line (was 23, and 48 where a one-line note kept the grid's two-line height) */
+  .nt4-card { aspect-ratio: auto; gap: 0; padding: 8px 8px 28px; } .nt4-thumb { flex: none; aspect-ratio: 16 / 10; }
+  .nt4-body { gap: 0; padding: 0 16px; margin-top: 24.1px; } .nt4-body h3 { margin-top: 2.5px; } .nt4-body p { min-height: 0; margin: 1.85px 0 -.412em; }
   /* the right column: Projects' pill and the stack and Off duty, each a container */
   .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 6px 4px; } .stack4 { flex: none; } .off4 { flex: none; min-height: 240px; }
   /* the home's projects on the phone (24 Oct): a row that scrolls sideways, edge to edge with the gutter as its inset, a
