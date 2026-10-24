@@ -544,6 +544,14 @@
   .pn4-ico { display: block; width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .pn4-ico.fill { fill: currentColor; stroke: none; } .pn4-ico.fill .k { fill: none; stroke: currentColor; stroke-width: 2.2; } .pn4-ico.fill .k.w { stroke-width: 3.2; } /* 'k' keeps a stroke inside a filled icon */
   .pn4-pill { position: absolute; top: var(--inset); height: calc(var(--bar-h) - 2 * var(--inset)); border-radius: 999px; background: var(--nav-bg); pointer-events: none; } /* the nav's light grey on the dark bar (24 Oct) */
+  /* light (24 Oct, Nitish: "if the user shifts the site theme to light, the navigation bar color should also change,
+     and the highlight color as well should invert"): the dark bar's inverse, in the desktop nav's own colours — the
+     nav's light grey (#e0e0e0) as the ground, at the same 86% over the same blur; the highlighter's dark (#2f2e30) as
+     the selected pill; the icons in the dark ink, the selected one in the highlighter's light ink. The rim at the light
+     cards' .75 (white at .52 is lost on a light ground); the shadow lighter, as a light surface casts */
+  .it04.light .navcol4, .it04.light .navcol4:has(.nav4.cav), .it04.light .navcol4:has(.nav4.sig) { background: color-mix(in srgb, var(--nav-bg) 86%, transparent); box-shadow: 0 10px 28px -10px rgba(0, 0, 0, .3), 0 2px 6px -2px rgba(0, 0, 0, .12); --bar-rim: .75; }
+  .it04.light .pn4 button { color: var(--nav-ink); } .it04.light .pn4 button.on { color: var(--nav-hl-ink); }
+  .it04.light .pn4-pill { background: var(--nav-hl); }
   .ai4 { display: none; }
   .tweaks4 { left: auto; right: 12px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; } /* the dev chip, out of the bar's way */
   /* the intro (24 Oct, Nitish: "my name in one line; my profile picture in the ellipse on its right; the floating box's
