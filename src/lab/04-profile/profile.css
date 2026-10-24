@@ -547,7 +547,7 @@
      a grid inset by 18px: the name on one line and the title under it, his photo at their right as tall as the two (24 Oct);
      the description (the box's paragraph, as plain text now); his one-liner; the CV. The picture's wrappers and the
      cut-out step aside (display: contents) so their pieces sit in the one grid */
-  .picwrap4 { --nm-fs: min(var(--t-h1), 8.2vw); display: grid; grid-template-columns: 18px minmax(0, 1fr) auto 18px; grid-template-areas: "pic pic pic pic" ". name me ." ". role me ." ". lede lede ." ". sub sub ." ". cv cv ."; padding-bottom: 18px; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; }
+  .picwrap4 { --nm-fs: min(var(--t-h1), 8.2vw); display: grid; grid-template-columns: 24px minmax(0, 1fr) auto 24px; grid-template-areas: "pic pic pic pic" ". name me ." ". role me ." ". lede lede ." ". sub sub ." ". cv cv ."; padding-bottom: 28px; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; }
   .pic4, .pic4-in, .cut4 { display: contents; } .corner4 { display: none; }
   .pic4-img { grid-area: pic; position: relative; aspect-ratio: 1; height: auto; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); }
   .pic4-img:not(.pic4-me) { -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, linear-gradient(#000 0 0); } /* the notch on the right edge: the pocket's shape (usePhoneNotch) taken out of the picture */
@@ -559,29 +559,29 @@
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
-  .nm4 { grid-area: name; align-self: end; margin-top: calc(18px - .165em); white-space: nowrap; font-size: var(--nm-fs); line-height: 1.1; } .nm4 br { display: none; } .nm4 b { margin-left: .26em; } /* one line: the surname after a word space; sized down only if a narrow phone can't hold it beside the photo */
+  .nm4 { grid-area: name; align-self: end; margin-top: calc(28px - .165em); white-space: nowrap; font-size: var(--nm-fs); line-height: 1.1; } .nm4 br { display: none; } .nm4 b { margin-left: .26em; } /* one line: the surname after a word space; sized down only if a narrow phone can't hold it beside the photo */
   /* his photo at the name's right again (24 Oct, Nitish: "put it back to the right side, but keep the size same"; p188 had
      it on the left) — as tall as the name and the title (Nitish: "the height of the ellipse will match the height of the name … including
      the stick"): from the top of the name's letters (.135em under its line box, measured) to the foot of the written
      title's play head, the Lottie's tallest stroke, which runs its box's full height (to .4px of its 40px) — so the
      name's ink, the 6px between, and the title's 40px less those. 77px at the 32px name; it follows the name's size.
      at least 12px (the phone's spacing step) from the name, on the container's right inset */
-  .cut4 .me4 { grid-area: me; align-self: start; width: calc(.965 * var(--nm-fs) + 45.6px); margin: 18px 0 0 12px; } /* its top on the name's letter tops, 18px under the picture */
+  .cut4 .me4 { grid-area: me; align-self: start; width: calc(.965 * var(--nm-fs) + 45.6px); margin: 28px 0 0 12px; } /* its top on the name's letter tops, 28px under the picture */
   .role4, .sig4 { grid-area: role; } .role4 { margin-top: 6px; font-size: var(--t-title); } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; }
-  .name4 { grid-area: lede; position: static; width: auto; min-width: 0; margin: 18px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
-  .lede4 { max-width: none; color: var(--line-ink); margin: -.338em 0 -.412em; } /* the description: the page's body, in the line's ink (the glass's light ink was for over the picture) */
+  .name4 { grid-area: lede; position: static; width: auto; min-width: 0; margin: 20px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
+  .lede4 { max-width: none; color: var(--line-ink); margin: -.338em 0 -.412em; text-wrap: pretty; } /* pretty: no lone word on the last line */ /* the description: the page's body, in the line's ink (the glass's light ink was for over the picture) */
   .sub4 { display: none; } .lede4-more { display: inline; } /* the one-liner merged into the description, one paragraph (24 Oct, Nitish) */
-  .cv4 { grid-area: cv; justify-self: start; margin-top: 18px; font-size: var(--t-title); padding: .65em 1.1em; } /* on the text's left edge */
-  /* the intro's spacing (24 Oct, Nitish: "the space between the button and text is different than the padding below the
-     button … and even above the name"): measured to the letters, it was 23 above the name, 20 under the title, 27 over
-     the button, 18 under it and at the sides. Now every gap is the container's 18px inset, to what the eye sees: the
-     line boxes' spare room taken off with margins, measured on Outfit (on solid ink, at 3x): the name's letters start
-     .165em under its line box's top, so 18px - .165em puts their tops 18px under the picture, the photo's top with
-     them (the name's foot where it was, so the title keeps its place under it); the description's capitals start
-     .338em under its box's top and its last baseline sits .412em over its foot, so those come off; the title's stick
-     ends at its box's foot (to a third of a pixel), so 18px to the description's capitals. Then 18px from the last baseline to the button, and 18px
-     under the button. Margins rather than text-box: trim, which rounded the name's line differently and pulled the
-     photo a pixel off the stick (measured), and which Firefox lacks — this lands the same in every browser */
+  .cv4 { grid-area: cv; justify-self: start; margin-top: 28px; font-size: var(--t-title); padding: .65em 1.1em; } /* on the text's left edge */
+  /* the intro's spacing (24 Oct, Nitish: "the spacing needs to be done in a way that the content is legible properly with
+     a visual separation, so it doesn't look cramped … think from a product designer perspective"; p190 had made every
+     gap 18 and cramped it). Grouping by proximity, three steps: within the name block (name → title) 6px, unchanged —
+     the photo is sized on it; between the name block and the description, which belongs to it, 20px; the container's
+     own room, the largest, 28px: picture → name, description → button, button → foot (his ask: those three alike),
+     with 24px sides (28 narrowed the paragraph to a ragged four lines). On screen at the .85 phone scale: 5 / 17 / 24 /
+     20. All measured to the letters (cap tops, baselines), the line boxes' spare room taken off with margins measured
+     on Outfit: the name's letters start .165em under its line box, the description's capitals .338em under its box and
+     its last baseline .412em over its foot; the title's stick ends at its box's foot. Margins rather than text-box:
+     trim, which rounded the name's line differently (photo a pixel off the stick) and Firefox lacks */
   /* the pages: the heading and its note on the background, above the content (an app's section heading: outside the card,
      at the content's edge — Nitish, 18 Oct); the content on its own grey container, the frame's; Workflow's map goes
      straight on the picture, no container ("it looks much better directly placed over the blurred background") */
