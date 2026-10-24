@@ -604,7 +604,7 @@
   .pp4-row { overflow: visible; -webkit-mask-image: none; mask-image: none; display: flex; flex-direction: column; gap: 12px; padding-bottom: 0; margin-bottom: 0; }
   .pp4-card { position: relative !important; transform: none !important; width: 100% !important; height: auto; min-height: 0; background: var(--pcard-open); color: var(--pcard-open-ink); }
   .pp4-fold, .pp4-hit { display: none; }
-  .pp4-open { position: relative; inset: auto; opacity: 1 !important; pointer-events: auto !important; display: flex; flex-direction: column; gap: 12px; padding: 18px 18px 18px; }
+  .pp4-open { position: relative; inset: auto; opacity: 1 !important; pointer-events: auto !important; display: flex; flex-direction: column; gap: 12px; padding: 18px 18px 18px; } /* (spaced below, 24 Oct) */
   .pp4-top { position: static; right: auto; gap: 8px; } .pp4-title { padding-right: 52px; } /* room for the arrow beside the title; the line under it takes the card's width */ .pp4-blurb { max-width: none; }
   .pp4-foot { display: contents; } .pp4-meta { position: static; order: 1; }
   .pp4-chips { position: static; order: 2; max-width: none; padding: 0; gap: 6px; background: none; border: 0; }
@@ -618,6 +618,18 @@
   .pp4-cover .pletter, .pp4-card.open .pp4-cover .pletter { left: auto; right: 10px; bottom: -6%; font-size: 140px; opacity: .06; color: currentColor; }
   .pp4-open { position: relative; z-index: 1; }
   .pp4-feat { position: static; transform: none; width: auto; gap: 10px; color: inherit; } .pp4-feat ol { gap: 8px; } /* the Lab cards' parts, in the card's flow, under the line */
+  /* a project card's text (24 Oct, Nitish: "follow this throughout the nav pages"), as the intro's: 28px from the
+     visual to the title's capitals (was 24), 24px sides (were 18), 28px under the chips (was 18). Grouped: the title and
+     its blurb one group, 14px baseline to capitals (was 19); 24px to the next group (the Lab's parts, then the meta —
+     was 23 and 64), the parts' heading 14px over its list; the meta 12px over its chips (was 16), one group. The
+     arrow on the text's right edge (24px in, was 14), centred on the title's first line. Offsets on Outfit, from the
+     lines' boxes: a display title's capitals .23em under its top; the rest folded into the margins */
+  .pp4-open { gap: 0; padding: calc(28px - .23 * var(--t-display)) 24px 28px; }
+  .pp4-top { gap: 3px; }
+  .pp4-feat { margin-top: 12.5px; gap: 3.4px; }
+  .pp4-meta { margin-top: 13.2px; } .pp4-feat + .pp4-foot > .pp4-meta { margin-top: 14px; }
+  .pp4-chips { margin-top: 8px; }
+  .pp4-open .pp4-arrow { right: 24px; top: calc(28px + .35 * var(--t-display) - 20px); }
   /* the right column: Projects' pill and the stack and Off duty, each a container */
   .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 6px 4px; } .stack4 { flex: none; } .off4 { flex: none; min-height: 240px; }
   /* the home's projects on the phone (24 Oct): a row that scrolls sideways, edge to edge with the gutter as its inset, a
