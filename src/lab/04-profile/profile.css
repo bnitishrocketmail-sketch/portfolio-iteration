@@ -544,10 +544,10 @@
   .tweaks4 { left: auto; right: 12px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; } /* the dev chip, out of the bar's way */
   /* the intro (24 Oct, Nitish: "my name in one line; my profile picture in the ellipse on its right; the floating box's
      paragraph as a description below the name"): one container, the tile's grey — the picture on top, full bleed; then
-     a grid inset by 18px: his photo, then the name on one line and the title under it, the photo as tall as the two (24 Oct: it was on the right);
+     a grid inset by 18px: the name on one line and the title under it, his photo at their right as tall as the two (24 Oct);
      the description (the box's paragraph, as plain text now); his one-liner; the CV. The picture's wrappers and the
      cut-out step aside (display: contents) so their pieces sit in the one grid */
-  .picwrap4 { --nm-fs: min(var(--t-h1), 8.2vw); display: grid; grid-template-columns: 18px auto minmax(0, 1fr) 18px; grid-template-areas: "pic pic pic pic" ". me name ." ". me role ." ". lede lede ." ". sub sub ." ". cv cv ."; padding-bottom: 18px; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; }
+  .picwrap4 { --nm-fs: min(var(--t-h1), 8.2vw); display: grid; grid-template-columns: 18px minmax(0, 1fr) auto 18px; grid-template-areas: "pic pic pic pic" ". name me ." ". role me ." ". lede lede ." ". sub sub ." ". cv cv ."; padding-bottom: 18px; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; }
   .pic4, .pic4-in, .cut4 { display: contents; } .corner4 { display: none; }
   .pic4-img { grid-area: pic; position: relative; aspect-ratio: 1; height: auto; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); }
   .pic4-img:not(.pic4-me) { -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, linear-gradient(#000 0 0); } /* the notch on the right edge: the pocket's shape (usePhoneNotch) taken out of the picture */
@@ -560,12 +560,13 @@
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
   .nm4 { grid-area: name; align-self: end; margin-top: 18px; white-space: nowrap; font-size: var(--nm-fs); line-height: 1.1; } .nm4 br { display: none; } .nm4 b { margin-left: .26em; } /* one line: the surname after a word space; sized down only if a narrow phone can't hold it beside the photo */
-  /* his photo on the name's left (24 Oct, Nitish: "the height of the ellipse will match the height of the name … including
+  /* his photo at the name's right again (24 Oct, Nitish: "put it back to the right side, but keep the size same"; p188 had
+     it on the left) — as tall as the name and the title (Nitish: "the height of the ellipse will match the height of the name … including
      the stick"): from the top of the name's letters (.135em under its line box, measured) to the foot of the written
      title's play head, the Lottie's tallest stroke, which runs its box's full height (to .4px of its 40px) — so the
      name's ink, the 6px between, and the title's 40px less those. 77px at the 32px name; it follows the name's size.
-     12px (the phone's spacing step) from the name */
-  .cut4 .me4 { grid-area: me; align-self: start; width: calc(.965 * var(--nm-fs) + 45.6px); margin: calc(18px + .135 * var(--nm-fs)) 12px 0 0; }
+     at least 12px (the phone's spacing step) from the name, on the container's right inset */
+  .cut4 .me4 { grid-area: me; align-self: start; width: calc(.965 * var(--nm-fs) + 45.6px); margin: calc(18px + .135 * var(--nm-fs)) 0 0 12px; }
   .role4, .sig4 { grid-area: role; } .role4 { margin-top: 6px; font-size: var(--t-title); } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; }
   .name4 { grid-area: lede; position: static; width: auto; min-width: 0; margin: 14px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
   .lede4 { max-width: none; color: var(--line-ink); } /* the description: the page's body, in the line's ink (the glass's light ink was for over the picture) */
