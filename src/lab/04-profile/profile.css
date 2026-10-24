@@ -484,7 +484,7 @@
      and the controls outside it, at their size */
   .picwrap4, .col4, .page4 { zoom: var(--ph-zoom, .85); } /* 85% (24 Oct, Nitish: one step down in Safari looked better than two) */
   .it04 > * { --copy-w: var(--ph-copy-w); } /* the phone's body weight, on .it04's children so it holds over a weight the controls set on .it04 itself */
-  .it04 { --t-h1: var(--ph-t-h1); --t-h2: var(--ph-t-h2); --t-display: var(--ph-t-display); --t-title: var(--ph-t-title); --t-body: var(--ph-t-body); --t-meta: var(--ph-t-meta); --r: 20px; --gut: 16px; position: static; display: block; padding: 12px var(--gut) calc(92px + env(safe-area-inset-bottom)); overflow: visible; background: var(--bg); }
+  .it04 { --t-h1: var(--ph-t-h1); --t-h2: var(--ph-t-h2); --t-display: var(--ph-t-display); --t-title: var(--ph-t-title); --t-body: var(--ph-t-body); --t-meta: var(--ph-t-meta); --r: 20px; --gut: 16px; position: static; display: block; --sec: 40px; /* a section's room (24 Oct): see the home's rhythm below */ padding: var(--gut) var(--gut) calc(80px + var(--sec) * var(--ph-zoom, .85) + env(safe-area-inset-bottom)); /* the top the sides' gutter (was 12); the foot: the bar's 80px (16 off the bottom + 64) and a section's room, so the last box ends that far over the bar (was 12px over it) */ overflow: visible; background: var(--bg); }
   /* the gutter, 16px, as apps keep it; the body's own 16px went (base.css) — it had boxed the picture in and left a strip of
      the body's colour down each side, "one more container" (Nitish, 18 Oct) */
   .bg4 { position: fixed; inset: -6%; filter: blur(34px) brightness(.5); }
@@ -615,15 +615,23 @@
   /* the home's projects on the phone (24 Oct): a row that scrolls sideways, edge to edge with the gutter as its inset, a
      card and a quarter in view (78% of the column), snapping card by card; each card whole, at its desktop proportion,
      its name 14px in */
-  /* the home's rhythm on the phone (24 Oct): 28px from a section to the next heading, 12px from a heading to what it
-     heads — a heading sits nearer its own content than the section before it (it had been 24–30 before and 36 after) */
-  .col4 { gap: 0; } .pill4 { justify-content: space-between; padding: 0 4px; margin-top: 16px; } .col4 > .pill4.off { margin-top: 24px; } /* + the frame's 12px gap; + the row's 4px foot */
+  /* the home's rhythm on the phone (24 Oct, Nitish: "follow this throughout the page" — the intro's spacing: 6 within a
+     group, 20 between groups, 28 / 24 the container's own room). Up a level: a section's room, --sec, 40px, more than
+     any container's own, from a box's foot to the next heading's capitals (was 36 and 34) and from the last box to the
+     bar; a heading 12px over its content's top (from its line's foot; 17 from its baseline), nearer its own content
+     than the section before it. The headings on the boxes' edges, not 4px in, and "See all" on the heading's
+     baseline (it sat 10px high) with its arrow on the boxes' right edge. Measured to the letters: a heading's
+     capitals start .222em under its line box (H2, 28px, 1.1) */
+  .col4 { gap: 0; } .pill4 { justify-content: space-between; align-items: baseline; padding: 0; margin-top: calc(var(--sec) - 12px / var(--ph-zoom, .85) - .222 * var(--t-h2)); } .col4 > .pill4.off { margin-top: calc(var(--sec) - 4px - .222 * var(--t-h2)); } /* less the frame's 12px gap (outside the zoom); less the row's 4px foot */
   .col4 > .stack4, .col4 > .off4 { margin-top: 12px; }
-  .off4 { padding: 12px 14px; } /* the caption and the count 12 / 14px in, as the project cards' names (the desktop's 1.2 / 1.4cqw is 4–5px here) */
-  .seeall4 { display: inline-flex; align-items: center; gap: .35em; padding: .45em .2em .45em .8em; border: 0; background: none; color: var(--line-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); opacity: .8; cursor: pointer; }
+  /* inside the boxes, one inset, the intro's 24px sides: Off duty's caption and count, and the project cards' names
+     (were 14 / 12), so every box's text starts on one line down the page. A title's capitals start .2em under its
+     line (Title, 17px, 1.2) */
+  .off4 { padding: calc(24px - .2 * var(--t-title)) 24px; }
+  .seeall4 { display: inline-flex; align-items: center; gap: .35em; padding: .45em 0 .45em .8em; margin: -.45em 0; /* its tap padding kept out of the heading row's height */ border: 0; background: none; color: var(--line-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); opacity: .8; cursor: pointer; }
   .stack4 { aspect-ratio: auto; width: auto; margin: 0 calc(-1 * var(--gut)); } /* edge to edge: the gutter as the row's inset */
   .deck4.rail { position: static; display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gut); padding: 0 var(--gut) 4px; scrollbar-width: none; } .deck4.rail::-webkit-scrollbar { display: none; }
   .deck4.rail .pcard4 { position: relative; bottom: auto; flex: 0 0 78%; scroll-snap-align: start; transform: none !important; z-index: auto; box-shadow: var(--shadow-el); }
-  .deck4.rail .pc-name { left: 14px; right: 14px; top: 12px; gap: 3px; }
+  .deck4.rail .pc-name { left: 24px; right: 24px; top: calc(24px - .2 * var(--t-title)); gap: 3px; }
 
 }
