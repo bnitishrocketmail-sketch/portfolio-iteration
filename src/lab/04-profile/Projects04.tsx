@@ -101,7 +101,7 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
   const shift = geo ? Math.max(0, Math.min(k < 2 ? 0 : laid[k - 2].x + C / 2, total - geo.w)) : 0;
   const place = laid.map(c => ({ ...c, x: c.x - shift }));
   return (
-    <section className="pp4" aria-label={title}>
+    <section className="pp4 navpage4" aria-label={title}> {/* navpage4: a nav tab's page (24 Oct), for the tabs' own spacing */}
       <header className="pp4-head">
         <h2 className="h2-4">{title}</h2>
         <div className="pp4-right">

@@ -149,7 +149,7 @@ export default function Workflow04() {
   const tr = reduce ? { duration: 0 } : SPRING;
   const node = open ? at[open.id] : null;
   return (
-    <section className="pp4 cr4" aria-label="Workflow">
+    <section className="pp4 cr4 navpage4" aria-label="Workflow">
       <header className="pp4-head">
         <h2 className="h2-4">Workflow</h2>
         <div className="pp4-right">

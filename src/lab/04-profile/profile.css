@@ -586,7 +586,15 @@
      at the content's edge — Nitish, 18 Oct); the content on its own grey container, the frame's; Workflow's map goes
      straight on the picture, no container ("it looks much better directly placed over the blurred background") */
   .page4 { display: block; }
-  .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; gap: 8px; padding: 4px 4px 0; } .pp4-right { max-width: none; }
+  /* the tabs' headings (24 Oct, Nitish: "follow this throughout the nav pages" — the home's rhythm; the tabs' pages carry .navpage4 — .tab4 is the desktop card's tab): the heading on the
+     box's edge, as the home's (was 4px in); its note under it as one group, 14px from the heading's baseline to the
+     note's capitals (was 19); 17px from the note's baseline to the box, as a home heading over its content (was 21).
+     Offsets on Outfit: an H2's baseline sits .176em over its line's foot; a body line's capitals start .338em under its
+     top and its baseline .412em over its foot */
+  .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; gap: 8px; padding: 4px 4px 0; } .pp4-right { max-width: none; } /* the inside pages (cases, the motion system) keep theirs until their own pass */
+  .navpage4.pp4 { gap: 0; } .navpage4 .pp4-head { gap: 0; padding: 4px 0 0; } /* the tabs only (Projects, Workflow, Lab, Notes) */
+  .navpage4 .pp4-head .pp4-note { margin-top: calc(14px - .176 * var(--t-h2) - .338em); }
+  .navpage4.pp4 > :not(.pp4-head) { margin-top: calc(17px - .412 * var(--t-body)); }
   .pp4-head .h2-4 { color: var(--name-ink); } .pp4-head .pp4-note { color: var(--glass-ink); } /* on the picture: the name's and the lede's inks, which already sit on it */
   .it04.light .pp4-head .pp4-note, .it04.light .cs4-head .pp4-note { color: var(--line-ink); } /* light: the page is light here, so the line's dark ink (the glass's light ink was for over the dark picture) */
   .pp4 > :not(.pp4-head) { border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); padding: 12px; } /* the container's inset the cards' gap, all round (24 Oct: was 16 / 14 / 18) */

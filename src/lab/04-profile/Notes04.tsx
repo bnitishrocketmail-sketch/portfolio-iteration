@@ -28,7 +28,7 @@ function Clip({ src, poster }: { src: string; poster: string; fit?: string }) {
 
 export default function Notes04() {
   return (
-    <section className="pp4 nt4" aria-label="Notes">
+    <section className="pp4 nt4 navpage4" aria-label="Notes">
       <header className="pp4-head">
         <h2 className="h2-4">Notes</h2>
         <div className="pp4-right"><p className="pp4-note">A few things I learned with hands-on experience, and where it started.</p></div>
