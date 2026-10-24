@@ -72,6 +72,13 @@
   .cm4.v2 { --map-ink: #dfdfdf; }
   .cm4.v2 .ow4 { color: var(--map-ink); }
   .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { color: var(--map-ink); border-color: color-mix(in srgb, var(--map-ink) 45%, transparent); background: rgba(20, 20, 22, .35); }
+  /* light (24 Oct, Nitish: "in the light version … the orb, AI written in the center, the nodes, they are all white …
+     they should have been inverted"): the light theme's page is light now, not the dark picture, so the map's ink
+     inverts to that theme's dark (its name ink, #2f2e30) — the orb, its "AI", the lines and the wires (the canvas
+     reads it each frame) and the outline pills' text and edge — and those pills' fill to a light veil (the nav's light
+     grey at 45%) for the dark one. The filled pills already follow the theme */
+  .it04.light .cm4.v2 { --map-ink: var(--name-ink); }
+  .it04.light .cm4.v2 .cn4.tool, .it04.light .cm4.v2 .cn4.ai { background: color-mix(in srgb, var(--nav-bg) 45%, transparent); }
 }
 
 /* the variant switch, above the note */
