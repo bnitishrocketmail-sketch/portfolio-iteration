@@ -7,7 +7,7 @@ import { useEffect, type RefObject } from 'react';
    conic gradient round the box's centre, its stops at the angles (from the centre) of the outline's points: constant
    along each straight edge, swept through each corner in 7.5° steps. Built from the box's own size and corner radius
    (its own px, so a zoomed page draws it the same), again on a resize, on a page change, on the slider. */
-const SEL = '.navcol4, .picwrap4, .deck4.rail .pcard4, .off4, .pp4 > :not(.pp4-head)';
+const SEL = '.navcol4, .picwrap4, .deck4.rail .pcard4, .off4, .pp4:not(.navpage4) > :not(.pp4-head), .navpage4 .pp4-card, .navpage4 .nt4-card'; /* the tabs: the cards, not their container (24 Oct) */
 
 export function rimConic(W: number, H: number, R: number, la: number) {
   R = Math.max(0, Math.min(R, W / 2, H / 2));

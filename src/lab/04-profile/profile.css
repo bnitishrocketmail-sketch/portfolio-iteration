@@ -512,11 +512,15 @@
      project and Let's talk too) — get the desktop container's rim (p149): 1px, the top and bottom lit, fading round the
      corners (cos(2φ)^1.5, gone 45° in), the sides bare. On a rounded box that depends on x alone (x = R(1 − sin φ)
      from the side), so one horizontal gradient per box draws it, at the box's radius (--rr); white at .52, .75 on the
-     home's light project cards (the desktop's dark and light rims). Off with Edge light: Off */
-  .it04.edgelit :is(.picwrap4, .deck4.rail .pcard4, .off4, .pp4 > :not(.pp4-head)) { --rim-a: .52; --rr: calc(var(--r) * var(--ios-k, 1)); }
-  .it04.edgelit .deck4.rail .pcard4 { --rim-a: .75; }
-  .it04.edgelit .pp4 > :not(.pp4-head) { position: relative; }
-  .it04.edgelit :is(.picwrap4, .deck4.rail .pcard4, .off4, .pp4 > :not(.pp4-head))::after { content: ""; position: absolute; inset: 0; z-index: 6; pointer-events: none; border-radius: inherit; corner-shape: inherit; padding: 1px;
+     home's light project cards (the desktop's dark and light rims). Off with Edge light: Off.
+     The tabs (24 Oct, Nitish: "the container that has all the cards … will not have iOS rim, but the project cards
+     will"): on Projects, Lab and Notes the rim moves from the grey container to the cards in it, at the home's card
+     strength (.75); Workflow, which shows no container, has none. The inside pages (cases, the motion system) keep
+     theirs until their own pass */
+  .it04.edgelit :is(.picwrap4, .deck4.rail .pcard4, .off4, .pp4:not(.navpage4) > :not(.pp4-head), .navpage4 .pp4-card, .navpage4 .nt4-card) { --rim-a: .52; --rr: calc(var(--r) * var(--ios-k, 1)); }
+  .it04.edgelit :is(.deck4.rail .pcard4, .navpage4 .pp4-card, .navpage4 .nt4-card) { --rim-a: .75; }
+  .it04.edgelit :is(.pp4 > :not(.pp4-head), .navpage4 .nt4-card) { position: relative; }
+  .it04.edgelit :is(.picwrap4, .deck4.rail .pcard4, .off4, .pp4:not(.navpage4) > :not(.pp4-head), .navpage4 .pp4-card, .navpage4 .nt4-card)::after { content: ""; position: absolute; inset: 0; z-index: 6; pointer-events: none; border-radius: inherit; corner-shape: inherit; padding: 1px;
     background: var(--rim-img, linear-gradient(90deg, transparent 0, rgb(255 255 255 / calc(var(--rim-a) * 0.000)) calc(var(--rr) * 0.293), rgb(255 255 255 / calc(var(--rim-a) * 0.132)) calc(var(--rr) * 0.391), rgb(255 255 255 / calc(var(--rim-a) * 0.354)) calc(var(--rr) * 0.500), rgb(255 255 255 / calc(var(--rim-a) * 0.670)) calc(var(--rr) * 0.658), rgb(255 255 255 / calc(var(--rim-a) * 0.911)) calc(var(--rr) * 0.826), rgb(255 255 255 / calc(var(--rim-a) * 1.000)) calc(var(--rr) * 1.000), rgb(255 255 255 / calc(var(--rim-a) * 1.000)) calc(100% - var(--rr) * 1.000), rgb(255 255 255 / calc(var(--rim-a) * 0.911)) calc(100% - var(--rr) * 0.826), rgb(255 255 255 / calc(var(--rim-a) * 0.670)) calc(100% - var(--rr) * 0.658), rgb(255 255 255 / calc(var(--rim-a) * 0.354)) calc(100% - var(--rr) * 0.500), rgb(255 255 255 / calc(var(--rim-a) * 0.132)) calc(100% - var(--rr) * 0.391), rgb(255 255 255 / calc(var(--rim-a) * 0.000)) calc(100% - var(--rr) * 0.293), transparent 100%));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
   /* the bar dark (24 Oct, Nitish: "the bottom nav's ground dark instead of light, a tiny bit of transparency and a
