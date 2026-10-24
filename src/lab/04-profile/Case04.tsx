@@ -5,6 +5,7 @@ import Signature04 from './Signature04';
 import BMachine from './BMachine';
 import Fintech3D, { Launches3D } from './Fintech3D';
 import { useInView } from './inview';
+import { sCorner, sysCurve } from './curve';
 import desk from '../../assets/nitish-desk.webp';
 import { PROJECTS04, type Project } from '../../lib/data';
 import { CASES, type Block, type Layer, type Media, type Rich, type Step } from './cases';
@@ -353,8 +354,21 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04 }: { id: s
   const root = useRef<HTMLElement>(null), headRef = useRef<HTMLElement>(null), heroRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const el = root.current, h = headRef.current; if (!el || !h) return;
-    const set = () => { el.style.setProperty('--head-h', `${h.offsetHeight}px`); const hero = heroRef.current; if (hero) el.style.setProperty('--hero-h', `${hero.offsetHeight}px`); else el.style.removeProperty('--hero-h'); };
-    set(); const ro = new ResizeObserver(set); ro.observe(h); if (heroRef.current) ro.observe(heroRef.current); return () => ro.disconnect();
+    /* the head on the frame's top edge (24 Oct): its glass cut by the frame's top-right corner, which it runs into (the
+       head ends 21px short of the frame's right edge, inside the corner's 50px) — the clip reaches to the frame's edge
+       and turns its corner on the frame's own curve (curve.ts), so the glass never shows past the frame. On the glass,
+       not the head: a clip on the head would make it the glass's backdrop root and the blur would lose what scrolls
+       under it. None on the phone, where the head is in the flow and the frame has no corners */
+    const glass = h.querySelector<HTMLElement>('.cs4-glass'), frame = h.closest('.frame4');
+    const cut = () => {
+      if (!glass || !frame || matchMedia('(max-width: 700px)').matches) { if (glass) glass.style.clipPath = ''; return; }
+      const f = frame.getBoundingClientRect(), b = h.getBoundingClientRect(), W = h.offsetWidth, H = h.offsetHeight;
+      const { K } = sysCurve(frame), R = parseFloat(getComputedStyle(frame).borderTopRightRadius) || 0;
+      const x = W + (f.right - b.right), y = 0; /* the frame's top-right corner, in the head's own px: its top is the frame's by the CSS (measuring it would catch the page's 8px rise as it enters) */
+      glass.style.clipPath = R ? `path('M -40 ${y.toFixed(2)} L ${(x - R).toFixed(2)} ${y.toFixed(2)} ${sCorner([x, y], [1, 0], [0, 1], R, K)} L ${x.toFixed(2)} ${H + 40} L -40 ${H + 40} Z')` : '';
+    };
+    const set = () => { el.style.setProperty('--head-h', `${h.offsetHeight}px`); const hero = heroRef.current; if (hero) el.style.setProperty('--hero-h', `${hero.offsetHeight}px`); else el.style.removeProperty('--hero-h'); cut(); };
+    set(); const ro = new ResizeObserver(set); ro.observe(h); if (frame) ro.observe(frame); if (heroRef.current) ro.observe(heroRef.current); return () => ro.disconnect();
   }, [id]);
   if (!p) return null;
   return (
