@@ -559,19 +559,29 @@
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
-  .nm4 { grid-area: name; align-self: end; margin-top: 18px; white-space: nowrap; font-size: var(--nm-fs); line-height: 1.1; } .nm4 br { display: none; } .nm4 b { margin-left: .26em; } /* one line: the surname after a word space; sized down only if a narrow phone can't hold it beside the photo */
+  .nm4 { grid-area: name; align-self: end; margin-top: calc(18px - .165em); white-space: nowrap; font-size: var(--nm-fs); line-height: 1.1; } .nm4 br { display: none; } .nm4 b { margin-left: .26em; } /* one line: the surname after a word space; sized down only if a narrow phone can't hold it beside the photo */
   /* his photo at the name's right again (24 Oct, Nitish: "put it back to the right side, but keep the size same"; p188 had
      it on the left) — as tall as the name and the title (Nitish: "the height of the ellipse will match the height of the name … including
      the stick"): from the top of the name's letters (.135em under its line box, measured) to the foot of the written
      title's play head, the Lottie's tallest stroke, which runs its box's full height (to .4px of its 40px) — so the
      name's ink, the 6px between, and the title's 40px less those. 77px at the 32px name; it follows the name's size.
      at least 12px (the phone's spacing step) from the name, on the container's right inset */
-  .cut4 .me4 { grid-area: me; align-self: start; width: calc(.965 * var(--nm-fs) + 45.6px); margin: calc(18px + .135 * var(--nm-fs)) 0 0 12px; }
+  .cut4 .me4 { grid-area: me; align-self: start; width: calc(.965 * var(--nm-fs) + 45.6px); margin: 18px 0 0 12px; } /* its top on the name's letter tops, 18px under the picture */
   .role4, .sig4 { grid-area: role; } .role4 { margin-top: 6px; font-size: var(--t-title); } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; }
-  .name4 { grid-area: lede; position: static; width: auto; min-width: 0; margin: 14px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
-  .lede4 { max-width: none; color: var(--line-ink); } /* the description: the page's body, in the line's ink (the glass's light ink was for over the picture) */
+  .name4 { grid-area: lede; position: static; width: auto; min-width: 0; margin: 18px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
+  .lede4 { max-width: none; color: var(--line-ink); margin: -.338em 0 -.412em; } /* the description: the page's body, in the line's ink (the glass's light ink was for over the picture) */
   .sub4 { display: none; } .lede4-more { display: inline; } /* the one-liner merged into the description, one paragraph (24 Oct, Nitish) */
-  .cv4 { grid-area: cv; justify-self: start; margin-top: 20px; font-size: var(--t-title); padding: .65em 1.1em; } /* on the text's left edge, 20px under the paragraph; the container's foot 18px under it, as its sides */
+  .cv4 { grid-area: cv; justify-self: start; margin-top: 18px; font-size: var(--t-title); padding: .65em 1.1em; } /* on the text's left edge */
+  /* the intro's spacing (24 Oct, Nitish: "the space between the button and text is different than the padding below the
+     button … and even above the name"): measured to the letters, it was 23 above the name, 20 under the title, 27 over
+     the button, 18 under it and at the sides. Now every gap is the container's 18px inset, to what the eye sees: the
+     line boxes' spare room taken off with margins, measured on Outfit (on solid ink, at 3x): the name's letters start
+     .165em under its line box's top, so 18px - .165em puts their tops 18px under the picture, the photo's top with
+     them (the name's foot where it was, so the title keeps its place under it); the description's capitals start
+     .338em under its box's top and its last baseline sits .412em over its foot, so those come off; the title's stick
+     ends at its box's foot (to a third of a pixel), so 18px to the description's capitals. Then 18px from the last baseline to the button, and 18px
+     under the button. Margins rather than text-box: trim, which rounded the name's line differently and pulled the
+     photo a pixel off the stick (measured), and which Firefox lacks — this lands the same in every browser */
   /* the pages: the heading and its note on the background, above the content (an app's section heading: outside the card,
      at the content's edge — Nitish, 18 Oct); the content on its own grey container, the frame's; Workflow's map goes
      straight on the picture, no container ("it looks much better directly placed over the blurred background") */
