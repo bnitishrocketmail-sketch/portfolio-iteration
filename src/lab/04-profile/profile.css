@@ -630,7 +630,7 @@
   .off4 { padding: calc(24px - .2 * var(--t-title)) 24px; }
   .seeall4 { display: inline-flex; align-items: center; gap: .35em; padding: .45em 0 .45em .8em; margin: -.45em 0; /* its tap padding kept out of the heading row's height */ border: 0; background: none; color: var(--line-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); opacity: .8; cursor: pointer; }
   .stack4 { aspect-ratio: auto; width: auto; margin: 0 calc(-1 * var(--gut)); } /* edge to edge: the gutter as the row's inset */
-  .deck4.rail { position: static; display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gut); padding: 0 var(--gut) 4px; scrollbar-width: none; } .deck4.rail::-webkit-scrollbar { display: none; }
+  .deck4.rail { position: static; display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gut); padding: 6px var(--gut) 32px; margin: -6px 0 -28px; scrollbar-width: none; } .deck4.rail::-webkit-scrollbar { display: none; } /* room for the cards' whole shadow (24 Oct: a scroller clips its overflow, and the 4px foot cut the shadow — it reaches 32px under a card, 4 over it), given back with the negative margins so the spacing stays */
   .deck4.rail .pcard4 { position: relative; bottom: auto; flex: 0 0 78%; scroll-snap-align: start; transform: none !important; z-index: auto; box-shadow: var(--shadow-el); }
   .deck4.rail .pc-name { left: 24px; right: 24px; top: calc(24px - .2 * var(--t-title)); gap: 3px; }
 
