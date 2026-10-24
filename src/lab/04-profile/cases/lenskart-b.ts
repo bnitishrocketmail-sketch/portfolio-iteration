@@ -54,11 +54,11 @@ export const lenskartB: Case = {
       ] },
     ] },
     { id: 'nudges', title: 'Nudges at the hesitation points', blocks: [
-      /* his strip: the two nudge Lotties either side of the label */
-      { k: 'row', ratio: '1.1fr auto 1.6fr', align: 'center', of: [
-        { k: 'media', shape: 'wide', ratio: '360 / 80', label: 'Talk to B nudge', lottie: `${A}/nudge-talk.json` },
-        { k: 'h', t: '← Copilot motion nudges →', center: true },
-        { k: 'media', shape: 'wide', ratio: '1032 / 192', label: 'Curious nudge', lottie: `${A}/nudge-curious.json` },
+      /* his strip (24 Oct, rebuilt): the two nudges on the foot of their phones, B's at the left, Copilot's at the right
+         (Nitish's order), the label in a pill between them */
+      { k: 'peek', label: 'Copilot motion nudges', of: [
+        { label: 'B’s nudge: Talk to B in 8 languages', lottie: `${A}/nudge-talk.json`, ratio: 360 / 80 },
+        { label: 'Copilot’s nudge: Curious? Just ask me', lottie: `${A}/nudge-curious.json`, ratio: 1032 / 192 },
       ] },
       { k: 'p', t: ['Copilot solved this by ', { b: 'intervening at exactly these hesitation points' }, ', guiding users step by step, and making decision-making effortless.'] },
       /* the nudges on the three screens, meeting at the help menu — the pills run past the phone, as on his page */

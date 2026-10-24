@@ -26,6 +26,10 @@ export type Block =
   | { k: 'carousel'; of: Media[] }
   /* his FAQ panel: a cut screen over the questions it drew, each under a label */
   | { k: 'faq'; of: { m: Media; qs: { label: string; q: string[] }[] }[] }
+  /* two phones seen only at their foot (`show`: the part of the phone in view, 25 by default), their tops fading into the
+     card, each with its nudge Lottie across the screen near the bottom as his page placed them, a pill between them
+     (the B study's nudges, 24 Oct). `ratio`: the Lottie comp's width / height */
+  | { k: 'peek'; label: string; show?: number; of: { label: string; lottie: string; ratio: number }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */
   | { k: 'converge'; of: Media[]; to: Media }
   /* a version of the feature: its number and name as chips, a line about it, its screens */
