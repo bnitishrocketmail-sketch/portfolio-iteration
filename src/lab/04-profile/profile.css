@@ -610,6 +610,14 @@
   .pp4-head .h2-4 { color: var(--name-ink); } .pp4-head .pp4-note { color: var(--glass-ink); } /* on the picture: the name's and the lede's inks, which already sit on it */
   .it04.light .pp4-head .pp4-note, .it04.light .cs4-head .pp4-note { color: var(--line-ink); } /* light: the page is light here, so the line's dark ink (the glass's light ink was for over the dark picture) */
   .pp4 > :not(.pp4-head) { border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); padding: 12px; } /* the container's inset the cards' gap, all round (24 Oct: was 16 / 14 / 18) */
+  /* the tabs (24 Oct, Nitish: "the main container containing these project containers will not have a background or
+     the rim … should not be visible … shouldn't have a shadow. There are just these floating project cards"): on
+     Projects, Lab and Notes the container stays as the list's holder but shows nothing — no ground, no shadow, no
+     inset, so the cards sit on the page's gutter, on the heading's edge and the home cards' line; each card keeps its
+     own shadow (--shadow-el) and rim. Floating apart on their shadows, 20px between them (the system's group step;
+     they were 12 inside the box). Workflow's holder was already bare */
+  .navpage4.pp4 > :not(.pp4-head) { background: none; box-shadow: none; padding: 0; }
+  .navpage4 .pp4-row, .navpage4 .nt4-grid { gap: 20px; }
   .cr4 > .cm4-wrap { background: none; box-shadow: none; padding: 0; }
   /* the projects: the desktop's fan of cards, one open, becomes a plain list — every card open, its content in flow
      (title, blurb, meta, chips, the arrow), the letter faint behind; the pieces were absolutely placed for the fan */
