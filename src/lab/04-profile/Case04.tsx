@@ -85,27 +85,40 @@ function Fig({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) {
    width, as his page placed it, so the two read at one size (25 Oct: inside the screen again — the spill past its sides
    "is not working out"; the phones a quarter over the study's size); the label in the system's marking pill between
    them, level with the nudges, the same clear gap from each phone */
-const PEEK_AT = .894; /* the nudge's middle, down the phone (his page: 61px over the foot of a 576px phone) */
+/* the nudges placed as the product would (25 Oct, Nitish: "when they expand they feel too cramped … do the hygiene
+   spacing as they should have been if they were actually in the product"): on a 360 × 780dp screen, each nudge by what
+   it draws at its widest (`vis`, measured over its loop: the Talk comp leaves 6% bare at its right, the Curious comp
+   fills its own edges), 16dp from each side — the system's screen margin — and 24dp clear of the foot (the floating
+   button's 16dp and the gesture bar's room); so the two expanded pills meet the screen's edges alike and clear its
+   rounded corners (by ~13dp). Without `vis`, his page's placement: across 94%, its middle 89.4% down */
+const SCR_W = 360, SCR_H = 780, SIDE = 16, FOOT = 24;
+type Nudge = { label: string; lottie: string; ratio: number; vis?: [number, number, number, number] };
+function place(n: Nudge) {
+  if (!n.vis) { const h = 94 / n.ratio * SCR_W / SCR_H; return { left: 3, width: 94, top: 89.4 - h / 2, mid: .894 }; }
+  const [x0, x1, y0, y1] = n.vis, w = (SCR_W - 2 * SIDE) / (x1 - x0), h = w / n.ratio, left = SIDE - x0 * w, top = SCR_H - FOOT - y1 * h;
+  return { left: left / SCR_W * 100, width: w / SCR_W * 100, top: top / SCR_H * 100, mid: (top + (y0 + y1) / 2 * h) / SCR_H };
+}
 const PHONE = 19.5 / 9, SHOT = 1600 / 720; /* the phone's height / width; a screen picture's */
-function Peek({ label, show = 25, screen, at, of }: { label: string; show?: number; screen?: string; at?: number; of: { label: string; lottie: string; ratio: number }[] }) {
+function Peek({ label, show = 25, screen, at, of }: { label: string; show?: number; screen?: string; at?: number; of: Nudge[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref);
-  const f = show / 100, mid = (PEEK_AT - (1 - f)) / f; /* the nudges' line, down the part in view; the rows mid : 1 − mid round the pill put its middle short of it by (2·mid − 1)/2 of its height, which the pill's translate gives back */
+  const f = show / 100, P = of.map(place), line = P.reduce((s, q) => s + q.mid, 0) / P.length;
+  const mid = (line - (1 - f)) / f; /* the nudges' line, down the part in view; the rows mid : 1 − mid round the pill put its middle short of it by (2·mid − 1)/2 of its height, which the pill's translate gives back */
   const a = at ?? (1 - f) * PHONE / SHOT, imgTop = (1 - f) - a * SHOT / PHONE; /* the picture's fraction `a` at the top of the view */
   const arrow = (d: string) => <svg viewBox="0 0 16 16" aria-hidden="true"><path d={d} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>;
-  const phone = (n: { label: string; lottie: string; ratio: number }) => (
+  const phone = (n: Nudge, q: ReturnType<typeof place>) => (
     <div className="cs4-peek-win" style={{ aspectRatio: `9 / ${(19.5 * f).toFixed(3)}` }} role="img" aria-label={n.label}>
       <div className="cs4-peek-ph">
         <div className="cs4-peek-scr">{screen && <img src={screen} alt="" loading="lazy" decoding="async" style={{ top: `${(imgTop * 100).toFixed(2)}%` }} />}</div>
-        <div className="cs4-peek-nudge" style={{ aspectRatio: n.ratio, top: `${PEEK_AT * 100}%` }}><Lottie className="cs4-lot" src={n.lottie} playing={on} /></div>
+        <div className="cs4-peek-nudge" style={{ aspectRatio: n.ratio, left: `${q.left.toFixed(2)}%`, width: `${q.width.toFixed(2)}%`, top: `${q.top.toFixed(2)}%` }}><Lottie className="cs4-lot" src={n.lottie} playing={on} /></div>
       </div>
     </div>
   );
   return (
     <div ref={ref} className="cs4-peek">
-      {phone(of[0])}
+      {phone(of[0], P[0])}
       <div className="cs4-peek-mid" style={{ gridTemplateRows: `${mid.toFixed(4)}fr auto ${(1 - mid).toFixed(4)}fr` }}><span className="cs4-peek-pill" style={{ transform: `translateY(${((2 * mid - 1) * 50).toFixed(2)}%)` }}>{arrow('M13 8H3M7 4 3 8l4 4')}<span>{label}</span>{arrow('M3 8h10M9 4l4 4-4 4')}</span></div>
-      {phone(of[1])}
+      {phone(of[1], P[1])}
     </div>
   );
 }

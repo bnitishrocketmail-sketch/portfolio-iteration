@@ -58,8 +58,8 @@ export const lenskartB: Case = {
          (Nitish's order), the label in a pill between them; the product list behind (Nitish: "a PLP screen background"),
          shown from halfway down — its own foot carries a baked-in nudge, which would sit behind these */
       { k: 'peek', label: 'Copilot motion nudges', screen: `${A}/nudge-plp.webp`, at: .5, of: [
-        { label: 'B’s nudge: Talk to B in 8 languages', lottie: `${A}/nudge-talk.json`, ratio: 360 / 80 },
-        { label: 'Copilot’s nudge: Curious? Just ask me', lottie: `${A}/nudge-curious.json`, ratio: 1032 / 192 },
+        { label: 'B’s nudge: Talk to B in 8 languages', lottie: `${A}/nudge-talk.json`, ratio: 360 / 80, vis: [.017, .944, .079, .891] },
+        { label: 'Copilot’s nudge: Curious? Just ask me', lottie: `${A}/nudge-curious.json`, ratio: 1032 / 192, vis: [0, .998, 0, .99] },
       ] },
       { k: 'p', t: ['Copilot solved this by ', { b: 'intervening at exactly these hesitation points' }, ', guiding users step by step, and making decision-making effortless.'] },
       /* the nudges on the three screens, meeting at the help menu — the pills run past the phone, as on his page */
