@@ -69,36 +69,41 @@ function BCell({ state, on }: { state: State; on: boolean }) {
   return <div ref={ref} className={`bst ${state}`} aria-hidden="true">{STACK[state].map((l, i) => <div key={i} className={`bst-l${l.cls ? ' ' + l.cls : ''}`} />)}</div>;
 }
 
-/* the row his page had under the map: the states left to right, what happens between them above the arrows, the B's
-   scale over the states that scale it (his "Scale: 1.5" over Talking) */
-const ROW: { s: State; name: string; scale?: string; to?: [string, string] }[] = [
-  { s: 'connecting', name: 'Connecting state', to: ['dots dissolve 200 ms,', 'then the flip · 0.8 s'] },
-  { s: 'connected', name: 'Connected state', to: ['exact cut', 'hold 150 ms'] },
-  { s: 'default', name: 'Default state', scale: 'scale 100 %', to: ['rings expand from behind B', '700 ms'] },
-  { s: 'listening', name: 'Listening state', scale: 'scale 95–100 % · a 1 s breath', to: ['ring blend 750 ms', 'ease-out, both ways'] },
-  { s: 'thinking', name: 'Thinking state', scale: 'scale 90 % · held', to: ['dissolve 200 ms', 'over the Default B'] },
-  { s: 'talking', name: 'Talking state', scale: 'scale +8 % · swells with the voice' },
+/* the row his page had under the drawing, as he laid it out (25 Oct, Nitish: "the Lotties in the bottom area … the exact
+   same visualization, with our text … the one you made had a lot of cramped text … the names of the states in a
+   container with a background"): his five states left to right — Connecting, Connected, Talking, Listening, Thinking —
+   the B's Lotties for each; over each arrow what happens there, in his words: the time (0 ms, his cut marked by two
+   bars; 250 ms) and the two opacities crossing, in the system's marking pills, staggered as his were; his "Scale 1.5"
+   over Talking; each state's name in a chip under it */
+const ROW: { s: State; name: string; scale?: string; to?: { t: string; cut?: boolean; tags?: [string, string] } }[] = [
+  { s: 'connecting', name: 'Connecting state', to: { t: '0 ms', cut: true } },
+  { s: 'connected', name: 'Connected state', to: { t: '250 ms', tags: ['opacity 0 → 1', 'opacity 1 → 0'] } },
+  { s: 'talking', name: 'Talking state', scale: 'Scale 1.5', to: { t: '250 ms', tags: ['opacity 0 → 1', 'opacity 1 → 0'] } },
+  { s: 'listening', name: 'Listening state', to: { t: '250 ms', tags: ['opacity 0 → 1', 'opacity 1 → 0'] } },
+  { s: 'thinking', name: 'Thinking state' },
 ];
 function StatesRow() {
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref);
   return (
-    <div className="bsr" ref={ref}>
-      {ROW.map((r, i) => (
-        <div key={r.s} className="bsr-item">
-          <div className="bsr-cell" style={{ '--col': 2 * i + 1 } as React.CSSProperties}>
-            <span className="bsr-scale">{r.scale ?? ''}</span>
-            <BCell state={r.s} on={on} />
-            <span className="bsr-name">{r.name}</span>
+    <div className="bsr-wrap">
+      <div className="bsr2" ref={ref}>
+        {ROW.map((r, i) => (
+          <div key={r.s} className="bsr2-item">
+            <span className="bsr2-scale" style={{ gridColumn: 2 * i + 1 }}>{r.scale ?? ''}</span>
+            <div className="bsr2-cell" style={{ gridColumn: 2 * i + 1 }}><BCell state={r.s} on={on} /></div>
+            <span className="bsr2-name" style={{ gridColumn: 2 * i + 1 }}>{r.name}</span>
+            {r.to && (
+              <div className="bsr2-to" style={{ gridColumn: 2 * i + 2 }} aria-label={`${r.name}, then ${r.to.t}${r.to.tags ? ', ' + r.to.tags.join(', ') : ''}`}>
+                <span className="bsr2-t">{r.to.t}</span>
+                {r.to.cut && <span className="bsr2-cut" aria-hidden="true"><i /><i /></span>}
+                {r.to.tags && <span className="bsr2-tags"><span>{r.to.tags[0]}</span><span>{r.to.tags[1]}</span></span>}
+                <svg className="bsr2-arrow" viewBox="0 0 60 12" preserveAspectRatio="none" aria-hidden="true"><path d="M1 6H57" /><path d="M51.6 .6 L57 6 L51.6 11.4" /></svg>
+              </div>
+            )}
           </div>
-          {r.to && i < ROW.length - 1 && (
-            <div className="bsr-arrow" style={{ '--col': 2 * i + 2 } as React.CSSProperties} aria-label={`${r.to[0]} ${r.to[1]}`}>
-              <span className="bsr-to">{r.to[0]}<br />{r.to[1]}</span>
-              <svg viewBox="0 0 60 12" preserveAspectRatio="none" aria-hidden="true"><path d="M1 6H57" /><path className="head" d="M51.6 .1 L57 6 L51.6 11.9" /></svg>
-            </div>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
