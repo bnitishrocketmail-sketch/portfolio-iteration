@@ -39,7 +39,7 @@ export type Block =
   /* the loaders as they sit in the app (25 Oct): a phone each — its ground (a picture, or the app's white), the Lottie in its
      box (percent of the screen), the line under it (`title`, `sub`, at `at`% down; `tone` dark for light text on a dark
      ground) and the dots loader under the line when `dots` */
-  | { k: 'loaders'; of: { label: string; cap: string; ground?: string; lottie: string; box: [number, number, number, number]; title: string; sub?: string; at: number; dots?: boolean; tone?: 'dark' }[] }
+  | { k: 'loaders'; of: { label: string; cap: string; ground?: string; lottie: string; box: [number, number, number, number]; title: string; sub?: string; at: number; dots?: boolean; tone?: 'dark'; feather?: boolean /* its box's edges faded: a comp whose glows run to its edges */ }[] }
   /* success states, each in its panel: the screen and what it is — a chip (its product), a heading, a line or two; `wide`
      for a desktop screen, which takes the row */
   | { k: 'successes'; of: { m: Media; chip: string; h: string; p: Rich; wide?: boolean }[] }

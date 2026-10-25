@@ -55,14 +55,18 @@ export const fintech: Case = {
        bank fetch on the ground taken from his other export of it with its line on the dark below the tiles; then the
        success states in panels with what each is — the Zaakpay payment on desktop (the coin from the 3D coin thread played
        straight from loading into success, its jerks smoothed out), the UPI pinless clip and the rocket from his old page's
-       Motion creatives. Each Lottie set to cover its screen where the comp is shorter than the phone (360 × 760 / 700); the documents scanner a little wider than the card (its bed runs to the comp's edges, so they sit off the screen). */
+       Motion creatives. Each Lottie set to cover its screen where the comp is shorter than the phone (360 × 760 / 700); the documents scanner a fifth smaller than it
+       first was (26 Oct, Nitish: "a little smaller … 0.8x … some space between the illustration and the text"): its drawn
+       part (x .128–.900, y .092–.828 of its comp, measured) centred across the screen, its foot 4% of the screen (31dp)
+       over the line, where the card's sits 2.6% over it. The bank tiles' steps ahead eased (bank-fetch.lottie's Null 1: his
+       linear export, 0.167/0.833, given the Easy Ease his tiles' lift has, 0.333/0 → 0.667/1). */
     { id: 'states', title: 'Loaders and success states', blocks: [
       { k: 'p', t: ['Loaders for the waits in the app’s journeys — finding banks, verifying documents, preparing a card, confirming a payment — and the success states that close them.'] },
       { k: 'h', t: 'Loaders' },
       { k: 'loaders', of: [
         { label: 'Card being prepared: a machine printing the card', cap: 'Card being prepared', lottie: `${A}/card.lottie`, box: [5, 26, 90, 31.15], title: 'Your card is being prepared and could take up to 10 minutes.', sub: 'We will notify you once it’s ready', at: 55, dots: true },
-        { label: 'Verifying documents: a scanner passing over the documents', cap: 'Verifying documents', lottie: `${A}/verify-docs.lottie`, box: [-3, 23.2, 106, 36.69], title: 'Verifying your documents. This could take up to 10 minutes.', sub: 'We will notify you once it’s ready', at: 55, dots: true },
-        { label: 'Bank fetch: bank tiles running past while the app finds the user’s banks', cap: 'Bank fetch', ground: `${A}/bank-fetch-bg.webp`, lottie: `${A}/bank-fetch.lottie`, box: [-1.316, 0, 102.632, 100], title: 'Fetching your bank details', at: 74, tone: 'dark' },
+        { label: 'Verifying documents: a scanner passing over the documents', cap: 'Verifying documents', lottie: `${A}/verify-docs.lottie`, box: [6.4, 26.7, 84.8, 29.35], feather: true, title: 'Verifying your documents. This could take up to 10 minutes.', sub: 'We will notify you once it’s ready', at: 55, dots: true },
+        { label: 'Bank fetch: bank tiles running past while the app finds the user’s banks', cap: 'Bank fetch', ground: `${A}/bank-fetch-bg.webp`, lottie: `${A}/bank-fetch.lottie`, box: [-1.316, 0, 102.632, 100], title: 'Fetching your bank details', sub: 'This will only take a few seconds', at: 74, tone: 'dark' },
       ] },
       { k: 'h', t: 'Success states' },
       { k: 'successes', of: [

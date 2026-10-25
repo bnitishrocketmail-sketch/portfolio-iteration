@@ -199,7 +199,7 @@ function Journey({ text: told, screen, bar, of, entry }: { text: Told[]; screen:
    the hero … the text … could take up to 10 minutes. We will notify you once it's ready … the bank fetch loader will also
    have content written below it"): the study's phone, the app's screen in it — the hero's right-hand screen laid out the
    same way (the Lottie over the top half, the line at 55%, the dots under it) — its text set in the screen's own width */
-type LoaderItem = { label: string; cap: string; ground?: string; lottie: string; box: [number, number, number, number]; title: string; sub?: string; at: number; dots?: boolean; tone?: 'dark' };
+type LoaderItem = { label: string; cap: string; ground?: string; lottie: string; box: [number, number, number, number]; title: string; sub?: string; at: number; dots?: boolean; tone?: 'dark'; feather?: boolean };
 function LoaderPhone({ l }: { l: LoaderItem }) {
   const ref = useRef<HTMLElement>(null);
   const on = useInView(ref);
@@ -208,7 +208,7 @@ function LoaderPhone({ l }: { l: LoaderItem }) {
     <figure ref={ref} className="cs4-fig phone">
       <div className={`cs4-media phone filled cs4-ld${l.tone === 'dark' ? ' dark' : ''}`} style={{ aspectRatio: '9 / 19.5' }} role="img" aria-label={`${l.label} — “${l.title}${l.sub ? ' ' + l.sub : ''}”`}>
         {l.ground && <img src={l.ground} alt="" loading="lazy" decoding="async" />}
-        <div className="cs4-layer" style={{ left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%` }}><Lottie className="cs4-lot" src={l.lottie} playing={on} /></div>
+        <div className={`cs4-layer${l.feather ? ' feather' : ''}`} style={{ left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%` }}><Lottie className="cs4-lot" src={l.lottie} playing={on} /></div>
         <div className="cs4-ld-copy" style={{ top: `${l.at}%` }}><b>{l.title}</b>{l.sub && <span>{l.sub}</span>}</div>
         {l.dots && <div className="cs4-layer cs4-ld-dots"><Lottie className="cs4-lot" src="/cases/fintech/dots.lottie" playing={on} /></div>}
       </div>
