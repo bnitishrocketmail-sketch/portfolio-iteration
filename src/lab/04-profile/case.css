@@ -218,15 +218,21 @@
 .bm-tabs button:hover { opacity: 1; } .bm-tabs button.on { background: var(--pcard-fold); color: var(--pcard-fold-ink); opacity: 1; }
 .bm-panel { display: flex; flex-direction: column; gap: var(--s3); padding: var(--s3); border-radius: calc(calc(var(--r) - .6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
 /* the map: his drawing's parts in the card's ink — boxes, lines with a dot at their label, open chevrons */
-.bmap-wrap { overflow-x: auto; } .bmap { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; }
-.bmap path { fill: none; stroke: color-mix(in srgb, var(--pcard-open-ink) 42%, transparent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.bmap .dot { fill: color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); }
-.bmap .lbl { font: 500 10.5px/1.2 var(--f-copy); fill: color-mix(in srgb, var(--pcard-open-ink) 78%, transparent); }
-.bmap .node rect { fill: var(--pcard-open); stroke: color-mix(in srgb, var(--pcard-open-ink) 55%, transparent); stroke-width: 1.4; }
-.bmap .node text { font: 600 12.5px/1 var(--f-copy); fill: var(--pcard-open-ink); } .bmap .node text.sub { font-weight: 400; font-size: 9.5px; opacity: .65; }
-.bmap .cursor path { fill: var(--pcard-fold); stroke: var(--pcard-open); stroke-width: 1.2; }
-.bmap .cursor rect { fill: var(--pcard-fold); stroke: none; } .bmap .cursor text { font: 600 11px/1 var(--f-copy); fill: var(--pcard-fold-ink); }
-.bm-notes { justify-content: flex-start; } .bm-notes li::before { content: '→'; opacity: .45; }
+/* the framework (25 Oct): his drawing as he drew it — the lines in his image's px (an SVG), the states and labels laid
+   over it in the system's type: the states in Title, emphasised, in boxes with the system's inner radius and curve
+   (the media's: --r less .8cqw, × k), outlined as his were; the moves' labels in Meta; his cursor and its tag in the
+   system's marking pill. Wide enough to read on the phone, where it scrolls sideways */
+.bfw-wrap { overflow-x: auto; scrollbar-width: thin; }
+.bfw { position: relative; width: 100%; min-width: 760px; aspect-ratio: 1840 / 870; }
+.bfw-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.bfw-lines path { fill: none; stroke: color-mix(in srgb, var(--pcard-open-ink) 55%, transparent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.bfw-lines .dot { fill: color-mix(in srgb, var(--pcard-open-ink) 78%, transparent); }
+.bfw-node { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 1.5px solid color-mix(in srgb, var(--pcard-open-ink) 55%, transparent); border-radius: calc(calc(var(--r) - .8cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--pcard-open-ink); text-align: center; white-space: nowrap; }
+.bfw-node b { font: 600 var(--t-title)/1.2 var(--f-copy); } .bfw-node small { font: 400 var(--t-meta)/1.2 var(--f-copy); opacity: .65; }
+.bfw-lbl { position: absolute; display: flex; flex-direction: column; font: 500 var(--t-meta)/1.25 var(--f-copy); color: color-mix(in srgb, var(--pcard-open-ink) 80%, transparent); white-space: nowrap; transform: translate(-50%, -50%); text-align: center; }
+.bfw-lbl.l { transform: translate(0, -50%); text-align: left; } .bfw-lbl.r { transform: translate(-100%, -50%); text-align: right; }
+.bfw-cursor { position: absolute; width: 14px; height: 20px; } .bfw-cursor svg { display: block; width: 100%; height: 100%; } .bfw-cursor path { fill: var(--nav-hl); stroke: var(--pcard-open); stroke-width: 1.2; stroke-linejoin: round; }
+.bfw-tag { position: absolute; transform: translate(-50%, -50%); padding: .45em .9em; border-radius: 999px; background: var(--nav-hl); color: var(--nav-hl-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); white-space: nowrap; } /* the FAQ panel's marking pill */
 /* the states in a row: the B's scale over a state, the state under it, what happens between two over the arrow */
 .bsr { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr) minmax(0, 1.15fr)) minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: var(--s1); row-gap: var(--s1); align-items: center; padding-top: var(--s2); }
 .bsr-item, .bsr-cell, .bsr-arrow { display: contents; } /* each part placed by its row, in its item's column (--col, BMachine.tsx) */
@@ -283,7 +289,7 @@
   .cs4-col { padding: 0; background: none; border-radius: 0; } .cs4-cols { gap: var(--s4); }
   .cs4-stats { padding: 16px; } .cs4-next, .cs4-talk { padding: 20px; }
   .cs4-fig.half { width: 72%; }
-  .bm-panel { padding: 12px; } .bmap { min-width: 720px; }
+  .bm-panel { padding: 12px; }
   .bsr { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: none; gap: 16px 12px; }
   .bsr-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; } .bsr-scale, .bst, .bsr-name { grid-row: auto; } .bst { width: 80%; }
   .bsr-arrow { display: none; } /* the moves between the states read off the map on a phone */

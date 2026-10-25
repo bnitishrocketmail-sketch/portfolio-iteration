@@ -103,76 +103,72 @@ function StatesRow() {
   );
 }
 
-/* ---- the map: his page's drawing redrawn — rounded boxes for the states, lines with a dot at their label and an open
-   chevron at their end — with the revamped states and the moves the rig makes (the gaps his map left: the hub, the
-   way back from listening, thinking and talking, the exact timings) ---- */
-type Box = [number, number, number, number, string, string?];
-const N: Record<string, Box> = {
-  start: [22, 206, 70, 40, 'Start'],
-  connecting: [150, 206, 150, 40, 'Connecting state'],
-  connected: [370, 198, 170, 56, 'Connected state', '(transition state)'],
-  default: [608, 206, 140, 40, 'Default state', '(the hub)'],
-  listening: [870, 206, 140, 40, 'Listening state'],
-  thinking: [870, 366, 140, 40, 'Thinking state'],
-  talking: [608, 366, 140, 40, 'Talking state'],
-};
-const f = (n: number) => n.toFixed(1);
-/* a point on a cubic and its tangent angle */
-const bez = (p: number[][], t: number) => { const u = 1 - t; const x = u * u * u * p[0][0] + 3 * u * u * t * p[1][0] + 3 * u * t * t * p[2][0] + t * t * t * p[3][0], y = u * u * u * p[0][1] + 3 * u * u * t * p[1][1] + 3 * u * t * t * p[2][1] + t * t * t * p[3][1]; const dx = 3 * u * u * (p[1][0] - p[0][0]) + 6 * u * t * (p[2][0] - p[1][0]) + 3 * t * t * (p[3][0] - p[2][0]), dy = 3 * u * u * (p[1][1] - p[0][1]) + 6 * u * t * (p[2][1] - p[1][1]) + 3 * t * t * (p[3][1] - p[2][1]); return { x, y, a: Math.atan2(dy, dx) * 180 / Math.PI }; };
-type Edge = { p: number[][]; label: string[]; at?: number; dy?: number; dx?: number; anchor?: 'start' | 'middle' | 'end' };
-/* straight: a line from a to b; curved: a cubic through its two controls */
-const line = (a: number[], b: number[], label: string[], o: Partial<Edge> = {}): Edge => ({ p: [a, [a[0] + (b[0] - a[0]) / 3, a[1] + (b[1] - a[1]) / 3], [a[0] + 2 * (b[0] - a[0]) / 3, a[1] + 2 * (b[1] - a[1]) / 3], b], label, ...o });
-const curve = (a: number[], c1: number[], c2: number[], b: number[], label: string[], o: Partial<Edge> = {}): Edge => ({ p: [a, c1, c2, b], label, ...o });
-const E: Edge[] = [
-  line([92, 226], [150, 226], ['model loading'], { dy: -12 }),
-  line([300, 226], [370, 226], ['model loaded'], { dy: -12 }),
-  line([540, 226], [608, 226], ['flip lands', 'exact cut'], { dy: -24 }),
-  line([748, 226], [870, 226], ['voice input', 'rings expand · 700 ms'], { dy: -24 }),
-  line([940, 246], [940, 366], ['processing', 'ring blend · 750 ms'], { dx: 14, dy: -4, anchor: 'start' }),
-  line([870, 386], [748, 386], ['response loaded', 'dissolve · 200 ms'], { dy: 18 }),
-  line([678, 366], [678, 246], ['done talking', 'dissolve'], { dx: -14, dy: -4, anchor: 'end' }),
-  curve([738, 366], [800, 330], [840, 290], [878, 246], ['voice input'], { at: .45, dx: 12, dy: 2, anchor: 'start' }),
-  curve([930, 206], [900, 150], [740, 150], [708, 206], ['no voice input', 'dissolve'], { at: .5, dy: -20 }),
-  curve([880, 366], [830, 320], [790, 290], [738, 246], ['no response', 'dissolve'], { at: .55, dx: -12, dy: 4, anchor: 'end' }),
-  /* an unstable network, from every B state: the flip plays back */
-  curve([636, 206], [636, 130], [560, 130], [520, 198], ['unstable network'], { at: .5, dy: -10 }),
-  curve([970, 206], [990, 60], [560, 60], [480, 198], ['unstable network'], { at: .5, dy: -10 }),
-  curve([648, 406], [640, 470], [560, 470], [500, 254], ['unstable network'], { at: .5, dy: 16 }),
-  curve([960, 406], [980, 520], [500, 520], [460, 254], ['unstable network'], { at: .5, dy: 16 }),
-  curve([400, 254], [380, 300], [300, 300], [230, 246], ['flip back · the dots dissolve in'], { at: .5, dy: 16 }),
+/* ---- the framework: his page's drawing, as he drew it (25 Oct, Nitish: "the framework … doesn't look better than what I
+   initially made … the texts are all getting merged, the arrows are not proper. Use it as it is … the text and the
+   corner radius of the containers the ones we follow"): his states — Start, Connecting, Connected (the transition
+   state), Talking, Idle, Thinking, Listening — and his moves, each a line with a dot at its label and an open chevron
+   at its end, traced off his image (Interaction framework, 1921 × 1082) and checked over it. The lines are drawn in
+   an SVG in his image's own px; the states and the labels are HTML laid over it at the same places, so they take the
+   system's type, radius and curve (case.css .bfw) ---- */
+const VB = { x: 40, y: 100, w: 1840, h: 870 }; /* the part of his image the drawing uses */
+const px = (x: number) => `${(((x - VB.x) / VB.w) * 100).toFixed(3)}%`, py = (y: number) => `${(((y - VB.y) / VB.h) * 100).toFixed(3)}%`;
+type Pt = [number, number];
+const FW_NODES: { k: string; b: [number, number, number, number]; t: string; sub?: string }[] = [
+  { k: 'start', b: [65, 360, 132, 80], t: 'Start' },
+  { k: 'connecting', b: [413, 360, 292, 80], t: 'Connecting state' },
+  { k: 'connected', b: [895, 360, 285, 115], t: 'Connected state', sub: '(Transition state)' },
+  { k: 'talking', b: [1435, 360, 226, 77], t: 'Talking state' },
+  { k: 'idle', b: [1600, 118, 187, 80], t: 'Idle state' },
+  { k: 'thinking', b: [1402, 552, 246, 77], t: 'Thinking state' },
+  { k: 'listening', b: [1547, 776, 253, 79], t: 'Listening state' },
 ];
+const seg = (a: Pt, b: Pt): Pt[] => [a, [a[0] + (b[0] - a[0]) / 3, a[1] + (b[1] - a[1]) / 3], [a[0] + 2 * (b[0] - a[0]) / 3, a[1] + 2 * (b[1] - a[1]) / 3], b];
+/* each move: its cubic, where his dot sits (snapped to the curve), its label — where his was, anchored at its middle
+   ('c'), its left ('l') or its right ('r') */
+const FW_EDGES: { p: Pt[]; dot: Pt; t: string[]; at: Pt; an: 'c' | 'l' | 'r' }[] = [
+  { p: seg([205, 398], [388, 398]), dot: [290, 398], t: ['Model loading'], at: [298, 366], an: 'c' },
+  { p: seg([712, 398], [878, 398]), dot: [790, 398], t: ['Model loaded'], at: [798, 366], an: 'c' },
+  { p: seg([1213, 398], [1413, 398]), dot: [1313, 398], t: ['Trigger intro'], at: [1306, 366], an: 'c' },
+  { p: [[1492, 342], [1490, 290], [1600, 300], [1610, 228]], dot: [1548, 285], t: ['no voice', 'input'], at: [1472, 266], an: 'l' },
+  { p: [[1749, 228], [1750, 290], [1640, 280], [1635, 342]], dot: [1687, 285], t: ['Voice', 'input'], at: [1712, 320], an: 'l' },
+  { p: [[1583, 151], [1100, 162], [700, 186], [670, 343]], dot: [1002, 184], t: ['unstable network'], at: [1003, 150], an: 'c' },
+  { p: [[1677, 396], [1760, 410], [1815, 620], [1778, 752]], dot: [1786, 573], t: ['Voice', 'input'], at: [1806, 571], an: 'l' },
+  { p: [[1736, 750], [1730, 630], [1628, 525], [1590, 450]], dot: [1610, 493], t: ['response', 'loaded'], at: [1640, 490], an: 'l' },
+  { p: seg([1562, 762], [1562, 640]), dot: [1562, 701], t: ['processing', 'response'], at: [1542, 713], an: 'r' },
+  { p: seg([1622, 640], [1622, 762]), dot: [1622, 701], t: ['Voice', 'input'], at: [1645, 706], an: 'l' },
+  { p: [[1462, 445], [1250, 665], [505, 716], [505, 469]], dot: [940, 627], t: ['unstable network'], at: [940, 667], an: 'c' },
+  { p: [[1440, 645], [1350, 760], [471, 780], [471, 469]], dot: [1086, 727], t: ['unstable network'], at: [1095, 761], an: 'c' },
+  { p: [[1564, 873], [1450, 960], [435, 960], [435, 471]], dot: [1304, 915], t: ['unstable network'], at: [1312, 948], an: 'c' },
+];
+const bz = (p: Pt[], t: number): Pt => { const u = 1 - t; return [u * u * u * p[0][0] + 3 * u * u * t * p[1][0] + 3 * u * t * t * p[2][0] + t * t * t * p[3][0], u * u * u * p[0][1] + 3 * u * u * t * p[1][1] + 3 * u * t * t * p[2][1] + t * t * t * p[3][1]]; };
+const snap = (p: Pt[], d: Pt): Pt => { let best = p[0], bd = Infinity; for (let i = 0; i <= 200; i++) { const q = bz(p, i / 200), e = (q[0] - d[0]) ** 2 + (q[1] - d[1]) ** 2; if (e < bd) { bd = e; best = q; } } return best; };
+const g1 = (n: number) => n.toFixed(1);
 function StateMap() {
   return (
-    <div className="bmap-wrap">
-      <svg className="bmap" viewBox="0 30 1040 510" aria-label="The state map: Start, Connecting, Connected, Default, Listening, Thinking and Talking, and the moves between them">
-        {E.map((e, i) => {
-          const d = `M${f(e.p[0][0])} ${f(e.p[0][1])} C${f(e.p[1][0])} ${f(e.p[1][1])}, ${f(e.p[2][0])} ${f(e.p[2][1])}, ${f(e.p[3][0])} ${f(e.p[3][1])}`;
-          const end = bez(e.p, 1), mid = bez(e.p, e.at ?? .5);
-          return (
-            <g key={i}>
-              <path d={d} />
-              <path className="head" d="M-5.4 -5.9 L0 0 L-5.4 5.9" transform={`translate(${f(end.x)} ${f(end.y)}) rotate(${f(end.a)})`} />
-              <circle className="dot" cx={f(mid.x)} cy={f(mid.y)} r="3.2" />
-              <text className="lbl" x={f(mid.x + (e.dx ?? 0))} y={f(mid.y + (e.dy ?? 0))} textAnchor={e.anchor ?? 'middle'}>
-                {e.label.map((l, k) => <tspan key={k} x={f(mid.x + (e.dx ?? 0))} dy={k ? '1.25em' : 0}>{l}</tspan>)}
-              </text>
-            </g>
-          );
-        })}
-        {Object.entries(N).map(([k, b]) => (
-          <g key={k} className={`node ${k}`}>
-            <rect x={b[0]} y={b[1]} width={b[2]} height={b[3]} rx="9" />
-            <text x={b[0] + b[2] / 2} y={b[1] + b[3] / 2 + (b[5] ? -3 : 0)} textAnchor="middle" dominantBaseline="middle">{b[4]}</text>
-            {b[5] && <text className="sub" x={b[0] + b[2] / 2} y={b[1] + b[3] / 2 + 13} textAnchor="middle" dominantBaseline="middle">{b[5]}</text>}
-          </g>
+    <div className="bfw-wrap">
+      <div className="bfw" role="img" aria-label="The state machine: Start, Connecting, Connected (the transition state), Talking, Idle, Thinking and Listening, and the moves between them">
+        <svg className="bfw-lines" viewBox={`${VB.x} ${VB.y} ${VB.w} ${VB.h}`} aria-hidden="true">
+          {FW_EDGES.map((e, i) => {
+            const [a, b, c, d] = e.p, dot = snap(e.p, e.dot), ang = Math.atan2(d[1] - c[1], d[0] - c[0]) * 180 / Math.PI;
+            return (
+              <g key={i}>
+                <path d={`M${g1(a[0])} ${g1(a[1])} C${g1(b[0])} ${g1(b[1])} ${g1(c[0])} ${g1(c[1])} ${g1(d[0])} ${g1(d[1])}`} />
+                <path className="head" d="M-12 -11.5 L0 0 L-12 11.5" transform={`translate(${g1(d[0])} ${g1(d[1])}) rotate(${g1(ang)})`} />
+                <circle className="dot" cx={g1(dot[0])} cy={g1(dot[1])} r="9" />
+              </g>
+            );
+          })}
+        </svg>
+        {FW_NODES.map(n => (
+          <div key={n.k} className="bfw-node" style={{ left: px(n.b[0]), top: py(n.b[1]), width: `${((n.b[2] / VB.w) * 100).toFixed(3)}%`, height: `${((n.b[3] / VB.h) * 100).toFixed(3)}%` }}>
+            <b>{n.t}</b>{n.sub && <small>{n.sub}</small>}
+          </div>
         ))}
-        {/* his cursor on the drawing: "Devs love me for this" */}
-        <g className="cursor" transform="translate(262 330)">
-          <path d="M0 0 L0 16 L4.4 12.4 L7.4 19 L10.2 17.8 L7.3 11.3 L12.6 10.8 Z" />
-          <rect x="12" y="14" width="124" height="24" rx="8" />
-          <text x="74" y="26.5" textAnchor="middle" dominantBaseline="middle">Devs love me for this</text>
-        </g>
-      </svg>
+        {FW_EDGES.map((e, i) => <span key={i} className={`bfw-lbl ${e.an}`} style={{ left: px(e.at[0]), top: py(e.at[1]) }}>{e.t.map((l, k) => <span key={k}>{l}</span>)}</span>)}
+        {/* his cursor on the drawing, as his page had it: "Devs love me for this" */}
+        <span className="bfw-cursor" style={{ left: px(470), top: py(758) }} aria-hidden="true"><svg viewBox="0 0 14 20"><path d="M1 1 L1 16.4 L5 12.8 L8 19 L10.8 17.8 L7.9 11.7 L13.2 11.2 Z" /></svg></span>
+        <span className="bfw-tag" style={{ left: px(337), top: py(830) }}>Devs love me for this</span>
+      </div>
     </div>
   );
 }
@@ -219,11 +215,6 @@ export default function BMachine() {
       {tab === 'framework' ? (
         <div className="bm-panel" role="tabpanel">
           <StateMap />
-          <ul className="cs4-legend bm-notes" aria-label="Notes">
-            <li>Default is the hub: the plain B, held 150 ms after the flip lands</li>
-            <li>a gradient blob sits behind Listening, Thinking and Talking</li>
-            <li>the labels under the B read Listening… and Talking…</li>
-          </ul>
           <StatesRow />
         </div>
       ) : (
