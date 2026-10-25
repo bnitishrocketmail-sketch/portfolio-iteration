@@ -60,10 +60,13 @@ export const lenskartB: Case = {
     ] },
     { id: 'nudges', title: 'Nudges at the hesitation points', blocks: [
       /* his strip (24 Oct, rebuilt): the two nudges on the foot of their phones, B's at the left, Copilot's at the right
-         (Nitish's order), the label in a pill between them; the product list behind (Nitish: "a PLP screen background"),
-         shown from halfway down — its own foot carries a baked-in nudge, which would sit behind these */
-      { k: 'peek', label: 'Copilot motion nudges', screen: `${A}/nudge-plp.webp`, at: .5, of: [
-        { label: 'B’s nudge: Talk to B in 8 languages', lottie: `${A}/nudge-talk.json`, ratio: 360 / 80, vis: [.017, .944, .079, .891] },
+         (Nitish's order), the label in a pill between them; behind them the product page with its Add to Cart bar
+         (25 Oct, Nitish: "the PDP screen we used below … place the nudge where it is placed on the PDP"), cleaned of
+         its own baked-in nudge (pdp-clean.webp: that strip taken from the expert screen, the same page at the same
+         scroll — the Best Offer card under it); the phones seen over their lower third, the nudge's line clear of the
+         fade */
+      { k: 'peek', label: 'Copilot motion nudges', screen: `${A}/pdp-clean.webp`, show: 32, of: [
+        { label: 'B’s nudge: Talk to B in 8 languages', lottie: `${A}/nudge-talk.json`, ratio: 360 / 80, vis: [.017, .944, .079, .891], k: .9 },
         { label: 'Copilot’s nudge: Curious? Just ask me', lottie: `${A}/nudge-curious.json`, ratio: 1032 / 192, vis: [0, .998, 0, .99] },
       ] },
       { k: 'p', t: ['Copilot solved this by ', { b: 'intervening at exactly these hesitation points' }, ', guiding users step by step, and making decision-making effortless.'] },

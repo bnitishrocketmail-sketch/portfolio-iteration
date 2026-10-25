@@ -29,7 +29,7 @@ export type Block =
   /* two phones seen only at their foot (`show`: the part of the phone in view, 25 by default), their tops fading into the
      card, each with its nudge Lottie near the bottom, running past the screen's sides, a pill between them (the B
      study's nudges, 24 Oct). `ratio`: the Lottie comp's width / height; `screen`: a 720 × 1600 picture behind */
-  | { k: 'peek'; label: string; show?: number; screen?: string; at?: number /* the screen picture's fraction (0–1) at the top of the part in view; its foot by default */; of: { label: string; lottie: string; ratio: number; vis?: [number, number, number, number] /* the comp's drawn extent over its loop (x0, x1, y0, y1, fractions), for placing it by what shows */ }[] }
+  | { k: 'peek'; label: string; show?: number; screen?: string; at?: number /* the screen picture's fraction (0–1) at the top of the part in view; its foot by default */; of: { label: string; lottie: string; ratio: number; vis?: [number, number, number, number] /* the comp's drawn extent over its loop (x0, x1, y0, y1, fractions), for placing it by what shows */; k?: number /* its drawn width against the screen's less 16dp each side */ }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */
   | { k: 'converge'; of: Media[]; to: Media }
   /* a version of the feature: its number and name as chips, a line about it, its screens */
