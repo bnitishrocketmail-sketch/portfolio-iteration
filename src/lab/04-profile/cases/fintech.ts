@@ -46,6 +46,26 @@ export const fintech: Case = {
           { label: 'EMI overdue', q: 'Alert users that an EMI payment is overdue and requires immediate action.', lottie: `${A}/emi-overdue.lottie`, ratio: 340 / 230, vis: [0, 1, 0, .835], dur: 4.5 },
           { label: 'Loan closed', q: 'Celebrate the successful completion of the loan repayment cycle.', lottie: `${A}/loan-closed.lottie`, ratio: 340 / 160, vis: [0, 1, .25, .75], dur: 6.5 },
         ] },
+    ] },
+    /* the loaders and success states (25 Oct, Nitish: "loaders that I've made throughout the app journeys … also success
+       states … built for flows when I worked with MobiKwik"): his loaders — bank fetch, on the ground taken from his other
+       export of it, and verifying documents — then his success states: two from his old page's Motion creatives (the
+       UPI pinless clip, the rocket) and the desktop payment, the coin from the 3D coin thread played straight from loading
+       into success: 2.85 s of the loop, the wind-up, the launch and the mark, its last frame held a second before it loops.
+       Phones the study's size; each Lottie set to cover its screen (the phone is taller than their 360 × 760 / 700 comps) */
+    { id: 'states', title: 'Loaders and success states', blocks: [
+      { k: 'p', t: ['Loaders for the waits in the app’s journeys — finding banks, verifying documents, processing a payment — and the success states that close them.'] },
+      { k: 'h', t: 'Loaders' },
+      { k: 'row', ratio: 'var(--ph-w) calc(var(--ph-h) * 4 / 3)', align: 'center', of: [
+        { k: 'figure', of: { k: 'media', shape: 'phone', label: 'Bank fetch: bank tiles running past while the app finds the user’s banks', cap: 'Bank fetch', src: `${A}/bank-fetch-bg.webp`, layers: [{ kind: 'lottie', src: `${A}/bank-fetch.lottie`, box: [-1.316, 0, 102.632, 100] }] } },
+        { k: 'figure', of: { k: 'media', shape: 'image', label: 'Verifying documents: a scanner passing over the user’s documents', cap: 'Verifying documents', lottie: `${A}/verify-docs.lottie`, bg: '#fff' } },
+      ] },
+      { k: 'h', t: 'Success states' },
+      { k: 'row', ratio: 'var(--ph-w) var(--ph-w)', align: 'center', of: [
+        { k: 'figure', of: { k: 'media', shape: 'phone', label: 'UPI pinless: the fingerprint turning into a shield and tick, then the account to activate', cap: 'UPI pinless, enabled', src: `${A}/upi-pinless.mp4`, poster: `${A}/upi-pinless-poster.webp` } },
+        { k: 'figure', of: { k: 'media', shape: 'phone', label: 'A rocket lifting off into the congratulations', cap: 'Benefits unlocked', bg: '#03301a', layers: [{ kind: 'lottie', src: `${A}/rocket-success.lottie`, box: [-5.714, 0, 111.429, 100] }] } },
+      ] },
+      { k: 'figure', width: 'wide', of: { k: 'media', shape: 'video', label: 'Desktop payment: the coin flying while the payment processes, then launching into the success mark', cap: 'Payment, loading to success — desktop', lottie: `${A}/coin-payment.lottie`, bg: '#fcfcfe' } },
       { k: 'p', t: ['More work is being added.'] },
     ] },
   ],

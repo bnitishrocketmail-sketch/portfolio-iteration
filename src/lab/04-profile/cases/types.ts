@@ -5,7 +5,7 @@ export type Rich = (string | { b: string })[];
 export type Layer = { kind: 'lottie' | 'image'; src: string; box: [number, number, number, number]; over?: boolean };
 /* a slot: its shape, and once filled, its picture or clip (`src`: an image, or an .mp4 with a `poster`), or a Lottie on its
    own (`lottie`, the slot clear behind it), and any layers. `screen`: a phone's top, cut (his FAQ panel's screens) */
-export type Media = { k: 'media'; shape: 'wide' | 'video' | 'image' | 'phone' | 'phone-land' | 'small' | 'screen'; ratio?: string; label: string; cap?: string; src?: string; poster?: string; lottie?: string; layers?: Layer[]; crop?: number /* percent of the slot the picture runs past its edges, to hide a clip's own border */ };
+export type Media = { k: 'media'; shape: 'wide' | 'video' | 'image' | 'phone' | 'phone-land' | 'small' | 'screen'; ratio?: string; label: string; cap?: string; src?: string; poster?: string; lottie?: string; layers?: Layer[]; crop?: number /* percent of the slot the picture runs past its edges, to hide a clip's own border */; bg?: string /* the slot's ground behind a Lottie (a screen's own white) */ };
 /* a step of a flow: a heading, optional text at the left, its screens, optional notes at the right; the steps are wired */
 export type Step = { title: string; text?: Block[]; media: Media[]; side?: Block[] };
 export type Block =
@@ -14,7 +14,7 @@ export type Block =
   | { k: 'ul'; items: Rich[] }
   | { k: 'ol'; items: { lead: string; t: Rich }[] }
   | Media
-  | { k: 'figure'; of: Media; width?: 'half' | 'phone' }
+  | { k: 'figure'; of: Media; width?: 'half' | 'phone' | 'wide' }
   | { k: 'row'; of: Block[]; ratio?: string; align?: 'start' | 'center' }
   | { k: 'phones'; of: Media[] }
   | { k: 'group'; of: Block[] }

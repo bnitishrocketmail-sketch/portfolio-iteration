@@ -40,9 +40,9 @@ function Slot({ m, fl, active = true }: { m: Media; fl?: string; active?: boolea
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref) && active;
   const clip = !!m.src && /\.mp4$/.test(m.src);
-  const filled = !!(m.src || m.lottie);
+  const filled = !!(m.src || m.lottie || m.layers?.length); /* a slot of layers alone (a Lottie set to cover a phone) is filled too */
   return (
-    <div ref={ref} className={`cs4-media ${m.shape}${filled ? ' filled' : ''}${m.lottie ? ' lot' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape] }} role="img" aria-label={filled ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
+    <div ref={ref} className={`cs4-media ${m.shape}${filled ? ' filled' : ''}${m.lottie ? ' lot' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape], background: m.bg }} role="img" aria-label={filled ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
       {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { left: `-${m.crop}%`, top: `-${m.crop}%`, width: `${100 + 2 * m.crop}%`, height: `${100 + 2 * m.crop}%` } : undefined} />) : m.lottie ? <Lottie className="cs4-lot" src={m.lottie} playing={on} /> : <span className="cs4-slot">{m.label}</span>}
       {m.layers?.filter(l => !l.over).map((l, i) => <LayerBox key={i} l={l} on={on} />)}
     </div>

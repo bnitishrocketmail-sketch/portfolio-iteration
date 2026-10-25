@@ -65,7 +65,7 @@
 .cs4-ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5em; max-width: 80ch; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); }
 .cs4-ul li { position: relative; padding-left: 1.5em; } .cs4-ul li::before { content: '→'; position: absolute; left: 0; opacity: .45; }
 .cs4-ol { margin: 0; padding: 0 0 0 1.5em; display: flex; flex-direction: column; gap: .7em; max-width: 100ch; font: var(--copy-w) var(--t-body)/1.5 var(--f-copy); } .cs4-ol li { padding-left: .3em; }
-.cs4-row { display: grid; gap: var(--s2) var(--s4); align-items: start; } .cs4-row.center { align-items: center; }
+.cs4-row { display: grid; gap: var(--s2) var(--s4); align-items: start; justify-content: center; } /* columns of fixed widths sit centred; fr columns fill it anyway */ .cs4-row.center { align-items: center; }
 .cs4-row > .cs4-media, .cs4-sec > .cs4-media { width: 92%; justify-self: center; align-self: center; } /* 22 Oct: a picture or clip a little inside its column, for air around it */
 .cs4-group { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
 
@@ -87,6 +87,7 @@
 .cs4-fig.phone-land { width: min(100%, var(--ph-h)); justify-self: center; }
 .cs4-sec > .cs4-fig { align-self: center; } /* a figure on its own in a section sits in the middle, as his page had the final ruler */
 .cs4-fig.half { width: 45%; align-self: center; } /* 22 Oct: a fifth smaller */
+.cs4-fig.wide { width: 82%; align-self: center; } /* a wide piece shown large, on its own (the fintech study's desktop payment, 25 Oct) */
 .cs4-fig.half .cs4-media::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; pointer-events: none; z-index: 2; box-shadow: inset 3px 3px 8px rgba(0, 0, 0, .28), inset 1px 1px 2px rgba(0, 0, 0, .18), inset -2px -2px 6px rgba(255, 255, 255, .55); } /* engraved: dark from the top-left, light from the bottom-right (22 Oct) */
 .cs4-phones { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--s2) var(--s5); padding: var(--s2) 0; }
 
