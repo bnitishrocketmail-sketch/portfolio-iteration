@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { animate } from 'motion/react';
 import { Lottie } from '../../components/micro/Lottie';
 import Signature04 from './Signature04';
@@ -120,6 +120,41 @@ function Peek({ label, show = 25, screen, at, of }: { label: string; show?: numb
       {phone(of[0], P[0])}
       <div className="cs4-peek-mid" style={{ gridTemplateRows: `${mid.toFixed(4)}fr auto ${(1 - mid).toFixed(4)}fr` }}><span className="cs4-peek-pill" style={{ transform: `translateY(${((2 * mid - 1) * 50).toFixed(2)}%)` }}>{arrow('M13 8H3M7 4 3 8l4 4')}<span>{label}</span>{arrow('M3 8h10M9 4l4 4-4 4')}</span></div>
       {phone(of[1], P[1])}
+    </div>
+  );
+}
+
+/* the loan journey's ticker (25 Oct, Nitish: "the way I showed this … a carousel moving from right to left slowly …
+   replicating this exactly … with our design system and font"): his page's ticker, measured off it. Each stage a phone —
+   the study's own (--ph-w), cut by the panel's top where his frames were (63.9% of it in view: from his frame's top at
+   36.1% of the screen down to its foot), the home behind blurred as his was (his blur(5px) on a 198 px home, baked into
+   the picture), the bottom bar over its foot, the nudge's Lottie where his page drew it — and under it its card: the
+   system's FAQ card (the label chip, the asker, body text), the phone's width and a twelfth (his 222 over 206). The row
+   twice, run left by half its length at his pace (a stage every 5.28 s: 49.6 px/s over his 262 px pitch), held off
+   screen; under reduced motion it stands still and scrolls. */
+const HU = (19.5 / 9) / (1520 / 720) / 198; /* our screen's widths per px of his (the home covers our 9 : 19.5 screen, 2.6% over its width) */
+const HCROP = ((19.5 / 9) / (1520 / 720) - 1) / 2, HH = 19.5 / 9; /* the home's overhang at each side; the screen's height in its widths */
+const HBAR = HH - (19.5 / 9) / (1520 / 720) * (531 / 1480); /* the bar's top, in screen widths (its picture 1480 × 531, at the foot) */
+const hisBox = ([x, y, w, h]: number[]): CSSProperties => ({ left: `${(((x - 4) * HU - HCROP) * 100).toFixed(2)}%`, top: `${((HBAR + (y - 196) * HU) / HH * 100).toFixed(2)}%`, width: `${(w * HU * 100).toFixed(2)}%`, height: `${(h * HU / HH * 100).toFixed(2)}%` });
+type Stage = { label: string; q: string; lottie: string; box: [number, number, number, number] };
+function Ticker({ label, screen, bar, of }: { label: string; screen: string; bar: string; of: Stage[] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const on = useInView(ref);
+  const item = (s: Stage, i: number, copy: boolean) => (
+    <li key={`${copy ? 'b' : 'a'}${i}`} className="cs4-jt-item" aria-hidden={copy || undefined}>
+      <div className="cs4-jt-win" role={copy ? undefined : 'img'} aria-label={copy ? undefined : `${s.label}: its nudge on the home screen`}>
+        <div className="cs4-jt-ph"><div className="cs4-jt-scr">
+          <img className="home" src={screen} alt="" width={360} height={760} decoding="async" />
+          <div className="cs4-jt-nudge" style={hisBox(s.box)}><Lottie className="cs4-lot" src={s.lottie} playing={on} /></div>
+          <img className="bar" src={bar} alt="" width={720} height={258} decoding="async" />
+        </div></div>
+      </div>
+      <div className="cs4-faq-card"><span className="cs4-faq-label">{s.label}</span><p className="cs4-faq-ask"><Asker /><span>{s.q}</span></p></div>
+    </li>
+  );
+  return (
+    <div ref={ref} className="cs4-jt" role="region" aria-label={label}>
+      <ul className="cs4-jt-track" style={{ '--n': of.length, animationPlayState: on ? 'running' : 'paused' } as CSSProperties}>{of.map((s, i) => item(s, i, false))}{of.map((s, i) => item(s, i, true))}</ul>
     </div>
   );
 }
@@ -343,6 +378,7 @@ function Render({ b }: { b: Block }) {
     );
     case 'converge': return <Converge of={b.of} to={b.to} />;
     case 'peek': return <Peek label={b.label} show={b.show} screen={b.screen} at={b.at} of={b.of} />;
+    case 'ticker': return <Ticker label={b.label} screen={b.screen} bar={b.bar} of={b.of} />;
     /* a version: its number and its name as chips, a line, its screens */
     case 'version': return (
       <div className="cs4-ver">

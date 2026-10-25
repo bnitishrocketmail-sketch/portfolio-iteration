@@ -1,17 +1,11 @@
-import type { Case, Media } from './types';
+import type { Case } from './types';
 
 /* Designing motion for a fintech product — MobiKwik (22 Oct): read off his Framer page ("Designing Motion for a Fintech
    Product"). The hero is his two phones in perspective, with the screens drawn into them properly this time — the home
    screen with the loan nudge in the left one, the card being prepared in the right — projected onto the screens'
    measured corners and clipped to them (Fintech3D.tsx), which his page could not do. The six loan-journey notifications
-   are his cut screens with their Lotties over the banner, under their labels (the FAQ panel's shape). */
+   run right to left in his ticker (25 Oct), each a phone with its nudge over the home and its card under it. */
 const A = '/cases/fintech';
-/* a cut home screen with a notification's Lottie over the banner row: the Lotties' canvases differ, so each box is
-   sized from its canvas and placed so its card sits on the banner (the row at 43.7% of the screenshot's height) */
-const cell = (name: string, w: number, h: number, label: string): Media => {
-  const hh = (h / w) / (14.5 / 9) * 100, top = 57.2 - hh / 2;
-  return { k: 'media', shape: 'screen', label, src: `${A}/home.webp`, layers: [{ kind: 'lottie', src: `${A}/${name}.lottie`, box: [0, +top.toFixed(1), 100, +hh.toFixed(1)] }] };
-};
 
 export const fintech: Case = {
   id: 'fintech-motion',
@@ -31,13 +25,14 @@ export const fintech: Case = {
     ] },
     { id: 'loan', title: 'Adaptive loan journey notifications', blocks: [
       { k: 'p', t: ['Designing contextual motion to guide users through every stage of their loan lifecycle — one nudge on the home screen, its card and its motion changing with where the loan is.'] },
-      { k: 'faq', of: [
-        { m: cell('first-user', 344, 150, 'The loan offer nudge'), qs: [{ label: 'First user', q: ['Encourage eligible users to explore loan offerings.'] }] },
-        { m: cell('loan-active', 344, 150, 'The active loan card'), qs: [{ label: 'Loan active', q: ['Keep users informed about their active loan and highlight the next EMI due date.'] }] },
-        { m: cell('loan-closed', 340, 160, 'The loan closed card'), qs: [{ label: 'Loan closed', q: ['Celebrate the successful completion of the loan repayment cycle.'] }] },
-        { m: cell('disbursed', 360, 240, 'The disbursed card'), qs: [{ label: 'Disbursed', q: ['Confirmation of the approved amount successfully credited to the user’s linked bank account.'] }] },
-        { m: cell('emi-overdue', 340, 230, 'The EMI overdue card'), qs: [{ label: 'EMI overdue', q: ['Alert users that an EMI payment is overdue and requires immediate action.'] }] },
-        { m: cell('disbursal-pending', 340, 200, 'The disbursal pending card'), qs: [{ label: 'Disbursal pending', q: ['The loan has been approved but the funds are still being processed.'] }] },
+      { k: 'ticker', label: 'The loan journey’s six notifications, running right to left', screen: `${A}/home-blur.webp`, bar: `${A}/home-nav.webp`, of: [
+        /* each Lottie's box as his page drew it (his px: the home 198 wide at x 4, the bar's top at y 196) */
+        { label: 'First user', q: 'Encourage eligible users to explore loan offerings.', lottie: `${A}/first-user.lottie`, box: [8, 116, 190, 106] },
+        { label: 'Loan active', q: 'Keep users informed about their active loan and highlight the next EMI due date.', lottie: `${A}/loan-active.lottie`, box: [8, 116, 190, 106] },
+        { label: 'Loan closed', q: 'Celebrate the successful completion of the loan repayment cycle.', lottie: `${A}/loan-closed.lottie`, box: [8, 116, 190, 106] },
+        { label: 'Disbursed', q: 'Confirmation of the approved amount successfully credited to the user’s linked bank account.', lottie: `${A}/disbursed.lottie`, box: [-5, 106, 217, 138] },
+        { label: 'EMI overdue', q: 'Alert users that an EMI payment is overdue and requires immediate action.', lottie: `${A}/emi-overdue.lottie`, box: [-1, 88, 208, 132] },
+        { label: 'Disbursal pending', q: 'The loan has been approved but the funds are still being processed.', lottie: `${A}/disbursal-pending.lottie`, box: [8, 116, 190, 106] },
       ] },
       { k: 'p', t: ['More work is being added.'] },
     ] },

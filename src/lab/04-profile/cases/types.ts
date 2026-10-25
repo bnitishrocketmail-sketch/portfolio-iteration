@@ -30,6 +30,10 @@ export type Block =
      card, each with its nudge Lottie near the bottom, running past the screen's sides, a pill between them (the B
      study's nudges, 24 Oct). `ratio`: the Lottie comp's width / height; `screen`: a 720 × 1600 picture behind */
   | { k: 'peek'; label: string; show?: number; screen?: string; at?: number /* the screen picture's fraction (0–1) at the top of the part in view; its foot by default */; of: { label: string; lottie: string; ratio: number; vis?: [number, number, number, number] /* the comp's drawn extent over its loop (x0, x1, y0, y1, fractions), for placing it by what shows */; k?: number /* its drawn width against the screen's less 16dp each side */ }[] }
+  /* his ticker (the fintech study's loan journey, 25 Oct): the stages running right to left, slowly, each a phone cut at the
+     panel's top with its nudge over the home screen, its card under it. `box`: where his page drew the Lottie, in his
+     page's px — a 206 px frame, the home 198 wide at x 4, its bottom bar's top at y 196 (Ticker places it from that) */
+  | { k: 'ticker'; label: string; screen: string; bar: string; of: { label: string; q: string; lottie: string; box: [number, number, number, number] }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */
   | { k: 'converge'; of: Media[]; to: Media }
   /* a version of the feature: its number and name as chips, a line about it, its screens */
