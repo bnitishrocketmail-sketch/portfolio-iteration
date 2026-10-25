@@ -221,6 +221,10 @@
    seamlessly, in white (25 Oct, Nitish: "the same container as the framework … the framework's ground greyish, the
    rig's white"; it had run edge to edge, p213) */
 .bm-panel.rig { background: #fff; }
+/* the two panels in one place (25 Oct): it takes the taller, the one not chosen hidden but holding its room, so the
+   container keeps its size; the rig's frame grows to fill its panel */
+.bm-panels { display: grid; grid-template-columns: minmax(0, 1fr); } .bm-panels > .bm-panel { grid-area: 1 / 1; min-width: 0; } /* the card's width, not the drawing's 760px minimum (which scrolls inside on the phone) */ .bm-panels > .bm-panel.off { visibility: hidden; }
+.bm-panel.rig .brig { flex: 1; } .bm-panel.rig .brig-frame { flex: 1; }
 .brig-probe { position: absolute; visibility: hidden; pointer-events: none; width: var(--ph-w); height: 1px; border-radius: calc(clamp(14px, 1.6cqw, 22px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); } /* the study's phone, measured for the rig (BMachine.tsx) */ .brig-probe.in { border-radius: calc(calc(var(--r) - .8cqw) * var(--ios-k, 1)); } /* the page's inner radius (the media's), for the rig's editor and status */
 /* the map: his drawing's parts in the card's ink — boxes, lines with a dot at their label, open chevrons */
 /* the framework (25 Oct): his drawing as he drew it — the lines in his image's px (an SVG), the states and labels laid

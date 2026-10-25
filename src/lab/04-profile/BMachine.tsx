@@ -82,9 +82,9 @@ const ROW: { s: State; name: string; scale?: string; to?: { t: string; cut?: boo
   { s: 'listening', name: 'Listening state', to: { t: '250 ms', tags: ['opacity 0 → 1', 'opacity 1 → 0'] } },
   { s: 'thinking', name: 'Thinking state' },
 ];
-function StatesRow() {
+function StatesRow({ active = true }: { active?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const on = useInView(ref);
+  const on = useInView(ref) && active; /* hidden behind the rig, its Lotties rest */
   return (
     <div className="bsr-wrap">
       <div className="bsr2" ref={ref}>
@@ -192,13 +192,13 @@ function Rig() {
     const ro = new ResizeObserver(send); ro.observe(fr);
     const onLoad = () => { setReady(true); send(); };
     fr.addEventListener('load', onLoad);
-    const onMsg = (e: MessageEvent) => { if (e.source === fr.contentWindow && e.data && typeof e.data.rigHeight === 'number') setH(Math.max(400, Math.min(2200, e.data.rigHeight))); };
+    const onMsg = (e: MessageEvent) => { if (e.source === fr.contentWindow && e.data && typeof e.data.rigHeight === 'number') setH(Math.max(300, Math.min(2200, e.data.rigHeight))); };
     addEventListener('message', onMsg);
     return () => { ro.disconnect(); probe.remove(); probeIn.remove(); fr.removeEventListener('load', onLoad); removeEventListener('message', onMsg); };
   }, []);
   return (
     <div className={`brig${ready ? ' ready' : ''}`}>
-      <iframe ref={frame} className="brig-frame" src={`${A}/rig/index.html?embed&theme=light`} title="B's state rig: the phone and the controls that drive it through its states" style={{ height: h }} loading="lazy" />
+      <iframe ref={frame} className="brig-frame" src={`${A}/rig/index.html?embed&theme=light`} title="B's state rig: the phone and the controls that drive it through its states" style={{ minHeight: h }} loading="lazy" /> {/* its own height as its least; it grows to fill the panel (the framework's height) */}
       <p className="brig-hint">Keys drive it too: 1–5 and 0 for the states, Q/W/E/R for the results sheet, P plays the scripted conversation.</p>
     </div>
   );
@@ -207,20 +207,22 @@ function Rig() {
 export default function BMachine() {
   const [tab, setTab] = useState<'framework' | 'rig'>('rig'); /* the rig first and shown by default (25 Oct, Nitish: "the rig should be on the left and selected by default; the framework if we select it on the right") */
   const host = useRef<HTMLDivElement>(null);
+  /* both panels kept, laid in one place, the one not chosen hidden (25 Oct, Nitish: "the container size readjusts when I
+     select the rig or the framework — it shouldn't … adapt the rig to the framework's size"): the place takes the taller
+     of the two — the framework's on the desktop — and the rig fills it; neither changes the container's size */
   return (
     <div className="bm" ref={host}>
       <div className="bm-tabs" role="tablist" aria-label="State machine">
         <button type="button" role="tab" aria-selected={tab === 'rig'} className={tab === 'rig' ? 'on' : ''} onClick={() => setTab('rig')}>The rig</button>
         <button type="button" role="tab" aria-selected={tab === 'framework'} className={tab === 'framework' ? 'on' : ''} onClick={() => setTab('framework')}>The framework</button>
       </div>
-      {tab === 'framework' ? (
-        <div className="bm-panel" role="tabpanel">
+      <div className="bm-panels">
+        <div className={`bm-panel rig${tab === 'rig' ? '' : ' off'}`} role="tabpanel" aria-hidden={tab !== 'rig'} inert={tab !== 'rig'}><Rig /></div>
+        <div className={`bm-panel${tab === 'framework' ? '' : ' off'}`} role="tabpanel" aria-hidden={tab !== 'framework'} inert={tab !== 'framework'}>
           <StateMap />
-          <StatesRow />
+          <StatesRow active={tab === 'framework'} />
         </div>
-      ) : (
-        <div className="bm-panel rig" role="tabpanel"><Rig /></div>
-      )}
+      </div>
     </div>
   );
 }

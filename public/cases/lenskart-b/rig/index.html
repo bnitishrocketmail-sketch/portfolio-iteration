@@ -167,7 +167,8 @@
      for the buttons and keys, the page's inner radius on the editor and the status), the rig's colours kept; the
      script and the status keep their monospace ("we will not touch the font of these"). Nothing scrolls inside. */
   .embed body { background: transparent; padding: 0; font-family: 'Outfit', system-ui, sans-serif; }
-  .embed .stage { display: grid; grid-template-columns: minmax(0, 1fr) var(--phw, 156px) minmax(0, 1fr); grid-template-areas: "c1 c2 c3"; gap: 32px 40px; align-items: stretch; justify-content: stretch; }
+  .embed .stage { display: grid; grid-template-columns: minmax(0, 1fr) var(--phw, 156px) minmax(0, 1fr); grid-template-areas: "c1 c2 c3"; gap: 32px 40px; align-items: stretch; justify-content: stretch; min-height: 100vh; } /* fills the frame, which the page sizes to its panel (the framework's height) */
+  .embed .c1 > .group:last-child { margin-top: auto; } /* what's playing at the foot, level with the script's */
   .embed .col { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
   .embed .c1 { grid-area: c1; } .embed .c2 { grid-area: c2; justify-content: center; } .embed .c3 { grid-area: c3; }
   .embed .panel, .embed .g-scale, .embed .g-opts { display: none; }
@@ -397,7 +398,7 @@ if (q.has('embed')) { document.documentElement.classList.add('embed');
     if (scale) scale.classList.add('g-scale'); if (opts) opts.classList.add('g-opts'); /* not in the page's layout; left in the panel, hidden, their defaults still in force */
     const col = (cls, ...els) => { const d = document.createElement('div'); d.className = 'col ' + cls; els.forEach(e => e && d.appendChild(e)); st.appendChild(d); return d; };
     col('c1', state, sheet, now); col('c2', pw); col('c3', scenario);
-    const tell = () => parent.postMessage({ rigHeight: Math.ceil(st.getBoundingClientRect().height) + 4 }, location.origin); new ResizeObserver(tell).observe(st); addEventListener('resize', tell); tell(); }); if (q.get('theme') === 'dark' || q.get('theme') === 'light') document.documentElement.dataset.theme = q.get('theme'); if (q.get('theme') === 'light') document.documentElement.dataset.theme = 'light'; }
+    const tell = () => { st.style.minHeight = '0px'; const n = st.getBoundingClientRect().height; st.style.minHeight = ''; parent.postMessage({ rigHeight: Math.ceil(n) + 4 }, location.origin); }; /* its own height, not the frame's it fills */ new ResizeObserver(tell).observe(st); addEventListener('resize', tell); tell(); }); if (q.get('theme') === 'dark' || q.get('theme') === 'light') document.documentElement.dataset.theme = q.get('theme'); if (q.get('theme') === 'light') document.documentElement.dataset.theme = 'light'; }
 addEventListener('message', e => { const f = e.data && e.data.phone; if (f && typeof f.w === 'number' && f.w > 60 && f.w < 600) { const k = 1.25, w = f.w * k, r = document.documentElement.style; r.setProperty('--phw', w + 'px'); r.setProperty('--pz', (w / 360).toFixed(4)); if (typeof f.r === 'number') r.setProperty('--pr', f.r * k + 'px'); /* a quarter over the study's phone (25 Oct, Nitish: "scale the phone 1.5x so it's more visible" — his 1.5x is about a quarter), its radius with it */ if (typeof f.ri === 'number') r.setProperty('--pri', f.ri + 'px'); if (typeof f.shape === 'string' && /^(round|superellipse\([\d.]+\))$/.test(f.shape)) r.setProperty('--pshape', f.shape); if (typeof f.ink === 'string' && /^#[0-9a-f]{6}$/i.test(f.ink)) r.setProperty('--pink', f.ink); } });
 addEventListener('message', e => { const t = e.data && e.data.tokens; if (!t || typeof t !== 'object') return; for (const k of Object.keys(t)) if (/^[a-z0-9-]+$/i.test(k) && typeof t[k] === 'string' && t[k].length < 80) document.documentElement.style.setProperty('--' + k, t[k]); });
 </script>
