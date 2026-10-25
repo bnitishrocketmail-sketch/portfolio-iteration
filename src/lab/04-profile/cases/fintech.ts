@@ -48,24 +48,31 @@ export const fintech: Case = {
         ] },
     ] },
     /* the loaders and success states (25 Oct, Nitish: "loaders that I've made throughout the app journeys … also success
-       states … built for flows when I worked with MobiKwik"): his loaders — bank fetch, on the ground taken from his other
-       export of it, and verifying documents — then his success states: two from his old page's Motion creatives (the
-       UPI pinless clip, the rocket) and the desktop payment, the coin from the 3D coin thread played straight from loading
-       into success: 2.85 s of the loop, the wind-up, the launch and the mark, its last frame held a second before it loops.
-       Phones the study's size; each Lottie set to cover its screen (the phone is taller than their 360 × 760 / 700 comps) */
+       states … built for flows when I worked with MobiKwik"; then: "the verifying documents loader … inside a phone screen
+       … similar to the card loader in the hero … put that one here too … the bank fetch loader will also have content
+       written below it … write a little bit about every success state … a different structure"): the loaders in phones as
+       the app shows them — the card being prepared (the hero's right-hand screen), verifying documents laid out the same,
+       bank fetch on the ground taken from his other export of it with its line on the dark below the tiles; then the
+       success states in panels with what each is — the Zaakpay payment on desktop (the coin from the 3D coin thread played
+       straight from loading into success, its jerks smoothed out), the UPI pinless clip and the rocket from his old page's
+       Motion creatives. Each Lottie set to cover its screen where the comp is shorter than the phone (360 × 760 / 700); the documents scanner a little wider than the card (its bed runs to the comp's edges, so they sit off the screen). */
     { id: 'states', title: 'Loaders and success states', blocks: [
-      { k: 'p', t: ['Loaders for the waits in the app’s journeys — finding banks, verifying documents, processing a payment — and the success states that close them.'] },
+      { k: 'p', t: ['Loaders for the waits in the app’s journeys — finding banks, verifying documents, preparing a card, confirming a payment — and the success states that close them.'] },
       { k: 'h', t: 'Loaders' },
-      { k: 'row', ratio: 'var(--ph-w) calc(var(--ph-h) * 4 / 3)', align: 'center', of: [
-        { k: 'figure', of: { k: 'media', shape: 'phone', label: 'Bank fetch: bank tiles running past while the app finds the user’s banks', cap: 'Bank fetch', src: `${A}/bank-fetch-bg.webp`, layers: [{ kind: 'lottie', src: `${A}/bank-fetch.lottie`, box: [-1.316, 0, 102.632, 100] }] } },
-        { k: 'figure', of: { k: 'media', shape: 'image', label: 'Verifying documents: a scanner passing over the user’s documents', cap: 'Verifying documents', lottie: `${A}/verify-docs.lottie`, bg: '#fff' } },
+      { k: 'loaders', of: [
+        { label: 'Card being prepared: a machine printing the card', cap: 'Card being prepared', lottie: `${A}/card.lottie`, box: [5, 26, 90, 31.15], title: 'Your card is being prepared and could take up to 10 minutes.', sub: 'We will notify you once it’s ready', at: 55, dots: true },
+        { label: 'Verifying documents: a scanner passing over the documents', cap: 'Verifying documents', lottie: `${A}/verify-docs.lottie`, box: [-3, 23.2, 106, 36.69], title: 'Verifying your documents. This could take up to 10 minutes.', sub: 'We will notify you once it’s ready', at: 55, dots: true },
+        { label: 'Bank fetch: bank tiles running past while the app finds the user’s banks', cap: 'Bank fetch', ground: `${A}/bank-fetch-bg.webp`, lottie: `${A}/bank-fetch.lottie`, box: [-1.316, 0, 102.632, 100], title: 'Fetching your bank details', at: 74, tone: 'dark' },
       ] },
       { k: 'h', t: 'Success states' },
-      { k: 'row', ratio: 'var(--ph-w) var(--ph-w)', align: 'center', of: [
-        { k: 'figure', of: { k: 'media', shape: 'phone', label: 'UPI pinless: the fingerprint turning into a shield and tick, then the account to activate', cap: 'UPI pinless, enabled', src: `${A}/upi-pinless.mp4`, poster: `${A}/upi-pinless-poster.webp` } },
-        { k: 'figure', of: { k: 'media', shape: 'phone', label: 'A rocket lifting off into the congratulations', cap: 'Benefits unlocked', bg: '#03301a', layers: [{ kind: 'lottie', src: `${A}/rocket-success.lottie`, box: [-5.714, 0, 111.429, 100] }] } },
+      { k: 'successes', of: [
+        { wide: true, chip: 'Zaakpay', h: 'Payment confirmed, on desktop', m: { k: 'media', shape: 'video', label: 'Zaakpay payment on desktop: the rupee coin flying while the payment is confirmed, then launching into the success mark', lottie: `${A}/coin-payment.lottie`, bg: '#fcfcfe' },
+          p: ['While the payment is confirmed, a rupee coin flies over the road. When it goes through, the coin winds up, launches into the distance and becomes the tick — the wait and the win as one motion. Built as a Lottie state machine, so the loading loop hands over to the success whenever the payment goes through.'] },
+        { chip: 'UPI pinless', h: 'Face ID payments switched on', m: { k: 'media', shape: 'phone', label: 'UPI pinless: the fingerprint turning into a shield and tick, then the account to activate', src: `${A}/upi-pinless.mp4`, poster: `${A}/upi-pinless-poster.webp` },
+          p: ['Enabling pinless UPI payments: the fingerprint resolves into a shield and a tick, then the sheet rises to pick the account to activate Face ID on.'] },
+        { chip: 'Lens Pro', h: 'Benefits unlocked', m: { k: 'media', shape: 'phone', label: 'A rocket lifting off into the congratulations', bg: '#03301a', layers: [{ kind: 'lottie', src: `${A}/rocket-success.lottie`, box: [-5.714, 0, 111.429, 100] }] },
+          p: ['A rocket lifts off and bursts into the congratulations: the member can now use the exclusive benefits of Lens Pro.'] },
       ] },
-      { k: 'figure', width: 'wide', of: { k: 'media', shape: 'video', label: 'Desktop payment: the coin flying while the payment processes, then launching into the success mark', cap: 'Payment, loading to success — desktop', lottie: `${A}/coin-payment.lottie`, bg: '#fcfcfe' } },
       { k: 'p', t: ['More work is being added.'] },
     ] },
   ],

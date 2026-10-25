@@ -195,6 +195,43 @@ function Journey({ text: told, screen, bar, of, entry }: { text: Told[]; screen:
   );
 }
 
+/* the loaders as they sit in the app (25 Oct, Nitish: "supposed to be inside a phone screen … similar to the card loader in
+   the hero … the text … could take up to 10 minutes. We will notify you once it's ready … the bank fetch loader will also
+   have content written below it"): the study's phone, the app's screen in it — the hero's right-hand screen laid out the
+   same way (the Lottie over the top half, the line at 55%, the dots under it) — its text set in the screen's own width */
+type LoaderItem = { label: string; cap: string; ground?: string; lottie: string; box: [number, number, number, number]; title: string; sub?: string; at: number; dots?: boolean; tone?: 'dark' };
+function LoaderPhone({ l }: { l: LoaderItem }) {
+  const ref = useRef<HTMLElement>(null);
+  const on = useInView(ref);
+  const [x, y, w, h] = l.box;
+  return (
+    <figure ref={ref} className="cs4-fig phone">
+      <div className={`cs4-media phone filled cs4-ld${l.tone === 'dark' ? ' dark' : ''}`} style={{ aspectRatio: '9 / 19.5' }} role="img" aria-label={`${l.label} — “${l.title}${l.sub ? ' ' + l.sub : ''}”`}>
+        {l.ground && <img src={l.ground} alt="" loading="lazy" decoding="async" />}
+        <div className="cs4-layer" style={{ left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%` }}><Lottie className="cs4-lot" src={l.lottie} playing={on} /></div>
+        <div className="cs4-ld-copy" style={{ top: `${l.at}%` }}><b>{l.title}</b>{l.sub && <span>{l.sub}</span>}</div>
+        {l.dots && <div className="cs4-layer cs4-ld-dots"><Lottie className="cs4-lot" src="/cases/fintech/dots.lottie" playing={on} /></div>}
+      </div>
+      <figcaption>{l.cap}</figcaption>
+    </figure>
+  );
+}
+/* success states, each in its panel with what it is (25 Oct, Nitish: "write a little bit about every success state … a
+   different structure that looks a little better"): the screen at the left, its chip, heading and a line or two at the
+   right; the desktop one takes the row */
+function Successes({ of }: { of: { m: Media; chip: string; h: string; p: Rich; wide?: boolean }[] }) {
+  return (
+    <div className="cs4-sx">
+      {of.map((x, i) => (
+        <div key={i} className={`cs4-sx-item${x.wide ? ' wide' : ''}`}>
+          <Fig m={x.m} />
+          <div className="cs4-sx-text"><span className="cs4-faq-label">{x.chip}</span><h4 className="cs4-sub">{x.h}</h4><p className="cs4-p">{text(x.p)}</p></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* screens in a row, their wires meeting at one screen under them (his nudges converging on the help menu): a node on
    each screen's bottom edge, the three curves dropping to one chevron over the screen below */
 function Converge({ of, to }: { of: Media[]; to: Media }) {
@@ -414,6 +451,8 @@ function Render({ b }: { b: Block }) {
     );
     case 'converge': return <Converge of={b.of} to={b.to} />;
     case 'peek': return <Peek label={b.label} show={b.show} screen={b.screen} at={b.at} of={b.of} />;
+    case 'loaders': return <div className="cs4-row cs4-ld-row">{b.of.map((l, i) => <LoaderPhone key={i} l={l} />)}</div>;
+    case 'successes': return <Successes of={b.of} />;
     case 'journey': return <Journey text={b.text} screen={b.screen} bar={b.bar} of={b.of} entry={b.entry} />;
     /* a version: its number and its name as chips, a line, its screens */
     case 'version': return (

@@ -231,6 +231,21 @@
 
 /* ---- the fintech study's hero (Fintech3D.tsx): his two phones in perspective, the screens projected onto them ---- */
 .cs4-hero.fill { padding: 0; }
+/* the loaders' phones (LoaderPhone): the app's white screen, the copy in the screen's width (the hero's 26px and 19px on
+   its 600px screen: 4.33 and 3.17 of 100), the dots under it at the hero's place */
+.cs4-ld-row { grid-template-columns: repeat(3, var(--ph-w)); column-gap: var(--s5); }
+.cs4-media.cs4-ld { background: #fff; container-type: inline-size; } /* the app's white (over the filled slot's grey) */
+.cs4-ld-copy { position: absolute; left: 8%; right: 8%; z-index: 1; text-align: center; color: #1c1c3a; font-family: var(--f-copy); }
+.cs4-ld-copy b { display: block; font-size: 4.33cqw; line-height: 1.3; font-weight: 700; } .cs4-ld-copy span { display: block; margin-top: 2cqw; font-size: 3.17cqw; line-height: 1.3; opacity: .6; }
+.cs4-ld.dark .cs4-ld-copy { color: #fff; } .cs4-ld.dark .cs4-ld-copy span { opacity: .7; }
+.cs4-ld-dots { left: 42%; top: 66%; width: 16%; height: 7.385%; }
+/* the success states' panels (Successes): the FAQ panel's ground and radius, the screen and its words side by side, the
+   two phones' panels in a row and the desktop one across it */
+.cs4-sx { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+.cs4-sx-item { display: grid; grid-template-columns: var(--ph-w) minmax(0, 1fr); gap: var(--s3); align-items: center; padding: var(--s3); border-radius: calc(calc(var(--r) - .6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
+.cs4-sx-item.wide { grid-column: 1 / -1; grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr); }
+.cs4-sx-item > .cs4-fig { width: 100%; }
+.cs4-sx-text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s1); min-width: 0; } .cs4-sx-text .cs4-sub { margin-top: var(--s1); }
 .ft3d { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; border-radius: inherit; corner-shape: inherit; color: #fff; } /* the ground is the study's own (Phones3D: the brand's blue running to violet; the campaigns' green to navy) */
 .ft3d-logo { position: absolute; left: 4%; top: 7%; z-index: 4; font: 700 clamp(14px, 1.7cqw, 22px)/1 var(--f-head); letter-spacing: -.01em; }
 .ft3d-stage { position: absolute; left: 50%; top: -7.5%; transform-origin: 50% 0; }
@@ -334,6 +349,7 @@
   .cs4-cols { grid-template-columns: 1fr; }
   .cs4-hero.block { padding: 20px 12px; overflow: hidden; } /* the sides run past the card's edge on a phone, cut by it */
   .cs4-faq, .cs4-faq.n6 { grid-template-columns: 1fr; gap: var(--s4); padding: 0; background: none; border-radius: 0; } .cs4-faq-ui > img { width: 52%; margin: 0 auto; } /* one step under another (two columns were too narrow for the system's body size and chips); the screen centred in its card at a phone's width; the steps --s4 apart, a section's parts */
+  .cs4-row.cs4-ld-row { grid-template-columns: repeat(2, var(--ph-w)) !important; column-gap: var(--s4); row-gap: var(--s3); } .cs4-ld-row > :last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; } .cs4-sx { grid-template-columns: minmax(0, 1fr); } .cs4-sx-item, .cs4-sx-item.wide { grid-template-columns: minmax(0, 1fr); justify-items: center; } .cs4-sx-item > .cs4-fig.phone { width: var(--ph-w); } .cs4-sx-text { justify-self: stretch; } /* the loaders two to a row; each success panel the screen over its words */
   .cs4-jn { grid-template-columns: minmax(0, 1fr); } .cs4-jn-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "entry" "foot" "cards"; justify-items: center; } .cs4-jn-entry, .cs4-jn-cards { justify-self: stretch; } /* one column: the text, then the top and its card, the foot and its cards; the cards the column's width (the phone's body size runs short lines in a phone-wide card) */
   .cs4-conv-row { gap: 12px; } .cs4-conv-row .cs4-fig.phone { width: 28%; } .cs4-conv .cs4-over .cs4-layer { display: none; } /* no room for the pills past the phones */
   .cs4-ver { padding: 0; background: none; border-radius: 0; } .cs4-ver + .cs4-ver { padding-top: var(--s3); border-top: 1px solid color-mix(in srgb, var(--pcard-open-ink) 12%, transparent); }

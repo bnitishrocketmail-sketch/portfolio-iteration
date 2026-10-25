@@ -36,6 +36,13 @@ export type Block =
      paragraphs, lists) at the left of both. A stage: `ratio` its comp's width / height, `vis` its drawn card in the comp (x0, x1, y0, y1, fractions),
      `dur` the seconds it stays up */
   | { k: 'journey'; text: { h?: string; p?: Rich; ul?: Rich[] }[]; screen: string; bar: string; of: { label: string; q: string; lottie: string; ratio: number; vis: [number, number, number, number]; dur: number }[]; entry: { label: string; q: string; lottie: string; tile: [number, number, number] } }
+  /* the loaders as they sit in the app (25 Oct): a phone each — its ground (a picture, or the app's white), the Lottie in its
+     box (percent of the screen), the line under it (`title`, `sub`, at `at`% down; `tone` dark for light text on a dark
+     ground) and the dots loader under the line when `dots` */
+  | { k: 'loaders'; of: { label: string; cap: string; ground?: string; lottie: string; box: [number, number, number, number]; title: string; sub?: string; at: number; dots?: boolean; tone?: 'dark' }[] }
+  /* success states, each in its panel: the screen and what it is — a chip (its product), a heading, a line or two; `wide`
+     for a desktop screen, which takes the row */
+  | { k: 'successes'; of: { m: Media; chip: string; h: string; p: Rich; wide?: boolean }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */
   | { k: 'converge'; of: Media[]; to: Media }
   /* a version of the feature: its number and name as chips, a line about it, its screens */
