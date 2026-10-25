@@ -208,6 +208,7 @@
 .ft3d-scr { position: absolute; left: 0; top: 0; z-index: 2; transform-origin: 0 0; overflow: hidden; background: #fff; backface-visibility: hidden; } /* a flat box, carried onto the glass by its matrix3d */
 .ft3d-scr > img, .ft3d-scr > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
 .ft3d-lot { position: absolute; } .ft3d-lot > div, .ft3d-lot svg { display: block; width: 100%; height: 100%; }
+.ft3d-scr > img.ft3d-nav { top: auto; bottom: 0; left: -1.475%; width: 102.95%; height: auto; } /* the home's bottom bar, over its foot and over the Lottie, cut at the sides as the home is (cover: 617.7 of 600) */
 .ft3d-copy { position: absolute; left: 8%; right: 8%; top: 55%; text-align: center; color: #1c1c3a; font-family: var(--f-copy); }
 .ft3d-copy b { display: block; font-size: 26px; line-height: 1.3; font-weight: 700; } .ft3d-copy span { display: block; margin-top: 12px; font-size: 19px; opacity: .6; }
 .pc-comp .ft3d { position: absolute; inset: 0; aspect-ratio: auto; } .ft3d.mini .ft3d-logo { display: none; } .ft3d.mini .ft3d-stage { left: 78%; top: -12%; } /* in the stack's card the name is the title, and the phones stand at the right, clear of it */

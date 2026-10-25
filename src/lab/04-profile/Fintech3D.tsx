@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Lottie } from '../../components/micro/Lottie';
+import { LottieCanvas } from '../../components/micro/LottieCanvas';
 import { useInView } from './inview';
 import Q from './cases/fintech-quads.json';
 
@@ -77,13 +78,23 @@ function ScreenClip({ src, on }: { src: string; on: boolean }) {
   return <video ref={ref} src={`${src}.mp4`} poster={`${src}-poster.webp`} muted loop playsInline preload="metadata" aria-hidden="true" />;
 }
 
-/* MobiKwik: the home screen with the loan nudge in the left phone, the card being prepared in the right */
+/* MobiKwik: the home screen with the loan nudge in the left phone, the card being prepared in the right.
+   The left phone as his page had it (25 Oct): the home with its bottom bar laid over the foot (his page's own overlay), and
+   his loan card's Lottie — "Get loan up to ₹15 lakh", then higher amount, lower rate, 100% paperless — in his box: centred,
+   88.5% of the screen's width at its own 340 : 300, from 48.8% down, its foot meeting the bar's top edge, under the bar
+   (the scan button's bump overlaps it, as there). Measured from his page's layout (a 228 × 201 box in a 265 × 560 screen at
+   18.5, 273.4), carried into this box (the home is cut 1.5% at each side by the cover fit; the bar is cut the same way).
+   The file is his, made in LottieFiles Creator, which lottie-web draws blank, so it plays in LottieFiles' own player
+   (LottieCanvas); the copy here drops the layers hidden in it and the assets only they used (503 → 82 KB, every frame the
+   same). Held on the finished card (frame 1000) when not playing; until it first plays, that frame is a picture
+   (paperless-poster.webp), so the home stack's small card does not load the player until it is hovered. */
 export default function Fintech3D({ on, mini, fit, at }: { on?: boolean; mini?: boolean; fit?: number; at?: number }) {
   return (
     <Phones3D on={on} mini={mini} fit={fit} at={at} cls="fin" bg={FIN_BG} logo="MobiKwik" label="MobiKwik: the home screen with the loan nudge, and a card being prepared, on two phones"
       left={on => <>
         <img src={`${A}/home.webp`} alt="" draggable={false} />
-        <div className="ft3d-lot" style={{ left: '2%', top: '33.4%', width: '96%', height: `${(96 * (150 / 344) * SW / SH).toFixed(1)}%` }}><Lottie src={`${A}/first-user.lottie`} playing={on} /></div>
+        <div className="ft3d-lot" style={{ left: '5.75%', top: '48.8%', width: '88.5%', height: `${(88.5 * (300 / 340) * SW / SH).toFixed(2)}%` }}><LottieCanvas src={`${A}/paperless.lottie`} poster={`${A}/paperless-poster.webp`} playing={on} still={1000} /></div>
+        <img className="ft3d-nav" src={`${A}/home-nav.webp`} alt="" draggable={false} />
       </>}
       right={on => <>
         <div className="ft3d-lot" style={{ left: '5%', top: '26%', width: '90%', height: `${(90 * (1200 / 1600) * SW / SH).toFixed(1)}%` }}><Lottie src={`${A}/card.lottie`} playing={on} /></div>
