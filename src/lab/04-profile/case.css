@@ -217,10 +217,10 @@
 .bm-tabs button { border: 0; padding: .55em 1.1em; border-radius: 999px; background: none; color: inherit; font: 500 var(--t-title)/1.2 var(--f-copy); cursor: pointer; opacity: .7; transition: opacity .2s, background-color .2s, color .2s; } /* title */
 .bm-tabs button:hover { opacity: 1; } .bm-tabs button.on { background: var(--pcard-fold); color: var(--pcard-fold-ink); opacity: 1; }
 .bm-panel { display: flex; flex-direction: column; gap: var(--s3); padding: var(--s3); border-radius: calc(calc(var(--r) - .6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
-/* the rig's panel (25 Oct, Nitish: "the rig edge to edge, filled; a completely white background, throughout the
-   container"): under the tabs it runs to the card's sides and foot — white, no inset, no radius of its own but the
-   card's at its foot */
-.bm-panel.rig { padding: var(--s4) var(--s3); margin: 0 calc(-1 * var(--s3)) calc(-1 * var(--s4)); border-radius: 0 0 calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #fff; }
+/* the rig's panel: the framework's container — its inset, its padding, its radius and curve — so the tabs swap
+   seamlessly, in white (25 Oct, Nitish: "the same container as the framework … the framework's ground greyish, the
+   rig's white"; it had run edge to edge, p213) */
+.bm-panel.rig { background: #fff; }
 .brig-probe { position: absolute; visibility: hidden; pointer-events: none; width: var(--ph-w); height: 1px; border-radius: calc(clamp(14px, 1.6cqw, 22px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); } /* the study's phone, measured for the rig (BMachine.tsx) */ .brig-probe.in { border-radius: calc(calc(var(--r) - .8cqw) * var(--ios-k, 1)); } /* the page's inner radius (the media's), for the rig's editor and status */
 /* the map: his drawing's parts in the card's ink — boxes, lines with a dot at their label, open chevrons */
 /* the framework (25 Oct): his drawing as he drew it — the lines in his image's px (an SVG), the states and labels laid
