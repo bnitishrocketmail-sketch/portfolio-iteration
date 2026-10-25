@@ -128,15 +128,22 @@ function Peek({ label, show = 25, screen, at, of }: { label: string; show?: numb
    replicating this exactly … with our design system and font"): his page's ticker, measured off it. Each stage a phone —
    the study's own (--ph-w), cut by the panel's top where his frames were (63.9% of it in view: from his frame's top at
    36.1% of the screen down to its foot), the home behind blurred as his was (his blur(5px) on a 198 px home, baked into
-   the picture), the bottom bar over its foot, the nudge's Lottie where his page drew it — and under it its card: the
+   the picture), the bottom bar over its foot, the nudge's Lottie placed with the product's padding (jtBox) — and under it its card: the
    system's FAQ card (the label chip, the asker, body text), the phone's width and a twelfth (his 222 over 206). The row
    twice, run left by half its length at his pace (a stage every 5.28 s: 49.6 px/s over his 262 px pitch), held off
    screen; under reduced motion it stands still and scrolls. */
-const HU = (19.5 / 9) / (1520 / 720) / 198; /* our screen's widths per px of his (the home covers our 9 : 19.5 screen, 2.6% over its width) */
-const HCROP = ((19.5 / 9) / (1520 / 720) - 1) / 2, HH = 19.5 / 9; /* the home's overhang at each side; the screen's height in its widths */
-const HBAR = HH - (19.5 / 9) / (1520 / 720) * (531 / 1480); /* the bar's top, in screen widths (its picture 1480 × 531, at the foot) */
-const hisBox = ([x, y, w, h]: number[]): CSSProperties => ({ left: `${(((x - 4) * HU - HCROP) * 100).toFixed(2)}%`, top: `${((HBAR + (y - 196) * HU) / HH * 100).toFixed(2)}%`, width: `${(w * HU * 100).toFixed(2)}%`, height: `${(h * HU / HH * 100).toFixed(2)}%` });
-type Stage = { label: string; q: string; lottie: string; box: [number, number, number, number] };
+/* a nudge placed as the product would place it (25 Oct, Nitish: "if they were placed in the UI, they should have had
+   padding"): its card — the comp's drawn card, measured over its loop (`vis`) — 16dp in from each side of the 360dp
+   screen, its foot 16dp over the bottom bar's highest point (the scan button's top: the bar's picture, 1480 × 531 across
+   369.5dp — the home's width, 2.6% over the screen's — at the screen's foot, so its top is 132.6dp up). The screen is
+   inside the device's edge (case.css), so the 16dp shows as 16dp; the box is set in the screen's own width (cqw) and
+   from its foot, as the bar is, so it holds at any height of the screen. */
+const JT_W = 360, JT_SIDE = 16, JT_UP = JT_W * (19.5 / 9) / (1520 / 720) * (531 / 1480) + 16; /* the card's foot, up from the screen's */
+const jtBox = (ratio: number, [x0, x1, , y1]: number[]): CSSProperties => {
+  const w = (JT_W - 2 * JT_SIDE) / (x1 - x0), h = w / ratio, q = (v: number) => `${(v / JT_W * 100).toFixed(2)}cqw`;
+  return { left: q(JT_SIDE - x0 * w), width: q(w), height: q(h), bottom: q(JT_UP - (1 - y1) * h) };
+};
+type Stage = { label: string; q: string; lottie: string; ratio: number; vis: [number, number, number, number] };
 function Ticker({ label, screen, bar, of }: { label: string; screen: string; bar: string; of: Stage[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref);
@@ -145,7 +152,7 @@ function Ticker({ label, screen, bar, of }: { label: string; screen: string; bar
       <div className="cs4-jt-win" role={copy ? undefined : 'img'} aria-label={copy ? undefined : `${s.label}: its nudge on the home screen`}>
         <div className="cs4-jt-ph"><div className="cs4-jt-scr">
           <img className="home" src={screen} alt="" width={360} height={760} decoding="async" />
-          <div className="cs4-jt-nudge" style={hisBox(s.box)}><Lottie className="cs4-lot" src={s.lottie} playing={on} /></div>
+          <div className="cs4-jt-nudge" style={jtBox(s.ratio, s.vis)}><Lottie className="cs4-lot" src={s.lottie} playing={on} /></div>
           <img className="bar" src={bar} alt="" width={720} height={258} decoding="async" />
         </div></div>
       </div>

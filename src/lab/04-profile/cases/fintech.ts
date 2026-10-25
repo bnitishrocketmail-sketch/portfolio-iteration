@@ -26,13 +26,13 @@ export const fintech: Case = {
     { id: 'loan', title: 'Adaptive loan journey notifications', blocks: [
       { k: 'p', t: ['Designing contextual motion to guide users through every stage of their loan lifecycle — one nudge on the home screen, its card and its motion changing with where the loan is.'] },
       { k: 'ticker', label: 'The loan journey’s six notifications, running right to left', screen: `${A}/home-blur.webp`, bar: `${A}/home-nav.webp`, of: [
-        /* each Lottie's box as his page drew it (his px: the home 198 wide at x 4, the bar's top at y 196) */
-        { label: 'First user', q: 'Encourage eligible users to explore loan offerings.', lottie: `${A}/first-user.lottie`, box: [8, 116, 190, 106] },
-        { label: 'Loan active', q: 'Keep users informed about their active loan and highlight the next EMI due date.', lottie: `${A}/loan-active.lottie`, box: [8, 116, 190, 106] },
-        { label: 'Loan closed', q: 'Celebrate the successful completion of the loan repayment cycle.', lottie: `${A}/loan-closed.lottie`, box: [8, 116, 190, 106] },
-        { label: 'Disbursed', q: 'Confirmation of the approved amount successfully credited to the user’s linked bank account.', lottie: `${A}/disbursed.lottie`, box: [-5, 106, 217, 138] },
-        { label: 'EMI overdue', q: 'Alert users that an EMI payment is overdue and requires immediate action.', lottie: `${A}/emi-overdue.lottie`, box: [-1, 88, 208, 132] },
-        { label: 'Disbursal pending', q: 'The loan has been approved but the funds are still being processed.', lottie: `${A}/disbursal-pending.lottie`, box: [8, 116, 190, 106] },
+        /* each comp's drawn card (vis), measured over its loop where it is solid (alpha over 95%), so the card is placed, not the comp */
+        { label: 'First user', q: 'Encourage eligible users to explore loan offerings.', lottie: `${A}/first-user.lottie`, ratio: 344 / 150, vis: [.003, .997, .2, .8] },
+        { label: 'Loan active', q: 'Keep users informed about their active loan and highlight the next EMI due date.', lottie: `${A}/loan-active.lottie`, ratio: 344 / 150, vis: [.003, .997, .2, .8] },
+        { label: 'Loan closed', q: 'Celebrate the successful completion of the loan repayment cycle.', lottie: `${A}/loan-closed.lottie`, ratio: 340 / 160, vis: [0, 1, .25, .75] },
+        { label: 'Disbursed', q: 'Confirmation of the approved amount successfully credited to the user’s linked bank account.', lottie: `${A}/disbursed.lottie`, ratio: 360 / 240, vis: [.04, .969, .321, .685] },
+        { label: 'EMI overdue', q: 'Alert users that an EMI payment is overdue and requires immediate action.', lottie: `${A}/emi-overdue.lottie`, ratio: 340 / 230, vis: [0, 1, 0, .835] },
+        { label: 'Disbursal pending', q: 'The loan has been approved but the funds are still being processed.', lottie: `${A}/disbursal-pending.lottie`, ratio: 340 / 200, vis: [0, 1, 0, .84] },
       ] },
       { k: 'p', t: ['More work is being added.'] },
     ] },
