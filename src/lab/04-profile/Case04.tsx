@@ -130,12 +130,12 @@ function Peek({ label, show = 25, screen, at, of }: { label: string; show?: numb
    right … just showing the bottom 30% of the phone … the same from the top side for the entry point … not blurred …
    its container on the left"). Two views of the study's phone a quarter over its size (his "1.5x"), on the right:
    - the top, for the entry point: the Pay Mobile / UPI ID icon flipping (his Lottie, the app's 56dp tile, laid on the
-     icon's tile in the home), the top 30% clear and fading out under it (to 40%), its card at the left;
+     icon's tile in the home), the top 30% clear and fading out under it (to 40%);
    - the bottom, for the notifications: the bottom 30% clear and fading out above it (from 46%, room for the tallest,
      EMI overdue, whose top is 42.8% up — the nudges are drawn over the fade, so a tall one stays whole), each nudge rising
-     from behind the bottom bar in turn, held while its Lottie plays (its length, 4.5–6.5 s), sinking back; its card under
-     the phone rising and fading in on the same curve and time, and out with it.
-   The top of the phone reads above its foot, as one home with its middle let go. The nudges keep the product's padding
+     from behind the bottom bar in turn, held while its Lottie plays (its length, 4.5–6.5 s), sinking back; its card
+     beside the phone rising and fading in on the same curve and time, and out with it.
+   The nudges keep the product's padding
    (16dp in from each side, 16dp over the bar's scan button: jtBox). Held off screen; under reduced motion they fade. */
 const JT_W = 360, JT_SIDE = 16, JT_UP = JT_W * (19.5 / 9) / (1520 / 720) * (531 / 1480) + 16; /* the card's foot, up from the screen's: the bar's picture (1480 × 531 across the home's 369.5dp, 2.6% over the screen's width) is 132.6dp tall, its top the scan button's */
 const JT_LINE = JT_W * (19.5 / 9) / (1520 / 720) * ((531 - 55) / 1480); /* the bar's own top edge (the picture's row 55), up from the screen's foot: 118.8dp */
@@ -149,7 +149,8 @@ const jtBox = (ratio: number, [x0, x1, , y1]: number[]) => {
 const JN_OUT = 450; /* the sinking (ms), as case.css's */
 type Stage = { label: string; q: string; lottie: string; ratio: number; vis: [number, number, number, number]; dur: number };
 type Entry = { label: string; q: string; lottie: string; tile: [number, number, number] };
-function Journey({ text: t, screen, bar, of, entry }: { text: Rich; screen: string; bar: string; of: Stage[]; entry: Entry }) {
+type Told = { h?: string; p?: Rich; ul?: Rich[] }; /* a part of the text beside the figure: a heading, a paragraph, a list */
+function Journey({ text: told, screen, bar, of, entry }: { text: Told[]; screen: string; bar: string; of: Stage[]; entry: Entry }) {
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref);
   const [st, setSt] = useState({ i: -1, up: false }); /* the stage in front, and whether it is up */
@@ -162,15 +163,23 @@ function Journey({ text: t, screen, bar, of, entry }: { text: Rich; screen: stri
   const k = 1.026316 / 720 * JT_W; /* the picture's px in the screen's dp (it runs 2.6% over the screen's width, centred) */
   return (
     <div ref={ref} className="cs4-jn">
-      <div className="cs4-jn-win top" role="img" aria-label={`${entry.label}: the Pay Mobile / UPI ID icon flipping on the home screen`}>
-        <div className="cs4-jn-fade"><div className="cs4-jn-ph"><div className="cs4-jn-scr">
-          <img className="home" src={screen} alt="" width={720} height={1520} decoding="async" />
-          <div className="cs4-jn-icon" style={{ left: cq(cx * k - JT_W * .013158 - size * k / 2), top: cq((cy - size / 2) * k), width: cq(size * k), height: cq(size * k) }}><Lottie className="cs4-lot" src={entry.lottie} playing={on} /></div>
-        </div></div></div>
+      <div className="cs4-jn-text">
+        {told.map((g, j) => (
+          <div key={j} className="cs4-jn-part">
+            {g.h && <h4 className="cs4-sub">{g.h}</h4>}
+            {g.p && <p className="cs4-p">{text(g.p)}</p>}
+            {g.ul && <ul className="cs4-ul">{g.ul.map((it, n) => <li key={n}>{text(it)}</li>)}</ul>}
+          </div>
+        ))}
       </div>
-      <div className="cs4-faq-card cs4-jn-entry"><span className="cs4-faq-label">{entry.label}</span><p className="cs4-faq-ask"><Asker /><span>{entry.q}</span></p></div>
-      <p className="cs4-p cs4-jn-text">{text(t)}</p>
-      <div className="cs4-jn-a">
+      <div className="cs4-jn-grid">
+        <div className="cs4-faq-card cs4-jn-entry"><span className="cs4-faq-label">{entry.label}</span><p className="cs4-faq-ask"><Asker /><span>{entry.q}</span></p></div>
+        <div className="cs4-jn-win top" role="img" aria-label={`${entry.label}: the Pay Mobile / UPI ID icon flipping on the home screen`}>
+          <div className="cs4-jn-fade"><div className="cs4-jn-ph"><div className="cs4-jn-scr">
+            <img className="home" src={screen} alt="" width={720} height={1520} decoding="async" />
+            <div className="cs4-jn-icon" style={{ left: cq(cx * k - JT_W * .013158 - size * k / 2), top: cq((cy - size / 2) * k), width: cq(size * k), height: cq(size * k) }}><Lottie className="cs4-lot" src={entry.lottie} playing={on} /></div>
+          </div></div></div>
+        </div>
         <div className="cs4-jn-win foot" role="img" aria-label={st.i >= 0 ? `${of[st.i].label}: its nudge rising over the home's bottom bar` : 'The home screen’s foot'}>
           <div className="cs4-jn-fade"><div className="cs4-jn-ph"><div className="cs4-jn-scr"><img className="home" src={screen} alt="" width={720} height={1520} decoding="async" /></div></div></div>
           <div className="cs4-jn-ph over"><div className="cs4-jn-scr">
