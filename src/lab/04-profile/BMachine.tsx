@@ -176,31 +176,23 @@ function StateMap() {
   );
 }
 
-/* ---- the rig, in a frame: the page the developers ran, kept as it was, its colours handed down from the page ---- */
-const hex = (c: string) => { const m = c.trim().match(/^#([0-9a-f]{6})$/i); return m ? [0, 2, 4].map(i => parseInt(m[1].slice(i, i + 2), 16)) : null; };
-const mix = (a: string, b: string, t: number) => { const A = hex(a), B = hex(b); if (!A || !B) return a; return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
-function Rig({ host }: { host: React.RefObject<HTMLElement | null> }) {
+/* ---- the rig, in a frame: the page the developers ran, in its own colours (25 Oct: no page greys handed in; it stays
+   light, on its panel's white, in both themes) ---- */
+function Rig() {
   const frame = useRef<HTMLIFrameElement>(null);
   const [h, setH] = useState(800);
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    const el = host.current, fr = frame.current; if (!el || !fr) return;
-    /* the page's greys, read off the card, mixed as its panels are (color-mix in case.css); sent whenever the theme turns */
-    const send = () => {
-      const cs = getComputedStyle(el); const open = cs.getPropertyValue('--pcard-open').trim(), ink = cs.getPropertyValue('--pcard-open-ink').trim(), hl = cs.getPropertyValue('--nav-hl').trim(), hlInk = cs.getPropertyValue('--nav-hl-ink').trim();
-      const t = { ground: 'transparent', panel: mix(open, ink, .05), line: mix(open, ink, .14), ink, 'ink-2': mix(open, ink, .7), 'ink-3': mix(open, ink, .5), chip: mix(open, ink, .09), 'chip-on': hl, accent: hl, 'accent-ink': hlInk, focus: hl, 'phone-shadow': '0 24px 48px -20px rgba(0,0,0,.3), 0 0 0 1px rgba(0,0,0,.06)' };
-      fr.contentWindow?.postMessage({ tokens: t }, location.origin);
-    };
-    const onLoad = () => { setReady(true); send(); };
+    const fr = frame.current; if (!fr) return;
+    const onLoad = () => setReady(true);
     fr.addEventListener('load', onLoad);
-    const it04 = el.closest('.it04'); const mo = it04 ? new MutationObserver(send) : null; if (it04 && mo) mo.observe(it04, { attributes: true, attributeFilter: ['class', 'style'] });
     const onMsg = (e: MessageEvent) => { if (e.source === fr.contentWindow && e.data && typeof e.data.rigHeight === 'number') setH(Math.max(400, Math.min(2200, e.data.rigHeight))); };
     addEventListener('message', onMsg);
-    return () => { fr.removeEventListener('load', onLoad); mo?.disconnect(); removeEventListener('message', onMsg); };
-  }, [host]);
+    return () => { fr.removeEventListener('load', onLoad); removeEventListener('message', onMsg); };
+  }, []);
   return (
     <div className={`brig${ready ? ' ready' : ''}`}>
-      <iframe ref={frame} className="brig-frame" src={`${A}/rig/index.html?embed`} title="B's state rig: the phone and the controls that drive it through its states" style={{ height: h }} loading="lazy" />
+      <iframe ref={frame} className="brig-frame" src={`${A}/rig/index.html?embed&theme=light`} title="B's state rig: the phone and the controls that drive it through its states" style={{ height: h }} loading="lazy" />
       <p className="brig-hint">Keys drive it too: 1–5 and 0 for the states, Q/W/E/R for the results sheet, P plays the scripted conversation.</p>
     </div>
   );
@@ -221,7 +213,7 @@ export default function BMachine() {
           <StatesRow />
         </div>
       ) : (
-        <div className="bm-panel" role="tabpanel"><Rig host={host} /></div>
+        <div className="bm-panel rig" role="tabpanel"><Rig /></div>
       )}
     </div>
   );

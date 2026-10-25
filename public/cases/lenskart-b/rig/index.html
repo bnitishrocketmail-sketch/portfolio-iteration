@@ -370,7 +370,7 @@ wait 1500</textarea>
 const q = new URLSearchParams(location.search);
 if (q.has('embed')) { document.documentElement.classList.add('embed');
   addEventListener('DOMContentLoaded', () => { const st = document.querySelector('.stage'), pw = document.querySelector('.phone-wrap'); const fit = () => { pw.style.zoom = innerWidth < 372 ? ((innerWidth - 8) / 360).toFixed(3) : ''; };   /* a narrow frame (a phone): the phone shrinks to the width */
-    const tell = () => { fit(); parent.postMessage({ rigHeight: Math.ceil(st.getBoundingClientRect().height) + 4 }, location.origin); }; new ResizeObserver(tell).observe(st); addEventListener('resize', tell); tell(); }); if (q.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark'; if (q.get('theme') === 'light') document.documentElement.dataset.theme = 'light'; }
+    const tell = () => { fit(); parent.postMessage({ rigHeight: Math.ceil(st.getBoundingClientRect().height) + 4 }, location.origin); }; new ResizeObserver(tell).observe(st); addEventListener('resize', tell); tell(); }); if (q.get('theme') === 'dark' || q.get('theme') === 'light') document.documentElement.dataset.theme = q.get('theme'); if (q.get('theme') === 'light') document.documentElement.dataset.theme = 'light'; }
 addEventListener('message', e => { const t = e.data && e.data.tokens; if (!t || typeof t !== 'object') return; for (const k of Object.keys(t)) if (/^[a-z0-9-]+$/i.test(k) && typeof t[k] === 'string' && t[k].length < 80) document.documentElement.style.setProperty('--' + k, t[k]); });
 </script>
 <script type="text/plain" id="rig-main">
