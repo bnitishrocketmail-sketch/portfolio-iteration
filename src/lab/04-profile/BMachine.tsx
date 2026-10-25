@@ -207,13 +207,13 @@ function Rig({ host }: { host: React.RefObject<HTMLElement | null> }) {
 }
 
 export default function BMachine() {
-  const [tab, setTab] = useState<'framework' | 'rig'>('framework');
+  const [tab, setTab] = useState<'framework' | 'rig'>('rig'); /* the rig first and shown by default (25 Oct, Nitish: "the rig should be on the left and selected by default; the framework if we select it on the right") */
   const host = useRef<HTMLDivElement>(null);
   return (
     <div className="bm" ref={host}>
       <div className="bm-tabs" role="tablist" aria-label="State machine">
-        <button type="button" role="tab" aria-selected={tab === 'framework'} className={tab === 'framework' ? 'on' : ''} onClick={() => setTab('framework')}>The framework</button>
         <button type="button" role="tab" aria-selected={tab === 'rig'} className={tab === 'rig' ? 'on' : ''} onClick={() => setTab('rig')}>The rig</button>
+        <button type="button" role="tab" aria-selected={tab === 'framework'} className={tab === 'framework' ? 'on' : ''} onClick={() => setTab('framework')}>The framework</button>
       </div>
       {tab === 'framework' ? (
         <div className="bm-panel" role="tabpanel">
