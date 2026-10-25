@@ -180,23 +180,34 @@
 .cs4-peek-mid { display: grid; justify-items: center; } /* its rows set by Peek: the pill on the nudges' line */
 .cs4-peek-pill { grid-row: 2; display: inline-flex; align-items: center; gap: .5em; padding: .45em .9em; border-radius: 999px; background: var(--nav-hl); color: var(--nav-hl-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); white-space: nowrap; } /* the FAQ panel's label (.cs4-faq-label), with its arrows */
 .cs4-peek-pill svg { width: 1.1em; height: 1.1em; flex: none; }
-/* the loan journey's ticker (Ticker in Case04.tsx, 25 Oct): his page's carousel in the system — the FAQ panel's ground
-   and radius, the study's phone, the FAQ card; the phones cut by the panel's top (it clips), the stages --s4 apart (his
-   40 on a 222 card), the card --s2 under its phone (his 20), the panel's room under the tallest card --s3 (his 20) */
-.cs4-jt { --jt-w: calc(var(--ph-w) * 1.08); position: relative; overflow: hidden; padding-bottom: var(--s3); border-radius: calc(calc(var(--r) - .6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
-.cs4-jt-track { display: flex; align-items: flex-start; width: max-content; margin: 0; padding: 0; list-style: none; animation: cs4-jt-run calc(var(--n) * 5.28s) linear infinite; will-change: transform; } /* the row twice: half its length is one pass (each stage carries its gap as a margin, so the halves match) */
-@keyframes cs4-jt-run { to { transform: translateX(-50%); } }
-.cs4-jt-item { flex: none; width: var(--jt-w); margin-right: var(--s4); display: flex; flex-direction: column; gap: var(--s2); }
-.cs4-jt-win { position: relative; width: var(--ph-w); align-self: center; aspect-ratio: 9 / 12.4576; } /* the part in view: 63.9% of the phone (his frame's top at 36.1% of the screen); the phone runs up out of it, cut by the panel */
-.cs4-jt-ph { position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 9 / 19.5; border-radius: calc(clamp(14px, 1.6cqw, 22px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #fff; box-shadow: 0 10px 26px -14px rgba(0, 0, 0, .35); } /* the study's phone (as the B study's nudges, at its own size) */
-.cs4-jt-ph::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); pointer-events: none; z-index: 3; } /* the device's edge */
-.cs4-jt-scr { position: absolute; inset: 3px; border-radius: calc(clamp(14px, 1.6cqw, 22px) * var(--ios-k, 1) - 3px); corner-shape: var(--ios-shape, round); overflow: hidden; -webkit-mask-image: linear-gradient(#000 0 0); container-type: inline-size; } /* the screen inside the device's edge (its 3px), so what is placed on it keeps its padding in view; a container, so the nudge is placed in the screen's width (Ticker: jtBox) */
-.cs4-jt-scr > img { position: absolute; display: block; max-width: none; }
-.cs4-jt-scr > .home { inset: 0; width: 100%; height: 100%; object-fit: cover; } /* the home, cut at the sides by the cover fit (its 720 × 1520 on the 9 : 19.5 screen) */
-.cs4-jt-scr > .bar { left: -1.316%; width: 102.632%; bottom: 0; height: auto; z-index: 2; } /* the bottom bar over the foot, cut at the sides as the home is, over the Lottie as on his page */
-.cs4-jt-nudge { position: absolute; z-index: 1; }
-.cs4-jt-nudge .cs4-lot { position: absolute; inset: 0; }
-@media (prefers-reduced-motion: reduce) { .cs4-jt { overflow-x: auto; } .cs4-jt-track { animation: none; } .cs4-jt-item[aria-hidden="true"] { display: none; } }
+/* the loan journey on one home (Journey in Case04.tsx, 25 Oct): the phone a quarter over the study's (his "1.5x"), its
+   top and its foot on the right — the entry point's card left of the top, the text left of the foot, the stage's card
+   under the foot — each part --s4 from the next, the columns --s5 apart; the left parts centred on their phone */
+.cs4-jn { --jn-w: calc(var(--ph-w) * 1.25); display: grid; grid-template-columns: minmax(0, calc(var(--jn-w) * 1.9)) var(--jn-w); justify-content: center; grid-template-areas: "entry top" "text a"; gap: var(--s4) var(--s5); align-items: center; } /* one figure, centred in the card: the words in a column under twice the phone's width, beside it */
+.cs4-jn-win.top { grid-area: top; } .cs4-jn-entry { grid-area: entry; } .cs4-jn-text { grid-area: text; margin: 0; } .cs4-jn-a { grid-area: a; display: flex; flex-direction: column; gap: var(--s2); }
+.cs4-jn-win { position: relative; width: var(--jn-w); }
+.cs4-jn-win.top { aspect-ratio: 9 / 7.8; clip-path: inset(-48px -48px 0 -48px); } /* the phone's top 40%: cut at its foot */
+.cs4-jn-win.foot { aspect-ratio: 9 / 8.97; clip-path: inset(0 -48px -48px -48px); } /* the phone's foot 46%: cut at its top */
+.cs4-jn-fade { position: absolute; inset: 0; } /* the phone fading out past its clear 30% (the stencil, not a wash of the card's colour, so it fades on any ground) */
+.cs4-jn-win.top .cs4-jn-fade { -webkit-mask-image: linear-gradient(#000 75%, transparent); mask-image: linear-gradient(#000 75%, transparent); }
+.cs4-jn-win.foot .cs4-jn-fade { inset: 0 -48px -48px; -webkit-mask-image: linear-gradient(transparent, #000 calc(var(--jn-w) * 8.97 / 9 * .348)); mask-image: linear-gradient(transparent, #000 calc(var(--jn-w) * 8.97 / 9 * .348)); } /* past the window at the sides and foot, so the phone's shadow is not cut there; the fade over its top 34.8% */
+.cs4-jn-win.foot .cs4-jn-fade .cs4-jn-ph { left: 48px; right: 48px; bottom: 48px; }
+.cs4-jn-ph { position: absolute; left: 0; right: 0; aspect-ratio: 9 / 19.5; border-radius: calc(clamp(14px, 1.6cqw, 22px) * 1.25 * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #fff; box-shadow: 0 12px 30px -16px rgba(0, 0, 0, .35); } /* the study's phone, its corner with it */
+.cs4-jn-win.top .cs4-jn-ph { top: 0; } .cs4-jn-win.foot .cs4-jn-ph { bottom: 0; }
+.cs4-jn-ph::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 calc(3px * 1.25) color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); pointer-events: none; z-index: 3; } /* the device's edge */
+.cs4-jn-ph.over { background: none; box-shadow: none; } .cs4-jn-ph.over::after { content: none; } /* the foot's nudges and bar, over the fade, on the same screen */
+.cs4-jn-scr { position: absolute; inset: calc(3px * 1.25); border-radius: calc(clamp(14px, 1.6cqw, 22px) * 1.25 * var(--ios-k, 1) - 3px * 1.25); corner-shape: var(--ios-shape, round); overflow: hidden; -webkit-mask-image: linear-gradient(#000 0 0); container-type: inline-size; } /* the screen inside the edge, a container: what is on it is placed in its width */
+.cs4-jn-scr > img { position: absolute; display: block; max-width: none; left: -1.316%; width: 102.632%; height: auto; } /* the home at the screen's width and 2.6% (as it covers the screen), from the top or the foot */
+.cs4-jn-win.top .home { top: 0; } .cs4-jn-win.foot .home { bottom: 0; }
+.cs4-jn-scr > .bar { bottom: 0; z-index: 2; } /* the bottom bar over the nudges: they rise from behind it */
+.cs4-jn-icon { position: absolute; } .cs4-jn-icon .cs4-lot { position: absolute; inset: 0; }
+.cs4-jn-nudge { position: absolute; z-index: 1; transform: translateY(var(--sink)); transition: transform .45s cubic-bezier(.4, 0, 1, 1); } /* sinking: easing in, under the bar */
+.cs4-jn-nudge.up { transform: none; transition: transform .7s cubic-bezier(.16, 1, .3, 1); } /* rising: out of the bar, settling */
+.cs4-jn-nudge .cs4-lot { position: absolute; inset: 0; }
+.cs4-jn-cards { display: grid; } /* the six cards in one cell, so the slot keeps the tallest's height */
+.cs4-jn-card { grid-area: 1 / 1; align-self: start; opacity: 0; transform: translateY(var(--s3)); transition: opacity .45s cubic-bezier(.4, 0, 1, 1), transform .45s cubic-bezier(.4, 0, 1, 1); pointer-events: none; }
+.cs4-jn-card.up { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .7s cubic-bezier(.16, 1, .3, 1); pointer-events: auto; } /* with its nudge: the same curve, the same time */
+@media (prefers-reduced-motion: reduce) { .cs4-jn-nudge, .cs4-jn-nudge.up, .cs4-jn-card, .cs4-jn-card.up { transform: none; transition: opacity .4s; } .cs4-jn-nudge { opacity: 0; } .cs4-jn-nudge.up { opacity: 1; } }
 @media (max-width: 700px) { /* the phone: no room for three across — the pill over the two phones, its arrows pointing to each */
   .cs4-peek { grid-template-columns: repeat(2, minmax(0, var(--pw))); column-gap: var(--s3); row-gap: var(--s1); }
   .cs4-peek-mid { grid-column: 1 / -1; grid-row: 1; grid-template-rows: auto !important; } .cs4-peek-pill { grid-row: 1; }
@@ -320,7 +331,7 @@
   .cs4-cols { grid-template-columns: 1fr; }
   .cs4-hero.block { padding: 20px 12px; overflow: hidden; } /* the sides run past the card's edge on a phone, cut by it */
   .cs4-faq, .cs4-faq.n6 { grid-template-columns: 1fr; gap: var(--s4); padding: 0; background: none; border-radius: 0; } .cs4-faq-ui > img { width: 52%; margin: 0 auto; } /* one step under another (two columns were too narrow for the system's body size and chips); the screen centred in its card at a phone's width; the steps --s4 apart, a section's parts */
-  .cs4-jt { --jt-w: calc(var(--ph-w) * 1.7); } /* the ticker's cards wider than the phone here: the phone's body size in a phone-wide card ran a word or two to a line */
+  .cs4-jn { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "entry" "text" "a"; justify-items: center; } .cs4-jn-entry { justify-self: stretch; } .cs4-jn-a { width: 100%; align-items: center; } .cs4-jn-cards { width: 100%; } /* one column: the top, its card, the text, the foot and its card; the cards the column's width (the phone's body size runs short lines in a phone-wide card) */
   .cs4-conv-row { gap: 12px; } .cs4-conv-row .cs4-fig.phone { width: 28%; } .cs4-conv .cs4-over .cs4-layer { display: none; } /* no room for the pills past the phones */
   .cs4-ver { padding: 0; background: none; border-radius: 0; } .cs4-ver + .cs4-ver { padding-top: var(--s3); border-top: 1px solid color-mix(in srgb, var(--pcard-open-ink) 12%, transparent); }
   .cs4-col { padding: 0; background: none; border-radius: 0; } .cs4-cols { gap: var(--s4); }

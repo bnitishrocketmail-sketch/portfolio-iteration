@@ -30,10 +30,12 @@ export type Block =
      card, each with its nudge Lottie near the bottom, running past the screen's sides, a pill between them (the B
      study's nudges, 24 Oct). `ratio`: the Lottie comp's width / height; `screen`: a 720 × 1600 picture behind */
   | { k: 'peek'; label: string; show?: number; screen?: string; at?: number /* the screen picture's fraction (0–1) at the top of the part in view; its foot by default */; of: { label: string; lottie: string; ratio: number; vis?: [number, number, number, number] /* the comp's drawn extent over its loop (x0, x1, y0, y1, fractions), for placing it by what shows */; k?: number /* its drawn width against the screen's less 16dp each side */ }[] }
-  /* his ticker (the fintech study's loan journey, 25 Oct): the stages running right to left, slowly, each a phone cut at the
-     panel's top with its nudge over the home screen, its card under it. `ratio`: the Lottie comp's width / height; `vis`:
-     its drawn card within the comp (x0, x1, y0, y1, fractions), for placing the card itself with the product's padding */
-  | { k: 'ticker'; label: string; screen: string; bar: string; of: { label: string; q: string; lottie: string; ratio: number; vis: [number, number, number, number] }[] }
+  /* the loan journey on one home (the fintech study, 25 Oct; Journey in Case04.tsx): the phone's top with the entry point's
+     icon Lottie on its tile (`tile`: the tile's middle x, y and side in the 720-wide home picture), its card at the left;
+     the phone's foot with each stage's nudge rising from behind the bottom bar in turn, its card under it; `text` beside
+     the foot. A stage: `ratio` its comp's width / height, `vis` its drawn card in the comp (x0, x1, y0, y1, fractions),
+     `dur` the seconds it stays up */
+  | { k: 'journey'; text: Rich; screen: string; bar: string; of: { label: string; q: string; lottie: string; ratio: number; vis: [number, number, number, number]; dur: number }[]; entry: { label: string; q: string; lottie: string; tile: [number, number, number] } }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */
   | { k: 'converge'; of: Media[]; to: Media }
   /* a version of the feature: its number and name as chips, a line about it, its screens */
