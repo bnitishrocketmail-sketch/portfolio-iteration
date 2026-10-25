@@ -33,6 +33,11 @@ export const lenskartB: Case = {
     clip('claire', 'Claire greeting on the product list'),
   ] },
   sections: [
+    /* the state machine first (25 Oct, Nitish: "the state machine framework for B AI interaction will be the first one to show, even before where it started") */
+    { id: 'machine', title: 'State machine: framework for B AI interaction', blocks: [
+      { k: 'p', t: ['To ensure smooth development and reduce developer handoff time — every state, every transition between them and how long each takes, in one map, with the rig the developers could run to see each move.'] },
+      { k: 'machine' },
+    ] },
     { id: 'start', title: 'Where it started?', blocks: [
       { k: 'row', ratio: '2fr 1fr', of: [
         { k: 'p', t: ['Customers often hesitated at PDP, lens selection and Cart because of unanswered questions. ', { b: 'Lenskart Copilot (Lensa)' }, ', now evolving into Claire and B, was built to handhold users through these stages — clearing doubts, guiding lens choices and connecting them to experts when needed.'] },
@@ -82,10 +87,6 @@ export const lenskartB: Case = {
       { k: 'version', v: 'V2', name: 'B AI',
         text: ['B is Copilot today: a character with states of its own — it connects, listens, thinks and talks. It greets, hears the question, and shows what it found as results that slide up as a sheet while B steps aside, taking the customer to the frame and the cart by voice.'],
         of: [clip('b-intro', 'B connecting and greeting'), phone('b-hi.webp', 'Hi there! I’m B'), phone('b-results.webp', 'B’s results'), phone('b-card.webp', 'A frame B found')] },
-    ] },
-    { id: 'machine', title: 'State machine: framework for B AI interaction', blocks: [
-      { k: 'p', t: ['To ensure smooth development and reduce developer handoff time — every state, every transition between them and how long each takes, in one map, with the rig the developers could run to see each move.'] },
-      { k: 'machine' },
     ] },
   ],
 };
