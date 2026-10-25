@@ -88,10 +88,9 @@ function Fig({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) {
 /* the nudges placed as the product would (25 Oct, Nitish: "when they expand they feel too cramped … do the hygiene
    spacing as they should have been if they were actually in the product"): on a 360 × 780dp screen, each nudge by what
    it draws at its widest (`vis`, measured over its loop: the Talk comp leaves 6% bare at its right, the Curious comp
-   fills its own edges), 16dp from each side — the system's screen margin — and 24dp clear of the foot (the floating
-   button's 16dp and the gesture bar's room); so the two expanded pills meet the screen's edges alike and clear its
-   rounded corners (by ~13dp). Without `vis`, his page's placement: across 94%, its middle 89.4% down */
-const SCR_W = 360, SCR_H = 780, SIDE = 16, FOOT = 24;
+   fills its own edges), 16dp from each side — the system's screen margin — and 72dp clear of the foot, floating over
+   where the app's bottom bar would be (FOOT); so the two expanded pills meet the screen's edges alike. Without `vis`, his page's placement: across 94%, its middle 89.4% down */
+const SCR_W = 360, SCR_H = 780, SIDE = 16, FOOT = 72; /* 25 Oct (Nitish: "too low … leave a generous gap, so it is above the bottom navigation if it was there … it floats a little above Lenskart's bottom navigation, as on the old portfolio"): 72dp clear of the foot — the app's 56dp bottom bar and 16dp over it (his old page: the Talk pill's foot 68dp up); was 24 */
 type Nudge = { label: string; lottie: string; ratio: number; vis?: [number, number, number, number] };
 function place(n: Nudge) {
   if (!n.vis) { const h = 94 / n.ratio * SCR_W / SCR_H; return { left: 3, width: 94, top: 89.4 - h / 2, mid: .894 }; }
