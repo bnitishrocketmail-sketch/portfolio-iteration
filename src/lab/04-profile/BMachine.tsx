@@ -184,11 +184,16 @@ function Rig() {
   const [ready, setReady] = useState(false);
   useEffect(() => {
     const fr = frame.current; if (!fr) return;
-    const onLoad = () => setReady(true);
+    /* the study's phone handed to the rig (25 Oct: "the standard phone size"): its width, its radius and curve, its ink —
+       read off a probe styled as the study's phones are, sent on load and whenever the page resizes */
+    const probe = document.createElement('div'); probe.className = 'brig-probe'; fr.parentElement?.appendChild(probe);
+    const send = () => { const cs = getComputedStyle(probe); fr.contentWindow?.postMessage({ phone: { w: parseFloat(cs.width), r: parseFloat(cs.borderTopLeftRadius), shape: (cs.getPropertyValue('corner-shape') || 'round').trim() || 'round', ink: (getComputedStyle(fr).getPropertyValue('--pcard-open-ink') || '').trim() } }, location.origin); };
+    const ro = new ResizeObserver(send); ro.observe(fr);
+    const onLoad = () => { setReady(true); send(); };
     fr.addEventListener('load', onLoad);
     const onMsg = (e: MessageEvent) => { if (e.source === fr.contentWindow && e.data && typeof e.data.rigHeight === 'number') setH(Math.max(400, Math.min(2200, e.data.rigHeight))); };
     addEventListener('message', onMsg);
-    return () => { fr.removeEventListener('load', onLoad); removeEventListener('message', onMsg); };
+    return () => { ro.disconnect(); probe.remove(); fr.removeEventListener('load', onLoad); removeEventListener('message', onMsg); };
   }, []);
   return (
     <div className={`brig${ready ? ' ready' : ''}`}>

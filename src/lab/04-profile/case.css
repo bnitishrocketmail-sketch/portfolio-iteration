@@ -221,6 +221,7 @@
    container"): under the tabs it runs to the card's sides and foot — white, no inset, no radius of its own but the
    card's at its foot */
 .bm-panel.rig { padding: var(--s4) var(--s3); margin: 0 calc(-1 * var(--s3)) calc(-1 * var(--s4)); border-radius: 0 0 calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #fff; }
+.brig-probe { position: absolute; visibility: hidden; pointer-events: none; width: var(--ph-w); height: 1px; border-radius: calc(clamp(14px, 1.6cqw, 22px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); } /* the study's phone, measured for the rig (BMachine.tsx) */
 /* the map: his drawing's parts in the card's ink — boxes, lines with a dot at their label, open chevrons */
 /* the framework (25 Oct): his drawing as he drew it — the lines in his image's px (an SVG), the states and labels laid
    over it in the system's type: the states in Title, emphasised, in boxes with the system's inner radius and curve

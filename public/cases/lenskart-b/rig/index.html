@@ -158,12 +158,31 @@
   .hint kbd { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
 
   @media (max-width: 760px) { .stage { gap: 24px; } .panel { width: 360px; flex-basis: 360px; } }
-  /* inside the case study (?embed): no ground, no padding, the panel as tall as the phone and scrolling, the page's font */
-  .embed body { background: transparent; padding: 0; font-family: 'Outfit', system-ui, sans-serif; }
-  .embed .stage { gap: 32px; }
-  .embed .panel { max-height: 800px; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; border: 0; background: transparent; padding: 0 12px 0 0; }
-  .embed .panel h1 { display: none; }
+  /* inside the case study (?embed; 25 Oct, Nitish: "the screen in a phone, the standard phone size … the buttons and
+     everything the rig as we built it … restructured to fit the container, with all the space hygiene"): no ground,
+     no padding of its own — the case card's white panel is its ground; the controls as built (their look, their font)
+     but laid out round the phone instead of in one scrolling column: the phone (at the study's phone width, framed as
+     the study's phones — handed in by the page); the states, the sheet and the B's scale; the scripted conversation and
+     what's playing; the options in a band across the foot, three to a row, each name over its choice. Nothing scrolls
+     inside. */
+  .embed body { background: transparent; padding: 0; }
+  .embed .stage { display: grid; grid-template-columns: var(--phw, 156px) minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "c1 c2 c3" "opts opts opts"; gap: 32px 32px; align-items: start; justify-content: stretch; }
+  .embed .col { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+  .embed .c1 { grid-area: c1; } .embed .c2 { grid-area: c2; } .embed .c3 { grid-area: c3; }
+  .embed .panel { display: none; }
+  .embed .phone-wrap { width: var(--phw, 156px); height: calc(var(--phw, 156px) * 800 / 360); }
+  .embed .phone { zoom: var(--pz, .4333); border-radius: calc(var(--pr, 28px) / var(--pz, .4333)); corner-shape: var(--pshape, round); box-shadow: 0 calc(10px / var(--pz, .4333)) calc(26px / var(--pz, .4333)) calc(-14px / var(--pz, .4333)) rgba(0, 0, 0, .35); }
+  .embed .phone::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 calc(3px / var(--pz, .4333)) color-mix(in srgb, var(--pink, #121212) 72%, transparent); pointer-events: none; z-index: 30; } /* the study's device edge: 3px on screen */
+  .embed .opts { grid-area: opts; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 32px; padding-top: 28px; border-top: 1px solid var(--line); }
+  .embed .opts h2 { grid-column: 1 / -1; margin-bottom: -6px; } .embed .opts .hint { display: none; } /* its "press H" is for the rig on its own; the page lists the keys under it */
+  .embed .opts label.opt { flex-direction: column; align-items: stretch; justify-content: space-between; gap: 6px; } .embed .opts label.opt select { width: 100%; } /* each option's name over its choice; the choices of a row level, at the cells' foot */
+  .embed .scenario textarea { height: 214px; }
   .embed .scenario textarea, .embed .status, .embed button kbd, .embed .hint kbd { font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; }
+  @media (max-width: 620px) { /* a narrow frame (the phone): one column, the phone centred */
+    .embed .stage { grid-template-columns: minmax(0, 1fr); grid-template-areas: "c1" "c2" "c3" "opts"; gap: 28px; }
+    .embed .c1 { align-items: center; }
+    .embed .opts { grid-template-columns: minmax(0, 1fr); }
+  }
   @media (prefers-reduced-motion: reduce) { .rig, .sheet, .sheet .pane, .greet-text { transition: none; } }
 </style>
 
@@ -369,8 +388,13 @@ wait 1500</textarea>
 })();
 const q = new URLSearchParams(location.search);
 if (q.has('embed')) { document.documentElement.classList.add('embed');
-  addEventListener('DOMContentLoaded', () => { const st = document.querySelector('.stage'), pw = document.querySelector('.phone-wrap'); const fit = () => { pw.style.zoom = innerWidth < 372 ? ((innerWidth - 8) / 360).toFixed(3) : ''; };   /* a narrow frame (a phone): the phone shrinks to the width */
-    const tell = () => { fit(); parent.postMessage({ rigHeight: Math.ceil(st.getBoundingClientRect().height) + 4 }, location.origin); }; new ResizeObserver(tell).observe(st); addEventListener('resize', tell); tell(); }); if (q.get('theme') === 'dark' || q.get('theme') === 'light') document.documentElement.dataset.theme = q.get('theme'); if (q.get('theme') === 'light') document.documentElement.dataset.theme = 'light'; }
+  addEventListener('DOMContentLoaded', () => { const st = document.querySelector('.stage'), pw = document.querySelector('.phone-wrap'), panel = document.getElementById('panel');
+    /* the controls laid round the phone (25 Oct): the groups moved into columns as they are, their buttons and ids kept */
+    const g = [...panel.querySelectorAll(':scope > .group')]; const [state, sheet, scenario, now, scale, opts] = g;
+    const col = (cls, ...els) => { const d = document.createElement('div'); d.className = 'col ' + cls; els.forEach(e => e && d.appendChild(e)); st.appendChild(d); return d; };
+    col('c1', pw); col('c2', state, sheet, scale); col('c3', scenario, now); if (opts) { opts.classList.add('opts'); st.appendChild(opts); }
+    const tell = () => parent.postMessage({ rigHeight: Math.ceil(st.getBoundingClientRect().height) + 4 }, location.origin); new ResizeObserver(tell).observe(st); addEventListener('resize', tell); tell(); }); if (q.get('theme') === 'dark' || q.get('theme') === 'light') document.documentElement.dataset.theme = q.get('theme'); if (q.get('theme') === 'light') document.documentElement.dataset.theme = 'light'; }
+addEventListener('message', e => { const f = e.data && e.data.phone; if (f && typeof f.w === 'number' && f.w > 60 && f.w < 600) { const r = document.documentElement.style; r.setProperty('--phw', f.w + 'px'); r.setProperty('--pz', (f.w / 360).toFixed(4)); if (typeof f.r === 'number') r.setProperty('--pr', f.r + 'px'); if (typeof f.shape === 'string' && /^(round|superellipse\([\d.]+\))$/.test(f.shape)) r.setProperty('--pshape', f.shape); if (typeof f.ink === 'string' && /^#[0-9a-f]{6}$/i.test(f.ink)) r.setProperty('--pink', f.ink); } });
 addEventListener('message', e => { const t = e.data && e.data.tokens; if (!t || typeof t !== 'object') return; for (const k of Object.keys(t)) if (/^[a-z0-9-]+$/i.test(k) && typeof t[k] === 'string' && t[k].length < 80) document.documentElement.style.setProperty('--' + k, t[k]); });
 </script>
 <script type="text/plain" id="rig-main">
