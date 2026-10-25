@@ -53,6 +53,26 @@ async function animationData(src: string): Promise<unknown> {
   }
   return anim;
 }
+/* LottieFiles Creator writes a position's spatial tangents (to, ti) with a third, zero component on a two-dimensional
+   value. lottie-web measures the motion path over the tangents' length, so the third reads an undefined coordinate, the
+   path's length comes out NaN and the layer jumps to its next keyframe at once instead of travelling there (25 Oct: the
+   fintech hero's card machine, and the ticker's loan-active and disbursed cards; LottieFiles' own player draws them
+   right, as his Framer page did). The tangents are cut to the value's length. */
+function fixTangents(root: unknown) {
+  const stack: unknown[] = [root];
+  while (stack.length) {
+    const x = stack.pop();
+    if (Array.isArray(x)) { for (const v of x) if (v && typeof v === 'object') stack.push(v); continue; }
+    if (!x || typeof x !== 'object') continue;
+    const k = x as Record<string, unknown>;
+    if (typeof k.t === 'number' && Array.isArray(k.s)) {
+      const n = k.s.length;
+      if (Array.isArray(k.to) && k.to.length > n) k.to = k.to.slice(0, n);
+      if (Array.isArray(k.ti) && k.ti.length > n) k.ti = k.ti.slice(0, n);
+    }
+    for (const v of Object.values(k)) if (v && typeof v === 'object') stack.push(v);
+  }
+}
 function toBase64(bytes: Uint8Array): string {
   let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   return btoa(s);
@@ -77,6 +97,7 @@ export function Lottie({ src, className, loop = true, speed = 1, still = 0, labe
     Promise.all([player(effects), animationData(src)]).then(([lottie, raw]) => {
       if (gone) return;
       const data = raw as Anim;
+      fixTangents(data);
       if (drop) {
         const dropped = new Set(data.layers.filter(drop).map(l => l.refId).filter(Boolean));
         data.layers = data.layers.filter(l => !drop(l));
