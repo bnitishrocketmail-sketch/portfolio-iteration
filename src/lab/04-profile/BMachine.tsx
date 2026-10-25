@@ -170,9 +170,7 @@ function StateMap() {
           </div>
         ))}
         {FW_EDGES.map((e, i) => <span key={i} className={`bfw-lbl ${e.an}`} style={{ left: px(e.at[0]), top: py(e.at[1]) }}>{e.t.map((l, k) => <span key={k}>{l}</span>)}</span>)}
-        {/* his cursor on the drawing, as his page had it: "Devs love me for this" */}
-        <span className="bfw-cursor" style={{ left: px(470), top: py(758) }} aria-hidden="true"><svg viewBox="0 0 14 20"><path d="M1 1 L1 16.4 L5 12.8 L8 19 L10.8 17.8 L7.9 11.7 L13.2 11.2 Z" /></svg></span>
-        <span className="bfw-tag" style={{ left: px(337), top: py(830) }}>Devs love me for this</span>
+        {/* his cursor and "Devs love me for this" went (25 Oct, Nitish: "remove that") */}
       </div>
     </div>
   );
