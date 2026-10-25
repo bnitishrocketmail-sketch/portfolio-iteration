@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AnimationItem } from 'lottie-web';
 import { useInView } from './inview';
+import { useSlidePill } from './SlidePill04';
 
 /* The B study's state machine section (22 Oct), in two tabs: the framework his old page carried — the map of states and
    transitions, redrawn in the page's own ink with the revamped states, and the states in a row with what happens
@@ -206,13 +207,14 @@ function Rig() {
 
 export default function BMachine() {
   const [tab, setTab] = useState<'framework' | 'rig'>('rig'); /* the rig first and shown by default (25 Oct, Nitish: "the rig should be on the left and selected by default; the framework if we select it on the right") */
-  const host = useRef<HTMLDivElement>(null);
+  const host = useRef<HTMLDivElement>(null), tabsRef = useRef<HTMLDivElement>(null);
+  useSlidePill(tabsRef); /* the pill slides between the tabs, as the bar's (25 Oct) */
   /* both panels kept, laid in one place, the one not chosen hidden (25 Oct, Nitish: "the container size readjusts when I
      select the rig or the framework — it shouldn't … adapt the rig to the framework's size"): the place takes the taller
      of the two — the framework's on the desktop — and the rig fills it; neither changes the container's size */
   return (
     <div className="bm" ref={host}>
-      <div className="bm-tabs" role="tablist" aria-label="State machine">
+      <div className="bm-tabs" role="tablist" aria-label="State machine" ref={tabsRef}>
         <button type="button" role="tab" aria-selected={tab === 'rig'} className={tab === 'rig' ? 'on' : ''} onClick={() => setTab('rig')}>The rig</button>
         <button type="button" role="tab" aria-selected={tab === 'framework'} className={tab === 'framework' ? 'on' : ''} onClick={() => setTab('framework')}>The framework</button>
       </div>

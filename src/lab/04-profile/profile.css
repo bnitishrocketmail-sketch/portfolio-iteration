@@ -682,3 +682,10 @@
   .deck4.rail .pc-name { left: 24px; right: 24px; top: calc(24px - .2 * var(--t-title)); gap: 3px; }
 
 }
+
+/* a switch's selection as one pill that moves (SlidePill04.ts, 25 Oct): the pill under the buttons in the selected one's
+   ground, which goes clear while the pill is there; the pill's colour eases as it moves between two grounds */
+.slide { position: relative; isolation: isolate; }
+.slide > button { position: relative; z-index: 1; }
+.slide > button.on, .slide > button[aria-selected="true"] { background: transparent !important; }
+.seg-pill { position: absolute; z-index: 0; pointer-events: none; transition: background-color .28s ease, opacity .2s; }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SlideGroup } from './SlidePill04';
 import Orb04 from './Orb04';
 import './profile.css';
 import './orb.css';
@@ -23,17 +24,17 @@ export default function OrbLab04() {
     <div className={`it04 orbl${light ? ' light' : ''}`}>
       <div className="orbl-stage"><Orb04 key={String(light)} freq={freq} speedX={speedX} speedY={speedY} dot={dot} line={line} fade={fade} /></div>
       <div className="orbl-panel">
-        <div className="orbl-seg" role="group" aria-label="Triangle size">
+        <SlideGroup className="orbl-seg" role="group" aria-label="Triangle size">
           {SIZES.map(([f, l]) => <button key={f} type="button" aria-pressed={freq === f} className={freq === f ? 'on' : ''} onClick={() => setFreq(f)}>{l}<small>{20 * f * f} faces</small></button>)}
-        </div>
+        </SlideGroup>
         {slider('Turn on X', speedX, setSpeedX, 0, 60, 1, '°/s')}
         {slider('Turn on Y', speedY, setSpeedY, 0, 60, 1, '°/s')}
         {slider('Dots', dot, setDot, 0, 5, .1, 'px')}
         {slider('Wires', line, setLine, .3, 3, .1, 'px')}
         {slider('Back fades', fade, setFade, 0, .95, .01)}
-        <div className="orbl-seg" role="group" aria-label="Theme">
+        <SlideGroup className="orbl-seg" role="group" aria-label="Theme">
           {[false, true].map(l => <button key={String(l)} type="button" aria-pressed={light === l} className={light === l ? 'on' : ''} onClick={() => setLight(l)}>{l ? 'Light' : 'Dark'}</button>)}
-        </div>
+        </SlideGroup>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
+import { SlideGroup } from './SlidePill04';
 import { createPortal } from 'react-dom';
 import { drawOrb, geodesic, projectOrb, type V3 } from './Orb04';
 import './orb.css';
@@ -198,18 +199,18 @@ export function OrbTuner({ tune, setTune, anchor }: { tune: OrbTune; setTune: (t
       <div className="ot4 orbl-panel" role="group" aria-label="Tune the orb">
         <div className="ot4-head"><b>Tune the orb</b><button type="button" onClick={() => setTune(TUNE0)}>Reset</button><button type="button" aria-label="Close" onClick={() => setOpen(false)}>×</button></div>
         {slider('Size', 'size', 14, 70, 1, '%')}
-        <div className="orbl-seg" role="group" aria-label="Triangle size">
+        <SlideGroup className="orbl-seg" role="group" aria-label="Triangle size">
           {([[2, 'Larger'], [3, 'Medium'], [4, 'Smaller']] as const).map(([f, l]) => <button key={f} type="button" aria-pressed={tune.freq === f} className={tune.freq === f ? 'on' : ''} onClick={() => set('freq', f)}>{l}<small>{20 * f * f} faces</small></button>)}
-        </div>
+        </SlideGroup>
         {slider('Turn on X', 'speedX', 0, 60, 1, '°/s')}
         {slider('Turn on Y', 'speedY', 0, 60, 1, '°/s')}
         {slider('Dots', 'dot', 0, 5, .1, 'px')}
         {slider('Wires', 'line', .3, 3, .1, 'px')}
         {slider('Back fades', 'fade', 0, .95, .01)}
         {slider('Rewiring', 'pace', .4, 2.5, .1, '×')}
-        <div className="orbl-seg" role="group" aria-label="Pills drift">
+        <SlideGroup className="orbl-seg" role="group" aria-label="Pills drift">
           {[true, false].map(f => <button key={String(f)} type="button" aria-pressed={tune.float === f} className={tune.float === f ? 'on' : ''} onClick={() => set('float', f)}>{f ? 'Pills drift' : 'Pills still'}</button>)}
-        </div>
+        </SlideGroup>
         <p className="ot4-note">Size is the orb’s diameter as a share of the map’s height; dots and wires scale with it. Rewiring: how long the three hold before the next swap (×1 ≈ 2.2–3.2 s).</p>
       </div>
     ) : <button type="button" className="ot4-chip" onClick={() => setOpen(true)}>Tune orb</button>,

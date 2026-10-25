@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import './motionv2.css';
+import { useSlidePill } from './SlidePill04';
 
 /* Variant 2 of the Motion system tab (Nitish, 17 Oct: "keep this whole motion system version aside as variant 1 and
    let's build variant 2 … adapt the whole Drivetrain as is, without the context of Cars24 … we just need to change the
@@ -248,6 +249,7 @@ export function MotionThumb({ on }: { on: boolean }) {
 }
 
 function TokenDemo({ root }: { root: RefObject<HTMLElement | null> }) {
+  const segsRef = useRef<HTMLDivElement>(null); useSlidePill(segsRef); /* the system switch's pill slides, as the bar's (25 Oct) */
   const [mode, setMode] = useState<Mode>('raw');
   const [pace, setPace] = useState<'calm' | 'brisk'>('calm');
   const [ph, setPh] = useState(REST);
@@ -302,7 +304,7 @@ function TokenDemo({ root }: { root: RefObject<HTMLElement | null> }) {
       <div className="tokstage">
         <JourneyPhone cls={cls} ph={ph} phoneRef={phone} />
         <div className={`tokpanel${sys ? ' with' : ''}`}>
-          <div className="segs" role="group" aria-label="The system">
+          <div className="segs" role="group" aria-label="The system" ref={segsRef}>
             <button type="button" aria-pressed={!sys} className={!sys ? 'on' : ''} onClick={() => pick('raw')}>Without the system</button>
             <button type="button" aria-pressed={sys} className={`sysbtn${sys ? ' on' : ''}`} onClick={() => pick('sys')}>With the system</button>
           </div>
