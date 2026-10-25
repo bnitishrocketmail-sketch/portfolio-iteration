@@ -163,7 +163,7 @@
      page); round it the controls that drive it, sorted by what they do — at the left the states and the results sheet,
      driven by hand, and what's playing; at the right the scripted conversation, its editor as tall as the left column.
      The B-scale and options groups are not here ("we will not have the options … the B scale controls will also not
-     be in this layout"). The page's type (Outfit; buttons in its Title size, headings in Meta) and its radius (pills
+     be in this layout"). The page's type (Outfit; buttons in its label style — Meta and the chip's padding — headings in Meta) and its radius (pills
      for the buttons and keys, the page's inner radius on the editor and the status), the rig's colours kept; the
      script and the status keep their monospace ("we will not touch the font of these"). Nothing scrolls inside. */
   .embed body { background: transparent; padding: 0; font-family: 'Outfit', system-ui, sans-serif; }
@@ -176,8 +176,8 @@
   .embed .phone::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 calc(3px / var(--pz, .4333)) color-mix(in srgb, var(--pink, #121212) 72%, transparent); pointer-events: none; z-index: 30; } /* the study's device edge: 3px on screen */
   .embed .group { gap: 10px; }
   .embed .group h2 { font: 500 11px/1.2 'Outfit', system-ui, sans-serif; letter-spacing: 0; text-transform: none; color: var(--ink-2); margin: 0; } /* the page's Meta, sentence case */
-  .embed button { font: 500 13px/1 'Outfit', system-ui, sans-serif; padding: .6em 1.05em; border-radius: 999px; gap: 7px; } /* the page's Title, its pill */
-  .embed button kbd { font: 500 10px/1 'Outfit', system-ui, sans-serif; border-radius: 999px; padding: 2px 6px; }
+  .embed button { font: 500 11px/1.2 'Outfit', system-ui, sans-serif; padding: .45em .9em; border-radius: 999px; gap: 6px; } /* the page's label: its Meta (11px, 500) and its chip's padding, in its pill (25 Oct, Nitish: "the label variant … so they take less space") */
+  .embed button kbd { font: 500 9px/1 'Outfit', system-ui, sans-serif; border-radius: 999px; padding: 1px 5px; }
   .embed .scenario { flex: 1; } .embed .scenario textarea { flex: 1; min-height: 200px; height: auto; border-radius: var(--pri, 20px); padding: 12px 14px; }
   .embed .status { border-radius: var(--pri, 20px); padding: 12px 14px; }
   .embed .hint { font: 400 11px/1.5 'Outfit', system-ui, sans-serif; }
