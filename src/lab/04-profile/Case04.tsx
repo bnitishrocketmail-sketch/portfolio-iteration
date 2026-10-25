@@ -81,10 +81,10 @@ function Fig({ m, cls, fl }: { m: Media; cls?: string; fl?: string }) {
    out from the top with a gradient of the same background colour … in between, Copilot motion nudges with arrows
    pointing both ways, inside a pill"; then: "the phones the same standard size as the page's … the nudges a little
    bigger and spilled out from both sides of the screens … a PLP screen behind … the spacing round the capsule clean"):
-   two phones of the study's size seen at their foot only, a screen behind; each nudge a little above the bottom edge,
-   as his page placed it, at 132% of the screen's width — running 16% past each side, as the nudge pills of the
-   converging phones below do — so the two read at one size; the label in the system's marking pill between them,
-   level with the nudges, the same clear gap from each nudge's edge */
+   two phones seen at their foot only, a screen behind; each nudge a little above the bottom edge, across its screen's
+   width, as his page placed it, so the two read at one size (25 Oct: inside the screen again — the spill past its sides
+   "is not working out"; the phones a quarter over the study's size); the label in the system's marking pill between
+   them, level with the nudges, the same clear gap from each phone */
 const PEEK_AT = .894; /* the nudge's middle, down the phone (his page: 61px over the foot of a 576px phone) */
 const PHONE = 19.5 / 9, SHOT = 1600 / 720; /* the phone's height / width; a screen picture's */
 function Peek({ label, show = 25, screen, at, of }: { label: string; show?: number; screen?: string; at?: number; of: { label: string; lottie: string; ratio: number }[] }) {
