@@ -405,6 +405,7 @@
 .pp4-row { position: relative; flex: 1; min-height: 0; column-gap: 1.4cqw; overflow: hidden; padding-bottom: 40px; margin-bottom: -40px; } /* no fade at the right end (Nitish, 23 Oct): the half card there is cut by the frame as it is */
 .pp4-card { position: absolute; top: 0; bottom: 40px; left: 0; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: var(--pcard-fold); color: var(--pcard-fold-ink); box-shadow: var(--shadow-el); transition: background-color .45s, color .45s; }
 .pp4-card.open { background: var(--pcard-open); color: var(--pcard-open-ink); }
+@media (min-width: 701px) { .pp4-card.open:has(.pp4-vc) { background-color: transparent; transition: background-color 0s .5s, color .45s; } } /* a scene (the phones) covers the open card: once it has faded in (.16 + .28 s) the card's ground goes, which showed through the scene's anti-aliased corners in a pale fringe on the curves (Nitish, 26 Oct). Until then the card keeps its folded ground, dark under a dark scene */
 /* the cover: the project's letter only — the theme's greys, no picture yet (01's gradients went: not this theme) */
 .pp4-cover { position: absolute; inset: 0; }
 /* the open card's visual (Projects04 Visual, 23 Oct): under the letter and the open layout, with nothing over it (the
@@ -634,6 +635,7 @@
      big letter at the card's foot, faint, past the text */
   .pp4-cover { display: contents; }
   .pp4-vis { position: relative; inset: auto; aspect-ratio: 16 / 10; overflow: hidden; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); -webkit-mask-image: linear-gradient(#000 0 0); /* the card's top corners, for Safari's clip */ background: color-mix(in srgb, var(--pcard-open-ink) 7%, var(--pcard-open)); }
+  .pp4-vis:has(.pp4-vc) { background: none; } .pp4-card:has(.pp4-vc) { background: linear-gradient(transparent 60px, var(--pcard-open) 0); } /* under a scene, no light ground at the top corners (it showed through their anti-aliased curve, 26 Oct): the box's own goes, and the card's starts below them, under the scene */
   .pp4-vid.side { right: auto; left: 50%; transform: translate(-50%, -50%); } .pp4-vl-in { left: 4%; right: 4%; } .pp4-vms { left: 12px; right: 12px; top: 12px; bottom: 12px; } /* each scene centred in its box */
   .pp4-cover .pletter, .pp4-card.open .pp4-cover .pletter { left: auto; right: 10px; bottom: -6%; font-size: 140px; opacity: .06; color: currentColor; }
   .pp4-open { position: relative; z-index: 1; }

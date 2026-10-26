@@ -97,6 +97,7 @@ export default function Fintech3D({ on, mini, fit, at }: { on?: boolean; mini?: 
         <img className="ft3d-nav" src={`${A}/home-nav.webp`} alt="" draggable={false} />
       </>}
       right={on => <>
+        <div className="ft3d-fill" />
         <div className="ft3d-lot" style={{ left: '5%', top: '26%', width: '90%', height: `${(90 * (1200 / 1600) * SW / SH).toFixed(1)}%` }}><Lottie src={`${A}/card.lottie`} playing={on} /></div>
         <div className="ft3d-copy"><b>Your card is being prepared and could take up to 10 minutes.</b><span>We will notify you once it’s ready</span></div>
         <div className="ft3d-lot" style={{ left: '42%', top: '66%', width: '16%', height: `${(16 * SW / SH).toFixed(1)}%` }}><Lottie src={`${A}/dots.lottie`} playing={on} /></div>

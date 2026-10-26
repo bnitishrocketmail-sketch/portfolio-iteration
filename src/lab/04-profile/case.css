@@ -230,7 +230,7 @@
 .cs4-phones.ver { padding: var(--s1) 0 0; gap: var(--s3) var(--s4); }
 
 /* ---- the fintech study's hero (Fintech3D.tsx): his two phones in perspective, the screens projected onto them ---- */
-.cs4-hero.fill { padding: 0; }
+.cs4-hero.fill { padding: 0; background: none; } /* the scene covers the card: with the card's light ground under it, the ground showed through the scene's anti-aliased corners in a pale fringe on the curves (Nitish, 26 Oct) */
 /* the loaders' phones (LoaderPhone): the app's white screen, the copy in the screen's width (the hero's 26px and 19px on
    its 600px screen: 4.33 and 3.17 of 100), the dots under it at the hero's place */
 .cs4-ld-row { grid-template-columns: repeat(3, var(--ph-w)); column-gap: var(--s5); }
@@ -252,7 +252,8 @@
 .ft3d-stage { position: absolute; left: 50%; top: -7.5%; transform-origin: 50% 0; }
 .ft3d-phones, .ft3d-island { position: absolute; left: 0; top: 0; display: block; max-width: none; }
 .ft3d-island { z-index: 3; pointer-events: none; }
-.ft3d-scr { position: absolute; left: 0; top: 0; z-index: 2; transform-origin: 0 0; overflow: hidden; background: #fff; backface-visibility: hidden; } /* a flat box, carried onto the glass by its matrix3d */
+.ft3d-scr { position: absolute; left: 0; top: 0; z-index: 2; transform-origin: 0 0; overflow: hidden; backface-visibility: hidden; } /* a flat box, carried onto the glass by its matrix3d. No ground of its own: a white one showed through a dark screen's rounded corners as a pale line against the bezel (26 Oct); a white screen draws its white inside (.ft3d-fill) */
+.ft3d-fill { position: absolute; inset: 0; background: #fff; }
 .ft3d-scr > img, .ft3d-scr > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
 .ft3d-lot { position: absolute; } .ft3d-lot > div, .ft3d-lot svg { display: block; width: 100%; height: 100%; }
 .ft3d-scr > img.ft3d-nav { top: auto; bottom: 0; left: -1.475%; width: 102.95%; height: auto; } /* the home's bottom bar, over its foot and over the Lottie, cut at the sides as the home is (cover: 617.7 of 600) */
