@@ -33,7 +33,7 @@ export const arTryOn: Case = {
     { k: 'Focus', v: 'UI/UX design collaboration, interaction & motion design ownership' },
   ],
   hero: { k: 'media', shape: 'wide', ratio: '2.2 / 1', label: 'Hero — to come' },
-  collab: { name: 'Ashish Sharma', role: 'Senior product designer', photo: '/cases/ashish.webp', project: 'https://ashishsharmaportfolio.framer.website/work-5/ar-on-colour-lenses', site: 'https://ashishsharmaportfolio.framer.website/' }, /* made with Ashish (26 Oct): his case study of it, and his portfolio */
+  collab: { name: 'Ashish Sharma', role: 'Product designer', photo: '/cases/ashish.webp', project: 'https://ashishsharmaportfolio.framer.website/work-5/ar-on-colour-lenses', site: 'https://ashishsharmaportfolio.framer.website/' }, /* made with Ashish (26 Oct): his case study of it, and his portfolio */
   sections: [
     { id: 'about', title: 'About', blocks: [
       { k: 'p', t: ['Shopping for eyewear isn’t just about function — it’s about ', { b: 'style, personality and occasion' }, '. Customers in a Lenskart store browse by how glasses fit their ', { b: 'lifestyle' }, ', not just by brand or frame type. In the app, that context was ', { b: 'missing from the digital experience' }, '.'] },

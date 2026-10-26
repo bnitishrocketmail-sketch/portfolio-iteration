@@ -9,6 +9,7 @@ import illustration from '../../assets/nitish-desk-illustration.webp';
 import desk from '../../assets/nitish-desk.webp';
 import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.webp';
 import deskCutout from '../../assets/nitish-desk-cutout.webp';
+import { Arrow04 } from './Arrow04';
 import Controls04 from './Controls04';
 import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
@@ -421,7 +422,7 @@ export default function Iteration04() {
             <span className="me4"><img src={desk} alt="" /></span>
             <Signature04 className="sig4" label="Product, motion designer" /> {/* his written title (22 Oct), in the rolling word's place — the word's first letter on the name's edge, as on the case study's card */}
             <p className="sub4">I design feedback{'\u00a0'}rich interfaces powered by motion.</p>
-            <a className="cv4" href={LINKS.cv}>View CV <span aria-hidden="true">↗</span></a>
+            <a className="cv4" href={LINKS.cv}>View CV <Arrow04 out /></a>
           </div>
         </div>
 

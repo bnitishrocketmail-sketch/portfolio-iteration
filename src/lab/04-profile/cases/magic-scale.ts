@@ -18,7 +18,7 @@ const magicScale: Case = {
     { k: 'Focus', v: 'UI/UX design collaboration, interaction & motion design ownership' },
   ],
   hero: { k: 'media', shape: 'wide', ratio: '2.2 / 1', label: 'Hero video', src: `${A}/hero.mp4`, poster: `${A}/hero-poster.webp` }, /* a band (the clip is 16:9, cropped as his page cropped it), so the strip shows under it in the page's height */
-  collab: { name: 'Ashish Sharma', role: 'Senior product designer', photo: '/cases/ashish.webp', project: 'https://ashishsharmaportfolio.framer.website/work-2/magic-ruler', site: 'https://ashishsharmaportfolio.framer.website/' }, /* made with Ashish (26 Oct): his case study of it, and his portfolio */
+  collab: { name: 'Ashish Sharma', role: 'Product designer', photo: '/cases/ashish.webp', project: 'https://ashishsharmaportfolio.framer.website/work-2/magic-ruler', site: 'https://ashishsharmaportfolio.framer.website/' }, /* made with Ashish (26 Oct): his case study of it, and his portfolio */
   sections: [
     {
       id: 'what', title: 'What is a Magic Scale?',

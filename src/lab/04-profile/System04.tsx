@@ -4,6 +4,7 @@ import { faInstagram, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import { siLottiefiles } from 'simple-icons';
 import { COPY, LINKS, NAV04 as NAV, PROJECTS } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
+import { Arrow04 } from './Arrow04';
 import { readTweaks, tweakKey, writeTweaks } from './tokens';
 import Controls04 from './Controls04';
 import './profile.css';
@@ -64,7 +65,7 @@ function Sheet({ dark, values }: { dark: boolean; values: Record<string, string>
                 <span className="sys-cap">Nav bar, highlight,<br />assistant</span>
               </div>
               <div className="sys-block">
-                <a className="cv4" href={LINKS.cv} onClick={e => e.preventDefault()}>View CV <span aria-hidden="true">↗</span></a>
+                <a className="cv4" href={LINKS.cv} onClick={e => e.preventDefault()}>View CV <Arrow04 out /></a>
                 <div className="links4">{SOCIAL.map(l => <a key={l.label} href="#" onClick={e => e.preventDefault()} aria-label={l.label}><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}</div>
                 <div className="sys-corner"><i className="corner4" aria-hidden="true" /></div>
                 <span className="sys-cap">CV button · social icons · corner bracket</span>

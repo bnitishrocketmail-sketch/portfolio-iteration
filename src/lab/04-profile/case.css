@@ -12,7 +12,7 @@
 /* the study at the left, the column at the right — the home page's column: its width and the frame's gap, level with
    the first container (the head stays above both) */
 .cs4-main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) calc(.21 * var(--fw)); gap: 0 calc(.016 * var(--fw)); } /* the study scrolls behind the head, which is out of the flow above it */
-.cs4-aside { min-height: 0; display: grid; grid-template-rows: var(--hero-h, 70%) minmax(0, 1fr); gap: var(--s3); padding: 2px 2px 2px 0; margin-top: calc(var(--head-h, 80px) - .014 * var(--fw) + var(--s2) - 2px); } /* level with the study's first container: under the bar and its room below — the study's own start (.cs4-body), less this column's 2px padding (25 Oct: p203 lifted the bar to the frame's edge and the study with it, and this column had stayed 34px low); the first card as tall as the hero beside it (22 Oct), the contact card taking the rest, the containers' gap between them */
+.cs4-aside { min-height: 0; display: grid; grid-template-rows: minmax(0, var(--hero-h, 70%)) minmax(max-content, 1fr); gap: var(--s3); padding: 2px 2px 2px 0; margin-top: calc(var(--head-h, 80px) - .014 * var(--fw) + var(--s2) - 2px); } /* level with the study's first container: under the bar and its room below — the study's own start (.cs4-body), less this column's 2px padding (25 Oct: p203 lifted the bar to the frame's edge and the study with it, and this column had stayed 34px low); the first card as tall as the hero beside it (22 Oct), the contact card taking the rest, the containers' gap between them */ /* (26 Oct) the second card is never shorter than what it holds: on a short window the next card gives way, where it had clipped the contact card's foot */
 .cs4-next { position: relative; display: flex; flex-direction: column; gap: var(--s1); min-height: 0; padding: var(--s3); border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--pcard-open); color: var(--pcard-open-ink); box-shadow: var(--shadow-el); overflow: hidden; }
 .cs4-eyebrow { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .55; margin-bottom: var(--s1); } /* meta */
 .cs4-next-title { margin: 0; font: var(--h2-w) var(--t-display)/1.15 var(--f-head); letter-spacing: -.01em; } /* the open card's title style */
@@ -32,14 +32,22 @@
 .cs4-talk .cs4-talk-btn { margin: 0; background: var(--nav-hl); color: var(--nav-hl-ink); font: 600 var(--t-title)/1 var(--f-copy); padding: .7em 1.1em; } /* the CV button's shape, in the nav highlight's dark (the system's), set in Title (22 Oct) */
 .cs4-talk .cs4-links { display: flex; gap: 2px; padding: 0; border-radius: 0; } .cs4-talk .cs4-links a { color: var(--pcard-open-ink); opacity: .7; } .cs4-talk .cs4-links a:hover { opacity: 1; background: color-mix(in srgb, var(--pcard-open-ink) 8%, transparent); }
 .cs4-talk .cs4-links svg { width: 15px; height: 15px; }
-/* the credit (26 Oct): the two faces overlapping, his in front with a ring of the card's ground; his portfolio as a quiet
-   link beside the case study's button */
+/* the credit (26 Oct): the two faces overlapping, his in front with a ring of the card's ground. Who and the line at the
+   top, the actions together at the foot (26 Oct, Nitish: the button and the link done differently, the system's arrow,
+   the spacing): the case study as the card's button; his portfolio as a text link — body text, underlined, the same arrow
+   smaller — a step after it, not pushed to the far edge */
+.cs4-talk.collab { justify-content: flex-start; gap: var(--s2); }
+.cs4-talk.collab .cs4-talk-row.acts { margin-top: auto; justify-content: flex-start; gap: var(--s3); }
+.cs4-talk.collab .cs4-talk-btn { gap: .45em; }
 .cs4-pair { display: flex; flex: none; align-items: center; }
 .cs4-pair > .cs4-me + .cs4-me { margin-left: calc(clamp(36px, 3.4cqw, 46px) * -.32); }
 .cs4-pal { aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; box-shadow: 0 0 0 2px var(--pcard-open) !important; }
 .cs4-pal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .cs4-talk.collab .cs4-talk-role { opacity: .55; } .cs4-talk.collab .cs4-talk-btn { white-space: nowrap; }
-.cs4-talk-link { font: 600 var(--t-meta)/1.2 var(--f-copy); color: inherit; text-decoration: none; opacity: .72; padding: .5em .2em; white-space: nowrap; } .cs4-talk-link:hover { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
+.cs4-talk-link { display: inline-flex; align-items: center; gap: .3em; font: 500 var(--t-body)/1.2 var(--f-copy); color: var(--pcard-open-ink); text-decoration: none; white-space: nowrap; }
+.cs4-talk-link > span { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .25em; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); transition: text-decoration-color .2s; }
+.cs4-talk-link:hover > span { text-decoration-color: currentColor; } .cs4-talk-link .arrow4 { width: .85em; height: .85em; opacity: .7; }
+.cs4-talk-link:focus-visible { outline: 2px solid var(--pcard-open-ink); outline-offset: 3px; border-radius: 4px; } .cs4-talk-btn:focus-visible { outline: 2px solid var(--pcard-open-ink); outline-offset: 3px; }
 
 .it04 .cs4-head { position: absolute; top: calc(-.014 * var(--fw)); left: .2cqw; right: .2cqw; z-index: 5; display: block; padding: var(--s2) var(--s3) var(--s3); border-radius: 0 0 calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); } /* across the page, the one-liner and the tags at its far right; 24 Oct (Nitish: "the top side of that container should go straight to the end of the main container … the curves on the bottom side, not the top"): no longer floating — lifted by the frame's padding (1.4% of its width) and its old gap, its top on the frame's top edge, square there, its foot rounded; its height as it was; it still stays put while the study scrolls under it. The frame's rim (.edge4, over the frame's contents) runs over its top as the frame's edge */
 .cs4-glass { position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; corner-shape: inherit; background: color-mix(in srgb, var(--frame) var(--head-tint, 60%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); } /* the home page's glass, tinted toward the frame's own colour (23 Oct, Nitish: the light cards scrolling under hid the light text; the text keeps its colour, the glass goes darker — not all the way): at rest it is the frame and does not show; frosted and dimmed when something scrolls under */
