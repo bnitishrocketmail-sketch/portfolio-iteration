@@ -17,6 +17,10 @@ const clip = (name: string, label: string, cap: string): Media => ({ k: 'media',
 const SIDE = 'minmax(0, 1.25fr) minmax(var(--ph-w), 1fr)';
 const state = (name: string, label: string): Media => ({ k: 'media', shape: 'image', ratio: '2 / 1', label, lottie: `${A}/${name}.json`, bg: '#000' });
 
+/* the contact-lens recording's slider handle: its x (a fraction of the screen) over the clip's seconds, measured by matching the
+   handle in every third frame of his recording and thinned to the points that change its path (within 0.6% of the width) */
+const LENS_HANDLE: [number, number][] = [[0.01, 0.126], [0.91, 0.125], [0.96, 0.127], [1.01, 0.149], [1.06, 0.206], [1.11, 0.293], [1.27, 0.66], [1.32, 0.757], [1.37, 0.828], [1.42, 0.863], [1.47, 0.87], [5.05, 0.87], [5.1, 0.863], [5.4, 0.674], [5.5, 0.629], [5.76, 0.483], [5.96, 0.387], [6.16, 0.317], [6.41, 0.264], [6.51, 0.252], [6.92, 0.254], [7.17, 0.311], [7.42, 0.427], [7.67, 0.528], [7.77, 0.582], [8.03, 0.739], [8.08, 0.762], [8.33, 0.826], [17.71, 0.827], [17.91, 0.71], [18.12, 0.58], [18.37, 0.469], [18.57, 0.361], [18.67, 0.317], [18.82, 0.291], [19.28, 0.249], [19.73, 0.24], [19.93, 0.334], [20.14, 0.467], [20.34, 0.615], [20.44, 0.733], [20.49, 0.783], [20.54, 0.815], [20.64, 0.856], [20.79, 0.875], [35.93, 0.875], [35.98, 0.872], [36.13, 0.652], [36.18, 0.594], [36.28, 0.498], [36.53, 0.213], [36.58, 0.184], [36.63, 0.171], [36.78, 0.16], [37.19, 0.16], [37.24, 0.179], [37.44, 0.323], [37.49, 0.37], [37.69, 0.589], [37.74, 0.638], [37.79, 0.672], [37.94, 0.734], [38.2, 0.791], [43.44, 0.794]];
+
 export const arTryOn: Case = {
   id: 'ar-try-on',
   title: 'Revolutionising AR try-on',
@@ -80,23 +84,25 @@ export const arTryOn: Case = {
       { k: 'p', t: ['Both were built as ', { b: 'custom Lotties' }, '. With motion, frame removal turned from a ', { b: 'technical feature' }, ' into an ', { b: 'engaging, visually intuitive interaction' }, ', making virtual try-ons ', { b: 'more immersive and natural' }, ' for users.'] },
     ] },
     { id: 'contact-lens', title: 'Contact-lens try-on with a slider', blocks: [
-      { k: 'row', ratio: SIDE, of: [
-        { k: 'group', of: [
-          { k: 'p', t: ['Users ', { b: 'drag a slider across the screen' }, ' to see:'] },
-          { k: 'ul', items: [
-            [{ b: 'One eye with, and one without' }, ' the contact lens.'],
-            ['A ', { b: 'before and after' }, ', in real time.'],
-          ] },
-          { k: 'p', t: [{ b: 'Micro nudges, interactions and feedback animations' }, ', custom-made, draw the user’s focus to the changing eye colour and to the slider.'] },
-        ] },
-        { k: 'figure', of: clip('contact-lens', 'Contact-lens try-on, recorded', 'From colour lenses to the try-on'), width: 'phone' },
+      { k: 'p', t: ['Users ', { b: 'drag a slider across the screen' }, ' to compare one eye ', { b: 'with the lens and one without' }, ': a before and after, in real time. Around the slider, small animations draw the eye to the colour, teach the gesture and celebrate the look. Each one lights up as the recording reaches it; tap one to see it again.'] },
+      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the slider, the nudges, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
+        { chip: 'Nudge', h: 'The reveal', side: 'r', p: ['As the try-on opens, the line sweeps across the face and sparkles play over the side wearing the lens: the first thing seen is the colour.'],
+          when: [{ t: [.85, 1.45], at: 'track' }, { t: [1.45, 3.45], at: [.58, .36] }] },
+        { chip: 'Nudge', h: 'A hand shows the drag', side: 'r', p: ['Before the slider is touched, a hand drags its handle once: the gesture is taught without a word.'],
+          when: [{ t: [3.5, 5], at: 'track' }] },
+        { chip: 'Compare', h: 'With and without', side: 'r', p: ['Drag the line across the face: one side wears the lens, the other doesn’t, and the labels at the top follow the line.'],
+          when: [{ t: [5.05, 8.6], at: 'track' }, { t: [17.6, 21], at: 'track' }, { t: [35.85, 38.5], at: 'track' }] },
+        { chip: 'Zoom', h: 'Closer to the eyes', side: 'l', p: ['The bar at the side brings the eyes closer, to see the lens; a toast in the middle says how far.'],
+          when: [{ t: [9.9, 12.4], at: [.045, .44] }, { t: [21.65, 24.75], at: [.045, .44] }, { t: [39.55, 43.4], at: [.045, .44] }] },
+        { chip: 'Persuasion', h: 'A burst of praise', side: 'l', p: ['Hearts burst around the face with a line of praise, here “Absolutely stunning!”: a moment of delight that nudges towards the cart.'],
+          when: [{ t: [12.7, 15.5], at: [[12.7, .5, .55], [13.3, .5, .59], [14.1, .5, .405], [14.9, .37, .23], [15.5, .36, .21]] }] },
+        { chip: 'Explore', h: 'Every colour, on your eyes', side: 'l', p: ['Tap a colour in the row and the eyes change on the spot; the product card under it follows, one tap from the cart.'],
+          when: [{ t: [25, 35.4], at: [.5, .705] }] },
       ] },
-      { k: 'h', t: 'Step by step' },
-      { k: 'phones', of: [
-        still('cl-1', 'Colour lenses', '1 · Colour lenses, zero power'),
-        still('cl-2', 'The nudge', '2 · A nudge towards the slider'),
-        still('cl-3', 'With and without', '3 · With and without, side by side'),
-        still('cl-4', 'Every colour', '4 · Every colour, on your own eye'),
+      { k: 'cols', of: [
+        { h: 'What it is', p: ['An AR try-on for colour contact lenses: the lens is drawn on your own eyes, live, from the camera.'] },
+        { h: 'Why a slider', p: ['A colour on an eye is easy to miss on its own. Split down the face, with and without, the difference is right in front of you.'] },
+        { h: 'The motion', p: ['The nudges and the praise are custom-made animations: they draw the eye to the colour, teach the gesture and make choosing a lens feel like play.'] },
       ] },
       { k: 'p', t: ['More work is being added.'] },
     ] },

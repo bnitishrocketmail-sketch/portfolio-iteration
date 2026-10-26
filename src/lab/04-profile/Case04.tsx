@@ -223,6 +223,83 @@ function LoaderPhone({ l }: { l: LoaderItem }) {
 /* success states, each in its panel with what it is (25 Oct, Nitish: "write a little bit about every success state … a
    different structure that looks a little better"): the screen at the left, its chip, heading and a line or two at the
    right; the desktop one takes the row */
+/* the contact-lens try-on, toured (Nitish, 26 Oct: "the phone is in the center, the video is being played inside, and the
+   markers… the nodes… guiding a little outside of the phone and then in a container, showing with the text what that
+   feature is"): his recording plays in a phone at the middle, its features in cards at the sides. While the recording
+   shows one, its card is lit, a node sits where it happens on the screen (riding the slider's handle as it is dragged:
+   the handle's x measured in every third frame of the recording) and a line runs from the node out past the phone's edge
+   and on to the card. The geometry is read each frame while it plays, so it holds at any size. A card plays the
+   recording from its moment. Under reduced motion the recording holds on its first frame and every card is lit. On the
+   phone the cards stack under it, in the order they happen, and the node stays without its line */
+type TourB = Extract<Block, { k: 'tour' }>;
+const lerpAt = (keys: [number, number, number][], t: number): [number, number] => {
+  if (t <= keys[0][0]) return [keys[0][1], keys[0][2]];
+  for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) { const [t0, x0, y0] = keys[i - 1], [t1, x1, y1] = keys[i], u = (t - t0) / (t1 - t0 || 1); return [x0 + (x1 - x0) * u, y0 + (y1 - y0) * u]; }
+  const k = keys[keys.length - 1]; return [k[1], k[2]];
+};
+function Tour({ b }: { b: TourB }) {
+  const box = useRef<HTMLDivElement>(null), phone = useRef<HTMLDivElement>(null), vid = useRef<HTMLVideoElement>(null);
+  const cards = useRef<(HTMLButtonElement | null)[]>([]);
+  const node = useRef<SVGGElement>(null), line = useRef<SVGPathElement>(null), halo = useRef<SVGPathElement>(null);
+  const inView = useInView(box, .25);
+  const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [act, setAct] = useState(-1); const actRef = useRef(-1);
+  useEffect(() => { const v = vid.current; if (!v) return; if (inView && !reduce) v.play().catch(() => {}); else v.pause(); }, [inView, reduce]);
+  useEffect(() => {
+    if (!inView || reduce) return;
+    const track = (b.track ?? []).map(([t, x]) => [t, x, b.ty ?? .6] as [number, number, number]);
+    let raf = 0;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const v = vid.current, bx = box.current, ph = phone.current, g = node.current, l = line.current, h = halo.current;
+      if (!v || !bx || !ph || !g || !l || !h) return;
+      const t = v.currentTime;
+      let ai = -1, at: [number, number] = [0, 0];
+      b.of.forEach((st, i) => st.when.forEach(w => {
+        if (ai >= 0 || t < w.t[0] || t >= w.t[1]) return;
+        ai = i; at = w.at === 'track' ? lerpAt(track, t) : typeof w.at[0] === 'number' ? w.at as [number, number] : lerpAt(w.at as [number, number, number][], t);
+      }));
+      if (ai !== actRef.current) { actRef.current = ai; setAct(ai); }
+      if (ai < 0) return;
+      const B = bx.getBoundingClientRect(), P = ph.getBoundingClientRect();
+      const ax = P.left - B.left + at[0] * P.width, ay = P.top - B.top + at[1] * P.height;
+      g.setAttribute('transform', `translate(${ax.toFixed(1)} ${ay.toFixed(1)})`);
+      const c = cards.current[ai]; if (!c) return;
+      const C = c.getBoundingClientRect();
+      const beside = C.bottom > P.top && C.top < P.bottom && (C.right <= P.left || C.left >= P.right); /* a card beside the phone; under it (the phone's layout) there is no line */
+      if (!beside) { l.setAttribute('d', ''); h.setAttribute('d', ''); return; }
+      const left = C.right <= P.left;
+      const ex = left ? P.left - B.left - 14 : P.right - B.left + 14, cx = left ? C.right - B.left : C.left - B.left, cy = C.top - B.top + Math.min(C.height / 2, 30), mx = (ex + cx) / 2;
+      const d = `M${ax.toFixed(1)} ${ay.toFixed(1)}L${ex.toFixed(1)} ${ay.toFixed(1)}C${mx.toFixed(1)} ${ay.toFixed(1)} ${mx.toFixed(1)} ${cy.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)}`;
+      l.setAttribute('d', d); h.setAttribute('d', d);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, reduce, b]);
+  const go = (i: number) => { const v = vid.current; if (!v) return; v.currentTime = b.of[i].when[0].t[0] + .05; if (!reduce) v.play().catch(() => {}); };
+  const card = (st: TourB['of'][number], i: number) => (
+    <button key={i} type="button" ref={el => { cards.current[i] = el; }} className={`cs4-tour-card${act === i || reduce ? ' on' : ''}`} style={{ order: i }} onClick={() => go(i)} aria-label={`${st.h}: play this moment`}>
+      <span className="cs4-faq-label">{st.chip}</span>
+      <h4 className="cs4-sub">{st.h}</h4>
+      <p className="cs4-p">{text(st.p)}</p>
+    </button>
+  );
+  return (
+    <div ref={box} className={`cs4-tour${act >= 0 ? ' live' : ''}`}>
+      <div className="cs4-tour-col l">{b.of.map((st, i) => st.side === 'l' ? card(st, i) : null)}</div>
+      <div ref={phone} className="cs4-media phone filled cs4-tour-phone" role="img" aria-label={b.label}>
+        <video ref={vid} src={b.src} poster={b.poster} muted loop playsInline preload="metadata" aria-hidden="true" />
+      </div>
+      <div className="cs4-tour-col r">{b.of.map((st, i) => st.side === 'r' ? card(st, i) : null)}</div>
+      <svg className="cs4-tour-svg" aria-hidden="true">
+        <path ref={halo} className="halo" d="" />
+        <path ref={line} className="ln" d="" />
+        <g ref={node} className="node"><circle className="pulse" r="9" /><circle className="dot" r="4.5" /></g>
+      </svg>
+    </div>
+  );
+}
+
 function Successes({ of }: { of: { m: Media; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean }[] }) {
   return (
     <div className="cs4-sx">
@@ -429,8 +506,8 @@ function Render({ b }: { b: Block }) {
     );
     case 'legend': return <ul className="cs4-legend">{b.items.map((t, i) => <li key={t}><i className={`sw s${i}`} style={b.colors ? { background: b.colors[i] } : undefined} aria-hidden="true" />{t}</li>)}</ul>;
     case 'cols': return (
-      <div className="cs4-cols">
-        {b.of.map(c => <div key={c.h} className="cs4-col"><h4 className="cs4-sub">{c.h}</h4><p className="cs4-p">{text(c.p)}</p><ul className="cs4-ul">{c.ul.map((it, i) => <li key={i}>{text(it)}</li>)}</ul></div>)}
+      <div className={`cs4-cols${b.of.length === 3 ? ' three' : ''}`}>
+        {b.of.map(c => <div key={c.h} className="cs4-col"><h4 className="cs4-sub">{c.h}</h4><p className="cs4-p">{text(c.p)}</p>{c.ul && <ul className="cs4-ul">{c.ul.map((it, i) => <li key={i}>{text(it)}</li>)}</ul>}</div>)}
       </div>
     );
     case 'flow': return <Flow steps={b.steps} />;
@@ -457,6 +534,7 @@ function Render({ b }: { b: Block }) {
     case 'peek': return <Peek label={b.label} show={b.show} screen={b.screen} at={b.at} of={b.of} />;
     case 'loaders': return <div className="cs4-row cs4-ld-row">{b.of.map((l, i) => <LoaderPhone key={i} l={l} />)}</div>;
     case 'successes': return <Successes of={b.of} />;
+    case 'tour': return <Tour b={b} />;
     case 'gaps': return (
       <div className="cs4-gaps">
         {b.of.map((g, i) => (
