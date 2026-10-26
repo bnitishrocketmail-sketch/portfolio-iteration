@@ -65,4 +65,7 @@ export type Case = {
   facts: { k: string; v: string }[];
   hero?: Media | Block;
   sections: Section[];
+  /* a project made with another designer (26 Oct): the contact card becomes his credit — who, his photo, the project on his
+     portfolio (`project`) and his portfolio (`site`) */
+  collab?: { name: string; role: string; photo: string; project: string; site: string };
 };

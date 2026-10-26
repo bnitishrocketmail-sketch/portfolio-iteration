@@ -660,6 +660,23 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04 }: { id: s
         </article>
         {/* the second card (21 Oct): his old site's contact card, at the foot of its project pages — the photo, the name, a
             line, "Let's talk!" and the links — in 04's parts (the intro's photo disc, its CV button's style, the notch's marks) */}
+        {c?.collab ? (
+          /* a collaboration (26 Oct, Nitish: "I have worked with this product designer on this project… I have worked on the
+             interaction part… a user gets directed on that project on his portfolio… it gives him a credit… and a space for his
+             portfolio"): the contact card's place, as a credit — both faces, his name and role, the line, his case study as
+             the card's button and his portfolio beside it */
+          <article className="cs4-talk collab" aria-label={`In collaboration with ${c.collab.name}`}>
+            <div className="cs4-talk-head">
+              <span className="cs4-pair" aria-hidden="true"><span className="me4 cs4-me"><img src={desk} alt="" /></span><span className="cs4-me cs4-pal"><img src={c.collab.photo} alt="" /></span></span>
+              <div className="cs4-talk-who"><span className="cs4-talk-role">In collaboration with</span><b className="cs4-talk-name">{c.collab.name}</b></div>
+            </div>
+            <p className="cs4-talk-line">I worked on the interaction and motion with {c.collab.name.split(' ')[0]}, {c.collab.role.toLowerCase()}. His case study has the project in full.</p>
+            <div className="cs4-talk-row">
+              <a className="cv4 cs4-talk-btn" href={c.collab.project} target="_blank" rel="noopener" aria-label={`${c.collab.name}’s case study of this project`}>Case study <span aria-hidden="true">↗</span></a>
+              <a className="cs4-talk-link" href={c.collab.site} target="_blank" rel="noopener" aria-label={`${c.collab.name}’s portfolio`}>His portfolio <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
+        ) : (
         <article className="cs4-talk" aria-label="Contact">
           <div className="cs4-talk-head">
             <span className="me4 cs4-me"><img src={desk} alt="" /></span> {/* the portfolio's own photo (22 Oct), as the intro has it */}
@@ -671,6 +688,7 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04 }: { id: s
             <div className="links4 cs4-links">{SOCIAL.filter(l => l.label !== 'Email').map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}</div>
           </div>
         </article>
+        )}
       </aside>
       </div>
     </section>
