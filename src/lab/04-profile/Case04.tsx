@@ -335,7 +335,7 @@ function Tour({ b }: { b: TourB }) {
       <div className="cs4-tour-col r">{b.of.map((f, i) => f.side === 'r' ? card(f, i) : null)}</div>
       <svg className="cs4-tour-svg" aria-hidden="true">
         <path ref={line} className="ln" d="" />
-        <g ref={node} className="node"><circle className="ring" r="11" /><circle className="dot" r="4" /></g>
+        <g ref={node} className="node"><circle className="ring" r="10" /><circle className="dot" r="3.5" /></g>
       </svg>
     </div>
   );

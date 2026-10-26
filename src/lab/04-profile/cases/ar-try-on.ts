@@ -51,16 +51,16 @@ export const arTryOn: Case = {
     ] },
     { id: 'contact-lens', title: 'Contact-lens try-on with a slider', blocks: [
       { k: 'p', t: ['Users ', { b: 'drag a slider across the screen' }, ' to compare one eye ', { b: 'with the lens and one without' }, ': a before and after, in real time. Around the slider, small animations draw the eye to the colour, teach the gesture and celebrate the look. Each one lights up as the recording reaches it; tap one to see it again.'] },
-      /* the tour, paced (Nitish, 26 Oct): the clip starts at the hand's nudge (the sparkles cut: "not made properly how it was
-         intended"). At each feature the recording pauses on its first frame (`t`), the node marks the spot (`at`), the card
-         comes in (`h`, a line); then the node goes and the feature plays to `end`. The slider's feature plays with its node
-         riding the handle ("the nod is following the slider, so that is fine"). Each feature once */
-      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the hand that shows the drag, the slider, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
-        { h: 'A hand shows the drag', p: ['Before the slider is touched, a hand drags its handle once: the gesture is taught without a word.'], side: 'r', t: .05, end: 1.7, at: [.871, .602] },
-        { h: 'With and without', p: ['Drag the line across the face: one side wears the lens, the other doesn’t, and the labels at the top follow the line.'], side: 'r', t: 1.72, end: 5.2, at: 'track', ride: true },
-        { h: 'Closer to the eyes', p: ['The bar at the side brings the eyes closer, to see the lens; a toast in the middle says how far.'], side: 'l', t: 6.45, end: 8.7, at: [.045, .44] },
-        { h: 'A burst of praise', p: ['Hearts burst around the face with a line of praise, here “Absolutely stunning!”: a moment of delight that nudges towards the cart.'], side: 'l', t: 9.35, end: 12.3, at: [.5, .46] },
-        { h: 'Every colour, on your eyes', p: ['Tap a colour in the row and the eyes change on the spot; the product card under it follows, one tap from the cart.'], side: 'l', t: 22.5, end: 32.4, at: [.405, .684] },
+      /* the tour, paced (Nitish, 26 Oct): the clip starts at the hand's nudge (the sparkles cut). At each feature the recording
+         pauses on the frame named (`t`), the node marks the spot (`at`), the card comes in; then the node goes and the feature
+         plays to `end`. The slider's plays with its node riding the handle. Plain words, each heading complete on its own
+         (26 Oct: "the heading is totally misleading… be very direct with what we are showing"); the hand's nudge folded into
+         the slider's card; the praise paused on its pill once it has fully emerged, just over the lens row (10.0 s) */
+      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the slider with its nudge, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
+        { h: 'Drag the slider to see the lens on and off', p: ['One side of the line wears the lens, the other doesn’t. A hand nudges the handle first, so you know it moves.'], side: 'r', t: .05, end: 5.2, at: 'track', ride: true },
+        { h: 'Zoom in for a closer look at the lens', p: ['The bar at the side zooms the camera; a toast says how far.'], side: 'l', t: 6.45, end: 8.7, at: [.045, .44] },
+        { h: 'A burst of praise, to delight and persuade', p: ['Hearts and a compliment, for the lens you just tried.'], side: 'l', t: 10, end: 12.3, at: [.312, .572] } /* the node at the pill's left end, by its heart, clear of its words */,
+        { h: 'Tap a colour to switch lenses', p: ['The eyes change on the spot, and the product card follows.'], side: 'l', t: 22.5, end: 32.4, at: [.405, .684] },
       ] },
       { k: 'cols', of: [
         { h: 'What it is', p: ['An AR try-on for colour contact lenses: the lens is drawn on your own eyes, live, from the camera.'] },
