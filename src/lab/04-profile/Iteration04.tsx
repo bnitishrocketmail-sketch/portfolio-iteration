@@ -339,7 +339,7 @@ export default function Iteration04() {
         {tab === 'projects' ? (
           /* the project page takes the picture's and the column's place (Projects04.tsx); the nav stays */
           <motion.div key={pid ? `case-${pid}` : 'projects'} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
-            {pid ? <Case04 id={pid} back={() => go('projects')} onOpen={id => go('project', id)} /> : <Projects04 onOpen={id => go('project', id)} />}
+            {pid ? <Case04 id={pid} card={tweaks[`--card-${pid}`]} back={() => go('projects')} onOpen={id => go('project', id)} /> : <Projects04 onOpen={id => go('project', id)} />}
           </motion.div>
         ) : tab === 'motion' ? (
           /* the motion system (Motion04.tsx), in the same place */

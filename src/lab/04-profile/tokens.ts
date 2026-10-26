@@ -84,6 +84,11 @@ export const CONTROLS: Control[] = [
      on his iPhone's screenshots — or the plain hairline as before; and the axis turned, as tilting the phone turns it */
   { group: 'Main container', sub: 'Edge light', kind: 'select', key: '--edge-light', label: 'Version', def: 'rim', light: 'rim', options: [['iOS rim', 'rim'], ['Off (as before)', 'off']] },
   { group: 'Main container', sub: 'Edge light', kind: 'range', key: '--edge-angle', label: 'Light angle', def: '24deg', light: '24deg', min: 0, max: 180, step: 1, unit: 'deg' },
+  /* the card at the foot of a case study's side column (26 Oct, Nitish: "a control to select what kind of… sticky container
+     I have on the bottom right… for which project… up to me to switch it on or off"): a project made with another designer
+     carries his credit (the case's `collab`); each such project can show that credit or the contact card instead */
+  { group: 'Case study', sub: 'Bottom-right card', kind: 'select', key: '--card-ar-try-on', label: 'AR try-on', def: 'collab', light: 'collab', options: [['Ashish’s credit', 'collab'], ['Contact (Let’s talk)', 'contact']] },
+  { group: 'Case study', sub: 'Bottom-right card', kind: 'select', key: '--card-magic-scale', label: 'Magic Scale', def: 'collab', light: 'collab', options: [['Ashish’s credit', 'collab'], ['Contact (Let’s talk)', 'contact']] },
 ];
 
 export const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;

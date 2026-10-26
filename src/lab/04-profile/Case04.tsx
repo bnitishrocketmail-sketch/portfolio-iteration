@@ -587,7 +587,7 @@ function Render({ b }: { b: Block }) {
 }
 
 /* `items`: the list it belongs to (Projects, or the Lab's), for its next card (23 Oct) */
-export default function Case04({ id, back, onOpen, items = PROJECTS04 }: { id: string; back: () => void; onOpen: (id: string) => void; items?: Project[] }) {
+export default function Case04({ id, back, onOpen, items = PROJECTS04, card = 'collab' }: { id: string; back: () => void; onOpen: (id: string) => void; items?: Project[]; card?: string /* the bottom-right card for a project with a collaborator: its credit, or the contact card (a control, 26 Oct) */ }) {
   const PROJECTS = items;
   const k = PROJECTS.findIndex(p => p.id === id); const p = PROJECTS[k];
   const c = CASES[id];
@@ -662,7 +662,7 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04 }: { id: s
         </article>
         {/* the second card (21 Oct): his old site's contact card, at the foot of its project pages — the photo, the name, a
             line, "Let's talk!" and the links — in 04's parts (the intro's photo disc, its CV button's style, the notch's marks) */}
-        {c?.collab ? (
+        {c?.collab && card !== 'contact' ? (
           /* a collaboration (26 Oct, Nitish: "I have worked with this product designer on this project… I have worked on the
              interaction part… a user gets directed on that project on his portfolio… it gives him a credit… and a space for his
              portfolio"): the contact card's place, as a credit — both faces, his name and role, the line, his case study as
