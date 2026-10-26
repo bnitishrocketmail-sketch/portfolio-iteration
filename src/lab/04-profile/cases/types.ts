@@ -43,6 +43,10 @@ export type Block =
   /* success states, each in its panel: the screen and what it is — a chip (its product), a heading, a line or two; `wide`
      for a desktop screen, which takes the row */
   | { k: 'successes'; of: { m: Media; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean /* the media over the words, a pair side by side (the AR study's loading and success Lotties) */ }[] }
+  /* a recording in a phone with a list beside it that keeps time with it (the Hustlr highlights, 26 Oct; Synced in
+     Case04.tsx): each item lights from its second (`t`) to the next's — its view as a small picture (`thumb`), a name, a
+     line; a tap plays the recording from there */
+  | { k: 'synced'; src: string; poster: string; label: string; of: { t: number; thumb: string; name: string; p: Rich }[] }
   /* what research found, a panel each: its heading and line, and the part of the study that answers it (`to`), when one does */
   | { k: 'gaps'; of: { h: string; p: Rich; to?: string }[] }
   /* a recording in a phone at the middle, toured feature by feature (the AR study's contact-lens try-on, 26 Oct; Tour in
@@ -51,6 +55,10 @@ export type Block =
      the feature's card (one plain line, `p`) comes in at the phone's side (`side`); then the node goes and the feature plays to
      `end` — unless it `ride`s, when the node stays on the handle through the play. A card's tap plays its feature again */
   | { k: 'tour'; src: string; poster: string; label: string; track?: [number, number][]; ty?: number; of: { p: Rich; side: 'l' | 'r'; t: number; end: number; at: [number, number] | 'track'; ride?: boolean }[] }
+  /* a recording in a phone with a list beside it that keeps time with it (the Hustlr highlights, 26 Oct; Synced in
+     Case04.tsx): each item lights from its second (`t`) to the next's — its view as a small picture (`thumb`), a name, a
+     line; a tap plays the recording from there */
+  | { k: 'synced'; src: string; poster: string; label: string; of: { t: number; thumb: string; name: string; p: Rich }[] }
   /* what research found, a panel each: its heading and line, and the part of the study that answers it (`to`), when one does */
   | { k: 'gaps'; of: { h: string; p: Rich; to?: string }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */

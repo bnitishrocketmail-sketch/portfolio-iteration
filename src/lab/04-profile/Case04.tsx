@@ -340,6 +340,50 @@ function Tour({ b }: { b: TourB }) {
   );
 }
 
+/* a recording with a list that keeps time with it (26 Oct; the Hustlr frame's 3D highlights): the phone at the left, the
+   items at the right, the one the recording is on lit (from its second to the next's, by the frame on screen), the rest
+   dim; a tap plays the recording from that item. Under reduced motion the recording holds its first frame and every item
+   is lit. On the phone the list sits under the recording */
+type SyncedB = Extract<Block, { k: 'synced' }>;
+function Synced({ b }: { b: SyncedB }) {
+  const box = useRef<HTMLDivElement>(null), vid = useRef<HTMLVideoElement>(null);
+  const inView = useInView(box, .25);
+  const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [act, setAct] = useState(0); const actRef = useRef(0);
+  useEffect(() => { const v = vid.current; if (!v) return; if (inView && !reduce) v.play().catch(() => {}); else v.pause(); }, [inView, reduce]);
+  useEffect(() => {
+    if (!inView || reduce) return;
+    let raf = 0;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const v = vid.current; if (!v) return;
+      const t = v.currentTime; let i = 0;
+      b.of.forEach((it, k) => { if (t >= it.t) i = k; });
+      if (i !== actRef.current) { actRef.current = i; setAct(i); }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, reduce, b]);
+  const go = (i: number) => { const v = vid.current; if (!v) return; v.currentTime = b.of[i].t + .02; if (!reduce) v.play().catch(() => {}); };
+  return (
+    <div ref={box} className="cs4-sync">
+      <div className="cs4-media phone filled cs4-sync-phone" role="img" aria-label={b.label}>
+        <video ref={vid} src={b.src} poster={b.poster} muted loop playsInline preload="metadata" aria-hidden="true" />
+      </div>
+      <ol className="cs4-sync-list">
+        {b.of.map((it, i) => (
+          <li key={i}>
+            <button type="button" className={`cs4-sync-item${act === i || reduce ? ' on' : ''}`} onClick={() => go(i)} aria-current={act === i ? 'step' : undefined} title="Play from here">
+              <img src={it.thumb} alt="" loading="lazy" decoding="async" />
+              <span className="cs4-sync-text"><span className="cs4-sync-name">{it.name}</span><span className="cs4-sync-p">{text(it.p)}</span></span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 function Successes({ of }: { of: { m: Media; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean }[] }) {
   return (
     <div className="cs4-sx">
@@ -574,6 +618,7 @@ function Render({ b }: { b: Block }) {
     case 'peek': return <Peek label={b.label} show={b.show} screen={b.screen} at={b.at} of={b.of} />;
     case 'loaders': return <div className="cs4-row cs4-ld-row">{b.of.map((l, i) => <LoaderPhone key={i} l={l} />)}</div>;
     case 'successes': return <Successes of={b.of} />;
+    case 'synced': return <Synced b={b} />;
     case 'tour': return <Tour b={b} />;
     case 'gaps': return (
       <div className="cs4-gaps">

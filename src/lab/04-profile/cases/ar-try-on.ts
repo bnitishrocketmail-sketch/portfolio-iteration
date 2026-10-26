@@ -37,7 +37,7 @@ export const arTryOn: Case = {
   sections: [
     { id: 'about', title: 'About', blocks: [
       { k: 'p', t: ['Shopping for eyewear isn’t just about function — it’s about ', { b: 'style, personality and occasion' }, '. Customers in a Lenskart store browse by how glasses fit their ', { b: 'lifestyle' }, ', not just by brand or frame type. In the app, that context was ', { b: 'missing from the digital experience' }, '.'] },
-      { k: 'p', t: ['This page collects the interactive experiences I worked on and built. First, two improvements to the app’s AR try-on: ', { b: 'trying on colour contact lenses' }, ' with a slider, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair.'] },
+      { k: 'p', t: ['This page collects the interactive experiences I worked on and built. First, two improvements to the app’s AR try-on: ', { b: 'trying on colour contact lenses' }, ' with a slider, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair. Then the ', { b: 'Hustlr frame’s highlights in 3D' }, '.'] },
     ] },
     { id: 'gaps', title: 'Where AR try-on fell short', blocks: [
       { k: 'p', t: ['In ', { b: 'primary research' }, ' — ', { b: 'user-testing sessions' }, ', and conversations with customers on ', { b: 'store visits' }, ' — we found four gaps in the AR try-on:'] },
@@ -104,6 +104,18 @@ export const arTryOn: Case = {
         ] },
       ] },
       { k: 'p', t: ['Both were built as ', { b: 'custom Lotties' }, '. With motion, frame removal turned from a ', { b: 'technical feature' }, ' into an ', { b: 'engaging, visually intuitive interaction' }, ', making virtual try-ons ', { b: 'more immersive and natural' }, ' for users.'] },
+    ] },
+    /* the Hustlr frame's product highlights (Nitish, 26 Oct, from his recording: "a 3D experience, where the 3D glasses
+       rotates and shows the emphasis on the screen on whatever feature"): the recording in a phone with the four highlights
+       beside it, lit in time; the stills are the stage's four views, cut from the recording */
+    { id: 'hustlr-3d', title: 'Hustlr frames: product highlights in 3D', blocks: [
+      { k: 'p', t: ['On the Hustlr frame’s product page, the highlights are a ', { b: '3D card' }, ': tap a feature — the material, the hinge, the nose pads, the temples — and the frame ', { b: 'turns to show it' }, ', its line fading in alongside. One model and four views, in place of four photos.'] },
+      { k: 'synced', src: `${A}/hustlr-3d.mp4`, poster: `${A}/hustlr-3d-poster.webp`, label: 'The Hustlr product page: the 3D highlights card, tapped through its four features', of: [
+        { t: 0, thumb: `${A}/h3-1.webp`, name: 'TR 90', p: ['Made with lightweight TR90: the whole frame, three-quarter on.'] },
+        { t: 3.5, thumb: `${A}/h3-2.webp`, name: 'Hinge', p: ['Flexible spring hinges: the frame swings round and in, to the hinge.'] },
+        { t: 6.5, thumb: `${A}/h3-3.webp`, name: 'Nose pads', p: ['Comfortable built-in nose pads: in to the bridge, from the front.'] },
+        { t: 9.6, thumb: `${A}/h3-4.webp`, name: 'Temples', p: ['Rubberised temples for comfort and grip: the temple’s tip, from above.'] },
+      ] },
       { k: 'p', t: ['More work is being added.'] },
     ] },
   ],
