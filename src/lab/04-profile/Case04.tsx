@@ -28,12 +28,16 @@ import './case.css';
 const f2 = (n: number) => n.toFixed(1);
 const text = (r: Rich): ReactNode => r.map((x, i) => (typeof x === 'string' ? x : <b key={i}>{x.b}</b>));
 const RATIO: Record<Media['shape'], string> = { wide: '2 / 1', video: '16 / 9', image: '4 / 3', phone: '9 / 19.5', 'phone-land': '19.5 / 9', small: '3 / 2', screen: '9 / 14.5' };
-function Clip({ src, poster, on, crop }: { src: string; poster?: string; on: boolean; crop?: number }) {
+function Clip({ src, poster, on, crop, fit }: { src: string; poster?: string; on: boolean; crop?: number; fit?: Media['fit'] }) {
   const ref = useRef<HTMLVideoElement>(null);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !still) v.play().catch(() => {}); else v.pause(); }, [on, still]);
-  return <video ref={ref} src={src} poster={poster} muted loop playsInline preload="metadata" aria-hidden="true" style={crop ? { left: `-${crop}%`, top: `-${crop}%`, width: `${100 + 2 * crop}%`, height: `${100 + 2 * crop}%` } : undefined} />; /* a replaced element keeps its own size under inset alone, so the size is spelled out */
+  return <video ref={ref} src={src} poster={poster} muted loop playsInline preload="metadata" aria-hidden="true" style={fit ? fitStyle(fit) : crop ? { left: `-${crop}%`, top: `-${crop}%`, width: `${100 + 2 * crop}%`, height: `${100 + 2 * crop}%` } : undefined} />; /* a replaced element keeps its own size under inset alone, so the size is spelled out */
 }
+const fitStyle = ({ box: [x, y, w, h], fade }: NonNullable<Media['fit']>): CSSProperties => {
+  const mask = fade ? `linear-gradient(#000 ${100 - fade}%, transparent)` : undefined;
+  return { left: `${x}%`, top: `${y}%`, width: `${w}%`, height: `${h}%`, borderRadius: 0, WebkitMaskImage: mask, maskImage: mask };
+};
 /* a slot: empty, it shows its shape and its name; filled (22 Oct), it holds the page's own picture or clip, with any
    Lotties layered over it where his page had them */
 function Slot({ m, fl, active = true }: { m: Media; fl?: string; active?: boolean /* false holds a clip or Lottie still (the hero's screens at the sides) */ }) {
@@ -43,7 +47,7 @@ function Slot({ m, fl, active = true }: { m: Media; fl?: string; active?: boolea
   const filled = !!(m.src || m.lottie || m.layers?.length); /* a slot of layers alone (a Lottie set to cover a phone) is filled too */
   return (
     <div ref={ref} className={`cs4-media ${m.shape}${filled ? ' filled' : ''}${m.lottie ? ' lot' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape], background: m.bg }} role="img" aria-label={filled ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
-      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { left: `-${m.crop}%`, top: `-${m.crop}%`, width: `${100 + 2 * m.crop}%`, height: `${100 + 2 * m.crop}%` } : undefined} />) : m.lottie ? <Lottie className="cs4-lot" src={m.lottie} playing={on} /> : <span className="cs4-slot">{m.label}</span>}
+      {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} fit={m.fit} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { left: `-${m.crop}%`, top: `-${m.crop}%`, width: `${100 + 2 * m.crop}%`, height: `${100 + 2 * m.crop}%` } : undefined} />) : m.lottie ? <Lottie className="cs4-lot" src={m.lottie} playing={on} /> : <span className="cs4-slot">{m.label}</span>}
       {m.layers?.filter(l => !l.over).map((l, i) => <LayerBox key={i} l={l} on={on} />)}
     </div>
   );

@@ -4,6 +4,15 @@ import type { Case, Media } from './types';
    perspective with the screens drawn into them (Launches3D in Fintech3D.tsx): the Phonic smart-glasses guide scrolling
    in the left one, the T20 × Hustlr landing page in the right. Then his three pieces, each with his line and its clips. */
 const A = '/cases/launches';
+/* the hero's recording (Nitish, 26 Oct: "placed inside a phone… of the standard size… corner to corner… where it is
+   cropping a little above, we'll fade that out"): the clip (720 × 1136) is a phone drawn on black, cut at its foot. Its
+   screen (x 95–637, from y 138, measured in a frame) is lined up with the phone's — 2 px inside its edge, so its outline
+   and bezel fall outside the screen, and the phone's rounder corners (18% of the width to its 11%) cut inside its own —
+   which runs it 85% of the way down the screen, on black, its last 12% faded */
+const T20_FIT = ((x0: number, x1: number, y0: number): [number, number, number, number] => {
+  const w = x1 - x0, H = 19.5 / 9; /* the slot's height, in widths */
+  return [-x0 / w * 100, -y0 / w / H * 100, 720 / w * 100, 1136 / w / H * 100];
+})(97, 635, 140);
 const clip = (name: string, label: string, more: Partial<Media> = {}): Media => ({ k: 'media', shape: 'phone', label, src: `${A}/${name}.mp4`, poster: `${A}/${name}-poster.webp`, ...more });
 
 export const launches: Case = {
@@ -32,7 +41,7 @@ export const launches: Case = {
     { id: 'hustlr', title: 'T20 × Hustlr campaign', blocks: [
       { k: 'p', t: ['Designed a cricket-themed promotional landing experience for Hustlr, with team-specific colour treatments and campaign visuals. The experience opened with a ', { b: 'Lottie-powered hero animation' }, ', creating an energetic entry point into the campaign.'] },
       { k: 'row', ratio: '1fr 1fr', align: 'center', of: [
-        { k: 'figure', of: { k: 'media', shape: 'image', ratio: '720 / 1136', label: 'The hero animation', src: `${A}/t20-hero.mp4`, poster: `${A}/t20-hero-poster.webp`, cap: 'The Lottie hero, opening the page' }, width: 'phone' },
+        { k: 'figure', of: { k: 'media', shape: 'phone', label: 'The hero animation', src: `${A}/t20-hero.mp4`, poster: `${A}/t20-hero-poster.webp`, cap: 'The Lottie hero, opening the page', bg: '#000', fit: { box: T20_FIT, fade: 12 } }, width: 'phone' },
         { k: 'figure', of: clip('t20-landing', 'The landing page, scrolling', { cap: 'Cheer for your team: a colour for each' }), width: 'phone' },
       ] },
     ] },
