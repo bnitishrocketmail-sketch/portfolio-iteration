@@ -316,10 +316,11 @@
 }
 /* a recording with its list in time (26 Oct): the standard phone, the list beside it; an item a row — its view as a small
    picture (the stage's 872 : 533), a name in meta over a line in body — on the panel ground when lit, faint otherwise */
-.cs4-sync { display: grid; grid-template-columns: var(--ph-w) minmax(0, 1fr); gap: var(--s4); align-items: center; }
-.cs4-sync-phone { width: var(--ph-w); aspect-ratio: 9 / 19.5; }
+.cs4-sync { --sync-w: calc(var(--ph-w) * 1.25); display: grid; grid-template-columns: minmax(var(--sync-w), 1fr) minmax(0, 1.4fr); gap: var(--s4); align-items: center; } /* the phone in the middle of its own column, air either side (26 Oct: "very much cornered and cramped up"), a quarter bigger (his 1.5×) */
+.cs4-sync-phone { width: var(--sync-w); aspect-ratio: 9 / 19.5; justify-self: center; margin-bottom: calc(var(--sync-w) * 19.5 / 9 * -.26); -webkit-mask-image: linear-gradient(#000 45%, transparent 72%); mask-image: linear-gradient(#000 45%, transparent 72%); } /* its lower part fading out (the highlights card is in the top half; the rest of the page is noise here), and the faded foot folded away so the row is only as tall as what shows */
+.cs4-sync-phone::after { display: none; } /* no device edge round a fading screen */
 .cs4-sync-phone > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.cs4-sync-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--s1); max-width: 60ch; }
+.cs4-sync-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--s1); max-width: 60ch; align-self: center; }
 .cs4-sync-item { all: unset; box-sizing: border-box; display: grid; grid-template-columns: clamp(72px, 7.5cqw, 104px) minmax(0, 1fr); gap: var(--s2); align-items: center; width: 100%; padding: var(--s1); border-radius: calc(calc(var(--r) - 1cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: inherit; cursor: pointer; opacity: .5; transition: opacity .35s ease, background-color .35s ease; }
 .cs4-sync-item img { width: 100%; aspect-ratio: 872 / 533; object-fit: cover; display: block; border-radius: calc(calc(var(--r) - 1.6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #f3f3f3; }
 .cs4-sync-item.on { opacity: 1; background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
@@ -328,7 +329,7 @@
 .cs4-sync-text { display: flex; flex-direction: column; gap: .2em; min-width: 0; }
 .cs4-sync-name { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .55; } /* meta */
 .cs4-sync-p { font: 600 var(--t-body)/1.4 var(--f-copy); text-wrap: pretty; } /* body, emphasised */
-@media (max-width: 700px) { .cs4-sync { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: var(--s3); } .cs4-sync-list { width: 100%; max-width: none; } .cs4-sync-item { grid-template-columns: 88px minmax(0, 1fr); } }
+@media (max-width: 700px) { .cs4-sync { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 0; } .cs4-sync-list { width: 100%; max-width: none; } .cs4-sync-item { grid-template-columns: 88px minmax(0, 1fr); } }
 .cs4-cols.three { grid-template-columns: repeat(3, minmax(0, 1fr)); } @media (max-width: 700px) { .cs4-cols.three { grid-template-columns: minmax(0, 1fr); } }
 .ft3d { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; border-radius: inherit; corner-shape: inherit; color: #fff; } /* the ground is the study's own (Phones3D: the brand's blue running to violet; the campaigns' green to navy) */
 .ft3d-logo { position: absolute; left: 4%; top: 7%; z-index: 4; font: 700 clamp(14px, 1.7cqw, 22px)/1 var(--f-head); letter-spacing: -.01em; }
