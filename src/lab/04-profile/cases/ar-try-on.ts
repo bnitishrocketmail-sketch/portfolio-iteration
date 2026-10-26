@@ -11,6 +11,10 @@ import type { Case, Media } from './types';
 const A = '/cases/ar-try-on';
 const still = (name: string, label: string, cap: string): Media => ({ k: 'media', shape: 'phone', label, cap, src: `${A}/${name}.webp` });
 const clip = (name: string, label: string, cap: string): Media => ({ k: 'media', shape: 'phone', label, cap, src: `${A}/${name}.mp4`, poster: `${A}/${name}-poster.webp` });
+/* the words beside a recording (26 Oct, Nitish: "the body content… misaligned oddly in the center vertically, and then one
+   line goes all the way to the right… the phone… too much on the corner"): the words from the top, in a column of a
+   readable measure (~450 px, ~70 characters); the phone in the middle of the rest, with air either side */
+const SIDE = 'minmax(0, 1.25fr) minmax(var(--ph-w), 1fr)';
 const state = (name: string, label: string): Media => ({ k: 'media', shape: 'image', ratio: '2 / 1', label, lottie: `${A}/${name}.json`, bg: '#000' });
 
 export const arTryOn: Case = {
@@ -41,7 +45,7 @@ export const arTryOn: Case = {
       { k: 'p', t: ['These gaps led to ', { b: 'hesitation in purchases' }, ' and ', { b: 'reduced engagement' }, ' with AR try-on.'] },
     ] },
     { id: 'frame-removal', title: 'Frame removal for a more accurate try-on', blocks: [
-      { k: 'row', ratio: 'minmax(0, 1fr) var(--ph-w)', align: 'center', of: [
+      { k: 'row', ratio: SIDE, of: [
         { k: 'group', of: [
           { k: 'p', t: ['For people who already wear glasses, the try-on first takes their own pair away:'] },
           { k: 'ul', items: [
@@ -55,8 +59,8 @@ export const arTryOn: Case = {
       ] },
       { k: 'h', t: 'Step by step' },
       { k: 'phones', of: [
-        still('fr-1', 'Two frames', '1 · Two frames: the try-on over his own'),
-        still('fr-2', 'Align', '2 · Align: the red frame turns green'),
+        still('fr-1', 'Two frames', '1 · Two frames at once'),
+        still('fr-2', 'Align', '2 · Align: red turns green'),
         still('fr-3', 'Removing', '3 · Particles trace the frame'),
         still('fr-4', 'A new frame', '4 · A new frame, on a clean face'),
       ] },
@@ -76,7 +80,7 @@ export const arTryOn: Case = {
       { k: 'p', t: ['Both were built as ', { b: 'custom Lotties' }, '. With motion, frame removal turned from a ', { b: 'technical feature' }, ' into an ', { b: 'engaging, visually intuitive interaction' }, ', making virtual try-ons ', { b: 'more immersive and natural' }, ' for users.'] },
     ] },
     { id: 'contact-lens', title: 'Contact-lens try-on with a slider', blocks: [
-      { k: 'row', ratio: 'minmax(0, 1fr) var(--ph-w)', align: 'center', of: [
+      { k: 'row', ratio: SIDE, of: [
         { k: 'group', of: [
           { k: 'p', t: ['Users ', { b: 'drag a slider across the screen' }, ' to see:'] },
           { k: 'ul', items: [
