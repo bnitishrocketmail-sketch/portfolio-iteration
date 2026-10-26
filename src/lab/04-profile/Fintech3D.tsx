@@ -105,12 +105,22 @@ export default function Fintech3D({ on, mini, fit, at }: { on?: boolean; mini?: 
 }
 
 /* Launches & campaigns (22 Oct): the Phonic guide scrolling in the left phone, the T20 × Hustlr landing in the right,
-   on his page's dark ground (green at the left running to navy) */
+   on his page's dark ground (green at the left running to navy).
+   The right phone plays the landing's hero (Nitish, 26 Oct: the left one plays, so the right one should too): his T20 Fan
+   Mania Lottie, from his old home page's Hero Frame (a 360 × 360 square — the dark ground, its arcs turning, the logo, the
+   wickets and the line), laid over the landing's picture where it was: the square across the screen's width at its top
+   (its first frame matches the picture to 2/255). Its arcs turn, so the picture's top bar — the status bar and the back,
+   search, wishlist and bag buttons — is lifted out of the picture onto its own transparent layer (hustlr-top.webp: the
+   picture against the Lottie's matching frame, the white parts' alpha recovered at their edges) and drawn over it. */
 const L = '/cases/launches';
 export function Launches3D({ on, mini, fit, at }: { on?: boolean; mini?: boolean; fit?: number; at?: number }) {
   return (
     <Phones3D on={on} mini={mini} fit={fit} at={at} cls="lau" bg={LAU_BG} label="The Phonic smart-glasses guide and the T20 × Hustlr landing page, on two phones"
       left={on => <ScreenClip src={`${L}/phonic-guide`} on={on} />}
-      right={() => <img src={`${L}/hustlr.webp`} alt="" draggable={false} />} />
+      right={on => <>
+        <img src={`${L}/hustlr.webp`} alt="" draggable={false} />
+        <div className="ft3d-lot" style={{ left: 0, top: 0, width: '100%', height: `${(SW / SH * 100).toFixed(2)}%` }}><Lottie src={`${L}/t20-hero.lottie`} playing={on} /></div>
+        <img className="ft3d-top" src={`${L}/hustlr-top.webp`} alt="" draggable={false} />
+      </>} />
   );
 }
