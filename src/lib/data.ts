@@ -28,7 +28,7 @@ export const PROJECTS: Project[] = [
     blurb: 'Landing pages, campaign visuals, a 3D product guide and GenAI characters for launches.', tags: ['Promotional', 'Visual communication', 'UI', 'Interaction/Motion'],
     cover: { comp: 'launches' } }, /* the two phones of its hero, in small (22 Oct) */
   { id: 'ar-try-on', title: 'AR try-on', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'A', m1: '#0E6B5C', m2: '#BFEDE2',
-    blurb: 'Frame removal and a contact-lens try-on: an AR try-on for people already wearing glasses.', tags: ['App feature', 'AR', 'Interaction/Motion'] }, /* (26 Oct) its visual, here and in its hero, to come; the year to confirm */
+    blurb: 'A contact-lens try-on and frame removal: lens colours compared on your own eye, and an AR try-on for people already wearing glasses.', tags: ['App feature', 'AR', 'Interaction/Motion'] }, /* (26 Oct) its visual, here and in its hero, to come; the year to confirm */
   { id: 'coin-rig', title: 'Coin Rig', client: 'Lottie Creator plugin', role: 'Design & build', year: '2026', letter: 'C', m1: '#F5BD56', m2: '#C94A3A', /* the plugin named where the client was (23 Oct: "mention it is a Lottie Creator plugin") */
     blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Lottie Creator plugin', 'Faux 3D', 'Tool'],
     /* his recording of the plugin in Creator, cropped to its panel at square pixels (the recording's are 571:640) (23 Oct) */

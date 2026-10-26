@@ -24,7 +24,7 @@ const LENS_HANDLE: [number, number][] = [[4.9, 0.871], [4.933, 0.871], [4.967, 0
 export const arTryOn: Case = {
   id: 'ar-try-on',
   title: 'Revolutionising AR try-on',
-  sub: 'Frame removal and a contact-lens try-on: an AR try-on that works for people already wearing glasses, and lets lens colours be compared on your own eye.',
+  sub: 'A contact-lens try-on and frame removal: an AR try-on that lets lens colours be compared on your own eye, and works for people already wearing glasses.',
   chips: ['App feature', 'AR', 'UX/UI', 'Interaction/Motion'],
   facts: [
     { k: 'Role', v: 'Product designer — motion' },
@@ -36,17 +36,42 @@ export const arTryOn: Case = {
   sections: [
     { id: 'about', title: 'About', blocks: [
       { k: 'p', t: ['Shopping for eyewear isn’t just about function — it’s about ', { b: 'style, personality and occasion' }, '. Customers in a Lenskart store browse by how glasses fit their ', { b: 'lifestyle' }, ', not just by brand or frame type. In the app, that context was ', { b: 'missing from the digital experience' }, '.'] },
-      { k: 'p', t: ['This study covers two of the improvements made to the app’s AR try-on: ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair, and ', { b: 'trying on colour contact lenses' }, ' with a slider.'] },
+      { k: 'p', t: ['This study covers two of the improvements made to the app’s AR try-on: ', { b: 'trying on colour contact lenses' }, ' with a slider, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair.'] },
     ] },
     { id: 'gaps', title: 'Where AR try-on fell short', blocks: [
       { k: 'p', t: ['In ', { b: 'primary research' }, ' — ', { b: 'user-testing sessions' }, ', and conversations with customers on ', { b: 'store visits' }, ' — we found four gaps in the AR try-on:'] },
       { k: 'gaps', of: [
-        { h: 'Overlapping frames', p: ['Users wearing glasses couldn’t get an accurate preview: the frame they tried sat on top of their own.'], to: 'Answered by frame removal' },
         { h: 'No interactive contact-lens try-on', p: ['No seamless way to compare lens colours.'], to: 'Answered by the contact-lens try-on' },
+        { h: 'Overlapping frames', p: ['Users wearing glasses couldn’t get an accurate preview: the frame they tried sat on top of their own.'], to: 'Answered by frame removal' },
         { h: 'No quick access to AR try-on', p: ['Users had to go deep into a product page to try frames.'] },
         { h: 'Limited personalisation', p: ['No way to shop by style, occasion or personality.'] },
       ] },
       { k: 'p', t: ['These gaps led to ', { b: 'hesitation in purchases' }, ' and ', { b: 'reduced engagement' }, ' with AR try-on.'] },
+    ] },
+    { id: 'contact-lens', title: 'Contact-lens try-on with a slider', blocks: [
+      { k: 'p', t: ['Users ', { b: 'drag a slider across the screen' }, ' to compare one eye ', { b: 'with the lens and one without' }, ': a before and after, in real time. Around the slider, small animations draw the eye to the colour, teach the gesture and celebrate the look. Each one lights up as the recording reaches it; tap one to see it again.'] },
+      /* each feature once, at its first showing (Nitish, 26 Oct: "once we show a feature… we don't have to repeat it"); a node rides
+         only the slider's handle, frame by frame; the rest sit still where their feature is ("either do it in synchronization… or
+         don't do it") */
+      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the slider, the nudges, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
+        { chip: 'Nudge', h: 'The reveal', side: 'r', p: ['As the try-on opens, the line sweeps across the face and sparkles play over the side wearing the lens: the first thing seen is the colour.'],
+          when: [{ t: [.85, 3.45], at: [.58, .36] }] },
+        { chip: 'Nudge', h: 'A hand shows the drag', side: 'r', p: ['Before the slider is touched, a hand drags its handle once: the gesture is taught without a word.'],
+          when: [{ t: [3.5, 5], at: [.871, .602] }] },
+        { chip: 'Compare', h: 'With and without', side: 'r', p: ['Drag the line across the face: one side wears the lens, the other doesn’t, and the labels at the top follow the line.'],
+          when: [{ t: [5.05, 8.6], at: 'track' }] },
+        { chip: 'Zoom', h: 'Closer to the eyes', side: 'l', p: ['The bar at the side brings the eyes closer, to see the lens; a toast in the middle says how far.'],
+          when: [{ t: [9.9, 12.4], at: [.045, .44] }] },
+        { chip: 'Persuasion', h: 'A burst of praise', side: 'l', p: ['Hearts burst around the face with a line of praise, here “Absolutely stunning!”: a moment of delight that nudges towards the cart.'],
+          when: [{ t: [12.7, 15.5], at: [.5, .46] }] },
+        { chip: 'Explore', h: 'Every colour, on your eyes', side: 'l', p: ['Tap a colour in the row and the eyes change on the spot; the product card under it follows, one tap from the cart.'],
+          when: [{ t: [25, 35.4], at: [.405, .684] }] },
+      ] },
+      { k: 'cols', of: [
+        { h: 'What it is', p: ['An AR try-on for colour contact lenses: the lens is drawn on your own eyes, live, from the camera.'] },
+        { h: 'Why a slider', p: ['A colour on an eye is easy to miss on its own. Split down the face, with and without, the difference is right in front of you.'] },
+        { h: 'The motion', p: ['The nudges and the praise are custom-made animations: they draw the eye to the colour, teach the gesture and make choosing a lens feel like play.'] },
+      ] },
     ] },
     { id: 'frame-removal', title: 'Frame removal for a more accurate try-on', blocks: [
       { k: 'row', ratio: SIDE, of: [
@@ -82,31 +107,6 @@ export const arTryOn: Case = {
         ] },
       ] },
       { k: 'p', t: ['Both were built as ', { b: 'custom Lotties' }, '. With motion, frame removal turned from a ', { b: 'technical feature' }, ' into an ', { b: 'engaging, visually intuitive interaction' }, ', making virtual try-ons ', { b: 'more immersive and natural' }, ' for users.'] },
-    ] },
-    { id: 'contact-lens', title: 'Contact-lens try-on with a slider', blocks: [
-      { k: 'p', t: ['Users ', { b: 'drag a slider across the screen' }, ' to compare one eye ', { b: 'with the lens and one without' }, ': a before and after, in real time. Around the slider, small animations draw the eye to the colour, teach the gesture and celebrate the look. Each one lights up as the recording reaches it; tap one to see it again.'] },
-      /* each feature once, at its first showing (Nitish, 26 Oct: "once we show a feature… we don't have to repeat it"); a node rides
-         only the slider's handle, frame by frame; the rest sit still where their feature is ("either do it in synchronization… or
-         don't do it") */
-      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the slider, the nudges, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
-        { chip: 'Nudge', h: 'The reveal', side: 'r', p: ['As the try-on opens, the line sweeps across the face and sparkles play over the side wearing the lens: the first thing seen is the colour.'],
-          when: [{ t: [.85, 3.45], at: [.58, .36] }] },
-        { chip: 'Nudge', h: 'A hand shows the drag', side: 'r', p: ['Before the slider is touched, a hand drags its handle once: the gesture is taught without a word.'],
-          when: [{ t: [3.5, 5], at: [.871, .602] }] },
-        { chip: 'Compare', h: 'With and without', side: 'r', p: ['Drag the line across the face: one side wears the lens, the other doesn’t, and the labels at the top follow the line.'],
-          when: [{ t: [5.05, 8.6], at: 'track' }] },
-        { chip: 'Zoom', h: 'Closer to the eyes', side: 'l', p: ['The bar at the side brings the eyes closer, to see the lens; a toast in the middle says how far.'],
-          when: [{ t: [9.9, 12.4], at: [.045, .44] }] },
-        { chip: 'Persuasion', h: 'A burst of praise', side: 'l', p: ['Hearts burst around the face with a line of praise, here “Absolutely stunning!”: a moment of delight that nudges towards the cart.'],
-          when: [{ t: [12.7, 15.5], at: [.5, .46] }] },
-        { chip: 'Explore', h: 'Every colour, on your eyes', side: 'l', p: ['Tap a colour in the row and the eyes change on the spot; the product card under it follows, one tap from the cart.'],
-          when: [{ t: [25, 35.4], at: [.405, .684] }] },
-      ] },
-      { k: 'cols', of: [
-        { h: 'What it is', p: ['An AR try-on for colour contact lenses: the lens is drawn on your own eyes, live, from the camera.'] },
-        { h: 'Why a slider', p: ['A colour on an eye is easy to miss on its own. Split down the face, with and without, the difference is right in front of you.'] },
-        { h: 'The motion', p: ['The nudges and the praise are custom-made animations: they draw the eye to the colour, teach the gesture and make choosing a lens feel like play.'] },
-      ] },
       { k: 'p', t: ['More work is being added.'] },
     ] },
   ],
