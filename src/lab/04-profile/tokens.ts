@@ -87,7 +87,7 @@ export const CONTROLS: Control[] = [
   /* the card at the foot of a case study's side column (26 Oct, Nitish: "a control to select what kind of… sticky container
      I have on the bottom right… for which project… up to me to switch it on or off"): a project made with another designer
      carries his credit (the case's `collab`); each such project can show that credit or the contact card instead */
-  { group: 'Case study', sub: 'Bottom-right card', kind: 'select', key: '--card-ar-try-on', label: 'AR try-on', def: 'collab', light: 'collab', options: [['Ashish’s credit', 'collab'], ['Contact (Let’s talk)', 'contact']] },
+  { group: 'Case study', sub: 'Bottom-right card', kind: 'select', key: '--card-ar-try-on', label: 'Interactive experiences', def: 'collab', light: 'collab', options: [['Ashish’s credit', 'collab'], ['Contact (Let’s talk)', 'contact']] },
   { group: 'Case study', sub: 'Bottom-right card', kind: 'select', key: '--card-magic-scale', label: 'Magic Scale', def: 'collab', light: 'collab', options: [['Ashish’s credit', 'collab'], ['Contact (Let’s talk)', 'contact']] },
 ];
 

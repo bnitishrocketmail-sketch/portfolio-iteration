@@ -1,6 +1,6 @@
 import type { Case, Media } from './types';
 
-/* Revolutionising AR try-on — Lenskart (Nitish, 26 Oct): from a page of an earlier portfolio of his
+/* Interactive experiences (was Revolutionising AR try-on) — Lenskart (Nitish, 26 Oct): from a page of an earlier portfolio of his
    (right-teams-858997.framer.app/works-2/weathy-weather-app), its words lightly edited, re-laid for reading: the context,
    the four gaps research found (each marked with the part of the study that answers it; the other two come later), then
    each answer — what it does and its result beside its recording, the flow step by step in stills from the recording,
@@ -23,8 +23,8 @@ const LENS_HANDLE: [number, number][] = [[4.9, 0.871], [4.933, 0.871], [4.967, 0
 
 export const arTryOn: Case = {
   id: 'ar-try-on',
-  title: 'Revolutionising AR try-on',
-  sub: 'A contact-lens try-on and frame removal: an AR try-on that lets lens colours be compared on your own eye, and works for people already wearing glasses.',
+  title: 'Interactive experiences', /* (26 Oct, Nitish: a name for the interactions he worked on and built, so more can join the AR try-on here; was Revolutionising AR try-on) */
+  sub: 'Interactions I worked on and built at Lenskart — starting with the AR try-on: a contact-lens try-on with a slider, and frame removal for people already wearing glasses.',
   chips: ['App feature', 'AR', 'UX/UI', 'Interaction/Motion'],
   facts: [
     { k: 'Role', v: 'Product designer — motion' },
@@ -37,7 +37,7 @@ export const arTryOn: Case = {
   sections: [
     { id: 'about', title: 'About', blocks: [
       { k: 'p', t: ['Shopping for eyewear isn’t just about function — it’s about ', { b: 'style, personality and occasion' }, '. Customers in a Lenskart store browse by how glasses fit their ', { b: 'lifestyle' }, ', not just by brand or frame type. In the app, that context was ', { b: 'missing from the digital experience' }, '.'] },
-      { k: 'p', t: ['This study covers two of the improvements made to the app’s AR try-on: ', { b: 'trying on colour contact lenses' }, ' with a slider, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair.'] },
+      { k: 'p', t: ['This page collects the interactive experiences I worked on and built. First, two improvements to the app’s AR try-on: ', { b: 'trying on colour contact lenses' }, ' with a slider, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair.'] },
     ] },
     { id: 'gaps', title: 'Where AR try-on fell short', blocks: [
       { k: 'p', t: ['In ', { b: 'primary research' }, ' — ', { b: 'user-testing sessions' }, ', and conversations with customers on ', { b: 'store visits' }, ' — we found four gaps in the AR try-on:'] },
