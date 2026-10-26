@@ -366,7 +366,7 @@ function Synced({ b }: { b: SyncedB }) {
   }, [inView, reduce, b]);
   const go = (i: number) => { const v = vid.current; if (!v) return; v.currentTime = b.of[i].t + .02; if (!reduce) v.play().catch(() => {}); };
   return (
-    <div ref={box} className="cs4-sync">
+    <div ref={box} className={`cs4-sync${b.full ? ' full' : ''}`}>
       <div className="cs4-media phone filled cs4-sync-phone" role="img" aria-label={b.label}>
         <video ref={vid} src={b.src} poster={b.poster} muted loop playsInline preload="metadata" aria-hidden="true" />
       </div>

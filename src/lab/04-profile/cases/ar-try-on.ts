@@ -37,7 +37,7 @@ export const arTryOn: Case = {
   sections: [
     { id: 'about', title: 'About', blocks: [
       { k: 'p', t: ['Shopping for eyewear isn’t just about function — it’s about ', { b: 'style, personality and occasion' }, '. Customers in a Lenskart store browse by how glasses fit their ', { b: 'lifestyle' }, ', not just by brand or frame type. In the app, that context was ', { b: 'missing from the digital experience' }, '.'] },
-      { k: 'p', t: ['This page collects the interactive experiences I worked on and built. First, two improvements to the app’s AR try-on: ', { b: 'trying on colour contact lenses' }, ' with a slider, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair. Then the ', { b: 'Hustlr frame’s highlights in 3D' }, '.'] },
+      { k: 'p', t: ['This page collects the interactive experiences I worked on and built. First, two improvements to the app’s AR try-on: ', { b: 'trying on colour contact lenses' }, ' with a slider, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair. Then the ', { b: 'Hustlr frame’s highlights in 3D' }, ', and ', { b: 'snap-on skins' }, ' tried on the frame you chose.'] },
     ] },
     { id: 'gaps', title: 'Where AR try-on fell short', blocks: [
       { k: 'p', t: ['In ', { b: 'primary research' }, ' — ', { b: 'user-testing sessions' }, ', and conversations with customers on ', { b: 'store visits' }, ' — we found four gaps in the AR try-on:'] },
@@ -115,6 +115,19 @@ export const arTryOn: Case = {
         { t: 3.5, thumb: `${A}/h3-2.webp`, name: 'Hinge', p: ['Flexible spring hinges: the frame swings round and in, to the hinge.'] },
         { t: 6.5, thumb: `${A}/h3-3.webp`, name: 'Nose pads', p: ['Comfortable built-in nose pads: in to the bridge, from the front.'] },
         { t: 9.6, thumb: `${A}/h3-4.webp`, name: 'Temples', p: ['Rubberised temples for comfort and grip: the temple’s tip, from above.'] },
+      ] },
+    ] },
+    /* the snap-on skins (Nitish, 26 Oct, from his recording: "a snap-on skin for your glasses… visualizing that specific skin on
+       your selected glasses, and then adding that skin… in your cart. It just snaps on from the top"): the recording in a
+       phone, whole, with its four moments beside it; the stage's turns measured on the clip (the skin lands 3.0–3.3 s and
+       4.9–5.1 s; the kit's slot fills at 6.5 s) */
+    { id: 'snap-on', title: 'Snap-on skins: dress the frame you chose', blocks: [
+      { k: 'p', t: ['A ', { b: 'snap-on skin' }, ' is a printed cover that clips over the front of a Lenskart frame. On the product page you see it ', { b: 'on your own frame' }, ' before you buy: pick a skin from the row and it ', { b: 'snaps on from the top' }, '; add it to your set, and to the cart.'] },
+      { k: 'synced', full: true, src: `${A}/snap-on.mp4`, poster: `${A}/snap-on-poster.webp`, label: 'The product page: a clear frame, the row of skins, two of them snapping on, one added to the set', of: [
+        { t: 0, thumb: `${A}/sk-1.webp`, name: 'Your frame', p: ['The frame you chose, in its clear finish; the skins wait in the row below.'] },
+        { t: 2.95, thumb: `${A}/sk-2.webp`, name: 'Snap on', p: ['Tap a skin: it drops from above and settles over the front of the frame.'] },
+        { t: 4.85, thumb: `${A}/sk-3.webp`, name: 'Try another', p: ['Tap the next one and it takes the first one’s place: Chameleon, ₹1000.'] },
+        { t: 6.4, thumb: `${A}/sk-4.webp`, name: 'Add it', p: ['Tap plus and the skin takes a slot in your set, ready for the cart.'] },
       ] },
       { k: 'p', t: ['More work is being added.'] },
     ] },

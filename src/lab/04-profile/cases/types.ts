@@ -46,7 +46,7 @@ export type Block =
   /* a recording in a phone with a list beside it that keeps time with it (the Hustlr highlights, 26 Oct; Synced in
      Case04.tsx): each item lights from its second (`t`) to the next's — its view as a small picture (`thumb`), a name, a
      line; a tap plays the recording from there */
-  | { k: 'synced'; src: string; poster: string; label: string; of: { t: number; thumb: string; name: string; p: Rich }[] }
+  | { k: 'synced'; src: string; poster: string; label: string; full?: boolean /* the whole screen shown (the Hustlr one fades its foot) */; of: { t: number; thumb: string; name: string; p: Rich }[] }
   /* what research found, a panel each: its heading and line, and the part of the study that answers it (`to`), when one does */
   | { k: 'gaps'; of: { h: string; p: Rich; to?: string }[] }
   /* a recording in a phone at the middle, toured feature by feature (the AR study's contact-lens try-on, 26 Oct; Tour in
@@ -58,7 +58,7 @@ export type Block =
   /* a recording in a phone with a list beside it that keeps time with it (the Hustlr highlights, 26 Oct; Synced in
      Case04.tsx): each item lights from its second (`t`) to the next's — its view as a small picture (`thumb`), a name, a
      line; a tap plays the recording from there */
-  | { k: 'synced'; src: string; poster: string; label: string; of: { t: number; thumb: string; name: string; p: Rich }[] }
+  | { k: 'synced'; src: string; poster: string; label: string; full?: boolean /* the whole screen shown (the Hustlr one fades its foot) */; of: { t: number; thumb: string; name: string; p: Rich }[] }
   /* what research found, a panel each: its heading and line, and the part of the study that answers it (`to`), when one does */
   | { k: 'gaps'; of: { h: string; p: Rich; to?: string }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */

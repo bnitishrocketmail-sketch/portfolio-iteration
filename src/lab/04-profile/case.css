@@ -328,6 +328,7 @@
 .cs4-sync-text { display: flex; flex-direction: column; gap: .2em; min-width: 0; }
 .cs4-sync-name { font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .55; } /* meta */
 .cs4-sync-p { font: 600 var(--t-body)/1.4 var(--f-copy); text-wrap: pretty; } /* body, emphasised */
+.cs4-sync.full .cs4-sync-phone { margin-bottom: 0; -webkit-mask-image: none; mask-image: none; } /* the whole screen (the snap-on: its frame at the top, its skins in the middle, its kit at the foot) */
 @media (max-width: 700px) { .cs4-sync { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 0; padding: 0; } .cs4-sync-list { width: 100%; max-width: none; } .cs4-sync-item { grid-template-columns: 88px minmax(0, 1fr); } }
 .cs4-cols.three { grid-template-columns: repeat(3, minmax(0, 1fr)); } @media (max-width: 700px) { .cs4-cols.three { grid-template-columns: minmax(0, 1fr); } }
 .ft3d { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; border-radius: inherit; corner-shape: inherit; color: #fff; } /* the ground is the study's own (Phones3D: the brand's blue running to violet; the campaigns' green to navy) */
