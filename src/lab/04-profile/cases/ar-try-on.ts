@@ -51,16 +51,17 @@ export const arTryOn: Case = {
     ] },
     { id: 'contact-lens', title: 'Contact-lens try-on with a slider', blocks: [
       { k: 'p', t: ['Users ', { b: 'drag a slider across the screen' }, ' to compare one eye ', { b: 'with the lens and one without' }, ': a before and after, in real time. Around the slider, small animations draw the eye to the colour, teach the gesture and celebrate the look. Each one lights up as the recording reaches it; tap one to see it again.'] },
-      /* the tour, paced (Nitish, 26 Oct): the clip starts at the hand's nudge (the sparkles cut). At each feature the recording
-         pauses on the frame named (`t`), the node marks the spot (`at`), the card comes in; then the node goes and the feature
-         plays to `end`. The slider's plays with its node riding the handle. Plain words, each heading complete on its own
-         (26 Oct: "the heading is totally misleading… be very direct with what we are showing"); the hand's nudge folded into
-         the slider's card; the praise paused on its pill once it has fully emerged, just over the lens row (10.0 s) */
+      /* the tour, paced (Nitish, 26 Oct): the clip starts at the hand's nudge (the sparkles cut). At each stop the recording
+         pauses on the frame named (`t`), the node marks the spot (`at`), the card comes in — one plain line, no heading
+         ("just some text that tells the viewer what we are showing him"); then the node goes and the feature plays to `end`.
+         The slider's plays with its node riding the handle. The colours: paused before the first switch (22.3 s, the white
+         selection still on Spicy Gray), then again on the third switch's sparkles (26.85 s), the node on an eye */
       { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the slider with its nudge, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
-        { h: 'Drag the slider to see the lens on and off', p: ['One side of the line wears the lens, the other doesn’t. A hand nudges the handle first, so you know it moves.'], side: 'r', t: .05, end: 5.2, at: 'track', ride: true },
-        { h: 'Zoom in for a closer look at the lens', p: ['The bar at the side zooms the camera; a toast says how far.'], side: 'l', t: 6.45, end: 8.7, at: [.045, .44] },
-        { h: 'A burst of praise, to delight and persuade', p: ['Hearts and a compliment, for the lens you just tried.'], side: 'l', t: 10, end: 12.3, at: [.312, .572] } /* the node at the pill's left end, by its heart, clear of its words */,
-        { h: 'Tap a colour to switch lenses', p: ['The eyes change on the spot, and the product card follows.'], side: 'l', t: 22.5, end: 32.4, at: [.405, .684] },
+        { p: ['Drag the slider to see the lens on and off. A hand nudges it first, so you know it moves.'], side: 'r', t: .05, end: 5.2, at: 'track', ride: true },
+        { p: ['Zoom in for a closer look at the lens.'], side: 'l', t: 6.45, end: 8.7, at: [.045, .44] },
+        { p: ['A burst of praise, to delight — and persuade.'], side: 'l', t: 10, end: 12.3, at: [.312, .572] },
+        { p: ['Tap a colour to switch lenses.'], side: 'l', t: 22.3, end: 26.5, at: [.405, .684] },
+        { p: ['Sparkles on the eyes, each time the lens changes.'], side: 'r', t: 26.85, end: 32.4, at: [.681, .396] },
       ] },
       { k: 'cols', of: [
         { h: 'What it is', p: ['An AR try-on for colour contact lenses: the lens is drawn on your own eyes, live, from the camera.'] },

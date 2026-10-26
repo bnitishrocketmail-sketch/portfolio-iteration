@@ -283,7 +283,7 @@
 @media (max-width: 700px) { .cs4-gaps { grid-template-columns: minmax(0, 1fr); gap: var(--s2); } } /* one to a row on the phone */
 /* the toured recording (26 Oct, the third pass): the standard phone at the middle, a column either side for the cards.
    A card is out of sight until the recording reaches its feature: then it comes in level with the node — dark (the nav
-   highlight's), the feature's name in the title size and a line in body, 21 characters wide (26 Oct: 40% narrower) — and goes when the
+   highlight's), one plain line in body, 21 characters wide — and goes when the
    feature is over. The node: a dot with a ring that grows in, and a hairline to the card, both drawn over everything;
    they withdraw before the feature plays (the slider's rides on). The lines and node share the dark */
 .cs4-tour { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) var(--ph-w) minmax(0, 1fr); column-gap: var(--s5); align-items: stretch; padding: var(--s2) 0; }
@@ -294,8 +294,7 @@
 .cs4-tour-card { all: unset; box-sizing: border-box; position: absolute; top: 0; width: min(100%, 21ch); display: flex; flex-direction: column; gap: 4px; padding: var(--s2) calc(var(--s2) + 2px); border-radius: calc(calc(var(--r) - 1cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-hl); color: var(--nav-hl-ink); cursor: pointer; opacity: 0; transform: translateX(var(--tour-dx, 0)); pointer-events: none; transition: opacity .4s ease, transform .4s cubic-bezier(.16, 1, .3, 1); }
 .cs4-tour-col.l .cs4-tour-card { right: 0; --tour-dx: 8px; } .cs4-tour-col.r .cs4-tour-card { left: 0; --tour-dx: -8px; } /* against the gap, and it comes in from the phone's side */
 .cs4-tour-card.on { opacity: 1; transform: none; pointer-events: auto; }
-.cs4-tour-h { margin: 0; font: 600 var(--t-title)/1.25 var(--f-copy); text-wrap: balance; } /* title */
-.cs4-tour-p { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); opacity: .78; text-wrap: pretty; } /* body */
+.cs4-tour-p { margin: 0; font: 500 var(--t-body)/1.45 var(--f-copy); text-wrap: pretty; } /* one line of body, a little weight, in the card's light ink */
 .cs4-tour-card:focus-visible { outline: 2px solid var(--pcard-open-ink); outline-offset: 2px; }
 .cs4-tour-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 3; }
 .cs4-tour-svg path { fill: none; stroke-linecap: round; }

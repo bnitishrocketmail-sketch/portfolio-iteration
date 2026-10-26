@@ -320,8 +320,7 @@ function Tour({ b }: { b: TourB }) {
   const card = (f: TourB['of'][number], i: number) => {
     const on = act === i || reduce;
     return (
-      <button key={i} type="button" ref={el => { cards.current[i] = el; }} className={`cs4-tour-card${on ? ' on' : ''}`} tabIndex={on ? 0 : -1} aria-hidden={!on} onClick={() => again(i)} aria-label={`${f.h}: play this moment again`}>
-        <h4 className="cs4-tour-h">{f.h}</h4>
+      <button key={i} type="button" ref={el => { cards.current[i] = el; }} className={`cs4-tour-card${on ? ' on' : ''}`} tabIndex={on ? 0 : -1} aria-hidden={!on} onClick={() => again(i)} title="Play this moment again">
         <p className="cs4-tour-p">{text(f.p)}</p>
       </button>
     );

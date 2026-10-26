@@ -48,9 +48,9 @@ export type Block =
   /* a recording in a phone at the middle, toured feature by feature (the AR study's contact-lens try-on, 26 Oct; Tour in
      Case04.tsx): at each feature's first frame (`t`) the recording pauses, a node marks where it happens on the screen
      (`at`: x, y as fractions of the screen; 'track' is the slider's handle, whose x over time is `track`, at `ty` down) and
-     the feature's card (`h`, a line `p`) comes in at the phone's side (`side`); then the node goes and the feature plays to
+     the feature's card (one plain line, `p`) comes in at the phone's side (`side`); then the node goes and the feature plays to
      `end` — unless it `ride`s, when the node stays on the handle through the play. A card's tap plays its feature again */
-  | { k: 'tour'; src: string; poster: string; label: string; track?: [number, number][]; ty?: number; of: { h: string; p: Rich; side: 'l' | 'r'; t: number; end: number; at: [number, number] | 'track'; ride?: boolean }[] }
+  | { k: 'tour'; src: string; poster: string; label: string; track?: [number, number][]; ty?: number; of: { p: Rich; side: 'l' | 'r'; t: number; end: number; at: [number, number] | 'track'; ride?: boolean }[] }
   /* what research found, a panel each: its heading and line, and the part of the study that answers it (`to`), when one does */
   | { k: 'gaps'; of: { h: string; p: Rich; to?: string }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */
