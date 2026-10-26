@@ -237,23 +237,45 @@ const lerpAt = (keys: [number, number, number][], t: number): [number, number] =
   for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) { const [t0, x0, y0] = keys[i - 1], [t1, x1, y1] = keys[i], u = (t - t0) / (t1 - t0 || 1); return [x0 + (x1 - x0) * u, y0 + (y1 - y0) * u]; }
   const k = keys[keys.length - 1]; return [k[1], k[2]];
 };
+/* the line from a node to its card (26 Oct, Nitish: "the first curve… a little raw… take the corner radius reference and
+   then bend it"): straight out of the node, turned midway across the gap through two corners of the cards' own radius,
+   straight into the card's side */
+const elbow = (ax: number, ay: number, xm: number, cx: number, cy: number, r0: number): string => {
+  const f = (n: number) => n.toFixed(1);
+  const dy = cy - ay, s = dy < 0 ? -1 : 1, dir = cx < ax ? -1 : 1;
+  const r = Math.min(r0, Math.abs(dy) / 2, Math.abs(xm - ax) - 1, Math.abs(cx - xm) - 1);
+  if (r < 1) return `M${f(ax)} ${f(ay)}H${f(xm)}V${f(cy)}H${f(cx)}`;
+  const s1 = (dir > 0) === (s > 0) ? 1 : 0, s2 = 1 - s1;
+  return `M${f(ax)} ${f(ay)}H${f(xm - dir * r)}A${f(r)} ${f(r)} 0 0 ${s1} ${f(xm)} ${f(ay + s * r)}V${f(cy - s * r)}A${f(r)} ${f(r)} 0 0 ${s2} ${f(xm + dir * r)} ${f(cy)}H${f(cx)}`;
+};
 function Tour({ b }: { b: TourB }) {
   const box = useRef<HTMLDivElement>(null), phone = useRef<HTMLDivElement>(null), vid = useRef<HTMLVideoElement>(null);
   const cards = useRef<(HTMLButtonElement | null)[]>([]);
-  const node = useRef<SVGGElement>(null), line = useRef<SVGPathElement>(null), halo = useRef<SVGPathElement>(null);
+  const node = useRef<SVGGElement>(null), line = useRef<SVGPathElement>(null);
   const inView = useInView(box, .25);
   const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [act, setAct] = useState(-1); const actRef = useRef(-1);
   useEffect(() => { const v = vid.current; if (!v) return; if (inView && !reduce) v.play().catch(() => {}); else v.pause(); }, [inView, reduce]);
+  /* the time of the frame on screen (the browser's video-frame callback), not the clock's: a node riding the handle keeps to
+     the frame that shows it; where there is no such callback, the clock */
+  const shown = useRef(-1);
+  useEffect(() => {
+    const v = vid.current as (HTMLVideoElement & { requestVideoFrameCallback?: (cb: (now: number, m: { mediaTime: number }) => void) => number; cancelVideoFrameCallback?: (id: number) => void }) | null;
+    if (!v?.requestVideoFrameCallback) return;
+    let id = 0;
+    const cb = (_: number, m: { mediaTime: number }) => { shown.current = m.mediaTime; id = v.requestVideoFrameCallback!(cb); };
+    id = v.requestVideoFrameCallback(cb);
+    return () => v.cancelVideoFrameCallback?.(id);
+  }, []);
   useEffect(() => {
     if (!inView || reduce) return;
     const track = (b.track ?? []).map(([t, x]) => [t, x, b.ty ?? .6] as [number, number, number]);
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
-      const v = vid.current, bx = box.current, ph = phone.current, g = node.current, l = line.current, h = halo.current;
-      if (!v || !bx || !ph || !g || !l || !h) return;
-      const t = v.currentTime;
+      const v = vid.current, bx = box.current, ph = phone.current, g = node.current, l = line.current;
+      if (!v || !bx || !ph || !g || !l) return;
+      const t = !v.paused && shown.current >= 0 ? shown.current : v.currentTime;
       let ai = -1, at: [number, number] = [0, 0];
       b.of.forEach((st, i) => st.when.forEach(w => {
         if (ai >= 0 || t < w.t[0] || t >= w.t[1]) return;
@@ -267,11 +289,12 @@ function Tour({ b }: { b: TourB }) {
       const c = cards.current[ai]; if (!c) return;
       const C = c.getBoundingClientRect();
       const beside = C.bottom > P.top && C.top < P.bottom && (C.right <= P.left || C.left >= P.right); /* a card beside the phone; under it (the phone's layout) there is no line */
-      if (!beside) { l.setAttribute('d', ''); h.setAttribute('d', ''); return; }
+      if (!beside) { l.setAttribute('d', ''); return; }
       const left = C.right <= P.left;
-      const ex = left ? P.left - B.left - 14 : P.right - B.left + 14, cx = left ? C.right - B.left : C.left - B.left, cy = C.top - B.top + Math.min(C.height / 2, 30), mx = (ex + cx) / 2;
-      const d = `M${ax.toFixed(1)} ${ay.toFixed(1)}L${ex.toFixed(1)} ${ay.toFixed(1)}C${mx.toFixed(1)} ${ay.toFixed(1)} ${mx.toFixed(1)} ${cy.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)}`;
-      l.setAttribute('d', d); h.setAttribute('d', d);
+      const cx = left ? C.right - B.left : C.left - B.left, cy = C.top - B.top + C.height / 2;
+      const xm = left ? (P.left + C.right) / 2 - B.left : (P.right + C.left) / 2 - B.left; /* the turn, midway across the gap */
+      const d = elbow(ax, ay, xm, cx, cy, parseFloat(getComputedStyle(c).borderTopLeftRadius) || 16);
+      l.setAttribute('d', d);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
@@ -292,9 +315,8 @@ function Tour({ b }: { b: TourB }) {
       </div>
       <div className="cs4-tour-col r">{b.of.map((st, i) => st.side === 'r' ? card(st, i) : null)}</div>
       <svg className="cs4-tour-svg" aria-hidden="true">
-        <path ref={halo} className="halo" d="" />
         <path ref={line} className="ln" d="" />
-        <g ref={node} className="node"><circle className="pulse" r="9" /><circle className="dot" r="4.5" /></g>
+        <g ref={node} className="node"><circle className="pulse" r="8" /><circle className="dot" r="3.5" /></g>
       </svg>
     </div>
   );

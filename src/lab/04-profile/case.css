@@ -267,7 +267,7 @@
 @media (max-width: 700px) { .cs4-gaps { grid-template-columns: minmax(0, 1fr); gap: var(--s2); } } /* one to a row on the phone */
 /* the toured recording (26 Oct): the phone at the middle, a fifth bigger than the standard (its features are small), the
    cards at its sides with room between for the lines; a card dim until the recording shows its feature. The node and
-   its line are drawn over everything, the line with a light halo so it reads on the screen and off it */
+   its line are drawn over everything */
 .cs4-tour { --tour-w: calc(var(--ph-w) * 1.4); position: relative; display: grid; grid-template-columns: minmax(0, 1fr) var(--tour-w) minmax(0, 1fr); column-gap: calc(var(--s5) + var(--s2)); align-items: center; padding: var(--s2) 0; }
 .cs4-tour-col { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
 .cs4-tour-phone { width: var(--tour-w); aspect-ratio: 9 / 19.5; }
@@ -280,10 +280,9 @@
 .cs4-tour-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 3; opacity: 0; transition: opacity .3s ease; }
 .cs4-tour.live .cs4-tour-svg { opacity: 1; }
 .cs4-tour-svg path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.cs4-tour-svg .halo { stroke: rgb(255 255 255 / .75); stroke-width: 4; }
-.cs4-tour-svg .ln { stroke: var(--pcard-open-ink); stroke-width: 1.5; }
-.cs4-tour-svg .dot { fill: #fff; stroke: var(--pcard-open-ink); stroke-width: 2; }
-.cs4-tour-svg .pulse { fill: rgb(255 255 255 / .45); transform-box: fill-box; transform-origin: center; animation: cs4-tour-pulse 1.6s ease-out infinite; }
+.cs4-tour-svg .ln { stroke: var(--nav-hl); stroke-width: 1.1; } /* the system's dark grey (the chips'), thin, no halo (26 Oct) */
+.cs4-tour-svg .dot { fill: var(--nav-hl); }
+.cs4-tour-svg .pulse { fill: color-mix(in srgb, var(--nav-hl) 35%, transparent); transform-box: fill-box; transform-origin: center; animation: cs4-tour-pulse 1.6s ease-out infinite; }
 @keyframes cs4-tour-pulse { 0% { transform: scale(.6); opacity: 1; } 100% { transform: scale(2.1); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .cs4-tour-svg { display: none; } }
 @media (max-width: 700px) {
