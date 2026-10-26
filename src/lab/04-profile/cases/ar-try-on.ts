@@ -63,10 +63,11 @@ export const arTryOn: Case = {
         { p: ['Tap a colour to switch lenses.'], side: 'l', t: 22.3, end: 26.5, at: [.405, .684] },
         { p: ['Sparkles on the eyes, each time the lens changes.'], side: 'r', t: 26.85, end: 32.4, at: [.681, .396] },
       ] },
+      /* his part in it (26 Oct: "ideated and worked on the interaction and prototyping and accurate handoff to the devs… ProtoPie") */
       { k: 'cols', of: [
-        { h: 'What it is', p: ['An AR try-on for colour contact lenses: the lens is drawn on your own eyes, live, from the camera.'] },
-        { h: 'Why a slider', p: ['A colour on an eye is easy to miss on its own. Split down the face, with and without, the difference is right in front of you.'] },
-        { h: 'The motion', p: ['The nudges and the praise are custom-made animations: they draw the eye to the colour, teach the gesture and make choosing a lens feel like play.'] },
+        { h: 'My part', p: ['I ideated and designed the interaction: the slider, the nudges, the praise and the lens switching.'] },
+        { h: 'Prototyped in ProtoPie', p: ['Every interaction was built as a working prototype in ProtoPie, so it could be felt and tuned before a line of code.'] },
+        { h: 'Handed off, accurately', p: ['The prototype became the handoff: the developers had every timing, trigger and curve to build from.'] },
       ] },
     ] },
     { id: 'frame-removal', title: 'Frame removal for a more accurate try-on', blocks: [
