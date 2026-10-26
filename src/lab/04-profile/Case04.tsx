@@ -223,13 +223,13 @@ function LoaderPhone({ l }: { l: LoaderItem }) {
 /* success states, each in its panel with what it is (25 Oct, Nitish: "write a little bit about every success state … a
    different structure that looks a little better"): the screen at the left, its chip, heading and a line or two at the
    right; the desktop one takes the row */
-function Successes({ of }: { of: { m: Media; chip: string; h: string; p: Rich; wide?: boolean }[] }) {
+function Successes({ of }: { of: { m: Media; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean }[] }) {
   return (
     <div className="cs4-sx">
       {of.map((x, i) => (
-        <div key={i} className={`cs4-sx-item${x.wide ? ' wide' : ''}`}>
+        <div key={i} className={`cs4-sx-item${x.wide ? ' wide' : ''}${x.top ? ' top' : ''}`}>
           <Fig m={x.m} />
-          <div className="cs4-sx-text"><span className="cs4-faq-label">{x.chip}</span><h4 className="cs4-sub">{x.h}</h4><p className="cs4-p">{text(x.p)}</p></div>
+          <div className="cs4-sx-text"><span className="cs4-faq-label">{x.chip}</span><h4 className="cs4-sub">{x.h}</h4>{x.p && <p className="cs4-p">{text(x.p)}</p>}{x.ul && <ul className="cs4-ul">{x.ul.map((it, k) => <li key={k}>{text(it)}</li>)}</ul>}</div>
         </div>
       ))}
     </div>
@@ -457,6 +457,18 @@ function Render({ b }: { b: Block }) {
     case 'peek': return <Peek label={b.label} show={b.show} screen={b.screen} at={b.at} of={b.of} />;
     case 'loaders': return <div className="cs4-row cs4-ld-row">{b.of.map((l, i) => <LoaderPhone key={i} l={l} />)}</div>;
     case 'successes': return <Successes of={b.of} />;
+    case 'gaps': return (
+      <div className="cs4-gaps">
+        {b.of.map((g, i) => (
+          <div key={g.h} className="cs4-gap">
+            <span className="cs4-gap-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h4 className="cs4-sub">{g.h}</h4>
+            <p className="cs4-p">{text(g.p)}</p>
+            {g.to && <span className="cs4-faq-label">{g.to}</span>}
+          </div>
+        ))}
+      </div>
+    );
     case 'journey': return <Journey text={b.text} screen={b.screen} bar={b.bar} of={b.of} entry={b.entry} />;
     /* a version: its number and its name as chips, a line, its screens */
     case 'version': return (

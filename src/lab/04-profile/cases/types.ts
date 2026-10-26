@@ -42,7 +42,9 @@ export type Block =
   | { k: 'loaders'; of: { label: string; cap: string; ground?: string; lottie: string; box: [number, number, number, number]; title: string; sub?: string; at: number; dots?: boolean; tone?: 'dark'; feather?: boolean /* its box's edges faded: a comp whose glows run to its edges */ }[] }
   /* success states, each in its panel: the screen and what it is — a chip (its product), a heading, a line or two; `wide`
      for a desktop screen, which takes the row */
-  | { k: 'successes'; of: { m: Media; chip: string; h: string; p: Rich; wide?: boolean }[] }
+  | { k: 'successes'; of: { m: Media; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean /* the media over the words, a pair side by side (the AR study's loading and success Lotties) */ }[] }
+  /* what research found, a panel each: its heading and line, and the part of the study that answers it (`to`), when one does */
+  | { k: 'gaps'; of: { h: string; p: Rich; to?: string }[] }
   /* screens in a row, their wires converging on one screen under them (his nudges meeting the help menu) */
   | { k: 'converge'; of: Media[]; to: Media }
   /* a version of the feature: its number and name as chips, a line about it, its screens */

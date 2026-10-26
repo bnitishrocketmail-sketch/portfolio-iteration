@@ -27,6 +27,8 @@ export const PROJECTS: Project[] = [
   { id: 'launches', title: 'Launches & campaigns', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'L', m1: '#0B2A15', m2: '#0A1230', wide: true,
     blurb: 'Landing pages, campaign visuals, a 3D product guide and GenAI characters for launches.', tags: ['Promotional', 'Visual communication', 'UI', 'Interaction/Motion'],
     cover: { comp: 'launches' } }, /* the two phones of its hero, in small (22 Oct) */
+  { id: 'ar-try-on', title: 'AR try-on', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'A', m1: '#0E6B5C', m2: '#BFEDE2',
+    blurb: 'Frame removal and a contact-lens try-on: an AR try-on for people already wearing glasses.', tags: ['App feature', 'AR', 'Interaction/Motion'] }, /* (26 Oct) its visual, here and in its hero, to come; the year to confirm */
   { id: 'coin-rig', title: 'Coin Rig', client: 'Lottie Creator plugin', role: 'Design & build', year: '2026', letter: 'C', m1: '#F5BD56', m2: '#C94A3A', /* the plugin named where the client was (23 Oct: "mention it is a Lottie Creator plugin") */
     blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Lottie Creator plugin', 'Faux 3D', 'Tool'],
     /* his recording of the plugin in Creator, cropped to its panel at square pixels (the recording's are 571:640) (23 Oct) */
@@ -52,7 +54,7 @@ export const PROJECTS: Project[] = [
    the Lab, which takes the Projects page's layout and interaction as they are, in this order. The rupee coin is gone (no
    such project); the Motion system joins the Lab as a project (its page is the Motion system tab) */
 const pick = (ids: string[]) => ids.map(id => PROJECTS.find(p => p.id === id)!);
-export const PROJECTS04: Project[] = pick(['magic-scale', 'lenskart-b', 'fintech-motion', 'launches']);
+export const PROJECTS04: Project[] = pick(['magic-scale', 'lenskart-b', 'fintech-motion', 'launches', 'ar-try-on']);
 export const MOTION_SYSTEM: Project = { id: 'motion-system', title: 'Motion design system', client: 'Motion & interaction system', role: 'Design & build', year: '2026', letter: 'M', m1: '#2f2e30', m2: '#e0e0e0',
   blurb: 'One set of motion decisions, defined once and inherited by every screen.', tags: ['Motion tokens', 'Interaction', 'System'],
   cover: { comp: 'motion' } }; /* its open card plays the system's journey phone beside the three levels (MotionThumb) */
