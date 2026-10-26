@@ -226,36 +226,28 @@ function LoaderPhone({ l }: { l: LoaderItem }) {
    right; the desktop one takes the row */
 /* the contact-lens try-on, toured (Nitish, 26 Oct: "the phone is in the center, the video is being played inside, and the
    markers… the nodes… guiding a little outside of the phone and then in a container, showing with the text what that
-   feature is"): his recording plays in a phone at the middle, its features in cards at the sides. While the recording
-   shows one, its card is lit, a node sits where it happens on the screen (riding the slider's handle as it is dragged:
-   the handle's x measured in every third frame of the recording) and a line runs from the node out past the phone's edge
-   and on to the card. The geometry is read each frame while it plays, so it holds at any size. A card plays the
-   recording from its moment. Under reduced motion the recording holds on its first frame and every card is lit. On the
-   phone the cards stack under it, in the order they happen, and the node stays without its line */
+   feature is"; later that day: "not to keep them there faded out… make them appear as we are talking about that specific
+   interaction… fading in and fading out… nodes don't need to bend anymore"): his recording plays in a phone at the
+   middle; as it reaches a feature, a node sits where it happens on the screen (riding the slider's handle as it is
+   dragged, frame by frame) and the feature's card fades in beside the phone, level with the node, a straight line from
+   the node to it; when the feature is over the card fades out. Between two features the node and line dip out and back.
+   The geometry is read each frame while it plays, so it holds at any size. The card plays the recording from its
+   moment. Under reduced motion the recording holds on its first frame and the cards stand in two columns, all shown.
+   On the phone each card fades in under the phone, in one slot, the node without a line */
 type TourB = Extract<Block, { k: 'tour' }>;
 const lerpAt = (keys: [number, number, number][], t: number): [number, number] => {
   if (t <= keys[0][0]) return [keys[0][1], keys[0][2]];
   for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) { const [t0, x0, y0] = keys[i - 1], [t1, x1, y1] = keys[i], u = (t - t0) / (t1 - t0 || 1); return [x0 + (x1 - x0) * u, y0 + (y1 - y0) * u]; }
   const k = keys[keys.length - 1]; return [k[1], k[2]];
 };
-/* the line from a node to its card (26 Oct, Nitish: "the first curve… a little raw… take the corner radius reference and
-   then bend it"): straight out of the node, turned midway across the gap through two corners of the cards' own radius,
-   straight into the card's side */
-const elbow = (ax: number, ay: number, xm: number, cx: number, cy: number, r0: number): string => {
-  const f = (n: number) => n.toFixed(1);
-  const dy = cy - ay, s = dy < 0 ? -1 : 1, dir = cx < ax ? -1 : 1;
-  const r = Math.min(r0, Math.abs(dy) / 2, Math.abs(xm - ax) - 1, Math.abs(cx - xm) - 1);
-  if (r < 1) return `M${f(ax)} ${f(ay)}H${f(xm)}V${f(cy)}H${f(cx)}`;
-  const s1 = (dir > 0) === (s > 0) ? 1 : 0, s2 = 1 - s1;
-  return `M${f(ax)} ${f(ay)}H${f(xm - dir * r)}A${f(r)} ${f(r)} 0 0 ${s1} ${f(xm)} ${f(ay + s * r)}V${f(cy - s * r)}A${f(r)} ${f(r)} 0 0 ${s2} ${f(xm + dir * r)} ${f(cy)}H${f(cx)}`;
-};
+const SWAP = 160; /* ms the node and line are out between two features */
 function Tour({ b }: { b: TourB }) {
   const box = useRef<HTMLDivElement>(null), phone = useRef<HTMLDivElement>(null), vid = useRef<HTMLVideoElement>(null);
   const cards = useRef<(HTMLButtonElement | null)[]>([]);
   const node = useRef<SVGGElement>(null), line = useRef<SVGPathElement>(null);
   const inView = useInView(box, .25);
   const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [act, setAct] = useState(-1); const actRef = useRef(-1);
+  const [act, setAct] = useState(-1); const actRef = useRef(-1); const swap = useRef(0);
   useEffect(() => { const v = vid.current; if (!v) return; if (inView && !reduce) v.play().catch(() => {}); else v.pause(); }, [inView, reduce]);
   /* the time of the frame on screen (the browser's video-frame callback), not the clock's: a node riding the handle keeps to
      the frame that shows it; where there is no such callback, the clock */
@@ -282,34 +274,43 @@ function Tour({ b }: { b: TourB }) {
         if (ai >= 0 || t < w.t[0] || t >= w.t[1]) return;
         ai = i; at = w.at === 'track' ? lerpAt(track, t) : typeof w.at[0] === 'number' ? w.at as [number, number] : lerpAt(w.at as [number, number, number][], t);
       }));
-      if (ai !== actRef.current) { actRef.current = ai; setAct(ai); }
-      if (ai < 0) return;
       const B = bx.getBoundingClientRect(), P = ph.getBoundingClientRect();
       const ax = P.left - B.left + at[0] * P.width, ay = P.top - B.top + at[1] * P.height;
+      if (ai !== actRef.current) {
+        const was = actRef.current; actRef.current = ai;
+        const c = cards.current[ai];
+        if (c && ai >= 0) { /* the card level with the node, kept inside its column */
+          const col = c.parentElement!, Col = col.getBoundingClientRect(), h = c.getBoundingClientRect().height;
+          c.style.top = `${Math.max(0, Math.min(ay - (Col.top - B.top) - h / 2, Col.height - h)).toFixed(1)}px`;
+        }
+        clearTimeout(swap.current);
+        if (was >= 0 && ai >= 0) { setAct(-1); swap.current = window.setTimeout(() => setAct(ai), SWAP); } else setAct(ai); /* between two features, out and back */
+      }
+      if (ai < 0) return;
       g.setAttribute('transform', `translate(${ax.toFixed(1)} ${ay.toFixed(1)})`);
       const c = cards.current[ai]; if (!c) return;
       const C = c.getBoundingClientRect();
       const beside = C.bottom > P.top && C.top < P.bottom && (C.right <= P.left || C.left >= P.right); /* a card beside the phone; under it (the phone's layout) there is no line */
       if (!beside) { l.setAttribute('d', ''); return; }
-      const left = C.right <= P.left;
-      const cx = left ? C.right - B.left : C.left - B.left, cy = C.top - B.top + C.height / 2;
-      const xm = left ? (P.left + C.right) / 2 - B.left : (P.right + C.left) / 2 - B.left; /* the turn, midway across the gap */
-      const d = elbow(ax, ay, xm, cx, cy, parseFloat(getComputedStyle(c).borderTopLeftRadius) || 16);
-      l.setAttribute('d', d);
+      const cx = (C.right <= P.left ? C.right : C.left) - B.left;
+      l.setAttribute('d', `M${ax.toFixed(1)} ${ay.toFixed(1)}H${cx.toFixed(1)}`);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => { cancelAnimationFrame(raf); clearTimeout(swap.current); };
   }, [inView, reduce, b]);
   const go = (i: number) => { const v = vid.current; if (!v) return; v.currentTime = b.of[i].when[0].t[0] + .05; if (!reduce) v.play().catch(() => {}); };
-  const card = (st: TourB['of'][number], i: number) => (
-    <button key={i} type="button" ref={el => { cards.current[i] = el; }} className={`cs4-tour-card${act === i || reduce ? ' on' : ''}`} style={{ order: i }} onClick={() => go(i)} aria-label={`${st.h}: play this moment`}>
-      <span className="cs4-faq-label">{st.chip}</span>
-      <h4 className="cs4-sub">{st.h}</h4>
-      <p className="cs4-p">{text(st.p)}</p>
-    </button>
-  );
+  const card = (st: TourB['of'][number], i: number) => {
+    const on = act === i || reduce;
+    return (
+      <button key={i} type="button" ref={el => { cards.current[i] = el; }} className={`cs4-tour-card${on ? ' on' : ''}`} tabIndex={on ? 0 : -1} aria-hidden={!on} onClick={() => go(i)} aria-label={`${st.h}: play this moment again`}>
+        <span className="cs4-faq-label">{st.chip}</span>
+        <h4 className="cs4-sub">{st.h}</h4>
+        <p className="cs4-p">{text(st.p)}</p>
+      </button>
+    );
+  };
   return (
-    <div ref={box} className={`cs4-tour${act >= 0 ? ' live' : ''}`}>
+    <div ref={box} className={`cs4-tour${act >= 0 ? ' live' : ''}${reduce ? ' still' : ''}`}>
       <div className="cs4-tour-col l">{b.of.map((st, i) => st.side === 'l' ? card(st, i) : null)}</div>
       <div ref={phone} className="cs4-media phone filled cs4-tour-phone" role="img" aria-label={b.label}>
         <video ref={vid} src={b.src} poster={b.poster} muted loop playsInline preload="metadata" aria-hidden="true" />
