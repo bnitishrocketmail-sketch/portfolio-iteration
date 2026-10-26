@@ -17,9 +17,9 @@ const clip = (name: string, label: string, cap: string): Media => ({ k: 'media',
 const SIDE = 'minmax(0, 1.25fr) minmax(var(--ph-w), 1fr)';
 const state = (name: string, label: string): Media => ({ k: 'media', shape: 'image', ratio: '2 / 1', label, lottie: `${A}/${name}.json`, bg: '#000' });
 
-/* the slider's handle in the contact-lens clip while it is dragged (5–8.6 s): its x, a fraction of the screen, in every frame of
-   the clip (30 a second), found by matching the handle in each frame — so its node keeps to the handle frame by frame */
-const LENS_HANDLE: [number, number][] = [[4.9, 0.871], [4.933, 0.871], [4.967, 0.871], [5.0, 0.871], [5.033, 0.871], [5.067, 0.854], [5.1, 0.833], [5.133, 0.812], [5.167, 0.792], [5.2, 0.769], [5.233, 0.746], [5.267, 0.725], [5.3, 0.704], [5.333, 0.685], [5.367, 0.667], [5.4, 0.654], [5.433, 0.64], [5.467, 0.621], [5.5, 0.6], [5.533, 0.579], [5.567, 0.558], [5.6, 0.54], [5.633, 0.521], [5.667, 0.502], [5.7, 0.483], [5.733, 0.469], [5.767, 0.452], [5.8, 0.438], [5.833, 0.421], [5.867, 0.404], [5.9, 0.388], [5.933, 0.375], [5.967, 0.36], [6.0, 0.35], [6.033, 0.34], [6.067, 0.329], [6.1, 0.319], [6.133, 0.31], [6.167, 0.304], [6.2, 0.298], [6.233, 0.292], [6.267, 0.285], [6.3, 0.277], [6.333, 0.269], [6.367, 0.263], [6.4, 0.258], [6.433, 0.254], [6.467, 0.254], [6.5, 0.254], [6.533, 0.254], [6.567, 0.254], [6.6, 0.254], [6.633, 0.254], [6.667, 0.254], [6.7, 0.254], [6.733, 0.254], [6.767, 0.254], [6.8, 0.254], [6.833, 0.254], [6.867, 0.258], [6.9, 0.263], [6.933, 0.271], [6.967, 0.279], [7.0, 0.285], [7.033, 0.294], [7.067, 0.302], [7.1, 0.312], [7.133, 0.323], [7.167, 0.338], [7.2, 0.354], [7.233, 0.371], [7.267, 0.388], [7.3, 0.404], [7.333, 0.421], [7.367, 0.433], [7.4, 0.448], [7.433, 0.463], [7.467, 0.475], [7.5, 0.49], [7.533, 0.502], [7.567, 0.515], [7.6, 0.529], [7.633, 0.544], [7.667, 0.562], [7.7, 0.583], [7.733, 0.604], [7.767, 0.627], [7.8, 0.648], [7.833, 0.667], [7.867, 0.688], [7.9, 0.71], [7.933, 0.729], [7.967, 0.748], [8.0, 0.762], [8.033, 0.773], [8.067, 0.781], [8.1, 0.792], [8.133, 0.802], [8.167, 0.812], [8.2, 0.821], [8.233, 0.825], [8.267, 0.827], [8.3, 0.827], [8.333, 0.827], [8.367, 0.827], [8.4, 0.827], [8.433, 0.827], [8.467, 0.827], [8.5, 0.827], [8.533, 0.827], [8.567, 0.827], [8.6, 0.827], [8.633, 0.827], [8.667, 0.827], [8.7, 0.827], [8.733, 0.827], [8.767, 0.827], [8.8, 0.827]];
+/* the slider's handle in the contact-lens clip while it is dragged (1.7–5.2 s): its x, a fraction of the screen, in every
+   frame of the clip (30 a second), found by matching the handle in each frame — so its node keeps to the handle frame by frame */
+const LENS_HANDLE: [number, number][] = [[1.7, 0.87], [1.73, 0.87], [1.77, 0.854], [1.8, 0.833], [1.83, 0.812], [1.87, 0.792], [1.9, 0.769], [1.93, 0.745], [1.97, 0.725], [2.0, 0.704], [2.03, 0.685], [2.07, 0.667], [2.1, 0.653], [2.13, 0.639], [2.17, 0.62], [2.2, 0.6], [2.23, 0.579], [2.27, 0.558], [2.3, 0.539], [2.33, 0.519], [2.37, 0.502], [2.4, 0.484], [2.43, 0.468], [2.47, 0.451], [2.5, 0.435], [2.53, 0.419], [2.57, 0.403], [2.6, 0.389], [2.63, 0.373], [2.67, 0.361], [2.7, 0.35], [2.73, 0.338], [2.77, 0.329], [2.8, 0.317], [2.83, 0.31], [2.87, 0.303], [2.9, 0.299], [2.93, 0.292], [2.97, 0.285], [3.0, 0.278], [3.03, 0.269], [3.07, 0.264], [3.1, 0.257], [3.13, 0.255], [3.17, 0.252], [3.53, 0.252], [3.57, 0.257], [3.6, 0.262], [3.63, 0.271], [3.67, 0.278], [3.7, 0.285], [3.73, 0.294], [3.77, 0.301], [3.8, 0.312], [3.83, 0.322], [3.87, 0.338], [3.9, 0.354], [3.93, 0.37], [3.97, 0.387], [4.0, 0.403], [4.03, 0.419], [4.07, 0.433], [4.1, 0.447], [4.13, 0.461], [4.17, 0.475], [4.2, 0.488], [4.23, 0.502], [4.27, 0.514], [4.3, 0.528], [4.33, 0.544], [4.37, 0.562], [4.4, 0.583], [4.43, 0.604], [4.47, 0.627], [4.5, 0.648], [4.53, 0.667], [4.57, 0.688], [4.6, 0.708], [4.63, 0.729], [4.67, 0.748], [4.7, 0.762], [4.73, 0.773], [4.77, 0.782], [4.8, 0.792], [4.83, 0.801], [4.87, 0.812], [4.9, 0.819], [4.93, 0.824], [4.97, 0.826], [5.2, 0.826]];
 
 export const arTryOn: Case = {
   id: 'ar-try-on',
@@ -51,22 +51,16 @@ export const arTryOn: Case = {
     ] },
     { id: 'contact-lens', title: 'Contact-lens try-on with a slider', blocks: [
       { k: 'p', t: ['Users ', { b: 'drag a slider across the screen' }, ' to compare one eye ', { b: 'with the lens and one without' }, ': a before and after, in real time. Around the slider, small animations draw the eye to the colour, teach the gesture and celebrate the look. Each one lights up as the recording reaches it; tap one to see it again.'] },
-      /* each feature once, at its first showing (Nitish, 26 Oct: "once we show a feature… we don't have to repeat it"); a node rides
-         only the slider's handle, frame by frame; the rest sit still where their feature is ("either do it in synchronization… or
-         don't do it") */
-      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the slider, the nudges, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
-        { chip: 'Nudge', h: 'The reveal', side: 'r', p: ['As the try-on opens, the line sweeps across the face and sparkles play over the side wearing the lens: the first thing seen is the colour.'],
-          when: [{ t: [.85, 3.45], at: [.58, .36] }] },
-        { chip: 'Nudge', h: 'A hand shows the drag', side: 'r', p: ['Before the slider is touched, a hand drags its handle once: the gesture is taught without a word.'],
-          when: [{ t: [3.5, 5], at: [.871, .602] }] },
-        { chip: 'Compare', h: 'With and without', side: 'r', p: ['Drag the line across the face: one side wears the lens, the other doesn’t, and the labels at the top follow the line.'],
-          when: [{ t: [5.05, 8.6], at: 'track' }] },
-        { chip: 'Zoom', h: 'Closer to the eyes', side: 'l', p: ['The bar at the side brings the eyes closer, to see the lens; a toast in the middle says how far.'],
-          when: [{ t: [9.9, 12.4], at: [.045, .44] }] },
-        { chip: 'Persuasion', h: 'A burst of praise', side: 'l', p: ['Hearts burst around the face with a line of praise, here “Absolutely stunning!”: a moment of delight that nudges towards the cart.'],
-          when: [{ t: [12.7, 15.5], at: [.5, .46] }] },
-        { chip: 'Explore', h: 'Every colour, on your eyes', side: 'l', p: ['Tap a colour in the row and the eyes change on the spot; the product card under it follows, one tap from the cart.'],
-          when: [{ t: [25, 35.4], at: [.405, .684] }] },
+      /* the tour, paced (Nitish, 26 Oct): the clip starts at the hand's nudge (the sparkles cut: "not made properly how it was
+         intended"). At each feature the recording pauses on its first frame (`t`), the node marks the spot (`at`), the card
+         comes in (`h`, a line); then the node goes and the feature plays to `end`. The slider's feature plays with its node
+         riding the handle ("the nod is following the slider, so that is fine"). Each feature once */
+      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the hand that shows the drag, the slider, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
+        { h: 'A hand shows the drag', p: ['Before the slider is touched, a hand drags its handle once: the gesture is taught without a word.'], side: 'r', t: .05, end: 1.7, at: [.871, .602] },
+        { h: 'With and without', p: ['Drag the line across the face: one side wears the lens, the other doesn’t, and the labels at the top follow the line.'], side: 'r', t: 1.72, end: 5.2, at: 'track', ride: true },
+        { h: 'Closer to the eyes', p: ['The bar at the side brings the eyes closer, to see the lens; a toast in the middle says how far.'], side: 'l', t: 6.45, end: 8.7, at: [.045, .44] },
+        { h: 'A burst of praise', p: ['Hearts burst around the face with a line of praise, here “Absolutely stunning!”: a moment of delight that nudges towards the cart.'], side: 'l', t: 9.35, end: 12.3, at: [.5, .46] },
+        { h: 'Every colour, on your eyes', p: ['Tap a colour in the row and the eyes change on the spot; the product card under it follows, one tap from the cart.'], side: 'l', t: 22.5, end: 32.4, at: [.405, .684] },
       ] },
       { k: 'cols', of: [
         { h: 'What it is', p: ['An AR try-on for colour contact lenses: the lens is drawn on your own eyes, live, from the camera.'] },

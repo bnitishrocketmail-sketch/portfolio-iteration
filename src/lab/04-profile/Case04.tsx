@@ -224,33 +224,35 @@ function LoaderPhone({ l }: { l: LoaderItem }) {
 /* success states, each in its panel with what it is (25 Oct, Nitish: "write a little bit about every success state … a
    different structure that looks a little better"): the screen at the left, its chip, heading and a line or two at the
    right; the desktop one takes the row */
-/* the contact-lens try-on, toured (Nitish, 26 Oct: "the phone is in the center, the video is being played inside, and the
-   markers… the nodes… guiding a little outside of the phone and then in a container, showing with the text what that
-   feature is"; later that day: "not to keep them there faded out… make them appear as we are talking about that specific
-   interaction… fading in and fading out… nodes don't need to bend anymore"): his recording plays in a phone at the
-   middle; as it reaches a feature, a node sits where it happens on the screen (riding the slider's handle as it is
-   dragged, frame by frame) and the feature's card fades in beside the phone, level with the node, a straight line from
-   the node to it; when the feature is over the card fades out. Between two features the node and line dip out and back.
-   The geometry is read each frame while it plays, so it holds at any size. The card plays the recording from its
-   moment. Under reduced motion the recording holds on its first frame and the cards stand in two columns, all shown.
-   On the phone each card fades in under the phone, in one slot, the node without a line */
+/* the contact-lens try-on, toured (Nitish, 26 Oct, the third pass: "pause the video and then… take the highlight from the
+   area… the container is there… then the interaction plays… the next thing comes… pauses before we tell the user"):
+   his recording plays in a phone at the middle. At each feature the recording pauses on the feature's first frame; a node
+   grows on the spot where it happens, with a hairline out to the card that comes in at the phone's side, level with the
+   node, dark, with the feature's name and a line; after a beat the node and line withdraw and the feature plays, the card
+   staying until the feature is over, then going before the recording runs on to the next. The slider's feature plays
+   with its node riding the handle (frame by frame, by the frame on screen). A card's tap plays its feature again. The
+   geometry is read each frame, so it holds at any size. Under reduced motion the recording holds on its first frame and
+   the cards stand in two columns, all shown. On the phone the card comes in under the recording, in one slot, no line */
 type TourB = Extract<Block, { k: 'tour' }>;
-const lerpAt = (keys: [number, number, number][], t: number): [number, number] => {
-  if (t <= keys[0][0]) return [keys[0][1], keys[0][2]];
-  for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) { const [t0, x0, y0] = keys[i - 1], [t1, x1, y1] = keys[i], u = (t - t0) / (t1 - t0 || 1); return [x0 + (x1 - x0) * u, y0 + (y1 - y0) * u]; }
-  const k = keys[keys.length - 1]; return [k[1], k[2]];
+type Phase = 'idle' | 'mark' | 'play';
+const MARK = 1900; /* ms the recording holds on a feature's first frame: the node in (300), the card in, a reading beat, the node out */
+const NODE_OUT = 1500; /* the node and line start withdrawing this far into the hold */
+const lerpX = (keys: [number, number][], t: number): number => {
+  if (t <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) { const [t0, x0] = keys[i - 1], [t1, x1] = keys[i]; return x0 + (x1 - x0) * (t - t0) / (t1 - t0 || 1); }
+  return keys[keys.length - 1][1];
 };
-const SWAP = 160; /* ms the node and line are out between two features */
 function Tour({ b }: { b: TourB }) {
   const box = useRef<HTMLDivElement>(null), phone = useRef<HTMLDivElement>(null), vid = useRef<HTMLVideoElement>(null);
   const cards = useRef<(HTMLButtonElement | null)[]>([]);
   const node = useRef<SVGGElement>(null), line = useRef<SVGPathElement>(null);
   const inView = useInView(box, .25);
   const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [act, setAct] = useState(-1); const actRef = useRef(-1); const swap = useRef(0);
-  useEffect(() => { const v = vid.current; if (!v) return; if (inView && !reduce) v.play().catch(() => {}); else v.pause(); }, [inView, reduce]);
-  /* the time of the frame on screen (the browser's video-frame callback), not the clock's: a node riding the handle keeps to
-     the frame that shows it; where there is no such callback, the clock */
+  const [act, setAct] = useState(-1); const [phase, setPhase] = useState<Phase>('idle'); const [nodeOn, setNodeOn] = useState(false);
+  const st = useRef({ act: -1, phase: 'idle' as Phase, timers: [] as number[] });
+  const clear = () => { st.current.timers.forEach(clearTimeout); st.current.timers = []; };
+  const later = (ms: number, f: () => void) => { st.current.timers.push(window.setTimeout(f, ms)); };
+  /* the time of the frame on screen (the browser's video-frame callback), not the clock's, for the node on the handle */
   const shown = useRef(-1);
   useEffect(() => {
     const v = vid.current as (HTMLVideoElement & { requestVideoFrameCallback?: (cb: (now: number, m: { mediaTime: number }) => void) => number; cancelVideoFrameCallback?: (id: number) => void }) | null;
@@ -260,65 +262,80 @@ function Tour({ b }: { b: TourB }) {
     id = v.requestVideoFrameCallback(cb);
     return () => v.cancelVideoFrameCallback?.(id);
   }, []);
+  /* the feature at `i`: pause on its first frame, mark, then play it */
+  const mark = (i: number) => {
+    const v = vid.current; if (!v) return;
+    clear(); const f = b.of[i];
+    v.pause(); v.currentTime = f.t;
+    st.current.act = i; st.current.phase = 'mark'; setAct(i); setPhase('mark'); setNodeOn(true);
+    if (!f.ride) later(NODE_OUT, () => setNodeOn(false));
+    later(MARK, () => { st.current.phase = 'play'; setPhase('play'); v.play().catch(() => {}); });
+  };
+  useEffect(() => {
+    const v = vid.current; if (!v) return;
+    if (!inView || reduce) { clear(); v.pause(); return; }
+    if (st.current.phase === 'idle') { v.play().catch(() => {}); }
+    else if (st.current.phase === 'play') v.play().catch(() => {});
+    return clear;
+  }, [inView, reduce]);
   useEffect(() => {
     if (!inView || reduce) return;
-    const track = (b.track ?? []).map(([t, x]) => [t, x, b.ty ?? .6] as [number, number, number]);
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
       const v = vid.current, bx = box.current, ph = phone.current, g = node.current, l = line.current;
       if (!v || !bx || !ph || !g || !l) return;
-      const t = !v.paused && shown.current >= 0 ? shown.current : v.currentTime;
-      let ai = -1, at: [number, number] = [0, 0];
-      b.of.forEach((st, i) => st.when.forEach(w => {
-        if (ai >= 0 || t < w.t[0] || t >= w.t[1]) return;
-        ai = i; at = w.at === 'track' ? lerpAt(track, t) : typeof w.at[0] === 'number' ? w.at as [number, number] : lerpAt(w.at as [number, number, number][], t);
-      }));
+      const S = st.current, t = !v.paused && shown.current >= 0 ? shown.current : v.currentTime;
+      /* the recording running (idle, or a feature playing): has it reached the next feature, or the end of this one? */
+      if (S.phase !== 'mark' && !v.paused) {
+        const cur = S.act;
+        if (S.phase === 'play' && cur >= 0 && t >= b.of[cur].end) { S.phase = 'idle'; S.act = -1; setPhase('idle'); setAct(-1); setNodeOn(false); }
+        const next = b.of.findIndex((f, i) => i !== cur && t >= f.t && t < f.t + .5 && (S.phase === 'idle' || i > cur));
+        if (next >= 0 && next !== cur && (S.act < 0 || next > S.act)) { mark(next); return; }
+        if (S.phase === 'idle' && t < b.of[0].t && S.act === -2) { /* looped round: start again */ }
+      }
+      if (S.act < 0) return;
+      const f = b.of[S.act];
+      const at: [number, number] = f.at === 'track' ? [lerpX(b.track ?? [[0, .5]], S.phase === 'mark' ? f.t : t), b.ty ?? .6] : f.at;
       const B = bx.getBoundingClientRect(), P = ph.getBoundingClientRect();
       const ax = P.left - B.left + at[0] * P.width, ay = P.top - B.top + at[1] * P.height;
-      if (ai !== actRef.current) {
-        const was = actRef.current; actRef.current = ai;
-        const c = cards.current[ai];
-        if (c && ai >= 0) { /* the card level with the node, kept inside its column */
-          const col = c.parentElement!, Col = col.getBoundingClientRect(), h = c.getBoundingClientRect().height;
-          c.style.top = `${Math.max(0, Math.min(ay - (Col.top - B.top) - h / 2, Col.height - h)).toFixed(1)}px`;
-        }
-        clearTimeout(swap.current);
-        if (was >= 0 && ai >= 0) { setAct(-1); swap.current = window.setTimeout(() => setAct(ai), SWAP); } else setAct(ai); /* between two features, out and back */
-      }
-      if (ai < 0) return;
       g.setAttribute('transform', `translate(${ax.toFixed(1)} ${ay.toFixed(1)})`);
-      const c = cards.current[ai]; if (!c) return;
+      const c = cards.current[S.act]; if (!c) return;
+      if (S.phase === 'mark' && !c.dataset.placed) { /* the card level with the node, kept inside its column */
+        const col = c.parentElement!, Col = col.getBoundingClientRect(), h = c.getBoundingClientRect().height;
+        c.style.top = `${Math.max(0, Math.min(ay - (Col.top - B.top) - h / 2, Col.height - h)).toFixed(1)}px`; c.dataset.placed = '1';
+      }
       const C = c.getBoundingClientRect();
-      const beside = C.bottom > P.top && C.top < P.bottom && (C.right <= P.left || C.left >= P.right); /* a card beside the phone; under it (the phone's layout) there is no line */
+      const beside = C.bottom > P.top && C.top < P.bottom && (C.right <= P.left || C.left >= P.right);
       if (!beside) { l.setAttribute('d', ''); return; }
       const cx = (C.right <= P.left ? C.right : C.left) - B.left;
       l.setAttribute('d', `M${ax.toFixed(1)} ${ay.toFixed(1)}H${cx.toFixed(1)}`);
     };
     raf = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(raf); clearTimeout(swap.current); };
+    return () => cancelAnimationFrame(raf);
   }, [inView, reduce, b]);
-  const go = (i: number) => { const v = vid.current; if (!v) return; v.currentTime = b.of[i].when[0].t[0] + .05; if (!reduce) v.play().catch(() => {}); };
-  const card = (st: TourB['of'][number], i: number) => {
+  /* when the loop comes round, the first feature marks again */
+  useEffect(() => { const v = vid.current; if (!v) return; const on = () => { b.of.forEach((_, i) => { const c = cards.current[i]; if (c) delete c.dataset.placed; }); }; v.addEventListener('seeked', on); return () => v.removeEventListener('seeked', on); }, [b]);
+  const again = (i: number) => { if (!reduce) mark(i); };
+  const card = (f: TourB['of'][number], i: number) => {
     const on = act === i || reduce;
     return (
-      <button key={i} type="button" ref={el => { cards.current[i] = el; }} className={`cs4-tour-card${on ? ' on' : ''}`} tabIndex={on ? 0 : -1} aria-hidden={!on} onClick={() => go(i)} aria-label={`${st.h}: play this moment again`}>
-        <span className="cs4-faq-label">{st.chip}</span>
-        <h4 className="cs4-sub">{st.h}</h4>
-        <p className="cs4-p">{text(st.p)}</p>
+      <button key={i} type="button" ref={el => { cards.current[i] = el; }} className={`cs4-tour-card${on ? ' on' : ''}`} tabIndex={on ? 0 : -1} aria-hidden={!on} onClick={() => again(i)} aria-label={`${f.h}: play this moment again`}>
+        <h4 className="cs4-tour-h">{f.h}</h4>
+        <p className="cs4-tour-p">{text(f.p)}</p>
       </button>
     );
   };
   return (
-    <div ref={box} className={`cs4-tour${act >= 0 ? ' live' : ''}${reduce ? ' still' : ''}`}>
-      <div className="cs4-tour-col l">{b.of.map((st, i) => st.side === 'l' ? card(st, i) : null)}</div>
+    <div ref={box} className={`cs4-tour${act >= 0 ? ' live' : ''}${nodeOn ? ' marked' : ''}${phase === 'play' ? ' playing' : ''}${reduce ? ' still' : ''}`}>
+      <div className="cs4-tour-col l">{b.of.map((f, i) => f.side === 'l' ? card(f, i) : null)}</div>
       <div ref={phone} className="cs4-media phone filled cs4-tour-phone" role="img" aria-label={b.label}>
         <video ref={vid} src={b.src} poster={b.poster} muted loop playsInline preload="metadata" aria-hidden="true" />
       </div>
-      <div className="cs4-tour-col r">{b.of.map((st, i) => st.side === 'r' ? card(st, i) : null)}</div>
+      <div className="cs4-tour-col r">{b.of.map((f, i) => f.side === 'r' ? card(f, i) : null)}</div>
       <svg className="cs4-tour-svg" aria-hidden="true">
         <path ref={line} className="ln" d="" />
-        <g ref={node} className="node"><circle className="pulse" r="8" /><circle className="dot" r="3.5" /></g>
+        <g ref={node} className="node"><circle className="ring" r="11" /><circle className="dot" r="4" /></g>
       </svg>
     </div>
   );
