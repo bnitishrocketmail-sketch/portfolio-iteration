@@ -36,8 +36,8 @@
    top, the actions together at the foot (26 Oct, Nitish: the button and the link done differently, the system's arrow,
    the spacing): the case study as the card's button; his portfolio as a text link — body text, underlined, the same arrow
    smaller — a step after it, not pushed to the far edge */
-.cs4-talk.collab { justify-content: flex-start; gap: var(--s2); }
-.cs4-talk.collab .cs4-talk-row.acts { margin-top: auto; justify-content: flex-start; gap: var(--s3); }
+.cs4-talk.collab { justify-content: flex-start; gap: var(--s1); }
+.cs4-talk.collab .cs4-talk-row.acts { margin-top: auto; padding-top: calc(var(--s1) * .75); justify-content: flex-start; gap: var(--s3); } /* the line close under who it is about (8), the actions at the foot at least 14 under it — so the three-line message (his wording, 26 Oct) fits the card without pushing the next card off the hero's line */
 .cs4-talk.collab .cs4-talk-btn { gap: .45em; }
 .cs4-pair { display: flex; flex: none; align-items: center; }
 .cs4-pair > .cs4-me + .cs4-me { margin-left: calc(clamp(36px, 3.4cqw, 46px) * -.32); }

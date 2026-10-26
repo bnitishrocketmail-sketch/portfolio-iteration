@@ -671,7 +671,7 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04 }: { id: s
               <span className="cs4-pair" aria-hidden="true"><span className="me4 cs4-me"><img src={desk} alt="" /></span><span className="cs4-me cs4-pal"><img src={c.collab.photo} alt="" /></span></span>
               <div className="cs4-talk-who"><span className="cs4-talk-role">In collaboration with</span><b className="cs4-talk-name">{c.collab.name}</b></div>
             </div>
-            <p className="cs4-talk-line">{c.collab.name.split(' ')[0]} was the {c.collab.role.toLowerCase()}; I worked on the interaction and motion.</p>
+            <p className="cs4-talk-line">I worked on the interaction and motion with {c.collab.name.split(' ')[0]}, {c.collab.role.toLowerCase()}. His case study has the project in full.</p>
             <div className="cs4-talk-row acts">
               <a className="cv4 cs4-talk-btn" href={c.collab.project} target="_blank" rel="noopener" aria-label={`${c.collab.name}’s case study of this project (opens his portfolio)`}>Case study <Arrow04 out /></a>
               <a className="cs4-talk-link" href={c.collab.site} target="_blank" rel="noopener"><span>His portfolio</span><Arrow04 out /></a>
