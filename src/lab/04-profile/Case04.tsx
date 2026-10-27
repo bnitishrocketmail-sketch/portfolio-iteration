@@ -433,7 +433,7 @@ function SimPick() {
           <div className="cs4-sim-lot" style={{ opacity: showFlow ? 1 : 0 }}>{run > 0 && <Lottie key={run} src={`${A}/sim-flow.lottie`} loop={false} playing={inView} onFrame={onFrame} onComplete={onDone} onLoaded={onFlowLoaded} />}</div>
           <div className="cs4-sim-foot">
             <p className="note" style={{ opacity: idle ? 1 : 0 }}>An SMS will be sent from your number to verify your bank account; standard charges may apply.</p>
-            <p className="word" style={{ opacity: words ? 1 : 0 }}>{words}</p>
+            <p className="line" style={{ opacity: words ? 1 : 0 }}>{words}</p>
           </div>
         </button>
       </div>
@@ -457,19 +457,19 @@ function CoinMachine({ map }: { map?: string }) {
   const inView = useInView(box, .25);
   const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [state, setState] = useState<CoinState>('loading');
-  const [pass, setPass] = useState(0); /* counts the segments played: a new number replays the segment, so a loading loop that stays loading starts again */
+  const [pass, setPass] = useState(0); /* a new number replays the state's segment (the loading after a success) */
   const [showMap, setShowMap] = useState(false);
   const [armed, setArmed] = useState(false); /* the payment confirmed: the loop hands over at its end */
   const armedRef = useRef(false); armedRef.current = armed;
   const loops = useRef(0); const timer = useRef(0);
   const segment = useMemo(() => [COIN[state][0], COIN[state][1]] as [number, number], [state, pass]); // eslint-disable-line react-hooks/exhaustive-deps -- `pass` makes a fresh segment to replay
-  const onComplete = useCallback(() => { /* stable: a changing handler would rebuild the player mid-play */
-    setState(st => {
-      if (st === 'loading') { loops.current += 1; if (armedRef.current || loops.current >= 3) { setArmed(false); loops.current = 0; return 'bridge'; } setPass(n => n + 1); return 'loading'; }
-      if (st === 'bridge') return 'success';
-      return st;
-    });
+  /* the loading loops inside the player (seamless: its last frame was blended into its first in the file, and the player
+     restarts it without a round trip); each time round, if the payment is confirmed or three loops are done, the bridge */
+  const onLoop = useCallback(() => {
+    loops.current += 1;
+    if (armedRef.current || loops.current >= 3) { setArmed(false); loops.current = 0; setState('bridge'); }
   }, []);
+  const onComplete = useCallback(() => { setState(st => (st === 'bridge' ? 'success' : st)); }, []); /* the bridge and the success play once */
   useEffect(() => { if (state !== 'success') return; timer.current = window.setTimeout(() => { setState('loading'); setPass(n => n + 1); }, 2200); return () => clearTimeout(timer.current); }, [state]);
   const confirm = () => { if (state === 'loading') setArmed(true); };
   const A = '/cases/fintech';
@@ -478,7 +478,7 @@ function CoinMachine({ map }: { map?: string }) {
       <div className="cs4-coin-screen">
         {showMap && map
           ? <video className="cs4-coin-map" src={`${map}.mp4`} poster={`${map}-poster.webp`} autoPlay={!reduce} muted loop playsInline aria-label="The state machine in Lottie Creator: the loading states, the bridges and the success, and the success input that triggers the hand-over" />
-          : <Lottie className="cs4-lot" src={`${A}/coin-payment.lottie`} loop={false} segment={segment} playing={inView && !reduce} onComplete={onComplete} />}
+          : <Lottie className="cs4-lot" src={`${A}/coin-payment.lottie`} loop={state === 'loading'} segment={segment} playing={inView && !reduce} onComplete={onComplete} onLoop={onLoop} />}
       </div>
       <div className="cs4-coin-bar">
         <ol className="cs4-coin-states" aria-label="The states">
