@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { animate } from 'motion/react';
 import { Lottie } from '../../components/micro/Lottie';
 import Signature04 from './Signature04';
@@ -418,6 +418,7 @@ function SimPick() {
   return (
     <div ref={box} className="cs4-sim">
       <div className="cs4-sim-text">
+        <h4 className="cs4-sub">Which SIM? A pick, a fetch, a tick</h4>
         <p className="cs4-p">On a dual-SIM Android phone, setting up UPI means choosing the SIM whose number the bank knows. The two SIMs float in the sheet until one is tapped; then it is picked, the banks are fetched and the number is verified — one Lottie, three states, the sheet’s words following.</p>
         <div className="cs4-sim-chips" role="group" aria-label="The state">
           {SIM_STATES.map(st => <button key={st} type="button" className={`cs4-faq-label cs4-sim-chip${state === st ? ' on' : ''}`} onClick={() => { if (st === 'Idle') { clearTimeout(hold.current); setRun(0); setState('Idle'); } else start(); }}>{st}</button>)}
@@ -456,18 +457,20 @@ function CoinMachine({ map }: { map?: string }) {
   const inView = useInView(box, .25);
   const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [state, setState] = useState<CoinState>('loading');
+  const [pass, setPass] = useState(0); /* counts the segments played: a new number replays the segment, so a loading loop that stays loading starts again */
   const [showMap, setShowMap] = useState(false);
   const [armed, setArmed] = useState(false); /* the payment confirmed: the loop hands over at its end */
+  const armedRef = useRef(false); armedRef.current = armed;
   const loops = useRef(0); const timer = useRef(0);
-  const segment = COIN[state];
-  const onComplete = useCallback(() => {
+  const segment = useMemo(() => [COIN[state][0], COIN[state][1]] as [number, number], [state, pass]); // eslint-disable-line react-hooks/exhaustive-deps -- `pass` makes a fresh segment to replay
+  const onComplete = useCallback(() => { /* stable: a changing handler would rebuild the player mid-play */
     setState(st => {
-      if (st === 'loading') { loops.current += 1; if (armed || loops.current >= 3) { setArmed(false); loops.current = 0; return 'bridge'; } return 'loading'; }
+      if (st === 'loading') { loops.current += 1; if (armedRef.current || loops.current >= 3) { setArmed(false); loops.current = 0; return 'bridge'; } setPass(n => n + 1); return 'loading'; }
       if (st === 'bridge') return 'success';
       return st;
     });
-  }, [armed]);
-  useEffect(() => { if (state !== 'success') return; timer.current = window.setTimeout(() => setState('loading'), 2200); return () => clearTimeout(timer.current); }, [state]);
+  }, []);
+  useEffect(() => { if (state !== 'success') return; timer.current = window.setTimeout(() => { setState('loading'); setPass(n => n + 1); }, 2200); return () => clearTimeout(timer.current); }, [state]);
   const confirm = () => { if (state === 'loading') setArmed(true); };
   const A = '/cases/fintech';
   return (

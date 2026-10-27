@@ -65,7 +65,6 @@ export const fintech: Case = {
        at the foot */
     { id: 'states', title: 'State-machine animations', blocks: [
       { k: 'p', t: ['Animations that follow the app’s state, not a timeline: each has an idle, a trigger and an outcome, and the screen’s words change with it. Built as Lotties with their states marked, so the app plays the right segment at the right moment.'] },
-      { k: 'h', t: 'Which SIM? A pick, a fetch, a tick' },
       { k: 'simpick' },
       { k: 'h', t: 'Success states' },
       { k: 'successes', of: [
