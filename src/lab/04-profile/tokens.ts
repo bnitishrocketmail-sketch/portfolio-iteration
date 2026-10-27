@@ -82,7 +82,14 @@ export const CONTROLS: Control[] = [
      background of the icon… whatever above it will also be inverted"): the nav's light grey, or the selection's dark */
   { group: 'Intro picture', sub: 'Name area', kind: 'select', key: '--plate', label: 'Plate', def: 'light', light: 'light', options: [['Light (the nav’s grey)', 'light'], ['Dark (the selection’s colour)', 'dark']] },
   /* his signature on the picture's wall, behind him (27 Oct) */
-  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--sig-bg', label: 'Signature on the wall', def: 'on', light: 'on', options: [['Shown', 'on'], ['Hidden', 'off']] },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'select', key: '--sig-bg', label: 'Shown', def: 'on', light: 'on', options: [['Shown', 'on'], ['Hidden', 'off']] },
+  /* its place, size and weight (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than what it is"):
+     the centre and the width as percent of the picture; the weight added to (or, below zero, taken off) each side of the
+     strokes, in the drawing's units — its strokes are about 1.7 wide, so −.5 leaves them about two-fifths as thick */
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-x', label: 'x', def: '50%', light: '50%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-y', label: 'y', def: '34%', light: '34%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-w', label: 'Size (width)', def: '100%', light: '100%', min: 30, max: 180, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-weight', label: 'Stroke (thinner ← → thicker)', def: '0', light: '0', min: -0.7, max: 1, step: 0.05 },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
   { group: 'Main container', sub: 'Corners', kind: 'select', key: '--corners', label: 'Curve', def: 'ios', light: 'ios', options: [['iOS (continuous)', 'ios'], ['Round', 'round']] },
   /* the selection: the dark pill, or a ball in the bar's colour in a cavity (23 Oct) */

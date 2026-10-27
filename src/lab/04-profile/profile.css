@@ -233,7 +233,12 @@
    the wall at the left and its "sh" on the wall at the right with his head over the middle; behind the cards (first of
    them) and him; black at 22%, so the wall reads a shade darker where it runs (the wall is ~#2f2e31, the strokes ~#252427).
    Tried at his head's height and narrower first: the head and the cards covered all but a few strokes */
-.fl4.sig-bg { left: 50%; top: 34%; width: 100%; z-index: 1; translate: -50% -50%; rotate: -6deg; color: #000; opacity: var(--sig-a, .22); pointer-events: none; }
+.fl4.sig-bg { left: var(--sig-x, 50%); top: var(--sig-y, 34%); width: var(--sig-w, 100%); z-index: 1; translate: -50% -50%; rotate: -6deg; color: #000; opacity: var(--sig-a, .22); pointer-events: none; }
+/* its place, size and weight are controls (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than
+   what it is"): --sig-x / --sig-y the centre, --sig-w the width, all of the picture; --sig-weight added to each side of
+   the strokes, in the drawing's units — below zero the mask's stroke takes it off, above it the shape's own stroke adds it */
+.sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, 0)) * 2px); }
+.sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, 0)) * 2px); }
 .sig-bg svg { display: block; width: 100%; height: auto; }
 .fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); display: var(--c-ai-v); } /* each card's place, layer (1 behind him, 3 in front) and whether it shows are tokens */
 .fl4.coin-card { left: var(--c-coin-x); top: var(--c-coin-y); z-index: var(--c-coin-z); display: var(--c-coin-v); }

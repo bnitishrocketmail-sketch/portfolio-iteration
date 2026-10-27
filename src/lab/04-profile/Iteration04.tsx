@@ -24,7 +24,7 @@ import { NavIcon } from './NavIcons04';
 import Fintech3D, { Launches3D } from './Fintech3D';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
-import Sig4 from './Sig4';
+import { SigWall } from './Sig4';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { readTweaks, tweakKey } from './tokens';
 import { SOCIAL } from './social';
@@ -383,7 +383,7 @@ export default function Iteration04() {
                   illustration container background, even behind my picture… like a silhouette… a little darker than the
                   background… not dominating"): the nav's old "Nitish", wide across the wall at his head's height, in the
                   dark at a low opacity so it reads as the wall a shade darker; behind him and the cards, leaning least */}
-              {sigBg && <div className="fl4 sig-bg" data-depth=".2" aria-hidden="true"><Sig4 /></div>}
+              {sigBg && <div className="fl4 sig-bg" data-depth=".2" aria-hidden="true"><SigWall /></div>}
               <div className="fl4 coin-card" data-depth=".5" style={{ '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
               </div>
