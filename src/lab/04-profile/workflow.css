@@ -18,7 +18,7 @@
 /* the card a node opens into: the open card's grey, the standard radius; its box is animated (Workflow04.tsx), the content
    is laid out at the card's full width from the start so nothing reflows while it grows */
 .cc4 { position: absolute; z-index: 5; overflow: hidden; border: 1px solid transparent; color: var(--pcard-open-ink); box-shadow: var(--shadow-el); }
-.cc4-in { position: relative; box-sizing: border-box; padding: 1.1em 1.2em 1.2em; display: flex; flex-direction: column; gap: .7em; font-size: var(--t-body); }
+.cc4-in { position: relative; box-sizing: border-box; padding: 1.2em; /* one inset all round (27 Oct; the top was a step tighter) */ display: flex; flex-direction: column; gap: .7em; font-size: var(--t-body); }
 .cc4-title { margin: 0; padding-right: 1.6em; font: 600 var(--t-body)/1.25 var(--f-copy); } /* body size, bold: a card's title */
 .cc4-text { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); opacity: .85; }
 .cc4-stage { aspect-ratio: 16 / 9; border-radius: calc(calc(var(--r) * .5) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 7%, transparent); display: grid; place-items: center; font: 500 var(--t-meta)/1.3 var(--f-copy); opacity: .6; text-align: center; padding: 0 1em; }
@@ -62,6 +62,11 @@
      desktop proportions and scrolls sideways */
   .cm4-wrap { overflow: visible; height: auto; margin: 0; padding: 0; }
   .cm4 { position: relative; inset: auto; width: 100%; aspect-ratio: 3 / 4; height: auto; } /* 3 : 4 (Nitish, 20 Oct: 720 tall "seems stretched") */
+  /* the map takes the screen's height down to the bar (27 Oct: at 3 : 4 it ended two-thirds of the way down and left a
+     fifth of the screen empty over the bar): from 3 : 4 up to 3 : 4.8 at most (short of the 720 that looked stretched),
+     ending 24px over the bar; the page is zoomed (--ph-zoom), so its own px are the screen's over the zoom. The pills are
+     placed in percent, so they only gain air */
+  .cm4.v2 { aspect-ratio: auto; height: clamp(calc((100vw - 32px) / var(--ph-zoom, .85) * 4 / 3), calc((100svh - 212px - env(safe-area-inset-bottom)) / var(--ph-zoom, .85)), calc((100vw - 32px) / var(--ph-zoom, .85) * 1.6)); }
   /* the pills closer in size, and smaller, so sixteen fit a 3 : 4 map: the gap between the biggest and the smallest narrowed */
   /* all at the phone's smallest style, Meta (27 Oct, Nitish: "reducing the size of the name… the smallest one should work
      specifically for the phone layout"): the kinds told apart by their fill and weight, not their size; the skills'
