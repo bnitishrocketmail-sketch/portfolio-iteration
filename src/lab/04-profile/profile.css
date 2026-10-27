@@ -327,11 +327,11 @@
      the system's corners, and the bar's own capsule and shadow step aside. On the other pages the bar's going is its
      own control (27 Oct, Nitish: on the other pages "the nav bar used to disappear, and… the icons were floating… with
      the select states as well… that looked pretty cool"; then: that on the open version "as well, but give me the
-     control to turn it off and on"): Nav bar → On the other pages — the tiles and the selection on the frame, or the bar;
-     for both versions of the name area. */
+     control to turn it off and on"): Nav bar → the tiles and the selection on the frame, or the bar; on every tab, for
+     both versions of the name area (the Light card merges the bar into the plate on the home tab when the bar is kept). */
   .intro-card:not(.nav-float) .frame4:has(.picwrap4) { column-gap: 0; }
   .intro-card:not(.nav-float) .frame4:has(.picwrap4) .picwrap4 { margin-right: calc(.016 * var(--fw)); }
-  .intro-card .frame4:has(.picwrap4) .navcol4, .nav-float .frame4:not(:has(.picwrap4)) .navcol4 { background: none; box-shadow: none; }
+  .intro-card .frame4:has(.picwrap4) .navcol4, .nav-float .navcol4 { background: none; box-shadow: none; } /* Floating icons: no bar on any tab, the home's too, in both versions of the name area (27 Oct, Nitish: the open version "still has a bar on the home page") */
   /* the floating icons on the home tab too (27 Oct, Nitish: "if the floating nav icons takes place, that means reducing
      the white plate from the left side… till it comes with the same difference from the left corner of the illustration
      container… the same as from the corner on top and bottom"): with Floating icons chosen, the home's tiles sit on the

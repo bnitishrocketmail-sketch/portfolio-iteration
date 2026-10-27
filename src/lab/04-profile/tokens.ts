@@ -85,9 +85,9 @@ export const CONTROLS: Control[] = [
   { group: 'Main container', sub: 'Corners', kind: 'select', key: '--corners', label: 'Curve', def: 'ios', light: 'ios', options: [['iOS (continuous)', 'ios'], ['Round', 'round']] },
   /* the selection: the dark pill, or a ball in the bar's colour in a cavity (23 Oct) */
   { group: 'Nav bar', sub: 'Selection', kind: 'select', key: '--nav-sel', label: 'Version', def: 'pill', light: 'pill', options: [['The pill', 'pill'], ['Cavity ball', 'cavity']] },
-  /* the bar on the pages other than Home (27 Oct, Nitish: the floating icons "on the other pages… on the [open] version
-     as well, but give me the control to turn it off and on"): the icons and the selection on the frame, or the bar */
-  { group: 'Nav bar', sub: 'On the other pages', kind: 'select', key: '--nav-bar', label: 'Version', def: 'float', light: 'float', options: [['Floating icons, no bar', 'float'], ['The bar', 'bar']] },
+  /* the bar (27 Oct, Nitish: the floating icons "on the [open] version as well, but give me the control to turn it off
+     and on"; then: on the home tab too): the icons and the selection on the frame, on every tab, or the bar */
+  { group: 'Nav bar', sub: 'Bar', kind: 'select', key: '--nav-bar', label: 'Version', def: 'float', light: 'float', options: [['Floating icons, no bar', 'float'], ['The bar', 'bar']] },
   /* the main container solid, as it was, or glass: the picture behind showing through it, blurred (22 Oct) */
   { group: 'Main container', sub: 'Background', kind: 'select', key: '--frame-v', label: 'Version', def: 'solid', light: 'solid', options: [['Solid', 'solid'], ['Glass', 'glass']] },
   /* the container's edge lit as iOS 26 lights its cards (23 Oct): a 1pt rim on the edges facing the light's axis, measured
