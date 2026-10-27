@@ -63,8 +63,11 @@
   .cm4-wrap { overflow: visible; height: auto; margin: 0; padding: 0; }
   .cm4 { position: relative; inset: auto; width: 100%; aspect-ratio: 3 / 4; height: auto; } /* 3 : 4 (Nitish, 20 Oct: 720 tall "seems stretched") */
   /* the pills closer in size, and smaller, so sixteen fit a 3 : 4 map: the gap between the biggest and the smallest narrowed */
-  .cm4.v2 .cn4.core { padding: .7em 1em; font-size: 14px; } .cm4.v2 .cn4.flow { padding: .65em .9em; font-size: 13px; }
-  .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { padding: .5em .8em; font-size: 12px; }
+  /* all at the phone's smallest style, Meta (27 Oct, Nitish: "reducing the size of the name… the smallest one should work
+     specifically for the phone layout"): the kinds told apart by their fill and weight, not their size; the skills'
+     padding a step more than the tools' */
+  .cm4.v2 .cn4.core { padding: .62em .95em; font-size: var(--t-meta); } .cm4.v2 .cn4.flow { padding: .58em .85em; font-size: var(--t-meta); }
+  .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { padding: .5em .8em; font-size: var(--t-meta); }
   .cm4:not(.v2) { width: 760px; height: 400px; } .cr4 > .cm4-wrap:has(.cm4:not(.v2)) { overflow: auto; }
   .vs4 { align-self: flex-start; }
   /* on the picture, not the grey: the picture is dark in both themes, so the orb, lines, wires and the outline pills take a

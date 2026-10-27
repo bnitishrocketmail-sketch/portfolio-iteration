@@ -65,20 +65,18 @@ const POS2: Record<string, { x: number; y: number }> = {
   msys: { x: 78.7, y: 43.2 }, review: { x: 91.2, y: 51 },
 };
 const PINS = NODES.map(n => ({ id: n.id, ...POS2[n.id] }));
-/* the phone (Nitish, 18 Oct: "recreate that layout in a mobile ratio"; 20 Oct: 3 : 4, "the pills a bit smaller … by
-   decreasing the size difference between bigger and smaller pills"): the pills, smaller and closer in size (workflow.css),
-   in rows down a 3 : 4 map (358 × 477) with the orb's band clear at its centre — the model's steps and the tools across
-   the top, animation and interaction above the orb, handoff and product below, Product centred on the last row. Laid by
-   rows (docs/refs/workflow-layout-rows-phone.py), checked for the hard rules only — nothing overlapping, nothing on the
-   orb or off the edge; at this width the lines must run under some pills, which the desktop's layout avoids. */
+/* the phone (Nitish, 18 Oct: "recreate that layout in a mobile ratio"; 20 Oct: 3 : 4). Re-laid 27 Oct (Nitish: "relocate
+   some pills so that they don't overlap… interaction design and motion design… lower on the left and right side…
+   Lottie… nearer to the right so that it doesn't have to curve a lot… a lot of tabs are pushed towards the above, and a
+   lot… towards down… a good structured amount of space… the randomness should be there"): found by a search (scratchpad
+   wf/opt3.py) scored at 360 and 390 wide — no pill on another or on the orb, at least 26 px between any two, no line
+   bending round the orb, few lines under a pill or crossing, a fifth of the pills in each fifth of the map's height —
+   with his placements held: Interaction design at the orb's left and Animation at its right, Motion design system
+   under it, Lottie to the right with short straight lines, the model's steps in the top corners, Product at the foot.
+   Each skill keeps its tools near it: Rive and Protopie under Interaction, After Effects and Lottie over Animation,
+   Figma, Code and Review round Product. The pills are all at the phone's Meta size (workflow.css) */
 const POS2_PHONE: Record<string, { x: number; y: number }> = {
-  brief: { x: 18.8, y: 4.5 }, ae: { x: 50, y: 4.5 }, build: { x: 81.2, y: 4.5 },
-  motion: { x: 22, y: 14 }, script: { x: 70, y: 14 },
-  rive: { x: 17, y: 23.5 }, lottie: { x: 47.9, y: 23.5 }, review: { x: 80, y: 23.5 },
-  interaction: { x: 26.2, y: 33 }, msys: { x: 72.9, y: 33 },
-  protopie: { x: 18, y: 69 }, handoff: { x: 66.4, y: 69.5 },
-  figma: { x: 14.9, y: 78.5 }, sm: { x: 50.8, y: 78.5 }, code: { x: 86, y: 78.5 },
-  product: { x: 50, y: 88 },
+  brief: { x: 20.0, y: 7.3 }, ae: { x: 85.4, y: 21.9 }, build: { x: 91.2, y: 7.4 }, motion: { x: 85.5, y: 47.0 }, script: { x: 59.1, y: 10.1 }, rive: { x: 8.9, y: 69.1 }, lottie: { x: 76.3, y: 32.9 }, review: { x: 10.6, y: 92.4 }, interaction: { x: 18.8, y: 58.2 }, msys: { x: 79.0, y: 62.2 }, protopie: { x: 17.2, y: 80.8 }, handoff: { x: 79.0, y: 72.8 }, figma: { x: 58.7, y: 83.7 }, sm: { x: 46.0, y: 23.2 }, code: { x: 45.8, y: 68.5 }, product: { x: 44.0, y: 94.4 },
 };
 const PINS_PHONE = NODES.map(n => ({ id: n.id, ...POS2_PHONE[n.id] }));
 /* who is wired to the orb: the tools (17 Oct, third pass — "let's do the opposite … the tools will now have the
