@@ -324,7 +324,7 @@ export default function Iteration04() {
             the top). The assistant's button that sat at the foot is gone (27 Oct: not sure it is being built) */}
         <div className="navcol4">
           <Nav tab={navTab} go={go} cav={tweaks['--nav-sel'] === 'cavity'} />
-          <PhoneNav04 items={NAV} tab={navTab} go={go} photo={desk} />
+          <PhoneNav04 items={NAV} tab={navTab} go={go} />
         </div>
 
         {/* the picture, with the notch hanging in from the top and the name box at the bottom-right, is the intro tile; the
