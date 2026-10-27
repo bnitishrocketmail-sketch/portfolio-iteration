@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { animate } from 'motion/react';
 import { Lottie } from '../../components/micro/Lottie';
 import Signature04 from './Signature04';
@@ -384,6 +384,53 @@ function Synced({ b }: { b: SyncedB }) {
   );
 }
 
+/* the SIM pick (27 Oct): his Android screen, rebuilt from his references — the UPI set-up page blurred (sim-bg.webp,
+   his screenshot blurred 14 px, as his references show it) behind a bottom sheet: its handle, "Select SIM Card Linked to"
+   and the number, the two SIMs floating (his idle Lottie, looping), the note under a hairline. A tap on the sheet plays his
+   flow Lottie once in the same place: the SIM picked, the fetch rings (the words become "Fetching your bank details"),
+   the verified tick (then "Redirecting you in a few seconds", as his success reference); after a hold it returns to the
+   idle. Its frames, measured: the pick to 30, the fetch to ~495, verified from ~510 of 720 at 60 fps. The Lotties are his
+   exports with their grey ground hidden, so they draw on the sheet. The state is also set by the chips over the screen */
+const SIM_STATES = ['Idle', 'Pick', 'Fetching', 'Verified'] as const;
+type SimState = typeof SIM_STATES[number];
+function SimPick() {
+  const box = useRef<HTMLDivElement>(null);
+  const inView = useInView(box, .25);
+  const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [run, setRun] = useState(0); /* 0: idle; >0: the flow playing (a new number restarts it) */
+  const [state, setState] = useState<SimState>('Idle');
+  const hold = useRef(0);
+  const start = () => { if (reduce) return; clearTimeout(hold.current); setRun(r => r + 1); setState('Pick'); };
+  const onFrame = useCallback((f: number) => { setState(f < 30 ? 'Pick' : f < 500 ? 'Fetching' : 'Verified'); }, []);
+  const onDone = useCallback(() => { hold.current = window.setTimeout(() => { setRun(0); setState('Idle'); }, 2600); }, []);
+  useEffect(() => () => clearTimeout(hold.current), []);
+  const A = '/cases/fintech';
+  const words = state === 'Idle' || state === 'Pick' ? null : state === 'Fetching' ? 'Fetching your bank details' : 'Redirecting you in a few seconds';
+  return (
+    <div ref={box} className="cs4-sim">
+      <div className="cs4-sim-chips" role="group" aria-label="The state">
+        {SIM_STATES.map(st => <button key={st} type="button" className={`cs4-faq-label cs4-sim-chip${state === st ? ' on' : ''}`} onClick={() => { if (st === 'Idle') { clearTimeout(hold.current); setRun(0); setState('Idle'); } else start(); }}>{st}</button>)}
+      </div>
+      <div className="cs4-media phone filled cs4-sim-phone" role="img" aria-label="Choosing which SIM to verify the bank account from: the two SIMs floating; on a tap, the pick, the fetch and the verified tick">
+        <img src={`${A}/sim-bg.webp`} alt="" draggable={false} />
+        <button type="button" className="cs4-sim-sheet" onClick={start} aria-label="Pick a SIM">
+          <i className="cs4-sim-handle" aria-hidden="true" />
+          <div className="cs4-sim-head" style={{ opacity: state === 'Idle' || state === 'Pick' ? 1 : 0 }}><span>Select SIM Card Linked to</span><b>8960793480</b></div>
+          <div className="cs4-sim-lot">
+            {run === 0
+              ? <Lottie src={`${A}/sim-idle.lottie`} playing={inView} />
+              : <Lottie key={run} src={`${A}/sim-flow.lottie`} loop={false} playing={inView} onFrame={onFrame} onComplete={onDone} />}
+          </div>
+          <div className="cs4-sim-foot">
+            <p className="note" style={{ opacity: state === 'Idle' || state === 'Pick' ? 1 : 0 }}>An SMS will be sent from your number to verify your bank account; standard charges may apply.</p>
+            <p className="word" style={{ opacity: words ? 1 : 0 }}>{words}</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Successes({ of }: { of: { m: Media; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean }[] }) {
   return (
     <div className="cs4-sx">
@@ -643,6 +690,7 @@ function Render({ b }: { b: Block }) {
       </div>
     );
     case 'machine': return <BMachine />;
+    case 'simpick': return <SimPick />;
     case 'fintech': return <Fintech3D />;
     case 'launches': return <Launches3D />;
   }

@@ -81,10 +81,12 @@ function toBase64(bytes: Uint8Array): string {
 type Layer = { nm?: string; ty?: number; refId?: string };
 type Anim = { layers: Layer[]; assets?: { id: string; p?: string; u?: string; e?: number }[]; fonts?: { list?: { fName?: string; fPath?: string; origin?: number }[] } };
 
-export function Lottie({ src, className, loop = true, speed = 1, still = 0, label, drop, viewBox, effects = false, playing = true }: {
+export function Lottie({ src, className, loop = true, speed = 1, still = 0, label, drop, viewBox, effects = false, playing = true, onFrame, onComplete }: {
   src: string; className?: string; loop?: boolean; speed?: number; still?: number; label?: string;
   drop?: (layer: Layer) => boolean; viewBox?: string; effects?: boolean;
   playing?: boolean; /* false holds it on its still frame (the Lab's thumbs: one plays at a time) */
+  onFrame?: (frame: number) => void; /* each frame drawn, with its number (a screen that changes its words with the animation's state) */
+  onComplete?: () => void; /* a run through, when not looping */
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
@@ -106,10 +108,12 @@ export function Lottie({ src, className, loop = true, speed = 1, still = 0, labe
       anim = lottie.loadAnimation({ container: el, renderer: 'svg', loop, autoplay: play, animationData: data,
         rendererSettings: { preserveAspectRatio: 'xMidYMid meet', progressiveLoad: true, ...(viewBox ? { viewBoxSize: viewBox } : {}) } });
       anim.setSpeed(speed);
+      if (onFrame) anim.addEventListener('enterFrame', () => { if (anim) onFrame(anim.currentFrame); });
+      if (onComplete) anim.addEventListener('complete', onComplete);
       animRef.current = anim;
       if (!play) anim.addEventListener('DOMLoaded', () => anim?.goToAndStop(still, true));
     }).catch(err => console.warn(err)); /* a failed load leaves the card's label in place */
     return () => { gone = true; animRef.current = null; anim?.destroy(); };
-  }, [src, loop, speed, still, reduce, drop, viewBox, effects]);
+  }, [src, loop, speed, still, reduce, drop, viewBox, effects, onFrame, onComplete]);
   return <div ref={ref} className={className} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} />;
 }

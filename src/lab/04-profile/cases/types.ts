@@ -69,6 +69,10 @@ export type Block =
   /* the B study's state machine (BMachine.tsx): the framework and the rig, in tabs */
   | { k: 'machine' }
   /* a hero of his two phones in perspective, the screens drawn into them (Fintech3D.tsx: the fintech study's, the campaigns') */
+  /* the SIM pick (the fintech study, 27 Oct; SimPick in Case04.tsx): his Android screen for choosing which SIM to verify the
+     bank account from — the UPI set-up page blurred behind a bottom sheet with the two SIMs floating (his idle Lottie), then
+     on a tap the pick, the fetch and the verified tick (his flow Lottie) with the sheet's words following each state */
+  | { k: 'simpick' }
   | { k: 'fintech' } | { k: 'launches' };
 export type Section = { id: string; title: string; blocks: Block[]; tone?: 'white' /* a white card, for a clip whose own background is white (the floating phone) */ };
 export type Case = {
