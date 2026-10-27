@@ -386,43 +386,52 @@ function Synced({ b }: { b: SyncedB }) {
 
 /* the SIM pick (27 Oct): his Android screen, rebuilt from his references — the UPI set-up page blurred (sim-bg.webp,
    his screenshot blurred 14 px, as his references show it) behind a bottom sheet: its handle, "Select SIM Card Linked to"
-   and the number, the two SIMs floating (his idle Lottie, looping), the note under a hairline. A tap on the sheet plays his
-   flow Lottie once in the same place: the SIM picked, the fetch rings (the words become "Fetching your bank details"),
-   the verified tick (then "Redirecting you in a few seconds", as his success reference); after a hold it returns to the
-   idle. Its frames, measured: the pick to 30, the fetch to ~495, verified from ~510 of 720 at 60 fps. The Lotties are his
-   exports with their grey ground hidden, so they draw on the sheet. The state is also set by the chips over the screen */
+   and the number, the two SIMs floating (his idle Lottie, looping), the note under a hairline. The flow Lottie plays in
+   the same place: the SIM picked, the fetch rings (the words become "Fetching your bank details"), the verified tick
+   (then "Redirecting you in a few seconds", as his success reference); after a hold, back to the idle. Its frames,
+   measured: the pick to 30, the fetch to ~495, verified from ~510 of 720 at 60 fps. It runs on its own (27 Oct: "it
+   should be auto played") — the idle a few loops, then the flow — and a tap on the sheet or a chip starts it at once.
+   Both Lotties stay mounted, the one not playing hidden, so the hand-over has no blank frame (the flow used to load on
+   the tap). The Lotties are his exports with their grey ground hidden, so they draw on the sheet. The words and the chips
+   sit at the left, the phone at the right */
 const SIM_STATES = ['Idle', 'Pick', 'Fetching', 'Verified'] as const;
 type SimState = typeof SIM_STATES[number];
+const SIM_IDLE_LOOPS = 2; /* idle loops (3.6 s each) before the flow runs on its own */
 function SimPick() {
   const box = useRef<HTMLDivElement>(null);
   const inView = useInView(box, .25);
   const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [run, setRun] = useState(0); /* 0: idle; >0: the flow playing (a new number restarts it) */
   const [state, setState] = useState<SimState>('Idle');
-  const hold = useRef(0);
-  const start = () => { if (reduce) return; clearTimeout(hold.current); setRun(r => r + 1); setState('Pick'); };
+  const [flowReady, setFlowReady] = useState(false);
+  const hold = useRef(0); const idleLoops = useRef(0);
+  const start = useCallback(() => { if (reduce) return; clearTimeout(hold.current); idleLoops.current = 0; setRun(r => r + 1); setState('Pick'); }, [reduce]);
   const onFrame = useCallback((f: number) => { setState(f < 30 ? 'Pick' : f < 500 ? 'Fetching' : 'Verified'); }, []);
   const onDone = useCallback(() => { hold.current = window.setTimeout(() => { setRun(0); setState('Idle'); }, 2600); }, []);
+  const onIdleFrame = useCallback((f: number) => { if (f < 2) { idleLoops.current += 1; if (idleLoops.current > SIM_IDLE_LOOPS && inView) start(); } }, [inView, start]);
+  const onFlowLoaded = useCallback(() => setFlowReady(true), []);
   useEffect(() => () => clearTimeout(hold.current), []);
   const A = '/cases/fintech';
-  const words = state === 'Idle' || state === 'Pick' ? null : state === 'Fetching' ? 'Fetching your bank details' : 'Redirecting you in a few seconds';
+  const idle = state === 'Idle' || state === 'Pick';
+  const words = idle ? null : state === 'Fetching' ? 'Fetching your bank details' : 'Redirecting you in a few seconds';
+  const showFlow = run > 0 && flowReady;
   return (
     <div ref={box} className="cs4-sim">
-      <div className="cs4-sim-chips" role="group" aria-label="The state">
-        {SIM_STATES.map(st => <button key={st} type="button" className={`cs4-faq-label cs4-sim-chip${state === st ? ' on' : ''}`} onClick={() => { if (st === 'Idle') { clearTimeout(hold.current); setRun(0); setState('Idle'); } else start(); }}>{st}</button>)}
+      <div className="cs4-sim-text">
+        <p className="cs4-p">On a dual-SIM Android phone, setting up UPI means choosing the SIM whose number the bank knows. The two SIMs float in the sheet until one is tapped; then it is picked, the banks are fetched and the number is verified — one Lottie, three states, the sheet’s words following.</p>
+        <div className="cs4-sim-chips" role="group" aria-label="The state">
+          {SIM_STATES.map(st => <button key={st} type="button" className={`cs4-faq-label cs4-sim-chip${state === st ? ' on' : ''}`} onClick={() => { if (st === 'Idle') { clearTimeout(hold.current); setRun(0); setState('Idle'); } else start(); }}>{st}</button>)}
+        </div>
       </div>
-      <div className="cs4-media phone filled cs4-sim-phone" role="img" aria-label="Choosing which SIM to verify the bank account from: the two SIMs floating; on a tap, the pick, the fetch and the verified tick">
+      <div className="cs4-media phone filled cs4-sim-phone" role="img" aria-label="Choosing which SIM to verify the bank account from: the two SIMs floating; then the pick, the fetch and the verified tick">
         <img src={`${A}/sim-bg.webp`} alt="" draggable={false} />
         <button type="button" className="cs4-sim-sheet" onClick={start} aria-label="Pick a SIM">
           <i className="cs4-sim-handle" aria-hidden="true" />
-          <div className="cs4-sim-head" style={{ opacity: state === 'Idle' || state === 'Pick' ? 1 : 0 }}><span>Select SIM Card Linked to</span><b>8960793480</b></div>
-          <div className="cs4-sim-lot">
-            {run === 0
-              ? <Lottie src={`${A}/sim-idle.lottie`} playing={inView} />
-              : <Lottie key={run} src={`${A}/sim-flow.lottie`} loop={false} playing={inView} onFrame={onFrame} onComplete={onDone} />}
-          </div>
+          <div className="cs4-sim-head" style={{ opacity: idle ? 1 : 0 }}><span>Select SIM Card Linked to</span><b>8960793480</b></div>
+          <div className="cs4-sim-lot" style={{ opacity: showFlow ? 0 : 1 }}><Lottie src={`${A}/sim-idle.lottie`} playing={inView && !showFlow} onFrame={onIdleFrame} /></div>
+          <div className="cs4-sim-lot" style={{ opacity: showFlow ? 1 : 0 }}>{run > 0 && <Lottie key={run} src={`${A}/sim-flow.lottie`} loop={false} playing={inView} onFrame={onFrame} onComplete={onDone} onLoaded={onFlowLoaded} />}</div>
           <div className="cs4-sim-foot">
-            <p className="note" style={{ opacity: state === 'Idle' || state === 'Pick' ? 1 : 0 }}>An SMS will be sent from your number to verify your bank account; standard charges may apply.</p>
+            <p className="note" style={{ opacity: idle ? 1 : 0 }}>An SMS will be sent from your number to verify your bank account; standard charges may apply.</p>
             <p className="word" style={{ opacity: words ? 1 : 0 }}>{words}</p>
           </div>
         </button>
@@ -437,8 +446,9 @@ function SimPick() {
    states as markers — loading 0–170 (a loop), bridge 171–188, success 189–459 — so it plays as the app plays it: the
    loading loop until the payment is confirmed, then the bridge and the success once, held, then round again. The trigger
    is the button ("Confirm payment"), or the machine fires it on its own after a few loops. A strip under the screen
-   lights the state; a switch shows his state-machine map in the screen's place */
-const COIN_MAP: string | undefined = undefined; /* his map of the state machine, to come (a screenshot) */
+   lights the state; a switch shows the machine itself in the screen's place — his recording of it in Lottie Creator
+   (the preview over the state graph; the success input flipped, the states lighting up) */
+const COIN_MAP = '/cases/fintech/coin-machine'; /* his recording of the state machine in Lottie Creator (27 Oct): the preview over the graph, the success input flipped — .mp4 and -poster.webp */
 const COIN = { loading: [0, 170] as [number, number], bridge: [171, 188] as [number, number], success: [189, 459] as [number, number] };
 type CoinState = keyof typeof COIN;
 function CoinMachine({ map }: { map?: string }) {
@@ -464,7 +474,7 @@ function CoinMachine({ map }: { map?: string }) {
     <div ref={box} className={`cs4-coin${showMap ? ' map' : ''}`}>
       <div className="cs4-coin-screen">
         {showMap && map
-          ? <img className="cs4-coin-map" src={map} alt="The state machine: loading, bridge and success, with their triggers" />
+          ? <video className="cs4-coin-map" src={`${map}.mp4`} poster={`${map}-poster.webp`} autoPlay={!reduce} muted loop playsInline aria-label="The state machine in Lottie Creator: the loading states, the bridges and the success, and the success input that triggers the hand-over" />
           : <Lottie className="cs4-lot" src={`${A}/coin-payment.lottie`} loop={false} segment={segment} playing={inView && !reduce} onComplete={onComplete} />}
       </div>
       <div className="cs4-coin-bar">

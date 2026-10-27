@@ -338,8 +338,10 @@
    (4.44%); the Lottie (360 : 404) at 101% of the width, its top 0.9% above the sheet's top, so its cards sit where the
    reference's do (1395 of 2280); the note's hairline 62% down, the note 20.5% up from the foot. Every measure in cqw of
    the screen (the screen is the container), so it holds at any size */
-.cs4-sim { display: flex; flex-direction: column; align-items: center; gap: var(--s2); }
-.cs4-sim-chips { display: flex; gap: 6px; }
+.cs4-sim { display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--ph-w) * 1.25); column-gap: var(--s5); align-items: center; padding: 0 var(--s3); } /* the words and the chips at the left, the phone at the right (27 Oct), the set in from the section's edges */
+.cs4-sim-text { display: flex; flex-direction: column; gap: var(--s3); } .cs4-sim-text .cs4-p { margin: 0; }
+.cs4-sim-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+@media (max-width: 700px) { .cs4-sim { grid-template-columns: minmax(0, 1fr); row-gap: var(--s3); padding: 0; justify-items: center; } .cs4-sim-text { justify-self: stretch; } }
 .cs4-sim-chip { all: unset; cursor: pointer; padding: .45em .9em; border-radius: 999px; background: color-mix(in srgb, var(--pcard-open-ink) 8%, var(--pcard-open)); color: var(--pcard-open-ink); font: 500 var(--t-meta)/1.2 var(--f-copy); transition: background-color .25s, color .25s; }
 .cs4-sim-chip.on { background: var(--nav-hl); color: var(--nav-hl-ink); } .cs4-sim-chip:focus-visible { outline: 2px solid var(--pcard-open-ink); outline-offset: 2px; }
 .cs4-sim-phone { width: calc(var(--ph-w) * 1.25); aspect-ratio: 9 / 19.5; container-type: inline-size; container-name: simscreen; }
@@ -349,7 +351,7 @@
 .cs4-sim-handle { position: absolute; left: 50%; top: 3.3cqw; width: 10.5cqw; height: 1.1cqw; margin-left: -5.25cqw; border-radius: 1cqw; background: #e3e7ea; }
 .cs4-sim-head { position: absolute; left: 0; right: 0; top: 14.2cqw; text-align: center; color: #38424f; font-family: var(--f-copy); transition: opacity .3s; }
 .cs4-sim-head span { display: block; font-size: 4.3cqw; font-weight: 500; line-height: 1.3; } .cs4-sim-head b { display: block; font-size: 6.1cqw; font-weight: 700; line-height: 1.3; margin-top: .4cqw; letter-spacing: .01em; }
-.cs4-sim-lot { position: absolute; left: -.5%; width: 101%; top: -.9cqw; aspect-ratio: 360 / 404; } .cs4-sim-lot > div, .cs4-sim-lot svg { display: block; width: 100%; height: 100%; }
+.cs4-sim-lot { position: absolute; left: -.5%; width: 101%; top: -.9cqw; aspect-ratio: 360 / 404; transition: opacity .15s; } /* both Lotties in the same place, the one not playing hidden */ .cs4-sim-lot > div, .cs4-sim-lot svg { display: block; width: 100%; height: 100%; }
 .cs4-sim-foot { position: absolute; left: 9cqw; right: 9cqw; bottom: 8cqw; display: grid; } .cs4-sim-foot > * { grid-area: 1 / 1; margin: 0; text-align: center; font-family: var(--f-copy); color: #636f7e; transition: opacity .3s; }
 .cs4-sim-foot .note { padding-top: 5.6cqw; border-top: 1px solid #e4e4e4; font-size: 3.7cqw; line-height: 1.5; font-weight: 500; }
 .cs4-sim-foot .word { align-self: center; font-size: 3.9cqw; line-height: 1.4; font-weight: 500; white-space: nowrap; }
@@ -357,9 +359,10 @@
    bar under it with the three states as steps (the live one lit in the system's chip) and, at the right, the trigger
    button and the switch to the state-machine map */
 .cs4-coin { display: flex; flex-direction: column; gap: var(--s2); }
-.cs4-coin-screen { position: relative; aspect-ratio: 16 / 9; width: 100%; border-radius: calc(calc(var(--r) - .8cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: #fcfcfe; }
+.cs4-coin-screen { position: relative; aspect-ratio: 16 / 9; width: 100%; transition: aspect-ratio .3s; border-radius: calc(calc(var(--r) - .8cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: #fcfcfe; }
 .cs4-coin-screen .cs4-lot { position: absolute; inset: 0; }
-.cs4-coin-map { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; background: #fff; }
+.cs4-coin.map .cs4-coin-screen { aspect-ratio: 2096 / 1806; background: #1a1b1e; } /* the recording's shape (the editor: the preview over the graph) */
+.cs4-coin-map { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
 .cs4-coin-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; }
 .cs4-coin-states { margin: 0; padding: 0; list-style: none; display: flex; align-items: center; gap: 4px; }
 .cs4-coin-states li { padding: .45em .9em; border-radius: 999px; font: 500 var(--t-meta)/1.2 var(--f-copy); color: var(--pcard-open-ink); opacity: .5; transition: opacity .25s, background-color .25s, color .25s; }

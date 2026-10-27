@@ -66,7 +66,6 @@ export const fintech: Case = {
     { id: 'states', title: 'State-machine animations', blocks: [
       { k: 'p', t: ['Animations that follow the app’s state, not a timeline: each has an idle, a trigger and an outcome, and the screen’s words change with it. Built as Lotties with their states marked, so the app plays the right segment at the right moment.'] },
       { k: 'h', t: 'Which SIM? A pick, a fetch, a tick' },
-      { k: 'p', t: ['On a dual-SIM Android phone, setting up UPI means choosing the SIM whose number the bank knows. The two SIMs float in the sheet until one is tapped; then it is picked, the banks are fetched and the number is verified — one Lottie, three states, the sheet’s words following. Tap the sheet to run it.'] },
       { k: 'simpick' },
       { k: 'h', t: 'Success states' },
       { k: 'successes', of: [
