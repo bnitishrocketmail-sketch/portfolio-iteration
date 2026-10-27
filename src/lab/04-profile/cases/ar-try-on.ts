@@ -37,7 +37,7 @@ export const arTryOn: Case = {
   sections: [
     { id: 'about', title: 'About', blocks: [
       { k: 'p', t: ['Shopping for eyewear isn’t just about function — it’s about ', { b: 'style, personality and occasion' }, '. Customers in a Lenskart store browse by how glasses fit their ', { b: 'lifestyle' }, ', not just by brand or frame type. In the app, that context was ', { b: 'missing from the digital experience' }, '.'] },
-      { k: 'p', t: ['This page collects the interactive experiences I worked on and built. First, two improvements to the app’s AR try-on: ', { b: 'trying on colour contact lenses' }, ' with a slider, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair. Then the ', { b: 'Hustlr frame’s highlights in 3D' }, ', and ', { b: 'snap-on skins' }, ' tried on the frame you chose.'] },
+      { k: 'p', t: ['This page collects the interactive experiences I worked on and built: ', { b: 'trying on colour contact lenses' }, ' with a slider, the ', { b: 'Hustlr frame’s highlights in 3D' }, ', ', { b: 'snap-on skins' }, ' tried on the frame you chose, and ', { b: 'removing the glasses you are already wearing' }, ' before you try on a new pair.'] },
     ] },
     { id: 'gaps', title: 'Where AR try-on fell short', blocks: [
       { k: 'p', t: ['In ', { b: 'primary research' }, ' — ', { b: 'user-testing sessions' }, ', and conversations with customers on ', { b: 'store visits' }, ' — we found four gaps in the AR try-on:'] },
@@ -70,41 +70,6 @@ export const arTryOn: Case = {
         { h: 'Handed off, accurately', p: ['The prototype became the handoff: the developers had every timing, trigger and curve to build from.'] },
       ] },
     ] },
-    { id: 'frame-removal', title: 'Frame removal for a more accurate try-on', blocks: [
-      { k: 'row', ratio: SIDE, of: [
-        { k: 'group', of: [
-          { k: 'p', t: ['For people who already wear glasses, the try-on first takes their own pair away:'] },
-          { k: 'ul', items: [
-            [{ b: 'Detects and removes' }, ' the user’s existing glasses in real time.'],
-            ['Uses ', { b: 'inpainting' }, ' to restore skin and eyebrows naturally.'],
-            ['Prevents ', { b: 'reflections and double frames' }, ', for a realistic AR try-on.'],
-          ] },
-          { k: 'stats', title: 'Result', tone: 'dark', items: [{ n: '32%', l: 'increase in users completing a virtual try-on session' }] },
-        ] },
-        { k: 'figure', of: clip('frame-removal', 'Frame removal, recorded', 'The flow, end to end'), width: 'phone' },
-      ] },
-      { k: 'h', t: 'Step by step' },
-      { k: 'phones', of: [
-        still('fr-1', 'Two frames', '1 · Two frames at once'),
-        still('fr-2', 'Align', '2 · Align: red turns green'),
-        still('fr-3', 'Removing', '3 · Particles trace the frame'),
-        still('fr-4', 'A new frame', '4 · A new frame, on a clean face'),
-      ] },
-      { k: 'h', t: 'Motion: from loading to success' },
-      { k: 'successes', of: [
-        { m: state('fr-loading', 'Loading state'), top: true, chip: 'Loading state', h: 'Particles gather on the frame', ul: [
-          ['As the system ', { b: 'detects the existing glasses' }, ', small particles ', { b: 'gather around the frame’s outline' }, ', forming a subtle ', { b: 'white tracing effect' }, '.'],
-          ['It builds ', { b: 'anticipation' }, ' and tells the user the removal is in progress.'],
-          ['The particles ', { b: 'move dynamically' }, ', like an energy build-up: something is about to happen.'],
-          ['A ', { b: 'soft pulse' }, ' gives the frame a sense of depth and interactivity.'],
-        ] },
-        { m: state('fr-success', 'Success state'), top: true, chip: 'Success state', h: 'Particles scatter, the glasses fade out', ul: [
-          ['Once the removal is triggered, the particles ', { b: 'burst outward' }, ' in a quick, smooth burst: the old frame disappearing.'],
-          ['At the same time the glasses ', { b: 'fade out in a gentle dissolve' }, ', not an instant cut, so the change stays smooth.'],
-        ] },
-      ] },
-      { k: 'p', t: ['Both were built as ', { b: 'custom Lotties' }, '. With motion, frame removal turned from a ', { b: 'technical feature' }, ' into an ', { b: 'engaging, visually intuitive interaction' }, ', making virtual try-ons ', { b: 'more immersive and natural' }, ' for users.'] },
-    ] },
     /* the Hustlr frame's product highlights (Nitish, 26 Oct, from his recording: "a 3D experience, where the 3D glasses
        rotates and shows the emphasis on the screen on whatever feature"): the recording in a phone with the four highlights
        beside it, lit in time; the stills are the stage's four views, cut from the recording */
@@ -130,6 +95,34 @@ export const arTryOn: Case = {
           { p: ['The skin drops from above and settles over the front of the frame — the way a real snap-on clips on.'], side: 'l', t: 3.1, end: 7.2, at: [.19, .22] },
         ] },
         after: { k: 'media', shape: 'phone', label: 'The cart with the skinned frame and the snap-on line', cap: 'The cart: the frame with its skin, the skin on the bill', src: `${A}/snap-cart.webp` } },
+    ] },
+    /* frame removal (27 Oct, Nitish: "remove the result container… remove the step-by-step screens… two screens… particles being
+       gathered… particles scattering… the third… when the glasses are removed and the new glasses are placed… talk a little
+       bit about the problem first… put this project in the end"): the problem, the three states as stills from his recording
+       (the API's mask behind the particles), the two state Lotties, the recording */
+    { id: 'frame-removal', title: 'Frame removal for a more accurate try-on', blocks: [
+      { k: 'p', t: ['People who ', { b: 'already wear glasses' }, ' couldn’t use the AR try-on: the frame they tried sat on top of their own, with ', { b: 'two frames, double reflections' }, ' and no way to judge the look. The try-on had to take their glasses off first.'] },
+      { k: 'p', t: ['It does that with a ', { b: 'mask' }, ': an API finds the glasses on the face, masks them out and ', { b: 'inpaints the skin and eyebrows' }, ' behind them. The motion on top tells the user what is happening while it works.'] },
+      { k: 'phones', of: [
+        still('fr-gather', 'Particles gather on the frame', 'Analysing: particles gather on the frame'),
+        still('fr-scatter', 'Particles scatter, the glasses fade out', 'Removed: the particles scatter, the frame fades'),
+        still('fr-clean', 'A new frame on a clean face', 'Try on: a new frame, on a clean face'),
+      ] },
+      { k: 'h', t: 'The two states, as Lotties' },
+      { k: 'successes', of: [
+        { m: state('fr-loading', 'Loading state'), top: true, chip: 'Loading state', h: 'Particles gather on the frame', ul: [
+          ['As the API ', { b: 'analyses the glasses' }, ', small particles ', { b: 'gather round the frame’s outline' }, ' in a subtle white trace: the removal is in progress.'],
+          ['They ', { b: 'move dynamically' }, ', like an energy build-up, and a ', { b: 'soft pulse' }, ' gives the frame depth: something is about to happen.'],
+        ] },
+        { m: state('fr-success', 'Success state'), top: true, chip: 'Success state', h: 'Particles scatter, the glasses fade out', ul: [
+          ['Once the mask is ready, the particles ', { b: 'burst outward' }, ' in a quick, smooth burst: the old frame disappearing.'],
+          ['The glasses ', { b: 'fade out in a gentle dissolve' }, ', not an instant cut, so the change stays smooth.'],
+        ] },
+      ] },
+      { k: 'row', ratio: SIDE, of: [
+        { k: 'p', t: ['Both are ', { b: 'custom Lotties' }, '. With motion, frame removal turned from a technical feature into an ', { b: 'engaging, visually intuitive interaction' }, ': the wait reads as something happening, and the removal as a reveal. The whole flow, recorded, at the right.'] },
+        { k: 'figure', of: clip('frame-removal', 'Frame removal, recorded', 'The flow, end to end'), width: 'phone' },
+      ] },
       { k: 'p', t: ['More work is being added.'] },
     ] },
   ],
