@@ -292,15 +292,18 @@
    name, the signature, the line, the corner bracket (inside the plate's bottom-left corner) and the links in the notch;
    the CV pill dark with light text, the selected tile's pairing. The plate has the containers' shadow. */
 @media (min-width: 701px) {
-  .intro-card .picwrap4::before { content: ""; position: absolute; z-index: -1; inset: calc(var(--r) * var(--ios-k, 1) / 2 - 5px) 0 0 calc(-.053 * var(--fw)); border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
+  .intro-card .picwrap4::before { content: ""; position: absolute; z-index: -1; inset: calc(var(--r) * var(--ios-k, 1) / 2 - 7px) 1px 1px calc(-.053 * var(--fw)); border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
   /* the plate's top (27 Oct, Nitish: where the plate meets the tile's corners "the shape at the most corner… it's looking
      a little weird… make this background a little shorter from the top… where half of the corner… completes"): the plate
-     starts half the corner's height down (the corner as drawn: --r × the iOS factor), less 5 px (27 Oct, Nitish: "a
-     little shorter than I expected… increase it by 5 pixels"), so its top edge meets the tile's top-left curve a little
-     above the curve's middle instead of running along its top and leaving a sliver in the corner. Behind the
-     tile itself a second sheet keeps the plate to the top, the tile's own rectangle and corners, no shadow — only the
-     notch shows it, so the links keep their ground */
-  .intro-card .picwrap4::after { content: ""; position: absolute; z-index: -1; inset: 0; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); }
+     starts half the corner's height down (the corner as drawn: --r × the iOS factor), less 7 px (27 Oct, Nitish: "a
+     little shorter than I expected… increase it by 5 pixels", then "a little more by 2"), so its top edge meets the
+     tile's top-left curve above the curve's middle instead of running along its top and leaving a sliver in the corner.
+     Behind the tile a strip keeps the plate to the top for the notch, so the links keep their ground.
+     The plate stays a pixel inside the tile's right edge and foot, and the strip a pixel under its top and clear of its
+     corners (27 Oct, Nitish: "patchy white outlines on the corner"): an edge of the light sheet exactly under the tile's
+     edge shows through the edge's anti-aliased pixels as a pale hairline on the curves — the fringe the project cards had
+     (p235) — so no edge of the sheet lies on an edge of the tile; the pixel it gives up is the frame's own dark */
+  .intro-card .picwrap4::after { content: ""; position: absolute; z-index: -1; inset: 1px calc(var(--r) * var(--ios-k, 1)) auto; height: calc(var(--r) * var(--ios-k, 1)); background: var(--nav-bg); }
   /* the tile's shadow on the plate (27 Oct, Nitish: "I hope the shadows are realistic and subtle"): the three shadows
      were set for the dark frame, where they read faint; on the light grey they darkened the plate 22% beside the tile's
      edge and 34% under its foot. Half the weight: the same contact line, near and far falls, at about 10% each — under
