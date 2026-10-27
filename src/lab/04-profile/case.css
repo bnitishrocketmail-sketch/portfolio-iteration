@@ -115,6 +115,7 @@
 .cs4-fig.wide { width: 82%; align-self: center; } /* a wide piece shown large, on its own (the fintech study's desktop payment, 25 Oct) */
 .cs4-fig.half .cs4-media::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; pointer-events: none; z-index: 2; box-shadow: inset 3px 3px 8px rgba(0, 0, 0, .28), inset 1px 1px 2px rgba(0, 0, 0, .18), inset -2px -2px 6px rgba(255, 255, 255, .55); } /* engraved: dark from the top-left, light from the bottom-right (22 Oct) */
 .cs4-phones { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--s2) var(--s5); padding: var(--s2) 0; }
+.cs4-phones.close { gap: var(--s2) var(--s4); } /* three screens of one flow, a step closer (the snap-on, 27 Oct) */
 
 /* the flow: the steps down the card, --s5 apart, the curves drawn over them */
 .cs4-flow { position: relative; display: flex; flex-direction: column; gap: calc(var(--s5) + var(--s3)); padding-top: var(--s2); } /* the steps further apart than anything else: the knots need the room */
@@ -331,17 +332,6 @@
 .cs4-sync-p { font: 600 var(--t-body)/1.4 var(--f-copy); text-wrap: pretty; } /* body, emphasised */
 .cs4-sync.full .cs4-sync-phone { margin-bottom: 0; -webkit-mask-image: none; mask-image: none; } /* the whole screen (the snap-on: its frame at the top, its skins in the middle, its kit at the foot) */
 @media (max-width: 700px) { .cs4-sync { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 0; padding: 0; } .cs4-sync-list { width: 100%; max-width: none; } .cs4-sync-item { grid-template-columns: 88px minmax(0, 1fr); } }
-/* three screens side by side (the snap-on flow, 27 Oct): two stills and, between them, the recording toured — its card at
-   the recording's side, over the still beside it. The row sits in from the section's edges; the cards keep their width */
-.cs4-trio { display: grid; grid-template-columns: var(--ph-w) minmax(0, 1fr) var(--ph-w); column-gap: var(--s4); align-items: start; justify-items: center; padding: 0 var(--s3); }
-.cs4-trio > .cs4-fig.phone { width: var(--ph-w); }
-.cs4-trio-mid { width: 100%; max-width: none; }
-.cs4-trio-mid .cs4-tour { padding: 0; grid-template-columns: minmax(0, 1fr) var(--ph-w) minmax(0, 1fr); column-gap: var(--s3); --tour-w: var(--ph-w); }
-.cs4-trio-mid .cs4-tour-col { overflow: visible; }
-.cs4-trio-mid .cs4-tour-card { width: 22ch; max-width: none; z-index: 4; } /* its own width: it lies over the still beside the recording when the gap is narrow */
-.cs4-trio-mid .cs4-tour-col.l .cs4-tour-card { right: 0; } .cs4-trio-mid .cs4-tour-col.r .cs4-tour-card { left: 0; }
-.cs4-trio-mid > figcaption { text-align: center; }
-@media (max-width: 700px) { .cs4-trio { grid-template-columns: minmax(0, 1fr); row-gap: var(--s4); padding: 0; } .cs4-trio-mid .cs4-tour { grid-template-columns: minmax(0, 1fr); } }
 .cs4-cols.three { grid-template-columns: repeat(3, minmax(0, 1fr)); } @media (max-width: 700px) { .cs4-cols.three { grid-template-columns: minmax(0, 1fr); } }
 .ft3d { position: relative; width: 100%; aspect-ratio: 2.2 / 1; overflow: hidden; border-radius: inherit; corner-shape: inherit; color: #fff; } /* the ground is the study's own (Phones3D: the brand's blue running to violet; the campaigns' green to navy) */
 .ft3d-logo { position: absolute; left: 4%; top: 7%; z-index: 4; font: 700 clamp(14px, 1.7cqw, 22px)/1 var(--f-head); letter-spacing: -.01em; }

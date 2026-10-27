@@ -16,7 +16,7 @@ export type Block =
   | Media
   | { k: 'figure'; of: Media; width?: 'half' | 'phone' | 'wide' }
   | { k: 'row'; of: Block[]; ratio?: string; align?: 'start' | 'center' }
-  | { k: 'phones'; of: Media[] }
+  | { k: 'phones'; of: Media[]; close?: boolean /* the screens a step closer: three of one flow */ }
   | { k: 'group'; of: Block[] }
   | { k: 'stats'; title?: string; tone?: 'dark'; items: { n: string; l: string }[]; more?: Rich /* on hover the numbers give way to this (his page) */ }
   | { k: 'legend'; items: string[]; colors?: string[] }
@@ -55,9 +55,7 @@ export type Block =
      the feature's card (one plain line, `p`) comes in at the phone's side (`side`); then the node goes and the feature plays to
      `end` — unless it `ride`s, when the node stays on the handle through the play. A card's tap plays its feature again */
   | { k: 'tour'; src: string; poster: string; label: string; track?: [number, number][]; ty?: number; of: { p: Rich; side: 'l' | 'r'; t: number; end: number; at: [number, number] | 'track'; ride?: boolean }[] }
-  /* screens side by side telling a flow (the snap-on, 27 Oct): stills with a caption each, and in the middle the recording as a
-     tour (`tour`: the same pause–mark–play as above, its card at the side named) */
-  | { k: 'trio'; before: Media; after: Media; tour: { src: string; poster: string; label: string; of: { p: Rich; side: 'l' | 'r'; t: number; end: number; at: [number, number] }[] }; cap: string }
+
   /* a recording in a phone with a list beside it that keeps time with it (the Hustlr highlights, 26 Oct; Synced in
      Case04.tsx): each item lights from its second (`t`) to the next's — its view as a small picture (`thumb`), a name, a
      line; a tap plays the recording from there */

@@ -84,17 +84,18 @@ export const arTryOn: Case = {
     ] },
     /* the snap-on skins (Nitish, 26–27 Oct: "a snap-on skin for your glasses… it just snaps on from the top"; "we are focusing
        on the flow and a bit on the interaction… create a PLP before it… on the cart… how snap-on looks… with the frame";
-       "three screens side by side… focus a little more on the interaction… add a node there with a text container"):
-       three screens in a row — his Lenskart product page with the way in drawn in, his recording toured (one stop: the skin
-       half-way down over the frame, 3.1 s), his Lenskart cart with the skinned frame and the skin's lines drawn in */
+       "three screens side by side… focus a little more on the interaction"; then "you don't have to pause the video… put this
+       information at the bottom… reduce the space between all these three screens"): three screens in a row, a step closer
+       than a row of phones usually is — his Lenskart product page with the way in drawn in, his recording playing plainly,
+       his Lenskart cart with the skinned frame and the skin's lines drawn in — and the interaction in a line under them */
     { id: 'snap-on', title: 'Snap-on skins: dress the frame you chose', blocks: [
       { k: 'p', t: ['A ', { b: 'snap-on skin' }, ' is a printed cover that clips over the front of a Lenskart frame. On the product page there is a row to add one; the try-on shows it ', { b: 'snapping onto your own frame' }, '; the cart carries the frame with its skin.'] },
-      { k: 'trio', cap: 'The try-on: the skin snaps on from the top',
-        before: { k: 'media', shape: 'phone', label: 'The product page with the snap-on entry', cap: 'The way in: a row under the frame’s chips', src: `${A}/snap-pdp.webp` },
-        tour: { src: `${A}/snap-on.mp4`, poster: `${A}/snap-on-poster.webp`, label: 'The snap-on try-on, recorded: a skin tapped in the row drops onto the frame; another takes its place; plus adds it to the set', of: [
-          { p: ['The skin drops from above and settles over the front of the frame — the way a real snap-on clips on.'], side: 'l', t: 3.1, end: 7.2, at: [.19, .22] },
-        ] },
-        after: { k: 'media', shape: 'phone', label: 'The cart with the skinned frame and the snap-on line', cap: 'The cart: the frame with its skin, the skin on the bill', src: `${A}/snap-cart.webp` } },
+      { k: 'phones', close: true, of: [
+        { k: 'media', shape: 'phone', label: 'The product page with the snap-on entry', cap: 'The way in: a row under the frame’s chips', src: `${A}/snap-pdp.webp` },
+        clip('snap-on', 'The snap-on try-on, recorded: a skin tapped in the row drops onto the frame; another takes its place; plus adds it to the set', 'The try-on: the skin snaps on from the top'),
+        { k: 'media', shape: 'phone', label: 'The cart with the skinned frame and the snap-on line', cap: 'The cart: the frame with its skin, the skin on the bill', src: `${A}/snap-cart.webp` },
+      ] },
+      { k: 'p', t: ['In the try-on, your frame waits at the top in its clear finish and the skins run in a row below. Tap one and it ', { b: 'drops from above and settles over the front of the frame' }, ' — the way a real snap-on clips on; tap another and it takes the first one’s place. Plus adds the skin to your set, and the cart carries the frame wearing it.'] },
     ] },
     /* frame removal (27 Oct, Nitish: "remove the result container… remove the step-by-step screens… two screens… particles being
        gathered… particles scattering… the third… when the glasses are removed and the new glasses are placed… talk a little
