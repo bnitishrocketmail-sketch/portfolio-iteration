@@ -292,16 +292,26 @@
    name, the signature, the line, the corner bracket (inside the plate's bottom-left corner) and the links in the notch;
    the CV pill dark with light text, the selected tile's pairing. The plate has the containers' shadow. */
 @media (min-width: 701px) {
-  .intro-card .picwrap4::before { content: ""; position: absolute; inset: 0 0 0 calc(-.069 * var(--fw)); border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
+  .intro-card .picwrap4::before { content: ""; position: absolute; inset: 0 0 0 calc(-.053 * var(--fw)); border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
   /* the nav bar merged into the plate (27 Oct, Nitish: "the navigation bar on the left side is of same color… merging it
-     with the background… the width of that navigation area doesn't change… the corner radiuses are the standard ones"):
-     the plate runs left over the frame's gap and the nav's column to the column's left edge (.016 + .053 of the frame's
-     width), one shape with the system's corners, and the bar's own capsule and shadow step aside; the column, its
-     width and the tiles' places are untouched (the bar is the grid's own track) */
-  .intro-card .navcol4 { background: none; box-shadow: none; }
+     with the background… the width of that navigation area doesn't change… the corner radiuses are the standard ones";
+     then: "the space on the left side of the icons… is lesser than the space on the right side… that spacing should be
+     equal, and it should be the same as it is"): on the home tab the frame's gap between the nav's column and the picture
+     closes — the picture's tile starts where the column ends, so a tile has the column's own clearance (15 px at 1440)
+     between it and the plate's edge on its left and between it and the picture on its right; the column's track and the
+     tiles' places are untouched, the picture takes the gap's width, and the gap to the right column is kept as the
+     picture's margin. The plate runs left over the column to its left edge (.053 of the frame's width), one shape with
+     the system's corners, and the bar's own capsule and shadow step aside. The other tabs keep the bar as it is. */
+  .intro-card .frame4:has(.picwrap4) { column-gap: 0; }
+  .intro-card .frame4:has(.picwrap4) .picwrap4 { margin-right: calc(.016 * var(--fw)); }
+  .intro-card .frame4:has(.picwrap4) .navcol4 { background: none; box-shadow: none; }
   .intro-card .picwrap4 { --name-ink: var(--nav-ink); --line-ink: var(--nav-ink); --corner-ink: var(--nav-ink); --cv-bg: var(--nav-hl); --cv-ink: var(--nav-hl-ink); --social-ink: var(--nav-ink); }
   .intro-card .links4 a:hover { background: rgba(0, 0, 0, .08); } /* the links' hover, dark on the light plate */
   .intro-card .cut4 .me4 { box-shadow: 0 0 0 1px rgba(0, 0, 0, .14), inset 0 1px 0 rgba(255, 255, 255, .3); } /* the disc's ring, dark on the plate */
+  /* the corner bracket lifted into the content (27 Oct, Nitish: "lift it upwards and align it with the same spacing of
+     left and bottom with the text"): its left leg on the text's left edge and its bottom leg on the content's bottom
+     line — the cut-out's own padding either way — so it frames the content's corner, not the tile's */
+  .intro-card .cut4 .corner4 { left: 1.6cqw; bottom: 1.5cqw; }
 }
 /* the corner bracket: a short 2.5px stroke along the blank area's bottom and left edges — where the tile's corner would
    be — turning the corner with the tile's radius; its legs run 12px past the curve, no further, and end in round caps
