@@ -81,6 +81,8 @@ export const CONTROLS: Control[] = [
   /* the plate's colour (27 Oct, Nitish: "another switch to make it darker as well… the colour which is the select state
      background of the icon… whatever above it will also be inverted"): the nav's light grey, or the selection's dark */
   { group: 'Intro picture', sub: 'Name area', kind: 'select', key: '--plate', label: 'Plate', def: 'light', light: 'light', options: [['Light (the nav’s grey)', 'light'], ['Dark (the selection’s colour)', 'dark']] },
+  /* his signature on the picture's wall, behind him (27 Oct) */
+  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--sig-bg', label: 'Signature on the wall', def: 'on', light: 'on', options: [['Shown', 'on'], ['Hidden', 'off']] },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
   { group: 'Main container', sub: 'Corners', kind: 'select', key: '--corners', label: 'Curve', def: 'ios', light: 'ios', options: [['iOS (continuous)', 'ios'], ['Round', 'round']] },
   /* the selection: the dark pill, or a ball in the bar's colour in a cavity (23 Oct) */

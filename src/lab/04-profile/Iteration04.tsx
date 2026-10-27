@@ -24,6 +24,7 @@ import { NavIcon } from './NavIcons04';
 import Fintech3D, { Launches3D } from './Fintech3D';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
+import Sig4 from './Sig4';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
 import { readTweaks, tweakKey } from './tokens';
 import { SOCIAL } from './social';
@@ -290,6 +291,7 @@ export default function Iteration04() {
   const introCard = (tweaks['--intro-v'] ?? 'card') === 'card'; /* the name area as a light card in the cut-out (a control, 27 Oct) */
   const plateDark = tweaks['--plate'] === 'dark'; /* the plate in the selection's dark, what is on it inverted (a control, 27 Oct) */
   const navFloat = (tweaks['--nav-bar'] ?? 'float') === 'float'; /* the other pages' nav: the icons on the frame, no bar (a control, 27 Oct) */
+  const sigBg = (tweaks['--sig-bg'] ?? 'on') === 'on'; /* his signature on the picture's wall, behind him (a control, 27 Oct) */
   const frameRef = useRef<HTMLDivElement>(null);
   usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '24') || 0); /* the phone's rims, at the Light angle (24 Oct) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
@@ -377,6 +379,11 @@ export default function Iteration04() {
                   behind him — his cutout from the illustration lies over them, so they are a little masked — the assistant's
                   in front, over his hair; each one's place and layer are tokens (the Edit panel moves them). They float, and
                   lean with the pointer by their depth. */}
+              {/* his signature on the wall behind him (27 Oct, Nitish: "the SVG… that we removed from the left navigation… in the
+                  illustration container background, even behind my picture… like a silhouette… a little darker than the
+                  background… not dominating"): the nav's old "Nitish", wide across the wall at his head's height, in the
+                  dark at a low opacity so it reads as the wall a shade darker; behind him and the cards, leaning least */}
+              {sigBg && <div className="fl4 sig-bg" data-depth=".2" aria-hidden="true"><Sig4 /></div>}
               <div className="fl4 coin-card" data-depth=".5" style={{ '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
                 <div className="fl4-in"><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
               </div>

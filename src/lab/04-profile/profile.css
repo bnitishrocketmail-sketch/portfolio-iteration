@@ -229,6 +229,12 @@
 /* the floating Lottie cards: the page's glass (the name box's recipe), sized on the frame; behind him or in front; they
    float (the hero's drift) and lean with the pointer by their depth */
 .fl4 { position: absolute; z-index: 1; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+/* his signature on the wall (27 Oct): the picture's full width, a third of the way down, tilted up 6°, so its N runs on
+   the wall at the left and its "sh" on the wall at the right with his head over the middle; behind the cards (first of
+   them) and him; black at 22%, so the wall reads a shade darker where it runs (the wall is ~#2f2e31, the strokes ~#252427).
+   Tried at his head's height and narrower first: the head and the cards covered all but a few strokes */
+.fl4.sig-bg { left: 50%; top: 34%; width: 100%; z-index: 1; translate: -50% -50%; rotate: -6deg; color: #000; opacity: var(--sig-a, .22); pointer-events: none; }
+.sig-bg svg { display: block; width: 100%; height: auto; }
 .fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); display: var(--c-ai-v); } /* each card's place, layer (1 behind him, 3 in front) and whether it shows are tokens */
 .fl4.coin-card { left: var(--c-coin-x); top: var(--c-coin-y); z-index: var(--c-coin-z); display: var(--c-coin-v); }
 .fl4.loader-card { left: var(--c-loader-x); top: var(--c-loader-y); z-index: var(--c-loader-z); display: var(--c-loader-v); }
