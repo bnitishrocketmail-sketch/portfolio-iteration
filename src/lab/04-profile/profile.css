@@ -160,8 +160,22 @@
    to the bar's sides, to its rounded top (the pill's cap concentric with the bar's) and to the names before and after it —
    and the assistant's circle sits concentric in the bar's foot. The clearance is (bar − pill) / 2; padding and margins in
    % resolve against the bar's width, so it holds at every size. */
-.navcol4 { --pill-w: 33px; /* a name's line (13px) and its button's sides (10px each) */ --me-w: 48px; /* his photo's disc (22 Oct: bigger than the pill's width) */ display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: calc(50% - var(--me-w) / 2) 0 12%; /* the disc as far from the top as from the sides */ border-radius: 999px; background: var(--nav-bg); box-shadow: var(--shadow-el); }
+.navcol4 { --pill-w: 33px; --tile-w: 76%; /* a name's line (13px) and its button's sides (10px each) */ --me-w: 48px; /* his photo's disc (22 Oct: bigger than the pill's width) */ display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: calc((100% - var(--tile-w)) / 2) 0 12%; /* the first tile as far from the top as from the sides (27 Oct: the tiles are the bar's own geometry now) */ border-radius: 999px; background: var(--nav-bg); box-shadow: var(--shadow-el); }
 .nav4 { width: 100%; }
+/* the icon bar (27 Oct): each tab a square tile 76% of the bar's width (the reference: a 104 tile in a 180 bar, 58%; ours a
+   little larger so the icon reads at the bar's size), the icon 48% of the tile (the reference's 50 of 104); the tiles a
+   third of a tile apart (the reference's 100 of 104 was airy — ours sit in a shorter bar). The selection a rounded square
+   (the tile's corners, 23% of its width, the reference's 24 of 104) in the nav highlight's colour; the selected icon in
+   the highlight's ink, the rest in the bar's ink, stepping up on hover */
+.nav4.icons li { width: var(--tile-w); aspect-ratio: 1; }
+.nav4.icons li + li { margin-top: calc(var(--tile-w) * .34); }
+.nav4.icons ul button { width: 100%; height: 100%; padding: 0; border-radius: 23%; color: var(--nav-ink); z-index: 2; transition: color .25s; }
+.nav4.icons ul button:hover { color: var(--nav-ink); opacity: 1; }
+.nav4.icons ul button.on { color: var(--nav-hl-ink); }
+.navico4 { width: 48%; height: 48%; display: block; }
+.hl4.tile { border-radius: 23%; transform: translateX(-50%); }
+.nav4.icons:not(.cav) ul button:not(.on) { opacity: .78; } .nav4.icons:not(.cav) ul button:not(.on):hover { opacity: 1; }
+.nav4.icons.cav ul button { color: color-mix(in srgb, var(--nav-ink) 50%, transparent); } .nav4.icons.cav ul button.on, .nav4.icons.cav ul button:hover { color: var(--nav-ink); }
 .nav4 ul { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; width: 100%; }
 .nav4 li { display: flex; justify-content: center; width: 100%; }
 .nav4 li + li { margin-top: max(0px, calc(50% - var(--pill-w) / 2 - 10.5px)); } /* the clearance, less the next button's own top padding */

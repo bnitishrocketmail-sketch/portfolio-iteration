@@ -73,7 +73,7 @@ export const CONTROLS: Control[] = [
   /* which build of the spatial picture: the latest, or the milestone — the first pronounced build (p147), frozen (23 Oct) */
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth-ver', label: 'Depth build', def: 'latest', light: 'latest', options: [['Latest (face held, p151)', 'latest'], ['Milestone: first pronounced (p147)', 'v147']] },
   /* the first tab of the nav: his photo, or his signature from the Framer site (22 Oct) */
-  { group: 'Nav bar', sub: 'Home tab', kind: 'select', key: '--home-tab', label: 'Version', def: 'photo', light: 'photo', options: [['The photo', 'photo'], ['The signature', 'sig']] },
+  /* (27 Oct) the home tab's photo / signature versions are gone: the bar is icons now (NavIcons04) */
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
   { group: 'Main container', sub: 'Corners', kind: 'select', key: '--corners', label: 'Curve', def: 'ios', light: 'ios', options: [['iOS (continuous)', 'ios'], ['Round', 'round']] },
   /* the selection: the dark pill, or a ball in the bar's colour in a cavity (23 Oct) */

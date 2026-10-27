@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
+import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, LAB04, LINKS, NAV04 as NAV, PROJECTS04 as PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
@@ -21,7 +21,7 @@ import { sCorner, sysCurve } from './curve';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
 import Blob4 from './Blob4';
-import Sig4 from './Sig4';
+import { NavIcon } from './NavIcons04';
 import Fintech3D, { Launches3D } from './Fintech3D';
 import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
@@ -161,7 +161,13 @@ function CavityBar({ w, h, x, y, cy }: { w: number; h: number; x: number; y: num
   );
 }
 
-function Nav({ tab, go, sig, cav }: { tab: Tab; go: (v: ViewName) => void; sig?: boolean; cav?: boolean }) {
+/* the nav bar (27 Oct, Nitish: his reference — a dark bar of solid icons, the selected one on a rounded square): five
+   icons from one family (NavIcons04: Font Awesome solid — the house and the folder as his reference has them, the three
+   joined nodes, the flask, the page with lines), each on a square tile; the selection a rounded square in the nav
+   highlight's colour (ours, not the reference's teal) that slides to the tab on the spring the pill had. The words and
+   the signature are gone from the bar (the names stay for screen readers and as titles). The cavity version keeps
+   its ball, the icons stepping back when not selected */
+function Nav({ tab, go, cav }: { tab: Tab; go: (v: ViewName) => void; cav?: boolean }) {
   const reduce = useReducedMotion();
   const ulRef = useRef<HTMLUListElement>(null);
   const [boxes, setBoxes] = useState<Record<string, { top: number; height: number; width: number; left: number }> | null>(null);
@@ -170,7 +176,7 @@ function Nav({ tab, go, sig, cav }: { tab: Tab; go: (v: ViewName) => void; sig?:
     const ul = ulRef.current; if (!ul) return;
     const measure = () => {
       const b: Record<string, { top: number; height: number; width: number; left: number }> = {};
-      const u = ul.getBoundingClientRect(); /* sub-pixel boxes, so the pill sits exactly on its name (offsetTop rounds); left too, for the phone's row */
+      const u = ul.getBoundingClientRect();
       ul.querySelectorAll<HTMLElement>('li[data-id]').forEach(li => { const r = li.querySelector('button')!.getBoundingClientRect(); b[li.dataset.id!] = { top: r.top - u.top, height: r.height, width: r.width, left: r.left - u.left }; });
       setBoxes(b);
       const col = ul.closest<HTMLElement>('.navcol4'); if (col) { const c = col.getBoundingClientRect(); setBar({ w: c.width, h: c.height, x: c.left - u.left, y: c.top - u.top }); }
@@ -178,35 +184,20 @@ function Nav({ tab, go, sig, cav }: { tab: Tab; go: (v: ViewName) => void; sig?:
     measure();
     const ro = new ResizeObserver(measure); ro.observe(ul); const col = ul.closest('.navcol4'); if (col) ro.observe(col); return () => ro.disconnect();
   }, []);
-  const i = NAV.findIndex(n => n.id === tab);
   const box = boxes?.[tab] ?? null;
-  const pill = box ? { top: box.top, height: box.height, width: box.width } : null;
-  const tr = reduce ? { duration: 0 } : cav ? { duration: .34, ease: [.22, 1, .36, 1] as const } : NAV_SPRING; /* cavity version: the pill glides with the ball, as on Swiggy (340ms, his ease) */
-  const out = reduce ? { duration: 0 } : { duration: .1, ease: 'easeOut' as const }; /* the old name goes quickly … */
-  const inn = reduce ? { duration: 0 } : { duration: .22, ease: 'easeOut' as const }; /* … the new one comes in while the pill is still arriving */
+  const tile = box ? { top: box.top, height: box.height, width: box.width } : null;
+  const tr = reduce ? { duration: 0 } : cav ? { duration: .34, ease: [.22, 1, .36, 1] as const } : NAV_SPRING;
   return (
-    <nav className={`nav4${sig ? ' sig' : ''}${cav ? ' cav' : ''}`} aria-label="Sections">
+    <nav className={`nav4 icons${cav ? ' cav' : ''}`} aria-label="Sections">
       <ul ref={ulRef}>
         {cav && bar && box && <CavityBar w={bar.w} h={bar.h} x={bar.x} y={bar.y} cy={box.top + box.height / 2 - bar.y} />}
-        {pill && !cav && ( /* the cavity version has no selection fill (Nitish, 23 Oct: two versions of the bar) */
-          <motion.i className="hl4" initial={false} animate={pill} transition={tr} aria-hidden="true">
-            <AnimatePresence initial={false} mode="wait">
-              <motion.span key={tab} className="hltx4" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: inn }} exit={{ opacity: 0, transition: out }}>
-                {tab === 'home' && sig
-                  ? <span className="navsig4"><Sig4 /></span> /* the signature version of the first tab (22 Oct): in the pill like a name */
-                  : tab === 'home'
-                  ? <motion.span className="me4 navme4 in" initial={{ scale: 1 }} animate={{ scale: .8, transition: reduce ? { duration: 0 } : { duration: .3, ease: 'easeOut' } }}><img src={desk} alt="" /></motion.span> /* the photo shrinks a little inside the pill, which shows round it as a ring (22 Oct) */
-                  : <span className="lbl4"><span>{NAV[i].label}</span></span>}
-              </motion.span>
-            </AnimatePresence>
-          </motion.i>
-        )}
+        {tile && !cav && <motion.i className="hl4 tile" initial={false} animate={tile} transition={tr} aria-hidden="true" />}
         {NAV.map(n => {
           const on = n.id === tab;
           return (
             <li key={n.id} data-id={n.id}>
-              <button type="button" className={`${on ? 'on' : ''}${n.id === 'home' && !sig ? ' navme' : ''}`} aria-current={on ? 'page' : undefined} aria-label={n.id === 'home' ? n.label : undefined} onClick={() => go(n.id)}>
-                {n.id === 'home' && sig ? <span className="navsig4"><Sig4 /></span> : n.id === 'home' ? <span className="me4 navme4"><img src={desk} alt="" /></span> : <span className="lbl4"><span>{n.label}</span></span>} {/* the first tab is his photo (22 Oct) */}
+              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} aria-label={n.label} title={n.label} onClick={() => go(n.id)}>
+                <NavIcon id={n.id} className="navico4" />
               </button>
             </li>
           );
@@ -325,7 +316,7 @@ export default function Iteration04() {
         <span className="edge4" aria-hidden="true" /> {/* the edge light (profile.css, 23 Oct) */}
         {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
         <div className="navcol4">
-          <Nav tab={navTab} go={go} sig={tweaks['--home-tab'] === 'sig'} cav={tweaks['--nav-sel'] === 'cavity'} />
+          <Nav tab={navTab} go={go} cav={tweaks['--nav-sel'] === 'cavity'} />
           <PhoneNav04 items={NAV} tab={navTab} go={go} photo={desk} />
           <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
             <Blob4 /> {/* the assistant's wavy mark (22 Oct), in place of the sparkle */}
