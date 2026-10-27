@@ -292,7 +292,13 @@
    name, the signature, the line, the corner bracket (inside the plate's bottom-left corner) and the links in the notch;
    the CV pill dark with light text, the selected tile's pairing. The plate has the containers' shadow. */
 @media (min-width: 701px) {
-  .intro-card .picwrap4::before { content: ""; position: absolute; inset: 0; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
+  .intro-card .picwrap4::before { content: ""; position: absolute; inset: 0 0 0 calc(-.069 * var(--fw)); border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
+  /* the nav bar merged into the plate (27 Oct, Nitish: "the navigation bar on the left side is of same color… merging it
+     with the background… the width of that navigation area doesn't change… the corner radiuses are the standard ones"):
+     the plate runs left over the frame's gap and the nav's column to the column's left edge (.016 + .053 of the frame's
+     width), one shape with the system's corners, and the bar's own capsule and shadow step aside; the column, its
+     width and the tiles' places are untouched (the bar is the grid's own track) */
+  .intro-card .navcol4 { background: none; box-shadow: none; }
   .intro-card .picwrap4 { --name-ink: var(--nav-ink); --line-ink: var(--nav-ink); --corner-ink: var(--nav-ink); --cv-bg: var(--nav-hl); --cv-ink: var(--nav-hl-ink); --social-ink: var(--nav-ink); }
   .intro-card .links4 a:hover { background: rgba(0, 0, 0, .08); } /* the links' hover, dark on the light plate */
   .intro-card .cut4 .me4 { box-shadow: 0 0 0 1px rgba(0, 0, 0, .14), inset 0 1px 0 rgba(255, 255, 255, .3); } /* the disc's ring, dark on the plate */
