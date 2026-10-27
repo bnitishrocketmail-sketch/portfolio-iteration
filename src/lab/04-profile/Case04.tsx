@@ -620,6 +620,13 @@ function Render({ b }: { b: Block }) {
     case 'successes': return <Successes of={b.of} />;
     case 'synced': return <Synced b={b} />;
     case 'tour': return <Tour b={b} />;
+    case 'trio': return (
+      <div className="cs4-trio">
+        <Fig m={b.before} />
+        <figure className="cs4-fig phone cs4-trio-mid"><Tour b={{ k: 'tour', ...b.tour }} /><figcaption>{b.cap}</figcaption></figure>
+        <Fig m={b.after} />
+      </div>
+    );
     case 'gaps': return (
       <div className="cs4-gaps">
         {b.of.map((g, i) => (
