@@ -78,10 +78,16 @@ export const CONTROLS: Control[] = [
      content above it inverted, including the corner stroke… standard spacing with the edges of the illustration
      container"): the light card in the picture's cut-out, or the open cut-out as before, the frame showing through */
   { group: 'Intro picture', sub: 'Name area', kind: 'select', key: '--intro-v', label: 'Version', def: 'card', light: 'card', options: [['Light card', 'card'], ['Open, on the frame', 'open']] },
+  /* the plate's colour (27 Oct, Nitish: "another switch to make it darker as well… the colour which is the select state
+     background of the icon… whatever above it will also be inverted"): the nav's light grey, or the selection's dark */
+  { group: 'Intro picture', sub: 'Name area', kind: 'select', key: '--plate', label: 'Plate', def: 'light', light: 'light', options: [['Light (the nav’s grey)', 'light'], ['Dark (the selection’s colour)', 'dark']] },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
   { group: 'Main container', sub: 'Corners', kind: 'select', key: '--corners', label: 'Curve', def: 'ios', light: 'ios', options: [['iOS (continuous)', 'ios'], ['Round', 'round']] },
   /* the selection: the dark pill, or a ball in the bar's colour in a cavity (23 Oct) */
   { group: 'Nav bar', sub: 'Selection', kind: 'select', key: '--nav-sel', label: 'Version', def: 'pill', light: 'pill', options: [['The pill', 'pill'], ['Cavity ball', 'cavity']] },
+  /* the bar on the pages other than Home (27 Oct, Nitish: the floating icons "on the other pages… on the [open] version
+     as well, but give me the control to turn it off and on"): the icons and the selection on the frame, or the bar */
+  { group: 'Nav bar', sub: 'On the other pages', kind: 'select', key: '--nav-bar', label: 'Version', def: 'float', light: 'float', options: [['Floating icons, no bar', 'float'], ['The bar', 'bar']] },
   /* the main container solid, as it was, or glass: the picture behind showing through it, blurred (22 Oct) */
   { group: 'Main container', sub: 'Background', kind: 'select', key: '--frame-v', label: 'Version', def: 'solid', light: 'solid', options: [['Solid', 'solid'], ['Glass', 'glass']] },
   /* the container's edge lit as iOS 26 lights its cards (23 Oct): a 1pt rim on the edges facing the light's axis, measured

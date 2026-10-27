@@ -324,12 +324,28 @@
      between it and the plate's edge on its left and between it and the picture on its right; the column's track and the
      tiles' places are untouched, the picture takes the gap's width, and the gap to the right column is kept as the
      picture's margin. The plate runs left over the column to its left edge (.053 of the frame's width), one shape with
-     the system's corners, and the bar's own capsule and shadow step aside — on every tab (27 Oct, Nitish: on the other
-     pages "the nav bar used to disappear, and… the icons were floating… with the select states as well… that looked
-     pretty cool"): on Projects, Workflow, Lab and Notes the tiles and the selection sit on the frame, no bar. */
+     the system's corners, and the bar's own capsule and shadow step aside. On the other pages the bar's going is its
+     own control (27 Oct, Nitish: on the other pages "the nav bar used to disappear, and… the icons were floating… with
+     the select states as well… that looked pretty cool"; then: that on the open version "as well, but give me the
+     control to turn it off and on"): Nav bar → On the other pages — the tiles and the selection on the frame, or the bar;
+     for both versions of the name area. */
   .intro-card .frame4:has(.picwrap4) { column-gap: 0; }
   .intro-card .frame4:has(.picwrap4) .picwrap4 { margin-right: calc(.016 * var(--fw)); }
-  .intro-card .navcol4 { background: none; box-shadow: none; }
+  .intro-card .frame4:has(.picwrap4) .navcol4, .nav-float .frame4:not(:has(.picwrap4)) .navcol4 { background: none; box-shadow: none; }
+  /* the plate in the selection's dark (27 Oct, Nitish: "another switch to make it darker as well… the colour which is the
+     select state background of the icon… whatever above it will also be inverted"; a control, Intro picture → Name
+     area → Plate): the plate and the notch's strip in the highlighter's dark, and everything on them turned — the
+     name, the signature, the line, the bracket and the links in the selection's light ink; the CV pill light with dark
+     text; the photo's ring light; and the nav's tiles on the home tab as the phone's dark bar has them, the selection
+     the nav's light grey with its dark ink, the other icons in the light ink, the hover tag light */
+  .intro-card.plate-dark .picwrap4::before, .intro-card.plate-dark .picwrap4::after { background: var(--nav-hl); }
+  .intro-card.plate-dark .picwrap4 { --name-ink: var(--nav-hl-ink); --line-ink: var(--nav-hl-ink); --corner-ink: var(--nav-hl-ink); --cv-bg: var(--nav-bg); --cv-ink: var(--nav-ink); --social-ink: var(--nav-hl-ink); }
+  .intro-card.plate-dark .links4 a:hover { background: rgba(255, 255, 255, .1); }
+  .intro-card.plate-dark .cut4 .me4 { box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18); }
+  .intro-card.plate-dark .frame4:has(.picwrap4) .nav4.icons ul button { color: var(--nav-hl-ink); }
+  .intro-card.plate-dark .frame4:has(.picwrap4) .nav4.icons ul button.on { color: var(--nav-ink); }
+  .intro-card.plate-dark .frame4:has(.picwrap4) .hl4.tile { background: var(--nav-bg); }
+  .intro-card.plate-dark .frame4:has(.picwrap4) .navtag4 { background: var(--nav-bg); color: var(--nav-ink); }
   .intro-card .picwrap4 { --name-ink: var(--nav-ink); --line-ink: var(--nav-ink); --corner-ink: var(--nav-ink); --cv-bg: var(--nav-hl); --cv-ink: var(--nav-hl-ink); --social-ink: var(--nav-ink); }
   .intro-card .links4 a:hover { background: rgba(0, 0, 0, .08); } /* the links' hover, dark on the light plate */
   .intro-card .cut4 .me4 { box-shadow: 0 0 0 1px rgba(0, 0, 0, .14), inset 0 1px 0 rgba(255, 255, 255, .3); } /* the disc's ring, dark on the plate */
