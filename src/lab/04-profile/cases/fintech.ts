@@ -70,8 +70,8 @@ export const fintech: Case = {
       { k: 'simpick' },
       { k: 'h', t: 'Success states' },
       { k: 'successes', of: [
-        { wide: true, chip: 'Zaakpay', h: 'Payment confirmed, on desktop', m: { k: 'media', shape: 'video', label: 'Zaakpay payment on desktop: the rupee coin flying while the payment is confirmed, then launching into the success mark', lottie: `${A}/coin-payment.lottie`, bg: '#fcfcfe' },
-          p: ['While the payment is confirmed, a rupee coin flies over the road. When it goes through, the coin winds up, launches into the distance and becomes the tick — the wait and the win as one motion. Built as a Lottie state machine, so the loading loop hands over to the success whenever the payment goes through.'] },
+        { wide: true, chip: 'Zaakpay', h: 'Payment confirmed, on desktop', machine: true,
+          p: ['While the payment is confirmed, a rupee coin flies over the road. When it goes through, the coin winds up, launches into the distance and becomes the tick — the wait and the win as one motion. A Lottie state machine: the loading loop runs until the payment is confirmed, then hands over to the success. Confirm it yourself, or wait for it; the switch shows the machine behind it.'] },
         { chip: 'UPI pinless', h: 'Face ID payments switched on', m: { k: 'media', shape: 'phone', label: 'UPI pinless: the fingerprint turning into a shield and tick, then the account to activate', src: `${A}/upi-pinless.mp4`, poster: `${A}/upi-pinless-poster.webp` },
           p: ['Enabling pinless UPI payments: the fingerprint resolves into a shield and a tick, then the sheet rises to pick the account to activate Face ID on.'] },
         { chip: 'Lens Pro', h: 'Benefits unlocked', m: { k: 'media', shape: 'phone', label: 'A rocket lifting off into the congratulations', bg: '#03301a', layers: [{ kind: 'lottie', src: `${A}/rocket-success.lottie`, box: [-5.714, 0, 111.429, 100] }] },

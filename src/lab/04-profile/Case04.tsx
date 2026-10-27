@@ -431,12 +431,61 @@ function SimPick() {
   );
 }
 
-function Successes({ of }: { of: { m: Media; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean }[] }) {
+/* the Zaakpay payment as a state machine (27 Oct, Nitish: "put the triggers also in this… while loading is being played, the
+   loading is highlighted. When the success triggers, the success gets highlighted. And it can also be controlled with an
+   input… a switch that if I switch it, I can see the state machine design done on Lottie"): his coin Lottie carries its
+   states as markers — loading 0–170 (a loop), bridge 171–188, success 189–459 — so it plays as the app plays it: the
+   loading loop until the payment is confirmed, then the bridge and the success once, held, then round again. The trigger
+   is the button ("Confirm payment"), or the machine fires it on its own after a few loops. A strip under the screen
+   lights the state; a switch shows his state-machine map in the screen's place */
+const COIN_MAP: string | undefined = undefined; /* his map of the state machine, to come (a screenshot) */
+const COIN = { loading: [0, 170] as [number, number], bridge: [171, 188] as [number, number], success: [189, 459] as [number, number] };
+type CoinState = keyof typeof COIN;
+function CoinMachine({ map }: { map?: string }) {
+  const box = useRef<HTMLDivElement>(null);
+  const inView = useInView(box, .25);
+  const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [state, setState] = useState<CoinState>('loading');
+  const [showMap, setShowMap] = useState(false);
+  const [armed, setArmed] = useState(false); /* the payment confirmed: the loop hands over at its end */
+  const loops = useRef(0); const timer = useRef(0);
+  const segment = COIN[state];
+  const onComplete = useCallback(() => {
+    setState(st => {
+      if (st === 'loading') { loops.current += 1; if (armed || loops.current >= 3) { setArmed(false); loops.current = 0; return 'bridge'; } return 'loading'; }
+      if (st === 'bridge') return 'success';
+      return st;
+    });
+  }, [armed]);
+  useEffect(() => { if (state !== 'success') return; timer.current = window.setTimeout(() => setState('loading'), 2200); return () => clearTimeout(timer.current); }, [state]);
+  const confirm = () => { if (state === 'loading') setArmed(true); };
+  const A = '/cases/fintech';
+  return (
+    <div ref={box} className={`cs4-coin${showMap ? ' map' : ''}`}>
+      <div className="cs4-coin-screen">
+        {showMap && map
+          ? <img className="cs4-coin-map" src={map} alt="The state machine: loading, bridge and success, with their triggers" />
+          : <Lottie className="cs4-lot" src={`${A}/coin-payment.lottie`} loop={false} segment={segment} playing={inView && !reduce} onComplete={onComplete} />}
+      </div>
+      <div className="cs4-coin-bar">
+        <ol className="cs4-coin-states" aria-label="The states">
+          {(['loading', 'bridge', 'success'] as CoinState[]).map((st, i) => <><li key={st} className={state === st ? 'on' : ''}>{st === 'loading' ? 'Loading' : st === 'bridge' ? 'Hand-over' : 'Success'}</li>{i < 2 && <i key={st + '-to'} aria-hidden="true">→</i>}</>)}
+        </ol>
+        <div className="cs4-coin-acts">
+          <button type="button" className="cs4-coin-btn" onClick={confirm} disabled={state !== 'loading' || armed || showMap}>{armed ? 'Confirming…' : 'Confirm payment'}</button>
+          {map && <label className="cs4-coin-switch"><input type="checkbox" checked={showMap} onChange={e => setShowMap(e.target.checked)} /><span className="track" aria-hidden="true"><i /></span><span>State machine</span></label>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Successes({ of }: { of: { m?: Media; machine?: boolean; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean }[] }) {
   return (
     <div className="cs4-sx">
       {of.map((x, i) => (
         <div key={i} className={`cs4-sx-item${x.wide ? ' wide' : ''}${x.top ? ' top' : ''}`}>
-          <Fig m={x.m} />
+          {x.machine ? <CoinMachine map={COIN_MAP} /> : x.m && <Fig m={x.m} />}
           <div className="cs4-sx-text"><span className="cs4-faq-label">{x.chip}</span><h4 className="cs4-sub">{x.h}</h4>{x.p && <p className="cs4-p">{text(x.p)}</p>}{x.ul && <ul className="cs4-ul">{x.ul.map((it, k) => <li key={k}>{text(it)}</li>)}</ul>}</div>
         </div>
       ))}
@@ -691,6 +740,7 @@ function Render({ b }: { b: Block }) {
     );
     case 'machine': return <BMachine />;
     case 'simpick': return <SimPick />;
+    case 'coinmachine': return <CoinMachine map={b.map} />;
     case 'fintech': return <Fintech3D />;
     case 'launches': return <Launches3D />;
   }

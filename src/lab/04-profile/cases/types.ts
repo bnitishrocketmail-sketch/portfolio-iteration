@@ -42,7 +42,7 @@ export type Block =
   | { k: 'loaders'; of: { label: string; cap: string; ground?: string; lottie: string; box: [number, number, number, number]; title: string; sub?: string; at: number; dots?: boolean; tone?: 'dark'; feather?: boolean /* its box's edges faded: a comp whose glows run to its edges */ }[] }
   /* success states, each in its panel: the screen and what it is — a chip (its product), a heading, a line or two; `wide`
      for a desktop screen, which takes the row */
-  | { k: 'successes'; of: { m: Media; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean /* the media over the words, a pair side by side (the AR study's loading and success Lotties) */ }[] }
+  | { k: 'successes'; of: { m?: Media; machine?: boolean /* the coin's state machine (CoinMachine) in the media's place */; chip: string; h: string; p?: Rich; ul?: Rich[]; wide?: boolean; top?: boolean /* the media over the words, a pair side by side (the AR study's loading and success Lotties) */ }[] }
   /* a recording in a phone with a list beside it that keeps time with it (the Hustlr highlights, 26 Oct; Synced in
      Case04.tsx): each item lights from its second (`t`) to the next's — its view as a small picture (`thumb`), a name, a
      line; a tap plays the recording from there */
@@ -73,6 +73,10 @@ export type Block =
      bank account from — the UPI set-up page blurred behind a bottom sheet with the two SIMs floating (his idle Lottie), then
      on a tap the pick, the fetch and the verified tick (his flow Lottie) with the sheet's words following each state */
   | { k: 'simpick' }
+  /* the coin's payment as a state machine (27 Oct; CoinMachine in Case04.tsx): the Lottie plays its loading loop, then the
+     bridge and the success when the payment is confirmed (a trigger: the button, or on its own after a while), the state
+     lit in a strip; a switch shows the state machine itself — his map of it (`map`), a picture */
+  | { k: 'coinmachine'; map?: string }
   | { k: 'fintech' } | { k: 'launches' };
 export type Section = { id: string; title: string; blocks: Block[]; tone?: 'white' /* a white card, for a clip whose own background is white (the floating phone) */ };
 export type Case = {

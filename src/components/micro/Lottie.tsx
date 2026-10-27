@@ -81,18 +81,20 @@ function toBase64(bytes: Uint8Array): string {
 type Layer = { nm?: string; ty?: number; refId?: string };
 type Anim = { layers: Layer[]; assets?: { id: string; p?: string; u?: string; e?: number }[]; fonts?: { list?: { fName?: string; fPath?: string; origin?: number }[] } };
 
-export function Lottie({ src, className, loop = true, speed = 1, still = 0, label, drop, viewBox, effects = false, playing = true, onFrame, onComplete }: {
+export function Lottie({ src, className, loop = true, speed = 1, still = 0, label, drop, viewBox, effects = false, playing = true, onFrame, onComplete, segment }: {
   src: string; className?: string; loop?: boolean; speed?: number; still?: number; label?: string;
   drop?: (layer: Layer) => boolean; viewBox?: string; effects?: boolean;
   playing?: boolean; /* false holds it on its still frame (the Lab's thumbs: one plays at a time) */
   onFrame?: (frame: number) => void; /* each frame drawn, with its number (a screen that changes its words with the animation's state) */
   onComplete?: () => void; /* a run through, when not looping */
+  segment?: [number, number] | null; /* a state machine's state: the frames to loop, played at once (the segment ends and the next is set from onComplete / onFrame) */
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const animRef = useRef<AnimationItem | null>(null);
   const play = playing && !reduce;
   useEffect(() => { const a = animRef.current; if (!a) return; if (play) a.play(); else a.goToAndStop(still, true); }, [play, still]);
+  useEffect(() => { const a = animRef.current; if (!a || !segment) return; a.playSegments([segment[0], segment[1]], true); if (!play) a.pause(); }, [segment, play]);
   useEffect(() => {
     const el = ref.current; if (!el) return;
     let anim: AnimationItem | undefined, gone = false;
@@ -111,9 +113,10 @@ export function Lottie({ src, className, loop = true, speed = 1, still = 0, labe
       if (onFrame) anim.addEventListener('enterFrame', () => { if (anim) onFrame(anim.currentFrame); });
       if (onComplete) anim.addEventListener('complete', onComplete);
       animRef.current = anim;
-      if (!play) anim.addEventListener('DOMLoaded', () => anim?.goToAndStop(still, true));
+      if (segment) anim.addEventListener('DOMLoaded', () => { anim?.playSegments([segment[0], segment[1]], true); if (!play) anim?.pause(); });
+      else if (!play) anim.addEventListener('DOMLoaded', () => anim?.goToAndStop(still, true));
     }).catch(err => console.warn(err)); /* a failed load leaves the card's label in place */
     return () => { gone = true; animRef.current = null; anim?.destroy(); };
-  }, [src, loop, speed, still, reduce, drop, viewBox, effects, onFrame, onComplete]);
+  }, [src, loop, speed, still, reduce, drop, viewBox, effects, onFrame, onComplete]); // eslint-disable-line react-hooks/exhaustive-deps -- `segment` is applied by its own effect; a change must not rebuild the player
   return <div ref={ref} className={className} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} />;
 }
