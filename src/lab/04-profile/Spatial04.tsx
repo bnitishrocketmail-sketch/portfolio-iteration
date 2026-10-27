@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 
 /* The intro picture as a spatial scene (Nitish, 23 Oct: "the iOS effect where tilting the phone moves the background and
    the foreground, a little 3D look"). It is Apple's Spatial Scenes (iOS 26): a depth map estimated from one photo, the
@@ -117,8 +117,14 @@ void main(){
 /* one picture drawn with the warp; `tilt` is shared, so the picture and the cutout move as one */
 export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, alt, k = K, fs = FS, focus = FOCUS }: { src: string; depth: string; plate?: string; layers?: string; fg?: string; fgn?: string; fs?: string; focus?: number; tilt: RefObject<Tilt>; className: string; alt: string; k?: number }) {
   const cv = useRef<HTMLCanvasElement>(null);
+  /* the still under the canvas until the textures are up (27 Oct, Nitish: coming back to the home tab "the center image
+     takes a bit of time to load… a few milliseconds"): the canvas is clear until its pictures are loaded and uploaded,
+     which on a return to the tab is a few frames of nothing; the plain picture, which the browser has, shows at once in
+     its place and goes when the canvas draws (the cut-out of him too — its warped copy would double it otherwise) */
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     const c = cv.current; if (!c) return;
+    setReady(false);
     const gl = c.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false }); if (!gl) return;
     const sh = (type: number, s: string) => { const o = gl.createShader(type)!; gl.shaderSource(o, s); gl.compileShader(o); return o; };
     const pr = gl.createProgram()!; gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
@@ -141,9 +147,12 @@ export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, 
       gl.uniform2f(uOff, t.x * k, t.y * k * (iw / ih) * .6); /* up and down a little less than side to side */
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
-    Promise.all([load(src), load(depth), layers && fg ? load(layers) : null, layers && fg ? load(fg) : null, plate && layers && fg && fgn ? load(plate) : null, plate && layers && fg && fgn ? load(fgn) : null]).then(([a, b, e, f, c, n]) => { iw = a.naturalWidth; ih = a.naturalHeight; tex(0, a); tex(1, b); if (e && f) { tex(3, e); tex(4, f); } if (c && n) { tex(2, c); tex(5, n); } ready = true; }).catch(() => {});
+    Promise.all([load(src), load(depth), layers && fg ? load(layers) : null, layers && fg ? load(fg) : null, plate && layers && fg && fgn ? load(plate) : null, plate && layers && fg && fgn ? load(fgn) : null]).then(([a, b, e, f, c, n]) => { iw = a.naturalWidth; ih = a.naturalHeight; tex(0, a); tex(1, b); if (e && f) { tex(3, e); tex(4, f); } if (c && n) { tex(2, c); tex(5, n); } ready = true; setReady(true); }).catch(() => {});
     size(); const ro = new ResizeObserver(size); ro.observe(c); raf = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(raf); ro.disconnect(); gl.getExtension('WEBGL_lose_context')?.loseContext(); };
   }, [src, depth, plate, layers, fg, fgn, tilt, k, fs, focus]);
-  return <canvas ref={cv} className={className} role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true} />;
+  return <>
+    {!ready && <img className={className} src={src} alt="" aria-hidden="true" draggable={false} />}
+    <canvas ref={cv} className={className} role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true} />
+  </>;
 }

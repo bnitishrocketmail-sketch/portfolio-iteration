@@ -358,7 +358,9 @@ export default function Iteration04() {
             <Workflow04 />
           </motion.div>
         ) : (<>
-        <div className="picwrap4" ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean}>
+        {/* the home's two containers arrive as the other tabs' pages do — a short fade, lifting a little (27 Oct, Nitish:
+            coming back to Home "the white background… just appears just like that… adding a little fade in can work") */}
+        <motion.div className="picwrap4" ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
           <section className={`pic4${picV === 'illo-bw' ? ' bw' : ''}`}> {/* the picture's version (22 Oct): the drawing, the drawing in black and white, or the photo — a control */}
             <div className="pic4-in" style={clip ? { clipPath: clip } : undefined}>
               {depthOn
@@ -419,10 +421,10 @@ export default function Iteration04() {
             <p className="sub4">I design feedback{'\u00a0'}rich interfaces powered by motion.</p>
             <a className="cv4" href={LINKS.cv}>View CV <Arrow04 out /></a>
           </div>
-        </div>
+        </motion.div>
 
         {/* the right column: the lo-fi's widgets — a pill, the three stacked cards, Off duty fanned */}
-        <aside className="col4" ref={colRef}>
+        <motion.aside className="col4" ref={colRef} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
           <div className="pill4">
             <h2 className="h2-4">Projects</h2>
             <button type="button" className="seeall4" onClick={() => go('projects')}>See all <span aria-hidden="true">→</span></button> {/* the phone only (24 Oct): a row that scrolls sideways gets an app's "See all", to the Projects tab */}
@@ -432,7 +434,7 @@ export default function Iteration04() {
           <i className="sep4" aria-hidden="true" /> {/* the separation between the two sections: whatever the column has left */}
           <div className="pill4 off"><h2 className="h2-4">Off duty</h2></div> {/* the heading outside the box, an H2 like Projects (Nitish, 21 Oct) */}
           <section className="off4"><PhotoStack fan tints={GREYS} caption /></section>
-        </aside>
+        </motion.aside>
         </>)}
       </div>
       {/* the design system — the type, the colours, the cards' places, in both modes, with their controls — is its own page */}
