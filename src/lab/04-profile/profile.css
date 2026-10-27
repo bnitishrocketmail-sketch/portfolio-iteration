@@ -301,17 +301,20 @@
      between it and the plate's edge on its left and between it and the picture on its right; the column's track and the
      tiles' places are untouched, the picture takes the gap's width, and the gap to the right column is kept as the
      picture's margin. The plate runs left over the column to its left edge (.053 of the frame's width), one shape with
-     the system's corners, and the bar's own capsule and shadow step aside. The other tabs keep the bar as it is. */
+     the system's corners, and the bar's own capsule and shadow step aside — on every tab (27 Oct, Nitish: on the other
+     pages "the nav bar used to disappear, and… the icons were floating… with the select states as well… that looked
+     pretty cool"): on Projects, Workflow, Lab and Notes the tiles and the selection sit on the frame, no bar. */
   .intro-card .frame4:has(.picwrap4) { column-gap: 0; }
   .intro-card .frame4:has(.picwrap4) .picwrap4 { margin-right: calc(.016 * var(--fw)); }
-  .intro-card .frame4:has(.picwrap4) .navcol4 { background: none; box-shadow: none; }
+  .intro-card .navcol4 { background: none; box-shadow: none; }
   .intro-card .picwrap4 { --name-ink: var(--nav-ink); --line-ink: var(--nav-ink); --corner-ink: var(--nav-ink); --cv-bg: var(--nav-hl); --cv-ink: var(--nav-hl-ink); --social-ink: var(--nav-ink); }
   .intro-card .links4 a:hover { background: rgba(0, 0, 0, .08); } /* the links' hover, dark on the light plate */
   .intro-card .cut4 .me4 { box-shadow: 0 0 0 1px rgba(0, 0, 0, .14), inset 0 1px 0 rgba(255, 255, 255, .3); } /* the disc's ring, dark on the plate */
-  /* the corner bracket lifted into the content (27 Oct, Nitish: "lift it upwards and align it with the same spacing of
-     left and bottom with the text"): its left leg on the text's left edge and its bottom leg on the content's bottom
-     line — the cut-out's own padding either way — so it frames the content's corner, not the tile's */
-  .intro-card .cut4 .corner4 { left: 1.6cqw; bottom: 1.5cqw; }
+  /* the corner bracket lifted (27 Oct, Nitish: "lift it upwards and align it with the same spacing of left and bottom
+     with the text"; then: "from the bottom alignment, it is fine, but from the left side, let's align it from the
+     container"): its bottom leg on the content's bottom line (the CV pill's foot, the cut-out's padding up), its left
+     leg on the cut-out's left edge, where the tile's corner would be, as before */
+  .intro-card .cut4 .corner4 { bottom: 1.5cqw; }
 }
 /* the corner bracket: a short 2.5px stroke along the blank area's bottom and left edges — where the tile's corner would
    be — turning the corner with the tile's radius; its legs run 12px past the curve, no further, and end in round caps
