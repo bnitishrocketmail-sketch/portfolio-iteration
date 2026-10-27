@@ -37,6 +37,16 @@ import './profile.css';
    reference is yellow; the dark grey stays. Decisions and placeholders: LOG.md, "04 Profile". */
 
 type Tab = Exclude<ViewName, 'project'>;
+/* a tab's container arriving and leaving (27 Oct): in over .32 s lifting from 8 px down, out over .18 s; the two cross-fade */
+const PAGE_IN = { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, transition: { duration: .18 } }, transition: { duration: .32, ease: [.3, 1, .4, 1] as const } };
+/* the spatial picture's WebGL canvases come back from the home's fade-in without their tile's clip (27 Oct, Chromium: the
+   picture painted over the name's cut-out and the plate; a fresh load is fine, as the canvases first draw after the
+   entrance). Taking the container out of the layout and putting it back in one step, once the entrance has finished,
+   rebuilds its layers with the clip — nothing is painted in between */
+function relayer(el: HTMLElement | null) { if (!el) return; el.style.display = 'none'; void el.offsetWidth; el.style.display = ''; }
+/* the home's containers, which stay mounted: shown (visible at once, then in as a page), or hidden (out over .18 s, then invisible) */
+const HOME_IN = { initial: { opacity: 0, y: 8 }, animate: { visibility: 'visible' as const, opacity: 1, y: 0 }, transition: { duration: .32, ease: [.3, 1, .4, 1] as const } };
+const HOME_OUT = { initial: false as const, animate: { opacity: 0, y: 8, transitionEnd: { visibility: 'hidden' as const } }, transition: { duration: .18 } };
 /* photo placeholders: close mid-greys, so in the fan the depth comes from the shading, not from the tints */
 const GREYS: [string, string][] = [['var(--g5)', 'var(--g3)'], ['var(--g5)', 'var(--g4)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g3)'], ['var(--g6)', 'var(--g4)'], ['var(--g5)', 'var(--g4)']];
 
@@ -273,6 +283,14 @@ export default function Iteration04() {
   /* the Motion system has no nav entry (20 Oct: a Lab project) but keeps its route; while it is open the nav shows Lab */
   const tab: Tab = (NAV.some(n => n.id === view) || view === 'motion' ? view : 'home') as Tab;
   const navTab: Tab = tab === 'motion' ? 'lab' : tab;
+  const home = tab === 'home';
+  /* once the home has faded out it leaves the layout too (display none, a class): with it only invisible, Chromium brought
+     the spatial picture's WebGL canvases back without their tile's clip on a return (27 Oct: the picture painted over the
+     name's cut-out and the plate); taken out and put back, the layers are rebuilt with the clip, as on a fresh load */
+  const [settled, setSettled] = useState<Tab | null>(null); /* the tab the home finished fading out under */
+  useEffect(() => { if (home) setSettled(null); }, [home]);
+  const gone = !home && settled !== null && settled !== 'home';
+  const tabRef = useRef(tab); tabRef.current = tab;
   const go = (v: ViewName, id?: string) => { if (v === 'project' && id) { navigate(`/lab/04-profile/projects/${id}`); return; } if (v === 'lab' && id) { navigate(`/lab/04-profile/lab/${id}`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
      mode change, and when the system page writes them from another tab */
@@ -318,7 +336,7 @@ export default function Iteration04() {
   /* after the button's own click has finished bubbling — the island closes on any click outside itself */
 
   return (
-    <div className={`it04${isDark ? '' : ' light'}${glass ? ' glassframe' : ''}${ios ? ' ios' : ''}${edge !== 'off' ? ' edgelit' : ''}${introCard ? ' intro-card' : ''}${plateDark ? ' plate-dark' : ''}${navFloat ? ' nav-float' : ''}`} style={{ '--gx': GOLD_RECT.x, '--gy': GOLD_RECT.y, '--gw': GOLD_RECT.w, '--gh': GOLD_RECT.h, ...tweaks } as React.CSSProperties}>
+    <div className={`it04${isDark ? '' : ' light'}${glass ? ' glassframe' : ''}${ios ? ' ios' : ''}${edge !== 'off' ? ' edgelit' : ''}${introCard ? ' intro-card' : ''}${plateDark ? ' plate-dark' : ''}${navFloat ? ' nav-float' : ''}${home ? ' home' : ''}`} style={{ '--gx': GOLD_RECT.x, '--gy': GOLD_RECT.y, '--gw': GOLD_RECT.w, '--gh': GOLD_RECT.h, ...tweaks } as React.CSSProperties}>
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${picV === 'photo' ? desk : illustration})`, filter: picV === 'illo-bw' ? `blur(${glass ? 14 : 44}px) brightness(${glass && isDark ? .66 : isDark ? .45 : 1.02}) grayscale(1)` : undefined }} />
       <div className="frame4" ref={frameRef}>
         <span className="edge4" aria-hidden="true" /> {/* the edge light (profile.css, 23 Oct) */}
@@ -333,36 +351,44 @@ export default function Iteration04() {
             area at its bottom-left — the name, the title, the line, the CV, the photo — is not part of it but the frame
             showing through a corner cut out of the tile (Nitish, 13 Oct). So the tile is clipped to that shape and casts its
             shadow as that shape — onto the frame around it and onto the cut-out area — and the cut-out sits beside it. */}
+        {/* the tabs cross-fade (27 Oct, Nitish: the plate "disappears" at once on leaving Home): the old container fades out
+            as the new one fades in, lifting a little — AnimatePresence holds the leaving one in place (popLayout) for its
+            .18 s, so the frame is never empty between the two */}
+        <AnimatePresence mode="popLayout">
         {tab === 'projects' ? (
           /* the project page takes the picture's and the column's place (Projects04.tsx); the nav stays */
-          <motion.div key={pid ? `case-${pid}` : 'projects'} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+          <motion.div key={pid ? `case-${pid}` : 'projects'} className="page4" {...PAGE_IN}>
             {pid ? <Case04 id={pid} card={tweaks[`--card-${pid}`]} back={() => go('projects')} onOpen={id => go('project', id)} /> : <Projects04 onOpen={id => go('project', id)} />}
           </motion.div>
         ) : tab === 'motion' ? (
           /* the motion system (Motion04.tsx), in the same place */
-          <motion.div key="motion" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+          <motion.div key="motion" className="page4" {...PAGE_IN}>
             <Motion04 />
           </motion.div>
         ) : tab === 'lab' ? (
           /* the experiments (Lab04.tsx); the Motion system's card opens its page */
-          <motion.div key={lid ? `lab-${lid}` : 'lab'} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+          <motion.div key={lid ? `lab-${lid}` : 'lab'} className="page4" {...PAGE_IN}>
             {/* the Lab is the Projects page with the Lab's list (23 Oct); the Motion system's arrow opens its page */}
             {lid ? <Case04 id={lid} items={LAB04} back={() => go('lab')} onOpen={id => (id === 'motion-system' ? go('motion') : go('lab', id))} />
               : <Projects04 items={LAB04} title="Lab" note="Experiments: the rigs, the plugin, the systems and the concepts, built to be played with." onOpen={id => (id === 'motion-system' ? go('motion') : go('lab', id))} />}
           </motion.div>
         ) : tab === 'articles' ? (
-          <motion.div key={tab} className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+          <motion.div key={tab} className="page4" {...PAGE_IN}>
             <Notes04 /> {/* the old site's recent articles, as Notes (23 Oct) */}
           </motion.div>
         ) : tab === 'workflow' ? (
           /* the "how I work" map (Workflow04.tsx), in the same place */
-          <motion.div key="workflow" className="page4" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+          <motion.div key="workflow" className="page4" {...PAGE_IN}>
             <Workflow04 />
           </motion.div>
-        ) : (<>
-        {/* the home's two containers arrive as the other tabs' pages do — a short fade, lifting a little (27 Oct, Nitish:
-            coming back to Home "the white background… just appears just like that… adding a little fade in can work") */}
-        <motion.div className="picwrap4" ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+        ) : null}
+        </AnimatePresence>
+        {/* the home's two containers stay mounted (27 Oct): they used to mount again on every return — two WebGL scenes
+            with their textures, six Lottie players — which held the main thread long enough to skip the fade; now they
+            fade out and go invisible (visibility, so the grid keeps its cells; the phone hides them outright) and fade back
+            in, as the other tabs' pages do (Nitish: coming back to Home "the white background… just appears just like
+            that… adding a little fade in can work"). They share the pages' cells, so the two cross-fade. */}
+        <motion.div className={`picwrap4${gone ? ' gone' : ''}`} ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean} {...(home ? HOME_IN : HOME_OUT)} onAnimationComplete={() => { if (tabRef.current !== 'home') setSettled(tabRef.current); else relayer(wrapRef.current); }}>
           <section className={`pic4${picV === 'illo-bw' ? ' bw' : ''}`}> {/* the picture's version (22 Oct): the drawing, the drawing in black and white, or the photo — a control */}
             <div className="pic4-in" style={clip ? { clipPath: clip } : undefined}>
               {depthOn
@@ -373,31 +399,31 @@ export default function Iteration04() {
                   in front, over his hair; each one's place and layer are tokens (the Edit panel moves them). They float, and
                   lean with the pointer by their depth. */}
               <div className="fl4 coin-card" data-depth=".5" style={{ '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
+                <div className="fl4-in"><Lottie className="coin" playing={home} src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
               </div>
               <div className="fl4 loader-card" data-depth=".6" style={{ '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
+                <div className="fl4-in"><Lottie className="lk" playing={home} src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
               </div>
               {depthOn
                 ? <DepthImg className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} depth={`${dd}${dn}.png`} layers={`${dd}${dn}-layers.png`} fg={`${dd}${dn}-fg.webp`} {...dfs} tilt={tilt} k={depthK} alt="" />
                 : <img className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} alt="" aria-hidden="true" />}
               <div className="fl4 ai-card" data-depth="1.3" style={{ '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
+                <div className="fl4-in"><Lottie className="bl" playing={home} src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
               </div>
               {/* the fifth card (Nitish, 13 Oct): the Gold membership reveal — the glass is padded to the rounded card inside the
                   Lottie (its canvas is laid with negative margins so that rectangle is the content box), and the confetti flies
                   past the glass; the Lottie's corners are its own */}
               <div className="fl4 gold-card" data-depth="1.15" style={{ '--dur': '6.1s', '--dl': '-3.8s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state animation</span></div>
+                <div className="fl4-in"><Lottie className="gm" playing={home} src={LOTTIES.gold} still={STILL.gold} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state animation</span></div>
               </div>
               {/* the sixth card (Nitish, 13 Oct): the persuasion animation, the whole canvas in the glass with the standard padding and
                   no rounding of its own */}
               <div className="fl4 pers-card" data-depth="1.2" style={{ '--dur': '6.6s', '--dl': '-.9s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects label="The persuasion animation" /><span className="cap">Persuasion animation</span></div>
+                <div className="fl4-in"><Lottie className="pa" playing={home} src={LOTTIES.persuasion} still={STILL.persuasion} effects label="The persuasion animation" /><span className="cap">Persuasion animation</span></div>
               </div>
               {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
               <div className="fl4 micro-card" data-depth="1.1" style={{ '--dur': '6.4s', '--dl': '-2.4s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="mli" src={LOTTIES.micro} still={STILL.micro} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></div>
+                <div className="fl4-in"><Lottie className="mli" playing={home} src={LOTTIES.micro} still={STILL.micro} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></div>
               </div>
               <div className="name4">
                 {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}
@@ -424,9 +450,8 @@ export default function Iteration04() {
             <a className="cv4" href={LINKS.cv}>View CV <Arrow04 out /></a>
           </div>
         </motion.div>
-
         {/* the right column: the lo-fi's widgets — a pill, the three stacked cards, Off duty fanned */}
-        <motion.aside className="col4" ref={colRef} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .32, ease: [.3, 1, .4, 1] }}>
+        <motion.aside className={`col4${gone ? ' gone' : ''}`} ref={colRef} {...(home ? HOME_IN : HOME_OUT)}>
           <div className="pill4">
             <h2 className="h2-4">Projects</h2>
             <button type="button" className="seeall4" onClick={() => go('projects')}>See all <span aria-hidden="true">→</span></button> {/* the phone only (24 Oct): a row that scrolls sideways gets an app's "See all", to the Projects tab */}
@@ -437,7 +462,6 @@ export default function Iteration04() {
           <div className="pill4 off"><h2 className="h2-4">Off duty</h2></div> {/* the heading outside the box, an H2 like Projects (Nitish, 21 Oct) */}
           <section className="off4"><PhotoStack fan tints={GREYS} caption /></section>
         </motion.aside>
-        </>)}
       </div>
       {/* the design system — the type, the colours, the cards' places, in both modes, with their controls — is its own page */}
       {/* the control centre (22 Oct, back from the first cut): a panel at the side of the page, with the way to the whole design-system page at its top */}

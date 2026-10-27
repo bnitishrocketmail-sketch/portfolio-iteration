@@ -23,7 +23,17 @@ import type { AnimationItem } from 'lottie-web';
    the right, a glow gone solid or a text mask failing, at random with load order). Each build gets its own prefix. */
 const player = (effects: boolean) => (effects ? import('lottie-web/build/player/lottie_svg') : import('lottie-web/build/player/lottie_light')).then(m => { m.default.setIDPrefix(effects ? 'lf' : 'll'); return m.default; });
 
-async function animationData(src: string): Promise<unknown> {
+/* a file's processed data is kept for the session (27 Oct: leaving and returning to the home tab mounted its six
+   floating cards again, and unzipping the packages and inlining their images as base64 — the gold card's confetti is
+   PNGs — took ~400 ms on the main thread each time, which froze the tab's cross-fade). Kept as a JSON string, parsed per
+   player (a few ms), since lottie-web writes into the data it is given. A failed load is not kept. */
+const dataCache = new Map<string, Promise<string>>();
+function animationData(src: string): Promise<unknown> {
+  let p = dataCache.get(src);
+  if (!p) { p = loadAnimationData(src).then(a => JSON.stringify(a)); p.catch(() => dataCache.delete(src)); dataCache.set(src, p); }
+  return p.then(s => JSON.parse(s));
+}
+async function loadAnimationData(src: string): Promise<unknown> {
   const res = await fetch(src); if (!res.ok) throw new Error(`Lottie ${res.status}: ${src}`);
   if (!/\.lottie(\?|$)/.test(src)) return res.json();
   const { unzipSync, strFromU8 } = await import('fflate');

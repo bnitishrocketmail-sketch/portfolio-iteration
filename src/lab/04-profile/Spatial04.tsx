@@ -115,6 +115,14 @@ void main(){
 
 
 /* one picture drawn with the warp; `tilt` is shared, so the picture and the cutout move as one */
+/* the scene's pictures, loaded once and kept (the picture, its depth map and layers: six files), so a return to the tab
+   uploads them without fetching and decoding again; a failed load is not kept */
+const imageCache = new Map<string, Promise<HTMLImageElement>>();
+function loadImage(u: string): Promise<HTMLImageElement> {
+  let p = imageCache.get(u);
+  if (!p) { p = new Promise<HTMLImageElement>((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = u; }); p.catch(() => imageCache.delete(u)); imageCache.set(u, p); }
+  return p;
+}
 export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, alt, k = K, fs = FS, focus = FOCUS }: { src: string; depth: string; plate?: string; layers?: string; fg?: string; fgn?: string; fs?: string; focus?: number; tilt: RefObject<Tilt>; className: string; alt: string; k?: number }) {
   const cv = useRef<HTMLCanvasElement>(null);
   /* the still under the canvas until the textures are up (27 Oct, Nitish: coming back to the home tab "the center image
@@ -132,7 +140,7 @@ export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, 
     const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
     const tex = (unit: number, im: HTMLImageElement) => /* layer masks must not be premultiplied (alpha is 1 there anyway) */ { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im); [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(w => gl.texParameteri(gl.TEXTURE_2D, w, gl.CLAMP_TO_EDGE)); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); };
-    const load = (u: string) => new Promise<HTMLImageElement>((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = u; });
+    const load = loadImage; /* the pictures kept for the session (27 Oct): a return to the home tab decoded them all again */
     let raf = 0, ready = false, iw = 1, ih = 1, last = '';
     const uBox = gl.getUniformLocation(pr, 'box'), uOff = gl.getUniformLocation(pr, 'off');
     gl.uniform1i(gl.getUniformLocation(pr, 'img'), 0); gl.uniform1i(gl.getUniformLocation(pr, 'dep'), 1); gl.uniform1i(gl.getUniformLocation(pr, 'plate'), 2); gl.uniform1i(gl.getUniformLocation(pr, 'lay'), 3); gl.uniform1i(gl.getUniformLocation(pr, 'fgc'), 4); gl.uniform1i(gl.getUniformLocation(pr, 'fgn'), 5); gl.uniform1f(gl.getUniformLocation(pr, 'mode'), layers && fg ? (plate && fgn ? 1 : 2) : 0); gl.uniform1f(gl.getUniformLocation(pr, 'focus'), focus);
