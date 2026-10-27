@@ -444,13 +444,17 @@ function SimPick() {
 /* the Zaakpay payment as a state machine (27 Oct, Nitish: "put the triggers also in this… while loading is being played, the
    loading is highlighted. When the success triggers, the success gets highlighted. And it can also be controlled with an
    input… a switch that if I switch it, I can see the state machine design done on Lottie"): his coin Lottie carries its
-   states as markers — loading 0–170 (a loop), bridge 171–188, success 189–459 — so it plays as the app plays it: the
+   states as markers — loading 0–227 (a loop), bridge 228–246, success 247–517 — so it plays as the app plays it: the
    loading loop until the payment is confirmed, then the bridge and the success once, held, then round again. The trigger
    is the button ("Confirm payment"), or the machine fires it on its own after a few loops. A strip under the screen
    lights the state; a switch shows the machine itself in the screen's place — his recording of it in Lottie Creator
-   (the preview over the state graph; the success input flipped, the states lighting up) */
+   (the preview over the state graph; the success input flipped, the states lighting up).
+   The loop is the coin's whole wobble (27 Oct): in his file the loading is four quarters of 57 frames, with a bridge off
+   the end of each; the earlier cut took three quarters and the third bridge, so the loop came round three-quarters of the
+   way through the tilt and snapped (and the blend that was then laid over the snap bent the coin as it tilted — the morph
+   he saw). It is now all four quarters — frame 228 is frame 0 again, to the number — and the bridge off the fourth. */
 const COIN_MAP = '/cases/fintech/coin-machine'; /* his recording of the state machine in Lottie Creator (27 Oct): the preview over the graph, the success input flipped — .mp4 and -poster.webp */
-const COIN = { loading: [0, 170] as [number, number], bridge: [171, 188] as [number, number], success: [189, 459] as [number, number] };
+const COIN = { loading: [0, 228] as [number, number], bridge: [228, 247] as [number, number], success: [247, 517] as [number, number] };
 type CoinState = keyof typeof COIN;
 function CoinMachine({ map }: { map?: string }) {
   const box = useRef<HTMLDivElement>(null);

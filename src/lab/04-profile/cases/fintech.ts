@@ -83,7 +83,6 @@ export const fintech: Case = {
         { label: 'Verifying documents: a scanner passing over the documents', cap: 'Verifying documents', lottie: `${A}/verify-docs.lottie`, box: [6.4, 26.7, 84.8, 29.35], feather: true, title: 'Verifying your documents. This could take up to 10 minutes.', sub: 'We will notify you once it’s ready', at: 55, dots: true },
         { label: 'Bank fetch: bank tiles running past while the app finds the user’s banks', cap: 'Bank fetch', ground: `${A}/bank-fetch-bg.webp`, lottie: `${A}/bank-fetch.lottie`, box: [-1.316, 0, 102.632, 100], title: 'Fetching your bank details', sub: 'This will only take a few seconds', at: 74, tone: 'dark' },
       ] },
-      { k: 'p', t: ['More work is being added.'] },
     ] },
   ],
 };
