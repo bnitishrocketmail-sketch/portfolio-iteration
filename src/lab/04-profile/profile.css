@@ -233,13 +233,13 @@
    the wall at the left and its "sh" on the wall at the right with his head over the middle; behind the cards (first of
    them) and him; black at 22%, so the wall reads a shade darker where it runs (the wall is ~#2f2e31, the strokes ~#252427).
    Tried at his head's height and narrower first: the head and the cards covered all but a few strokes */
-.fl4.sig-bg { left: var(--sig-x, 50%); top: var(--sig-y, 34%); width: var(--sig-w, 100%); z-index: 1; translate: -50% -50%; rotate: -6deg; color: #000; opacity: var(--sig-a, .22); pointer-events: none; }
+.fl4.sig-bg { inset: 0; z-index: 1; color: #000; opacity: var(--sig-a, .22); pointer-events: none; } /* a layer the picture's size; the drawing placed in it (the phone puts the layer in the picture's grid cell) */
+.sig-bg svg { position: absolute; left: var(--sig-x, 50%); top: var(--sig-y, 34%); width: var(--sig-w, 100%); height: auto; translate: -50% -50%; rotate: -6deg; }
 /* its place, size and weight are controls (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than
    what it is"): --sig-x / --sig-y the centre, --sig-w the width, all of the picture; --sig-weight added to each side of
    the strokes, in the drawing's units — below zero the mask's stroke takes it off, above it the shape's own stroke adds it */
 .sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, 0)) * 2px); }
 .sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, 0)) * 2px); }
-.sig-bg svg { display: block; width: 100%; height: auto; }
 .fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); display: var(--c-ai-v); } /* each card's place, layer (1 behind him, 3 in front) and whether it shows are tokens */
 .fl4.coin-card { left: var(--c-coin-x); top: var(--c-coin-y); z-index: var(--c-coin-z); display: var(--c-coin-v); }
 .fl4.loader-card { left: var(--c-loader-x); top: var(--c-loader-y); z-index: var(--c-loader-z); display: var(--c-loader-v); }
@@ -667,12 +667,18 @@
   .picwrap4 { --nm-fs: min(var(--t-h1), 8.2vw); display: grid; grid-template-columns: 24px minmax(0, 1fr) auto 24px; grid-template-areas: "pic pic pic pic" ". name me ." ". role me ." ". lede lede ." ". sub sub ." ". cv cv ."; padding-bottom: 28px; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; }
   .pic4, .pic4-in, .cut4 { display: contents; } .corner4 { display: none; }
   .pic4-img { grid-area: pic; position: relative; aspect-ratio: 1; height: auto; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); }
-  .pic4-img:not(.pic4-me) { -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, linear-gradient(#000 0 0); } /* the notch on the right edge: the pocket's shape (usePhoneNotch) taken out of the picture */
+  .pic4-img { -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, linear-gradient(#000 0 0); } /* the notch on the right edge: the pocket's shape (usePhoneNotch) taken out of the picture */
   .notch4 { pointer-events: none; } .notch4 .links4, .notch4 .island-wrap { pointer-events: auto; }
   .notch4 { aspect-ratio: 1; } /* the picture's square, so the links centre on it */
   .notch4 .links4 { position: absolute; right: 0; top: 50%; transform: translateY(-50%); flex-direction: column; gap: 2px; padding: 8px 6px; border-radius: 0; } /* the links stacked, centred on the picture's height */
   .notch4 .links4 a { width: 36px; height: 34px; } .notch4 .links4 a svg { width: 17px; height: 17px; } /* a finger's target; the notch's links only — the case pages' Let's talk card uses .links4 too (found 24 Oct: p172 had pulled its icons to the screen's edge) */
-  .pic4-me, .fl4 { display: none !important; } /* the floating Lotties come back later (his note, 24 Oct) */
+  .fl4:not(.sig-bg) { display: none !important; } /* the floating Lotties come back later (his note, 24 Oct) */
+  /* the signature on the wall here too (27 Oct, Nitish: "it's only there in desktop… in the phone layout, it's not
+     there"): its layer takes the picture's cell, clipped to it, and his cutout comes back over it (it went with the
+     floating cards, which needed it to sit behind him), masked with the picture's notch as the picture is */
+  .fl4.sig-bg { grid-area: pic; position: relative; inset: auto; aspect-ratio: 1; overflow: hidden; transform: none; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round);
+    -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, linear-gradient(#000 0 0); } /* the picture's notch out of it too */
+  .sig-bg svg { top: calc(var(--sig-y, 34%) + 10%); } /* the square crop shows the wall lower than the desktop's wide one: at the desktop's height it ran across the ring light; the same control, a tenth lower */
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
