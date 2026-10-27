@@ -282,6 +282,20 @@
 .cut4 { position: absolute; left: 0; bottom: 0; width: 40%; min-width: 250px; padding: 1.8cqw 1.8cqw 1.5cqw 1.6cqw; background: none; border-radius: 0 calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); z-index: 3;
   display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name me" "role me" "sub sub" "cv cv"; column-gap: 1cqw; row-gap: .5cqw; align-items: start; }
 .nm4 { grid-area: name; } .role4, .sig4 { grid-area: role; } .sub4 { grid-area: sub; } .cv4 { grid-area: cv; justify-self: end; }
+/* the light card version (27 Oct, Nitish: "give it a background, which is the lighter colour in our design system, near to
+   white… the content above it inverted, including the corner stroke… standard spacing with the edges of the… container
+   that holds my illustration"; a control, Intro picture → Name area): the cut-out keeps its shape, and a card the nav
+   bar's light grey (the system's light surface — the open project cards' too) sits in it, flush with the tile's bottom
+   and left, and in from the cut-out's inner edges by the frame's own gap — the air between the nav, the picture and the
+   column — so the picture's cut edges are as far from the card as the containers are from each other. The card's ink is
+   the nav's on the same grey; the CV pill goes dark with light text, as the nav's selected tile; the corner bracket, inside
+   the card's bottom-left corner, in the same ink. The card has the containers' shadow; the tile's still falls on it. */
+@media (min-width: 701px) {
+  .intro-card .cut4 { --cut-gap: calc(.016 * var(--fw)); padding: calc(var(--cut-gap) + 1.8cqw) calc(var(--cut-gap) + 1.8cqw) 1.5cqw 1.6cqw;
+    --name-ink: var(--nav-ink); --line-ink: var(--nav-ink); --corner-ink: var(--nav-ink); --cv-bg: var(--nav-hl); --cv-ink: var(--nav-hl-ink); }
+  .intro-card .cut4::before { content: ""; position: absolute; inset: var(--cut-gap) var(--cut-gap) 0 0; z-index: -1; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
+  .intro-card .cut4 .me4 { box-shadow: 0 0 0 1px rgba(0, 0, 0, .14), inset 0 1px 0 rgba(255, 255, 255, .3); } /* the disc's ring, dark on the light card */
+}
 /* the corner bracket: a short 2.5px stroke along the blank area's bottom and left edges — where the tile's corner would
    be — turning the corner with the tile's radius; its legs run 12px past the curve, no further, and end in round caps
    (a dot the stroke's width on each end) */
