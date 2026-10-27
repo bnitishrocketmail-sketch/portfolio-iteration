@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, LAB04, LINKS, NAV04 as NAV, PROJECTS04 as PROJECTS, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
@@ -161,17 +161,21 @@ function CavityBar({ w, h, x, y, cy }: { w: number; h: number; x: number; y: num
   );
 }
 
-/* the nav bar (27 Oct, Nitish: his reference — a dark bar of solid icons, the selected one on a rounded square): five
-   icons from one family (NavIcons04: Font Awesome solid — the house and the folder as his reference has them, the three
-   joined nodes, the flask, the page with lines), each on a square tile; the selection a rounded square in the nav
-   highlight's colour (ours, not the reference's teal) that slides to the tab on the spring the pill had. The words and
-   the signature are gone from the bar (the names stay for screen readers and as titles). The cavity version keeps
-   its ball, the icons stepping back when not selected */
+/* the nav bar (27 Oct, Nitish: his reference — a dark bar of solid icons, the selected one on a rounded square; then
+   "two of the icons, the home and the works one… take that as it is… consider the spacing around it in the select
+   state… center aligned… the corner radius based on our design system… a pill… sliding in from left to right… the name of
+   that icon"): five Heroicons (NavIcons04: the house and the folder read off his page, the share nodes, the beaker, the
+   document from the same set), each on a square tile at the reference's proportions — the icon 24 of the tile's 52, the
+   tile 52 of the bar's 92, 20 between tiles — the tile's corners the system's (--r × --ios-k, continuous), not the
+   reference's 14. The selection: the tile in the nav highlight's colour, sliding to the tab on the spring the pill had.
+   On hover a tag with the tab's name slides in from the bar's right edge and fades, as his page's does. The words and
+   the signature are gone from the bar. The cavity version keeps its ball, the icons stepping back when not selected */
 function Nav({ tab, go, cav }: { tab: Tab; go: (v: ViewName) => void; cav?: boolean }) {
   const reduce = useReducedMotion();
   const ulRef = useRef<HTMLUListElement>(null);
   const [boxes, setBoxes] = useState<Record<string, { top: number; height: number; width: number; left: number }> | null>(null);
   const [bar, setBar] = useState<{ w: number; h: number; x: number; y: number } | null>(null); /* the bar's box, from the list's corner (the cavity version draws the bar) */
+  const [hov, setHov] = useState<string | null>(null);
   useLayoutEffect(() => {
     const ul = ulRef.current; if (!ul) return;
     const measure = () => {
@@ -187,6 +191,7 @@ function Nav({ tab, go, cav }: { tab: Tab; go: (v: ViewName) => void; cav?: bool
   const box = boxes?.[tab] ?? null;
   const tile = box ? { top: box.top, height: box.height, width: box.width } : null;
   const tr = reduce ? { duration: 0 } : cav ? { duration: .34, ease: [.22, 1, .36, 1] as const } : NAV_SPRING;
+  const tag = reduce ? { duration: 0 } : { duration: .28, ease: [.22, 1, .36, 1] as const };
   return (
     <nav className={`nav4 icons${cav ? ' cav' : ''}`} aria-label="Sections">
       <ul ref={ulRef}>
@@ -195,10 +200,13 @@ function Nav({ tab, go, cav }: { tab: Tab; go: (v: ViewName) => void; cav?: bool
         {NAV.map(n => {
           const on = n.id === tab;
           return (
-            <li key={n.id} data-id={n.id}>
-              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} aria-label={n.label} title={n.label} onClick={() => go(n.id)}>
+            <li key={n.id} data-id={n.id} onMouseEnter={() => setHov(n.id)} onMouseLeave={() => setHov(h => (h === n.id ? null : h))}>
+              <button type="button" className={on ? 'on' : ''} aria-current={on ? 'page' : undefined} aria-label={n.label} onClick={() => go(n.id)} onFocus={() => setHov(n.id)} onBlur={() => setHov(h => (h === n.id ? null : h))}>
                 <NavIcon id={n.id} className="navico4" />
               </button>
+              <AnimatePresence>
+                {hov === n.id && <motion.span className="navtag4" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -6, transition: { duration: .16 } }} transition={tag} aria-hidden="true">{n.label}</motion.span>}
+              </AnimatePresence>
             </li>
           );
         })}
