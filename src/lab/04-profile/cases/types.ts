@@ -21,7 +21,7 @@ export type Block =
   | { k: 'stats'; title?: string; tone?: 'dark'; items: { n: string; l: string }[]; more?: Rich /* on hover the numbers give way to this (his page) */ }
   | { k: 'legend'; items: string[]; colors?: string[] }
   | { k: 'cols'; of: { h: string; p: Rich; ul?: Rich[] }[] }
-  | { k: 'flow'; steps: Step[] }
+  | { k: 'flow'; steps: Step[]; tight?: boolean /* single phones beside their words, closer (the snap-on flow) */ }
   /* one phone with the screens taking turns in it, the other two floating at its sides (the B study's hero) */
   | { k: 'carousel'; of: Media[] }
   /* his FAQ panel: a cut screen over the questions it drew, each under a label */

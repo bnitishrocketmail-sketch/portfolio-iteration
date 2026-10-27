@@ -124,6 +124,7 @@
 .cs4-step { display: grid; gap: var(--s2) var(--s4); align-items: start; grid-template-columns: minmax(0, 1fr); }
 .cs4-step .cs4-sub.step { grid-column: 1 / -1; text-align: center; }
 .cs4-step.with-text { grid-template-columns: 3fr 2fr; } .cs4-step.with-text .cs4-sub.step { text-align: left; }
+.cs4-flow.tight .cs4-step.with-text { grid-template-columns: minmax(0, 1fr) minmax(var(--ph-w), .9fr); column-gap: var(--s5); padding: 0 var(--s3); } /* a flow of single phones (the snap-on, 27 Oct): the words and the phone closer, the set in from the section's edges */
 .cs4-step.with-side { grid-template-columns: 1fr 1fr; }
 .cs4-screens { display: flex; justify-content: center; align-items: center; gap: var(--s5); min-width: 0; }
 .cs4-step.with-text .cs4-screens, .cs4-step.with-side .cs4-screens { justify-content: center; }
@@ -430,7 +431,7 @@
   .cs4-media, .cs4-faq-ui, .cs4-faq-card { border-radius: calc(calc(var(--r) - 8px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); }
   .cs4-fig.phone { width: min(100%, var(--ph-w)); } .cs4-fig.phone-land { width: min(100%, var(--ph-h)); }
   .cs4-phones { display: grid; grid-template-columns: repeat(2, minmax(0, var(--ph-w))); justify-content: center; gap: var(--s3) var(--s4); padding: 0; } .cs4-phones .cs4-fig.phone { width: 100%; } /* two to a row, each a phone's width, centred with air between */
-  .cs4-step.with-text, .cs4-step.with-side { grid-template-columns: 1fr; }
+  .cs4-step.with-text, .cs4-step.with-side, .cs4-flow.tight .cs4-step.with-text { grid-template-columns: 1fr; padding: 0; }
   .cs4-screens { flex-direction: column; gap: var(--s4); }
   .cs4-stats ul { grid-template-columns: 1fr 1fr; }   .cs4-legend { justify-content: flex-start; }
   .cs4-cols { grid-template-columns: 1fr; }

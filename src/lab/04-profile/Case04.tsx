@@ -437,7 +437,7 @@ function Converge({ of, to }: { of: Media[]; to: Media }) {
    its bottom, drops, sweeps across above the next heading and drops again to an open chevron just over the next
    screen; between two screens of one step a shorter S from a node in the first's lower right to the second's left
    edge. Measured after layout and on resize; drawn in the card's ink, faint, like his light grey on white. */
-function Flow({ steps }: { steps: Step[] }) {
+function Flow({ steps, tight }: { steps: Step[]; tight?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   /* a wire: its line (ending short of the head), its node on the screen's border, its head at the end, turned along the line */
   const [wires, setWires] = useState<{ d: string; node: [number, number]; head: [number, number, number] }[]>([]);
@@ -471,7 +471,7 @@ function Flow({ steps }: { steps: Step[] }) {
     draw(); const ro = new ResizeObserver(draw); ro.observe(root); root.querySelectorAll('[data-fl]').forEach(el => ro.observe(el)); return () => ro.disconnect();
   }, [steps]);
   return (
-    <div className="cs4-flow" ref={ref}>
+    <div className={`cs4-flow${tight ? ' tight' : ''}`} ref={ref}>
       <svg className="cs4-wires" width={size[0]} height={size[1]} viewBox={`0 0 ${size[0]} ${size[1]}`} aria-hidden="true">
         {wires.map((w, i) => (
           <g key={i}>
@@ -594,7 +594,7 @@ function Render({ b }: { b: Block }) {
         {b.of.map(c => <div key={c.h} className="cs4-col"><h4 className="cs4-sub">{c.h}</h4><p className="cs4-p">{text(c.p)}</p>{c.ul && <ul className="cs4-ul">{c.ul.map((it, i) => <li key={i}>{text(it)}</li>)}</ul>}</div>)}
       </div>
     );
-    case 'flow': return <Flow steps={b.steps} />;
+    case 'flow': return <Flow steps={b.steps} tight={b.tight} />;
     case 'carousel': return <Carousel of={b.of} />;
     /* his FAQ panel (rebuilt 23 Oct from his Framer page: "it doesn't look like UI, the questions lost the user icon,
        no space hygiene"): each step's screen whole, in a white screen card, then the questions it raised — a white card

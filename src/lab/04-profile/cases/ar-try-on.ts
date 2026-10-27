@@ -117,17 +117,27 @@ export const arTryOn: Case = {
         { t: 9.6, thumb: `${A}/h3-4.webp`, name: 'Temples', p: ['Rubberised temples for comfort and grip: the temple’s tip, from above.'] },
       ] },
     ] },
-    /* the snap-on skins (Nitish, 26 Oct, from his recording: "a snap-on skin for your glasses… visualizing that specific skin on
-       your selected glasses, and then adding that skin… in your cart. It just snaps on from the top"): the recording in a
-       phone, whole, with its four moments beside it; the stage's turns measured on the clip (the skin lands 3.0–3.3 s and
-       4.9–5.1 s; the kit's slot fills at 6.5 s) */
+    /* the snap-on skins (Nitish, 26–27 Oct: "a snap-on skin for your glasses… it just snaps on from the top"; then "we are
+       focusing on the flow and a bit on the interaction… create a PLP before it… where you can select the frame… add a
+       button, add a snap-on with a little picture… on the cart… how snap-on looks… with the frame"): three steps, wired
+       (Flow): the product page with the way in — a row under the frame's chips, the skin's picture, "Add a snap-on skin",
+       drawn into his Lenskart product page; the experience itself, his recording; the cart with the skinned frame in the
+       item, the skin as a line in it and in the bill, and the new total — drawn into his Lenskart cart */
     { id: 'snap-on', title: 'Snap-on skins: dress the frame you chose', blocks: [
-      { k: 'p', t: ['A ', { b: 'snap-on skin' }, ' is a printed cover that clips over the front of a Lenskart frame. On the product page you see it ', { b: 'on your own frame' }, ' before you buy: pick a skin from the row and it ', { b: 'snaps on from the top' }, '; add it to your set, and to the cart.'] },
-      { k: 'synced', full: true, src: `${A}/snap-on.mp4`, poster: `${A}/snap-on-poster.webp`, label: 'The product page: a clear frame, the row of skins, two of them snapping on, one added to the set', of: [
-        { t: 0, thumb: `${A}/sk-1.webp`, name: 'Your frame', p: ['The frame you chose, in its clear finish; the skins wait in the row below.'] },
-        { t: 2.95, thumb: `${A}/sk-2.webp`, name: 'Snap on', p: ['Tap a skin: it drops from above and settles over the front of the frame.'] },
-        { t: 4.85, thumb: `${A}/sk-3.webp`, name: 'Try another', p: ['Tap the next one and it takes the first one’s place: Chameleon, ₹1000.'] },
-        { t: 6.4, thumb: `${A}/sk-4.webp`, name: 'Add it', p: ['Tap plus and the skin takes a slot in your set, ready for the cart.'] },
+      { k: 'p', t: ['A ', { b: 'snap-on skin' }, ' is a printed cover that clips over the front of a Lenskart frame. The flow: from the frame’s product page into a try-on where the skin ', { b: 'snaps onto your frame' }, ', and on to the cart with both.'] },
+      { k: 'flow', tight: true, steps: [
+        { title: 'The way in, on the product page',
+          text: [{ k: 'p', t: ['Under the frame’s chips, a row with a skin’s picture: ', { b: 'Add a snap-on skin' }, ' — see it on this frame, from ₹1000. Tap it and the try-on opens with this frame already in place.'] }],
+          media: [{ k: 'media', shape: 'phone', label: 'The product page with the snap-on entry', cap: 'The product page: a row to add a snap-on', src: `${A}/snap-pdp.webp` }] },
+        { title: 'The try-on: a skin snaps onto your frame',
+          text: [
+            { k: 'p', t: ['Your frame sits at the top in its clear finish; the skins run in a row below. Tap one and it ', { b: 'drops from above and settles over the front' }, ' of the frame — the way a real snap-on clips on. Tap another and it takes the first one’s place.'] },
+            { k: 'p', t: ['Tap plus and the skin takes a slot in your set, with the total updating below. Every skin is tried on ', { b: 'the frame you chose' }, ', not a stock pair.'] },
+          ],
+          media: [{ k: 'media', shape: 'phone', label: 'The snap-on try-on, recorded', cap: 'Two skins snapped on, one added to the set', src: `${A}/snap-on.mp4`, poster: `${A}/snap-on-poster.webp` }] },
+        { title: 'The cart: the frame, with its skin',
+          text: [{ k: 'p', t: ['The item shows the frame ', { b: 'wearing the skin' }, ', with the skin as its own line under Frame + Lens; the bill carries it too, and the total adds it up.'] }],
+          media: [{ k: 'media', shape: 'phone', label: 'The cart with the skinned frame and the snap-on line', cap: 'The cart: Air POP in Chameleon, ₹1000 on the bill', src: `${A}/snap-cart.webp` }] },
       ] },
       { k: 'p', t: ['More work is being added.'] },
     ] },
