@@ -160,7 +160,7 @@
    to the bar's sides, to its rounded top (the pill's cap concentric with the bar's) and to the names before and after it —
    and the assistant's circle sits concentric in the bar's foot. The clearance is (bar − pill) / 2; padding and margins in
    % resolve against the bar's width, so it holds at every size. */
-.navcol4 { --pill-w: 33px; --tile-w: 56.5%; --tile-r: calc(var(--r) * .5); /* the tile's corner: the system's radius at the tile's scale (the reference's 14 of 52 is 27%; --r on a 40 tile would be a circle), with the system's continuous curve */ /* a name's line (13px) and its button's sides (10px each) */ --me-w: 48px; /* his photo's disc (22 Oct: bigger than the pill's width) */ display: flex; flex-direction: column; align-items: center; gap: 1cqh; padding: calc((100% - var(--tile-w)) / 2) 0 12%; /* the first tile as far from the top as from the sides (27 Oct: the tiles are the bar's own geometry now) */ border-radius: 999px; background: var(--nav-bg); box-shadow: var(--shadow-el); }
+.navcol4 { --pill-w: 33px; --tile-w: 56.5%; --tile-r: calc(var(--r) * .5); /* the tile's corner: the system's radius at the tile's scale (the reference's 14 of 52 is 27%; --r on a 40 tile would be a circle), with the system's continuous curve */ /* a name's line (13px) and its button's sides (10px each) */ --me-w: 48px; /* his photo's disc (22 Oct: bigger than the pill's width) */ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1cqh; padding: calc((100% - var(--tile-w)) / 2) 0; /* the tiles centred on the bar's height (27 Oct, Nitish: they started from the top; the assistant's button that held the foot is gone), the padding the tiles' own clearance either end */ border-radius: 999px; background: var(--nav-bg); box-shadow: var(--shadow-el); }
 .nav4 { width: 100%; }
 /* the icon bar (27 Oct): the reference's proportions — a 24 icon in a 52 tile, 20 of bar either side (92), 20 between
    tiles — carried as fractions of the bar's width: the tile 56.5%, the icon 46% of the tile, the tiles a third of a tile
@@ -187,11 +187,6 @@
 .lbl4 > span { display: block; position: relative; left: 1.5px; } /* sideways text sits a pixel off its box's centre */
 .hl4 { position: absolute; left: 50%; transform: translateX(-50%); box-sizing: border-box; border-radius: 999px; background: var(--nav-hl); color: var(--nav-hl-ink); z-index: 1; pointer-events: none; overflow: hidden; font: 500 13px/1 var(--f-copy); letter-spacing: .01em; display: grid; place-items: center; }
 .hltx4 { display: grid; place-items: center; }
-.ai4 { margin-top: auto; width: 76%; aspect-ratio: 1; border-radius: 50%; border: 0; background: none; color: var(--ai-bg); display: grid; place-items: center; cursor: pointer; transition: transform .2s; } /* no ground of its own (22 Oct): the mark in the dark the ground had */
-.ai4:hover { transform: translateY(-1px); } .ai4 svg { width: 48%; height: 48%; }
-.ai4 .blob4 { width: 100%; height: 100%; overflow: visible; } /* the assistant's mark (Blob4.tsx): the wavy ring with its name in the middle */
-.blob4 path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
-.blob4 text { font: 600 17px var(--f-copy); letter-spacing: .02em; fill: currentColor; }
 /* the first tab is his photo: a disc the pill's width; inside the pill it is a little smaller, the pill showing round it */
 .nav4 ul button.navme { padding: 0; width: var(--me-w); height: var(--me-w); }
 .nav4 .navme4, .hl4 .navme4 { grid-area: auto; width: var(--me-w); height: var(--me-w); box-shadow: none; background: var(--nav-bg); } /* the disc's own width (--me-w, navcol4), over .me4's own size and grid place */
@@ -521,7 +516,7 @@
   .it04.edgelit .frame4 { box-shadow: none; isolation: auto; } .it04.edgelit .edge4 { display: none; } /* no frame here, so no edge to light */
   /* the bar (Nitish, 19 Oct, styled from a recording of Instagram's): a dark pill, about 6.3 : 1, the icons white and
      outlined, the selected one filled on a lighter pill two-thirds of the bar's height; it blurs what passes behind it.
-     The desktop column (.nav4, .ai4) is hidden here; PhoneNav04 draws the phone's bar (PhoneNav04.tsx). */
+     The desktop column (.nav4) is hidden here; PhoneNav04 draws the phone's bar (PhoneNav04.tsx). */
   .it04 .navcol4, .it04 .navcol4:has(.nav4.cav), .it04 .navcol4:has(.nav4.sig) { --bar-h: 64px; --inset: 10px; position: fixed; z-index: 40; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(calc(100vw - 32px), 380px); height: var(--bar-h); padding: 0; gap: 0; border-radius: 999px;
     background: color-mix(in srgb, #121212 86%, transparent); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); /* the design's dark grey — the dark main container's #121212 (24 Oct, darker than the highlighter's #2f2e30), in both themes */
     box-shadow: 0 10px 28px -10px rgba(0, 0, 0, .55), 0 2px 6px -2px rgba(0, 0, 0, .2); --bar-rim: .52; }
@@ -571,7 +566,6 @@
   .it04.light .navcol4, .it04.light .navcol4:has(.nav4.cav), .it04.light .navcol4:has(.nav4.sig) { background: color-mix(in srgb, var(--nav-bg) 86%, transparent); box-shadow: 0 10px 28px -10px rgba(0, 0, 0, .3), 0 2px 6px -2px rgba(0, 0, 0, .12); --bar-rim: .75; }
   .it04.light .pn4 button { color: var(--nav-ink); } .it04.light .pn4 button.on { color: var(--nav-hl-ink); }
   .it04.light .pn4-pill { background: var(--nav-hl); }
-  .ai4 { display: none; }
   .tweaks4 { left: auto; right: 12px; top: calc(10px + env(safe-area-inset-top)); bottom: auto; } /* the dev chip, out of the bar's way */
   /* the intro (24 Oct, Nitish: "my name in one line; my profile picture in the ellipse on its right; the floating box's
      paragraph as a description below the name"): one container, the tile's grey — the picture on top, full bleed; then

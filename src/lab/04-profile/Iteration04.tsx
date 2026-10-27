@@ -20,7 +20,6 @@ import { usePhoneRims } from './PhoneRim04';
 import { sCorner, sysCurve } from './curve';
 import Case04 from './Case04';
 import Signature04 from './Signature04';
-import Blob4 from './Blob4';
 import { NavIcon } from './NavIcons04';
 import Fintech3D, { Launches3D } from './Fintech3D';
 import Motion04 from './Motion04';
@@ -31,8 +30,8 @@ import { SOCIAL } from './social';
 import './profile.css';
 
 /* Iteration 04 — "Profile". One screen, after the hi-fi reference (ref 5) with Nitish's changes (13 Oct) and the lo-fi
-   reference's right column (ref 4): a dark frame on the blurred picture; a narrow nav of names on the left with a travelling
-   highlighter and the assistant's button at its foot; the picture fills the middle, the assistant's notch hangs into it
+   reference's right column (ref 4): a dark frame on the blurred picture; a narrow nav of icons on the left with a travelling
+   highlighter (the assistant's button at its foot went on 27 Oct — not sure it is being built); the picture fills the middle, the assistant's notch hangs into it
    from the top, a line about him sits in the cutout at its bottom-left, his name in a glass box at its bottom-right; on
    the right, the projects as a stack of three cards, and Off duty as fanned cards. Greys where the
    reference is yellow; the dark grey stays. Decisions and placeholders: LOG.md, "04 Profile". */
@@ -275,7 +274,6 @@ export default function Iteration04() {
   const tab: Tab = (NAV.some(n => n.id === view) || view === 'motion' ? view : 'home') as Tab;
   const navTab: Tab = tab === 'motion' ? 'lab' : tab;
   const go = (v: ViewName, id?: string) => { if (v === 'project' && id) { navigate(`/lab/04-profile/projects/${id}`); return; } if (v === 'lab' && id) { navigate(`/lab/04-profile/lab/${id}`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
-  const [ask, setAsk] = useState(0);
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
      mode change, and when the system page writes them from another tab */
   const [tweaks, setTweaks] = useState<Record<string, string>>(() => readTweaks(isDark));
@@ -315,20 +313,17 @@ export default function Iteration04() {
   }, [tab]);
   const unlean = () => wrapRef.current?.querySelectorAll<HTMLElement>('.fl4').forEach(c => { c.style.setProperty('--px', '0px'); c.style.setProperty('--py', '0px'); });
   /* after the button's own click has finished bubbling — the island closes on any click outside itself */
-  useEffect(() => { if (!ask) return; const id = window.setTimeout(() => document.querySelector<HTMLButtonElement>('.it04 .island-pill')?.click(), 0); return () => window.clearTimeout(id); }, [ask]);
 
   return (
     <div className={`it04${isDark ? '' : ' light'}${glass ? ' glassframe' : ''}${ios ? ' ios' : ''}${edge !== 'off' ? ' edgelit' : ''}`} style={{ '--gx': GOLD_RECT.x, '--gy': GOLD_RECT.y, '--gw': GOLD_RECT.w, '--gh': GOLD_RECT.h, ...tweaks } as React.CSSProperties}>
       <div className="bg4" aria-hidden="true" style={{ backgroundImage: `url(${picV === 'photo' ? desk : illustration})`, filter: picV === 'illo-bw' ? `blur(${glass ? 14 : 44}px) brightness(${glass && isDark ? .66 : isDark ? .45 : 1.02}) grayscale(1)` : undefined }} />
       <div className="frame4" ref={frameRef}>
         <span className="edge4" aria-hidden="true" /> {/* the edge light (profile.css, 23 Oct) */}
-        {/* nav: the names, the highlighter travels; the assistant's button at the foot (ref 4's circle, moved down) */}
+        {/* nav: the icons, the highlighter travels, the tiles centred on the bar's height (27 Oct, Nitish: they started from
+            the top). The assistant's button that sat at the foot is gone (27 Oct: not sure it is being built) */}
         <div className="navcol4">
           <Nav tab={navTab} go={go} cav={tweaks['--nav-sel'] === 'cavity'} />
           <PhoneNav04 items={NAV} tab={navTab} go={go} photo={desk} />
-          <button type="button" className="ai4" aria-label="Ask the assistant" onClick={() => setAsk(a => a + 1)}>
-            <Blob4 /> {/* the assistant's wavy mark (22 Oct), in place of the sparkle */}
-          </button>
         </div>
 
         {/* the picture, with the notch hanging in from the top and the name box at the bottom-right, is the intro tile; the
