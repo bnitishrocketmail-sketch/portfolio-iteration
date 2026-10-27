@@ -292,7 +292,14 @@
    name, the signature, the line, the corner bracket (inside the plate's bottom-left corner) and the links in the notch;
    the CV pill dark with light text, the selected tile's pairing. The plate has the containers' shadow. */
 @media (min-width: 701px) {
-  .intro-card .picwrap4::before { content: ""; position: absolute; z-index: -1; inset: calc(var(--r) * var(--ios-k, 1) / 2 - 7px) 1px 1px calc(-.053 * var(--fw)); border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
+  .intro-card .picwrap4 { --plate-in: calc(var(--r) * var(--ios-k, 1) / 2 - 7px); } /* how far the plate's top and foot sit in from the tile's */
+  .intro-card .picwrap4::before { content: ""; position: absolute; z-index: -1; inset: var(--plate-in) 1px var(--plate-in) calc(-.053 * var(--fw)); border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--nav-bg); box-shadow: var(--shadow-el); }
+  /* the foot the same (27 Oct, Nitish: "reducing the same amount of height, but from the bottom also… the padding between
+     the bracket, the button and the bottom of the white background should not be reduced"): the plate's foot sits up from
+     the tile's by the same distance as its top sits down, so its bottom edge meets the cut-out's corner curve as its top
+     edge meets the tile's top-left; the cut-out's box rides up with it (its clip in the tile follows the box's top), so
+     the name, the CV pill and the bracket keep their padding to the plate's foot */
+  .intro-card .cut4 { bottom: var(--plate-in); }
   /* the plate's top (27 Oct, Nitish: where the plate meets the tile's corners "the shape at the most corner… it's looking
      a little weird… make this background a little shorter from the top… where half of the corner… completes"): the plate
      starts half the corner's height down (the corner as drawn: --r × the iOS factor), less 7 px (27 Oct, Nitish: "a

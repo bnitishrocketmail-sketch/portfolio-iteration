@@ -224,7 +224,7 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
     const w = wrap.current, c = cut.current, l = links.current; if (!w || !c || !l) return;
     const measure = () => {
       if (getComputedStyle(c).position !== 'absolute') { setClip(null); return; }
-      const W = w.clientWidth, H = w.clientHeight, cw = c.offsetWidth, ch = c.offsetHeight, r = parseFloat(getComputedStyle(c).borderTopRightRadius) || 0;
+      const W = w.clientWidth, H = w.clientHeight, cw = c.offsetWidth, ch = H - c.offsetTop, r = parseFloat(getComputedStyle(c).borderTopRightRadius) || 0; /* the cut runs from the box's top to the tile's foot: the box may sit up from the foot (the light plate version lifts it with the plate's own bottom, 27 Oct) */
       const wr = w.getBoundingClientRect(), lr = l.getBoundingClientRect(); const nx = lr.left - wr.left, nw = lr.width, nh = lr.height, rn = parseFloat(getComputedStyle(l).borderBottomLeftRadius) || 0;
       const { K } = sysCurve(w); /* the radii are already the system's (× --ios-k, computed); the curve too (24 Oct: they were round arcs) */
       const d = [
