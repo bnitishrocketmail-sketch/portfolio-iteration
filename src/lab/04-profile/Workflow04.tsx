@@ -74,9 +74,12 @@ const PINS = NODES.map(n => ({ id: n.id, ...POS2[n.id] }));
    with his placements held: Interaction design at the orb's left and Animation at its right, Motion design system
    under it, Lottie to the right with short straight lines, the model's steps in the top corners, Product at the foot.
    Each skill keeps its tools near it: Rive and Protopie under Interaction, After Effects and Lottie over Animation,
-   Figma, Code and Review round Product. The pills are all at the phone's Meta size (workflow.css) */
+   Figma, Code and Review round Product. The pills are all at the phone's Meta size (workflow.css).
+   Then three moves of his (27 Oct), each on one axis: Interaction design up so it sits just over the orb's top (its foot
+   8 px above it at 390), x kept; Code left so its right edge is on the orb's left edge (the line from Interaction down to
+   it stays straight), y kept; Figma right so its right edge is on the second t of "Prototype", y kept */
 const POS2_PHONE: Record<string, { x: number; y: number }> = {
-  brief: { x: 20.0, y: 7.3 }, ae: { x: 85.4, y: 21.9 }, build: { x: 91.2, y: 7.4 }, motion: { x: 85.5, y: 47.0 }, script: { x: 59.1, y: 10.1 }, rive: { x: 8.9, y: 69.1 }, lottie: { x: 76.3, y: 32.9 }, review: { x: 10.6, y: 92.4 }, interaction: { x: 18.8, y: 58.2 }, msys: { x: 79.0, y: 62.2 }, protopie: { x: 17.2, y: 80.8 }, handoff: { x: 79.0, y: 72.8 }, figma: { x: 58.7, y: 83.7 }, sm: { x: 46.0, y: 23.2 }, code: { x: 45.8, y: 68.5 }, product: { x: 44.0, y: 94.4 },
+  brief: { x: 20.0, y: 7.3 }, ae: { x: 85.4, y: 21.9 }, build: { x: 91.2, y: 7.4 }, motion: { x: 85.5, y: 47.0 }, script: { x: 59.1, y: 10.1 }, rive: { x: 8.9, y: 69.1 }, lottie: { x: 76.3, y: 32.9 }, review: { x: 10.6, y: 92.4 }, interaction: { x: 18.8, y: 39.2 }, msys: { x: 79.0, y: 62.2 }, protopie: { x: 17.2, y: 80.8 }, handoff: { x: 79.0, y: 72.8 }, figma: { x: 65.9, y: 83.7 }, sm: { x: 46.0, y: 23.2 }, code: { x: 31.6, y: 68.5 }, product: { x: 44.0, y: 94.4 },
 };
 const PINS_PHONE = NODES.map(n => ({ id: n.id, ...POS2_PHONE[n.id] }));
 /* who is wired to the orb: the tools (17 Oct, third pass — "let's do the opposite … the tools will now have the
