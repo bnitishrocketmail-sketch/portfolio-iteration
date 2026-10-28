@@ -26,6 +26,11 @@ const card = (id: string, name: string, x: string, y: string, z: string, v: stri
 /* the phone's defaults (profile.css :root): centre x, y (% of the square picture) and shown */
 const PH: Record<string, [string, string, string]> = { ai: ['17%', '64%', 'block'], loader: ['71%', '77%', 'block'], gold: ['27%', '30%', 'block'], pers: ['67%', '23%', 'none'], coin: ['66%', '33%', 'none'], micro: ['40%', '85%', 'none'] };
 
+/* the defaults are his desktop settings (28 Oct, Nitish: "These are the desktop layout values, and I want you to make them
+   default"): the name area open on the frame, the bar, the drawing in black and white, the depth pronounced, the name box
+   hidden, the coin hidden, the persuasion card behind him, the loader at 64 / 63%, the signature at 48 / 46%, 109% wide,
+   0.35 thinner, the edge light at 20°. The phone keeps what it had where these would have changed it (profile.css,
+   Iteration04.tsx) */
 export const CONTROLS: Control[] = [
   /* type */
   { group: 'Type', sub: 'Faces', kind: 'select', key: '--name-font', label: 'Headings (the name’s face)', def: "'Outfit'", light: "'Outfit'", options: FONTS },
@@ -66,16 +71,16 @@ export const CONTROLS: Control[] = [
   col('Controls and marks', '--social-ink', 'Social icons', '#a6a6a6', '#2f2e30'),
   col('Controls and marks', '--corner-ink', 'Corner bracket', '#bababa', '#2f2e30'),
   /* the intro's floating cards */
-  ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'block'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
-  ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '3', 'block'), ...card('loader', 'Loader', '60%', '59%', '1', 'block'),
+  ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'none'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
+  ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'),
   /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */
-  { group: 'Intro cards', sub: 'Name box (the one-liner)', kind: 'select', key: '--name-box-v', label: 'Shown', def: 'flex', light: 'flex', options: [['Shown', 'flex'], ['Hidden', 'none']] },
+  { group: 'Intro cards', sub: 'Name box (the one-liner)', kind: 'select', key: '--name-box-v', label: 'Shown', def: 'none', light: 'none', options: [['Shown', 'flex'], ['Hidden', 'none']] },
   /* the intro's picture (Nitish, 22 Oct): the drawing as it is, the drawing in black and white, or his photo — the cutout
      and the cards in front and behind the same in each */
-  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-v', label: 'Version', def: 'illo', light: 'illo', options: [['The drawing', 'illo'], ['The drawing, black and white', 'illo-bw'], ['The photo', 'photo']] },
+  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-v', label: 'Version', def: 'illo-bw', light: 'illo-bw', options: [['The drawing', 'illo'], ['The drawing, black and white', 'illo-bw'], ['The photo', 'photo']] },
   /* the picture as a spatial scene (23 Oct): the depth-map warp, or still; the layered version is to come */
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth', label: 'Depth', def: 'warp', light: 'warp', options: [['Depth-map warp', 'warp'], ['Still', 'off']] },
-  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth-k', label: 'Depth strength', def: 'subtle', light: 'subtle', options: [['Subtle, like iOS', 'subtle'], ['Pronounced', 'pronounced']] },
+  { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth-k', label: 'Depth strength', def: 'pronounced', light: 'pronounced', options: [['Subtle, like iOS', 'subtle'], ['Pronounced', 'pronounced']] },
   /* which build of the spatial picture: the latest, or the milestone — the first pronounced build (p147), frozen (23 Oct) */
   { group: 'Intro picture', sub: 'Picture', kind: 'select', key: '--pic-depth-ver', label: 'Depth build', def: 'latest', light: 'latest', options: [['Latest (face held, p151)', 'latest'], ['Milestone: first pronounced (p147)', 'v147']] },
   /* the first tab of the nav: his photo, or his signature from the Framer site (22 Oct) */
@@ -83,7 +88,7 @@ export const CONTROLS: Control[] = [
   /* the intro's name area (27 Oct, Nitish: "give it a background, which is the lighter colour in our design system… the
      content above it inverted, including the corner stroke… standard spacing with the edges of the illustration
      container"): the light card in the picture's cut-out, or the open cut-out as before, the frame showing through */
-  { group: 'Intro picture', sub: 'Name area', kind: 'select', key: '--intro-v', label: 'Version', def: 'card', light: 'card', options: [['Light card', 'card'], ['Open, on the frame', 'open']] },
+  { group: 'Intro picture', sub: 'Name area', kind: 'select', key: '--intro-v', label: 'Version', def: 'open', light: 'open', options: [['Light card', 'card'], ['Open, on the frame', 'open']] },
   /* the plate's colour (27 Oct, Nitish: "another switch to make it darker as well… the colour which is the select state
      background of the icon… whatever above it will also be inverted"): the nav's light grey, or the selection's dark */
   { group: 'Intro picture', sub: 'Name area', kind: 'select', key: '--plate', label: 'Plate', def: 'light', light: 'light', options: [['Light (the nav’s grey)', 'light'], ['Dark (the selection’s colour)', 'dark']] },
@@ -92,23 +97,23 @@ export const CONTROLS: Control[] = [
   /* its place, size and weight (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than what it is"):
      the centre and the width as percent of the picture; the weight added to (or, below zero, taken off) each side of the
      strokes, in the drawing's units — its strokes are about 1.7 wide, so −.5 leaves them about two-fifths as thick */
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-x', label: 'x', def: '50%', light: '50%', min: 0, max: 100, step: 1, unit: '%' },
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-y', label: 'y', def: '34%', light: '34%', min: 0, max: 100, step: 1, unit: '%' },
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-w', label: 'Size (width)', def: '100%', light: '100%', min: 30, max: 180, step: 1, unit: '%' },
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-weight', label: 'Stroke (thinner ← → thicker)', def: '0', light: '0', min: -0.7, max: 1, step: 0.05 },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-x', label: 'x', def: '48%', light: '48%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-y', label: 'y', def: '46%', light: '46%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-w', label: 'Size (width)', def: '109%', light: '109%', min: 30, max: 180, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-weight', label: 'Stroke (thinner ← → thicker)', def: '-0.35', light: '-0.35', min: -0.7, max: 1, step: 0.05 },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
   { group: 'Main container', sub: 'Corners', kind: 'select', key: '--corners', label: 'Curve', def: 'ios', light: 'ios', options: [['iOS (continuous)', 'ios'], ['Round', 'round']] },
   /* the selection: the dark pill, or a ball in the bar's colour in a cavity (23 Oct) */
   { group: 'Nav bar', sub: 'Selection', kind: 'select', key: '--nav-sel', label: 'Version', def: 'pill', light: 'pill', options: [['The pill', 'pill'], ['Cavity ball', 'cavity']] },
   /* the bar (27 Oct, Nitish: the floating icons "on the [open] version as well, but give me the control to turn it off
      and on"; then: on the home tab too): the icons and the selection on the frame, on every tab, or the bar */
-  { group: 'Nav bar', sub: 'Bar', kind: 'select', key: '--nav-bar', label: 'Version', def: 'float', light: 'float', options: [['Floating icons, no bar', 'float'], ['The bar', 'bar']] },
+  { group: 'Nav bar', sub: 'Bar', kind: 'select', key: '--nav-bar', label: 'Version', def: 'bar', light: 'bar', options: [['Floating icons, no bar', 'float'], ['The bar', 'bar']] },
   /* the main container solid, as it was, or glass: the picture behind showing through it, blurred (22 Oct) */
   { group: 'Main container', sub: 'Background', kind: 'select', key: '--frame-v', label: 'Version', def: 'solid', light: 'solid', options: [['Solid', 'solid'], ['Glass', 'glass']] },
   /* the container's edge lit as iOS 26 lights its cards (23 Oct): a 1pt rim on the edges facing the light's axis, measured
      on his iPhone's screenshots — or the plain hairline as before; and the axis turned, as tilting the phone turns it */
   { group: 'Main container', sub: 'Edge light', kind: 'select', key: '--edge-light', label: 'Version', def: 'rim', light: 'rim', options: [['iOS rim', 'rim'], ['Off (as before)', 'off']] },
-  { group: 'Main container', sub: 'Edge light', kind: 'range', key: '--edge-angle', label: 'Light angle', def: '24deg', light: '24deg', min: 0, max: 180, step: 1, unit: 'deg' },
+  { group: 'Main container', sub: 'Edge light', kind: 'range', key: '--edge-angle', label: 'Light angle', def: '20deg', light: '20deg', min: 0, max: 180, step: 1, unit: 'deg' },
   /* the card at the foot of a case study's side column (26 Oct, Nitish: "a control to select what kind of… sticky container
      I have on the bottom right… for which project… up to me to switch it on or off"): a project made with another designer
      carries his credit (the case's `collab`); each such project can show that credit or the contact card instead */

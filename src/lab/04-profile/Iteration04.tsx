@@ -11,6 +11,7 @@ import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.web
 import deskCutout from '../../assets/nitish-desk-cutout.webp';
 import { Arrow04 } from './Arrow04';
 import Controls04 from './Controls04';
+import ThemeSwitch04 from './ThemeSwitch04';
 import { useInView } from './inview';
 import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
@@ -293,17 +294,19 @@ export default function Iteration04() {
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
      mode change, and when the system page writes them from another tab */
   const [tweaks, setTweaks] = useState<Record<string, string>>(() => readTweaks(isDark));
-  const picV = tweaks['--pic-v'] ?? 'illo';
+  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && matchMedia('(max-width: 700px)').matches);
+  useEffect(() => { const q = matchMedia('(max-width: 700px)'), on = () => setPhone(q.matches); q.addEventListener('change', on); return () => q.removeEventListener('change', on); }, []);
+  const picV = tweaks['--pic-v'] ?? (phone ? 'illo' : 'illo-bw'); /* the drawing in black and white by default on the desktop (28 Oct, his settings); the phone keeps the colour drawing */
   const depthOn = (tweaks['--pic-depth'] ?? 'warp') === 'warp' && !(typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches); /* the spatial picture (Spatial04, 23 Oct; a control) */
   const ios = (tweaks['--corners'] ?? 'ios') === 'ios'; /* iOS corners (a control, 22 Oct) */
   const glass = tweaks['--frame-v'] === 'glass'; /* the main container as glass (a control, 22 Oct) */
   const edge = tweaks['--edge-light'] ?? 'rim'; /* the container's edge light, iOS's rim or off (a control, 23 Oct) */
-  const introCard = (tweaks['--intro-v'] ?? 'card') === 'card'; /* the name area as a light card in the cut-out (a control, 27 Oct) */
+  const introCard = (tweaks['--intro-v'] ?? 'open') === 'card'; /* open by default (28 Oct, his desktop settings) */ /* the name area as a light card in the cut-out (a control, 27 Oct) */
   const plateDark = tweaks['--plate'] === 'dark'; /* the plate in the selection's dark, what is on it inverted (a control, 27 Oct) */
-  const navFloat = (tweaks['--nav-bar'] ?? 'float') === 'float'; /* the other pages' nav: the icons on the frame, no bar (a control, 27 Oct) */
+  const navFloat = (tweaks['--nav-bar'] ?? 'bar') === 'float'; /* the bar by default (28 Oct) */ /* the other pages' nav: the icons on the frame, no bar (a control, 27 Oct) */
   const sigBg = (tweaks['--sig-bg'] ?? 'on') === 'on'; /* his signature on the picture's wall, behind him (a control, 27 Oct) */
   const frameRef = useRef<HTMLDivElement>(null);
-  usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '24') || 0); /* the phone's rims, at the Light angle (24 Oct) */
+  usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '24') || 0); /* the phone's rims, at the Light angle (24 Oct); the phone keeps 24° unless it's set (the desktop's default is 20°, 28 Oct) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
   const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
@@ -311,9 +314,7 @@ export default function Iteration04() {
   const tilt = useTilt(wrapRef, depthOn && tab === 'home');
   /* the build: the latest, or the milestone — p147 as it shipped, frozen (a control, 23 Oct) */
   const m147 = tweaks['--pic-depth-ver'] === 'v147';
-  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && matchMedia('(max-width: 700px)').matches);
-  useEffect(() => { const q = matchMedia('(max-width: 700px)'), on = () => setPhone(q.matches); q.addEventListener('change', on); return () => q.removeEventListener('change', on); }, []);
-  const depthK = (m147 ? V147.k : DEPTH_K)[(tweaks['--pic-depth-k'] ?? (phone ? 'pronounced' : 'subtle')) === 'pronounced' ? 'pronounced' : 'subtle']; /* the strength (a control); unset, the phone takes the pronounced one — driven by the phone's tilt (24 Oct) */
+  const depthK = (m147 ? V147.k : DEPTH_K)[(tweaks['--pic-depth-k'] ?? 'pronounced') === 'pronounced' ? 'pronounced' : 'subtle']; /* the strength (a control); unset, the phone takes the pronounced one — driven by the phone's tilt (24 Oct) */
   const dd = m147 ? V147.dir : '/depth/', dn = picV === 'photo' ? 'desk' : 'illustration'; /* the depth files' folder and name */
   const dfs = m147 ? { fs: V147.fs, focus: V147.focus } : {};
   const reduce = useReducedMotion();
@@ -432,6 +433,7 @@ export default function Iteration04() {
             <Signature04 className="sig4" label="Product, motion designer" /> {/* his written title (22 Oct), in the rolling word's place — the word's first letter on the name's edge, as on the case study's card */}
             <p className="sub4">I design feedback{'\u00a0'}rich interfaces powered by motion.</p>
             <a className="cv4" href={LINKS.cv}>View CV <Arrow04 out /></a>
+            <ThemeSwitch04 dark={isDark} toggle={toggle} /> {/* light / dark, on the CV's row: on the text's left edge, level with the CV's foot (28 Oct) */}
           </div>
         </motion.div>
         {/* the right column: the lo-fi's widgets — a pill, the three stacked cards, Off duty fanned */}

@@ -25,16 +25,16 @@
      Used by the phone breakpoint below; tunable on the system page like the rest */
   --ph-t-h1: 32px; --ph-t-h2: 28px; --ph-t-display: 24px; --ph-t-title: 17px; --ph-t-body: 17px; --ph-t-meta: 13px; --ph-copy-w: 400;
   --f-head: var(--name-font), 'Outfit', sans-serif; --f-copy: var(--copy-font), 'Outfit', sans-serif;
-  --c-ai-x: 11%; --c-ai-y: 38%; --c-ai-z: 3; --c-coin-x: 59%; --c-coin-y: 10%; --c-coin-z: 1; --c-loader-x: 60%; --c-loader-y: 59%; --c-loader-z: 1; --c-micro-x: 3%; --c-micro-y: 51%; --c-micro-z: 3; --c-gold-x: 18%; --c-gold-y: 12%; --c-gold-z: 3;
-  --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 3;
-  --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: none; --c-gold-v: block; --c-pers-v: block; /* each card shown or hidden */
+  --c-ai-x: 11%; --c-ai-y: 38%; --c-ai-z: 3; --c-coin-x: 59%; --c-coin-y: 10%; --c-coin-z: 1; --c-loader-x: 64%; --c-loader-y: 63%; --c-loader-z: 1; --c-micro-x: 3%; --c-micro-y: 51%; --c-micro-z: 3; --c-gold-x: 18%; --c-gold-y: 12%; --c-gold-z: 3;
+  --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 1;
+  --c-ai-v: block; --c-coin-v: none; --c-loader-v: block; --c-micro-v: none; --c-gold-v: block; --c-pers-v: block; /* each card shown or hidden */
   /* the phone's (28 Oct): each card's centre in % of the square picture, and whether it shows there — the four he asked
      for shown, the coin and the micro-interactions hidden; their places carried over from the desktop's (the same spot
      on the drawing); the persuasion card, whose desktop spot (right of his head) is the links' notch here, takes the
      coin's at the top right — the coin is hidden here — beside the success card */
   --c-ai-px: 17%; --c-ai-py: 64%; --c-loader-px: 71%; --c-loader-py: 77%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
   --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: none; /* three on the phone (28 Oct, Nitish: the persuasion card removed there) */ --c-coin-pv: none; --c-micro-pv: none;
-  --name-box-v: flex; /* the name box with the one-liner, shown or hidden (the design system page) */
+  --name-box-v: none; /* the name box with the one-liner, shown or hidden (the design system page); hidden by default (28 Oct, his desktop settings) */
   --pcard-open: var(--nav-bg); --pcard-open-ink: var(--frame); --pcard-fold: var(--nav-hl); --pcard-fold-ink: var(--nav-bg); /* the project page's cards: the theme's two greys, the open one light with dark text, the folded dark with light text (Nitish, 14 Oct) */
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
      the offsets exceed the blur, so nothing spills above an edge; the frame's own falls on the page */
@@ -90,7 +90,7 @@
    cos(2 × the angle off the light's axis), clamped, to the power 1.5 — a fit to the widgets' corners. --edge-angle turns
    the axis (0: top and bottom lit; 90: the sides), as tilting the phone does. ---- */
 .edge4 { display: none; }
-.it04.edgelit { --rim-a: .52; --la: var(--edge-angle, 24deg); } /* 24° by default (24 Oct, Nitish) */
+.it04.edgelit { --rim-a: .52; --la: var(--edge-angle, 20deg); } /* 20° by default (28 Oct, his desktop settings; was 24°) */
 .it04.edgelit.light { --rim-a: .75; }
 .it04.edgelit .frame4, .it04.edgelit.light.glassframe .frame4 { isolation: isolate; box-shadow: var(--shadow-frame); } /* the old hairline and top line go (the light glass one's selector is stronger, so named) */
 .it04.edgelit .edge4 { display: block; position: absolute; inset: 0; z-index: 7; pointer-events: none; /* over the frame's contents: they never reach its edge, but their shadows do, and dimmed the bottom rim */ border-radius: inherit; corner-shape: inherit;
@@ -240,12 +240,12 @@
    them) and him; black at 22%, so the wall reads a shade darker where it runs (the wall is ~#2f2e31, the strokes ~#252427).
    Tried at his head's height and narrower first: the head and the cards covered all but a few strokes */
 .fl4.sig-bg { inset: 0; z-index: 1; color: #000; opacity: var(--sig-a, .22); pointer-events: none; } /* a layer the picture's size; the drawing placed in it (the phone puts the layer in the picture's grid cell) */
-.sig-bg svg { position: absolute; left: var(--sig-x, 50%); top: var(--sig-y, 34%); width: var(--sig-w, 100%); height: auto; translate: -50% -50%; rotate: -6deg; }
+.sig-bg svg { position: absolute; left: var(--sig-x, 48%); top: var(--sig-y, 46%); width: var(--sig-w, 109%); height: auto; translate: -50% -50%; rotate: -6deg; }
 /* its place, size and weight are controls (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than
    what it is"): --sig-x / --sig-y the centre, --sig-w the width, all of the picture; --sig-weight added to each side of
    the strokes, in the drawing's units — below zero the mask's stroke takes it off, above it the shape's own stroke adds it */
-.sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, 0)) * 2px); }
-.sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, 0)) * 2px); }
+.sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, -.35)) * 2px); }
+.sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, -.35)) * 2px); }
 .fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); display: var(--c-ai-v); } /* each card's place, layer (1 behind him, 3 in front) and whether it shows are tokens */
 .fl4.coin-card { left: var(--c-coin-x); top: var(--c-coin-y); z-index: var(--c-coin-z); display: var(--c-coin-v); }
 .fl4.loader-card { left: var(--c-loader-x); top: var(--c-loader-y); z-index: var(--c-loader-z); display: var(--c-loader-v); }
@@ -381,6 +381,7 @@
      container"): its bottom leg on the content's bottom line (the CV pill's foot, the cut-out's padding up), its left
      leg on the cut-out's left edge, where the tile's corner would be, as before */
   .intro-card .cut4 .corner4 { bottom: 1.5cqw; }
+  .intro-card .ts4 { --ts-surface: var(--nav-bg); } .intro-card.plate-dark .ts4 { --ts-surface: var(--nav-hl); } /* the switch cut into the plate it sits on */
 }
 /* the corner bracket: a short 2.5px stroke along the blank area's bottom and left edges — where the tile's corner would
    be — turning the corner with the tile's radius; its legs run 12px past the curve, no further, and end in round caps
@@ -414,6 +415,35 @@
 .role4 { display: block; margin-top: .5cqw; font: var(--role-w2) clamp(12px, 1.35cqw, 15.5px)/1.3 var(--f-copy); color: var(--role-ink2); white-space: nowrap; } /* "designer": its own colour and weight */
 .cv4 { margin-top: .9cqw; display: inline-flex; align-items: center; gap: 6px; padding: .55em 1em; border-radius: 999px; background: var(--cv-bg); color: var(--cv-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); text-decoration: none; transition: transform .2s; }
 .cv4:hover { transform: translateY(-1px); }
+/* the light / dark switch (ThemeSwitch04, 28 Oct): in the CV's row, on the text's left edge, its foot level with the CV's
+   (the two share the row's cell; each sits at the foot). Sized in the CV's type, so it scales as the CV does.
+   The track, engraved: a step darker than the surface it is cut into (--ts-surface, the name area's ground), shadowed
+   from above inside (the cut's upper wall), its lower lip catching the light (inside and out), and a rim lit top and
+   bottom fading round the ends (the iOS rim, as the containers'). The knob, a bead: white in light, black in dark, lit
+   from the upper left (a radial body, a specular ellipse, a lit upper edge, a shadowed lower one) and resting on the
+   track's floor with a short contact shadow; it slides right for dark on a small overshoot */
+.ts4 { --ts-surface: var(--frame); grid-area: cv; justify-self: start; align-self: end; display: inline-flex; align-items: center; gap: .6em; padding: 0; border: 0; background: none; color: var(--line-ink); font: 500 clamp(11.5px, 1.15cqw, 13.5px)/1.2 var(--body); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.cut4 > .cv4 { align-self: end; }
+.ts4-track { --tw: 3.2em; --th: 1.8em; --kn: 1.36em; --pad: calc((var(--th) - var(--kn)) / 2); position: relative; flex: none; width: var(--tw); height: var(--th); border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ts-surface), #000 34%), color-mix(in srgb, var(--ts-surface), #000 20%));
+  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, .55), inset 0 .5px .5px rgba(0, 0, 0, .5), inset 0 -1px 0 rgba(255, 255, 255, .07), 0 1px 0 rgba(255, 255, 255, .07), 0 -.5px 0 rgba(0, 0, 0, .35); }
+.ts4-track::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .04), transparent 35%, transparent 62%, rgba(255, 255, 255, .16));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.ts4-knob { position: absolute; left: var(--pad); top: var(--pad); width: var(--kn); height: var(--kn); border-radius: 50%; transition: transform .38s cubic-bezier(.34, 1.36, .5, 1);
+  background: radial-gradient(circle at 34% 28%, #ffffff 0, #f4f4f5 38%, #d9d9dc 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1.5px 1.5px rgba(0, 0, 0, .14), 0 1.5px 2.5px rgba(0, 0, 0, .35), 0 .5px .5px rgba(0, 0, 0, .3); }
+.ts4-knob::after { content: ''; position: absolute; left: 22%; top: 12%; width: 46%; height: 30%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, .9), rgba(255, 255, 255, 0)); } /* the specular highlight */
+.ts4.on .ts4-knob { transform: translateX(calc(var(--tw) - var(--kn) - 2 * var(--pad)));
+  background: radial-gradient(circle at 34% 28%, #5a5a5e 0, #252527 40%, #0b0b0c 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 -1.5px 1.5px rgba(0, 0, 0, .6), 0 1.5px 2.5px rgba(0, 0, 0, .6), 0 .5px .5px rgba(0, 0, 0, .55); }
+.ts4.on .ts4-knob::after { background: radial-gradient(closest-side, rgba(255, 255, 255, .32), rgba(255, 255, 255, 0)); }
+.ts4-label { min-width: 2.6em; text-align: left; }
+.ts4:focus-visible { outline: 2px solid var(--line-ink); outline-offset: 3px; border-radius: 999px; }
+.it04.light .ts4-track { background: linear-gradient(180deg, color-mix(in srgb, var(--ts-surface), #000 18%), color-mix(in srgb, var(--ts-surface), #000 9%));
+  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, .3), inset 0 .5px .5px rgba(0, 0, 0, .28), inset 0 -1px 0 rgba(255, 255, 255, .35), 0 1px 0 rgba(255, 255, 255, .5), 0 -.5px 0 rgba(0, 0, 0, .12); }
+.it04.light .ts4-track::before { background: linear-gradient(180deg, rgba(255, 255, 255, .1), transparent 35%, transparent 62%, rgba(255, 255, 255, .6)); }
+@media (prefers-reduced-motion: reduce) { .ts4-knob { transition: none; } }
 .arrow4 { width: 1em; height: 1em; flex: none; display: block; } .arrow4.out { transform: rotate(-45deg); } /* the system's arrow as an icon (Arrow04.tsx): the round buttons' drawing, at the text's size; turned up-right for a link out (26 Oct) */
 .cv4 .arrow4 { width: 1.05em; height: 1.05em; margin-right: -.15em; } /* in a pill, at the label's cap height, its tip in by the pill's curve */
 .sig4 { height: calc(2.7 * clamp(12px, 1.35cqw, 15.5px)); aspect-ratio: 593 / 141; margin-top: .3cqw; margin-left: calc(.083 * var(--t-h1)); justify-self: start; will-change: transform; color: var(--name-ink); } /* 22 Oct: a quarter bigger again (his 1.5×); in from the box's edge by the B's side bearing (3px at 36px), so the word's first letter sits on the B of BHARDWAJ, not the box; in the name's ink */ /* his written title under the name (22 Oct): its letters a little taller than the title line's were, well under the name's; shifted so the word's first letter sits on the name's edge (Signature04.tsx) */
@@ -727,7 +757,7 @@
      floating cards, which needed it to sit behind him), masked with the picture's notch as the picture is */
   .fl4.sig-bg { grid-area: pic; position: relative; inset: auto; aspect-ratio: 1; overflow: hidden; transform: none; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round);
     -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, linear-gradient(#000 0 0); } /* the picture's notch out of it too */
-  .sig-bg svg { top: calc(var(--sig-y, 34%) + 10%); } /* the square crop shows the wall lower than the desktop's wide one: at the desktop's height it ran across the ring light; the same control, a tenth lower */
+  .sig-bg svg { left: var(--sig-x, 50%); top: calc(var(--sig-y, 34%) + 10%); width: var(--sig-w, 100%); } .sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, 0)) * 2px); } .sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, 0)) * 2px); } /* the phone keeps its own defaults (28 Oct: the desktop's moved) */ /* the square crop shows the wall lower than the desktop's wide one: at the desktop's height it ran across the ring light; the same control, a tenth lower */
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
@@ -740,10 +770,11 @@
      at least 12px (the phone's spacing step) from the name, on the container's right inset */
   .cut4 .me4 { grid-area: me; align-self: start; width: calc(.965 * var(--nm-fs) + 45.6px); margin: 28px 0 0 12px; } /* its top on the name's letter tops, 28px under the picture */
   .role4, .sig4 { grid-area: role; } .role4 { margin-top: 6px; font-size: var(--t-title); } .sig4 { height: 40px; margin-top: 6px; margin-left: 2.5px; }
-  .name4 { grid-area: lede; position: static; width: auto; min-width: 0; margin: 20px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
+  .name4 { display: flex; grid-area: lede; position: static; width: auto; min-width: 0; margin: 20px 0 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } .name4::before, .name4::after { display: none; }
   .lede4 { max-width: none; color: var(--line-ink); margin: -.338em 0 -.412em; text-wrap: pretty; } /* pretty: no lone word on the last line */ /* the description: the page's body, in the line's ink (the glass's light ink was for over the picture) */
   .sub4 { display: none; } .lede4-more { display: inline; } /* the one-liner merged into the description, one paragraph (24 Oct, Nitish) */
   .cv4 { grid-area: cv; justify-self: start; margin-top: 28px; font-size: var(--t-title); padding: .65em 1.1em; } /* on the text's left edge */
+  .ts4 { grid-area: cv; justify-self: end; align-self: end; font-size: var(--t-title); } /* the switch on the CV's row, at the text's right edge, level with the CV's foot (28 Oct) */
   /* the intro's spacing (24 Oct, Nitish: "the spacing needs to be done in a way that the content is legible properly with
      a visual separation, so it doesn't look cramped … think from a product designer perspective"; p190 had made every
      gap 18 and cramped it). Grouping by proximity, three steps: within the name block (name → title) 6px, unchanged —
