@@ -7,7 +7,7 @@ import type { Case, Media } from './types';
    and for frame removal its two state Lotties. The recordings are his: both are full-screen phone recordings exported
    squashed (720 × 1080 and 888 × 1080; a round button measured 1.46 : 1), so they are re-encoded at the phone's 9 : 19.5
    (432 × 936, 30 fps, no sound) and the stills are taken from them. The Lotties are his page's own, on its black.
-   The hero and the Projects card's visual are to come (Nitish: placeholders for now). */
+   The hero is the three experiences' recordings; the Projects card plays the try-on's (28 Oct). */
 const A = '/cases/ar-try-on';
 const still = (name: string, label: string, cap: string): Media => ({ k: 'media', shape: 'phone', label, cap, src: `${A}/${name}.webp` });
 const clip = (name: string, label: string, cap: string): Media => ({ k: 'media', shape: 'phone', label, cap, src: `${A}/${name}.mp4`, poster: `${A}/${name}-poster.webp` });
@@ -32,7 +32,14 @@ export const arTryOn: Case = {
     { k: 'Team', v: 'Product design' },
     { k: 'Focus', v: 'UI/UX design collaboration, interaction & motion design ownership' },
   ],
-  hero: { k: 'media', shape: 'wide', ratio: '2.2 / 1', label: 'Hero — to come' },
+  /* the hero (28 Oct, Nitish: "the top container can have all three screens with… the main experience screen recording of
+     all three phones placed side by side"): the three experiences' recordings, in the page's order — the contact-lens
+     try-on, the Hustlr highlights in 3D, the snap-on skins */
+  hero: { k: 'phones', of: [
+    clip('lens-tour', 'The contact-lens try-on, recorded: the slider, zoom, the praise and the colours', 'Contact-lens try-on'),
+    clip('hustlr-3d', 'The Hustlr product page: the 3D highlights card, tapped through its four features', 'Hustlr highlights in 3D'),
+    clip('snap-on', 'The snap-on try-on, recorded: a skin dropping onto the frame', 'Snap-on skins'),
+  ] },
   collab: { name: 'Ashish Sharma', role: 'Senior product designer', photo: '/cases/ashish.webp', project: 'https://ashishsharmaportfolio.framer.website/work-5/ar-on-colour-lenses', site: 'https://ashishsharmaportfolio.framer.website/' }, /* made with Ashish (26 Oct): his case study of it, and his portfolio */
   sections: [
     { id: 'about', title: 'About', blocks: [

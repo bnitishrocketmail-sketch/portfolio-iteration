@@ -475,6 +475,7 @@
   .cs4-media, .cs4-faq-ui, .cs4-faq-card { border-radius: calc(calc(var(--r) - 8px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); }
   .cs4-fig.phone { width: min(100%, var(--ph-w)); } .cs4-fig.phone-land { width: min(100%, var(--ph-h)); }
   .cs4-phones { display: grid; grid-template-columns: repeat(2, minmax(0, var(--ph-w))); justify-content: center; gap: var(--s3) var(--s4); padding: 0; } .cs4-phones .cs4-fig.phone { width: 100%; } /* two to a row, each a phone's width, centred with air between */
+  .cs4-hero .cs4-phones:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); } /* a hero of three screens (RideQuest's, the interactive experiences', 28 Oct) keeps them side by side, a third of the row each, rather than two and one under them */
   .cs4-step.with-text, .cs4-step.with-side, .cs4-flow.tight .cs4-step.with-text { grid-template-columns: 1fr; padding: 0; }
   .cs4-screens { flex-direction: column; gap: var(--s4); }
   .cs4-stats ul { grid-template-columns: 1fr 1fr; }   .cs4-legend { justify-content: flex-start; }
