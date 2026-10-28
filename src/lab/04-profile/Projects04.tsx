@@ -126,7 +126,11 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
                 <span className="pp4-meta">{p.client} · {p.role} · {p.year}</span>
                 <ul className="pp4-chips">{p.tags.map(t => <li key={t}>{t}</li>)}</ul>
               </div>
-              <button type="button" className="pp4-arrow" aria-label={`Open ${p.title}`} onClick={() => onOpen(p.id)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+              {/* a project that lives elsewhere is a link out (Coin Rig's plugin page, 28 Oct): the same round control, the arrow
+                  turned up-right as the system's links out are, opening in a new tab */}
+              {p.href
+                ? <a className="pp4-arrow out" href={p.href} target="_blank" rel="noopener" aria-label={`${p.title}, on LottieFiles (opens in a new tab)`}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></a>
+                : <button type="button" className="pp4-arrow" aria-label={`Open ${p.title}`} onClick={() => onOpen(p.id)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg></button>}
             </motion.div>
             {/* the folded layout: 01's card's lines, set vertically at the bottom-left */}
             <motion.div className="pp4-fold" initial={false} animate={{ opacity: open ? 0 : 1 }} transition={open ? { ...fade, duration: .14 } : { ...fade, delay: reduce ? 0 : .12 }} aria-hidden={open}>

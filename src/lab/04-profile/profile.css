@@ -561,6 +561,7 @@
 .pp4-foot { position: absolute; left: 2cqw; bottom: 2cqw; right: calc(1.4cqw + clamp(40px, 4cqw, 56px) + 2cqw); display: flex; flex-direction: column; align-items: flex-start; gap: 1.3cqw; }
 .pp4-arrow { position: absolute; right: 1.4cqw; bottom: 1.4cqw; width: clamp(40px, 4cqw, 56px); height: clamp(40px, 4cqw, 56px); border-radius: 50%; border: 0; background: var(--pcard-open-ink); color: var(--pcard-open); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-el); transition: transform .2s; } /* inverted within the card */
 .pp4-arrow:hover { transform: translateY(-1px); } .pp4-arrow svg { width: 44%; height: 44%; }
+.pp4-arrow.out svg { transform: rotate(-45deg); } /* a link out: the arrow up-right (Arrow04's out) */
 /* the folded layout: the lines set vertically, reading bottom to top, at the bottom-left */
 .pp4-fold { position: absolute; left: 1.2cqw; bottom: 1.4cqw; display: flex; flex-direction: row-reverse; gap: .5cqw; align-items: flex-end; }
 .pp4-fold > span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; max-height: 60cqh; overflow: hidden; text-overflow: ellipsis; }

@@ -8,6 +8,7 @@ export type Project = {
   letter: string; m1: string; m2: string; wide?: boolean; blurb: string; tags: string[];
   features?: string[]; /* listed beside the visual where there's room (RideQuest's, 23 Oct) */
   featuresTitle?: string; /* the list's heading */
+  href?: string; /* a project that lives elsewhere: its card's arrow is a link out to it (Coin Rig's plugin page, 28 Oct) */
   cover?: { video: string; poster: string; side?: boolean; bg?: string; size?: number /* a side clip's height, a fraction of the card's (.92 by default) */ } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' | 'motion' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
 };
 
@@ -33,6 +34,7 @@ export const PROJECTS: Project[] = [
     blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Lottie Creator plugin', 'Faux 3D', 'Tool'],
     /* his recording of the plugin in Creator, cropped to its panel at square pixels (the recording's are 571:640) (23 Oct) */
     cover: { video: '/cases/coin-rig/panel.mp4', poster: '/cases/coin-rig/panel-poster.webp', side: true, bg: '#111111' },
+    href: 'https://extensions.lottiefiles.com/plugin/nitish/coin-rig', /* its page on LottieFiles' Creator Bazaar (28 Oct, Nitish: "it will direct us to the coin rig plugin page from Lottie") */
     featuresTitle: 'A Lottie Creator plugin',
     features: ['A live preview drawn with the projection the build uses', 'Any viewing angle: front, isometric, below', 'Spin or tumble, from any start to any end', 'Timing: once or ping-pong, duration and easing', 'Builds native, editable Creator layers; nothing is baked'] },
   { id: 'ridequest', title: 'RideQuest', client: 'Concept', role: 'Interaction & prototype', year: '2026', letter: 'R', m1: '#2E5E8E', m2: '#9A82D6',
