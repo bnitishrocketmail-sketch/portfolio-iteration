@@ -26,7 +26,7 @@
 .cc4-x:hover { opacity: 1; background: color-mix(in srgb, var(--pcard-open-ink) 8%, transparent); }
 .cc4-x svg { width: 1em; height: 1em; }
 /* the copies the cards are measured from: laid out, never seen */
-.cc4-measure { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; z-index: -1; }
+.cc4-measure { position: absolute; left: 0; top: 0; width: 0; height: 0; overflow: hidden; visibility: hidden; pointer-events: none; z-index: -1; } /* a box of no size that clips them (28 Oct): the copies keep their own widths for measuring, but no longer widen the page (at 360 wide they gave it 30 px of sideways scroll) */
 .cc4-measure > .cc4-in { position: absolute; left: 0; top: 0; }
 
 /* the state machine's card (StateMachine04.tsx): the button above its diagram on one panel, the triggers under it */
