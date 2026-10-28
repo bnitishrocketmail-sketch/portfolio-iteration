@@ -63,7 +63,7 @@ export const arTryOn: Case = {
          ("just some text that tells the viewer what we are showing him"); then the node goes and the feature plays to `end`.
          The slider's plays with its node riding the handle. The colours: paused before the first switch (22.3 s, the white
          selection still on Spicy Gray), then again on the third switch's sparkles (26.85 s), the node on an eye */
-      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the slider with its nudge, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, of: [
+      { k: 'tour', src: `${A}/lens-tour.mp4`, poster: `${A}/lens-tour-poster.webp`, label: 'The contact-lens try-on, recorded: the slider with its nudge, zoom, the praise and the colours', track: LENS_HANDLE, ty: .602, guide: ['With lens', 'Without lens'], of: [
         { p: ['Drag the slider to see the lens on and off. A hand nudges it first, so you know it moves.'], side: 'r', t: .05, end: 5.2, at: 'track', ride: true },
         { p: ['Zoom in for a closer look at the lens.'], side: 'l', t: 6.45, end: 8.7, at: [.045, .44] },
         { p: ['A burst of praise, to delight — and persuade.'], side: 'l', t: 10, end: 12.3, at: [.312, .572] },

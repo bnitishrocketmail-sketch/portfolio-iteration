@@ -54,7 +54,7 @@ export type Block =
      (`at`: x, y as fractions of the screen; 'track' is the slider's handle, whose x over time is `track`, at `ty` down) and
      the feature's card (one plain line, `p`) comes in at the phone's side (`side`); then the node goes and the feature plays to
      `end` — unless it `ride`s, when the node stays on the handle through the play. A card's tap plays its feature again */
-  | { k: 'tour'; src: string; poster: string; label: string; track?: [number, number][]; ty?: number; of: { p: Rich; side: 'l' | 'r'; t: number; end: number; at: [number, number] | 'track'; ride?: boolean }[] }
+  | { k: 'tour'; src: string; poster: string; label: string; track?: [number, number][]; ty?: number; guide?: [string, string] /* the slider's two sides, named above the phone on a short dotted line that rides the handle while the slider plays (28 Oct) */; of: { p: Rich; side: 'l' | 'r'; t: number; end: number; at: [number, number] | 'track'; ride?: boolean }[] }
 
   /* a recording in a phone with a list beside it that keeps time with it (the Hustlr highlights, 26 Oct; Synced in
      Case04.tsx): each item lights from its second (`t`) to the next's — its view as a small picture (`thumb`), a name, a

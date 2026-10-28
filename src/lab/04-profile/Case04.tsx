@@ -262,6 +262,7 @@ function Tour({ b }: { b: TourB }) {
   const box = useRef<HTMLDivElement>(null), phone = useRef<HTMLDivElement>(null), vid = useRef<HTMLVideoElement>(null);
   const cards = useRef<(HTMLButtonElement | null)[]>([]);
   const node = useRef<SVGGElement>(null), line = useRef<SVGPathElement>(null);
+  const guide = useRef<HTMLDivElement>(null), gl = useRef<HTMLSpanElement>(null), gr = useRef<HTMLSpanElement>(null);
   const inView = useInView(box, .25);
   const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [act, setAct] = useState(-1); const [phase, setPhase] = useState<Phase>('idle'); const [nodeOn, setNodeOn] = useState(false);
@@ -310,6 +311,24 @@ function Tour({ b }: { b: TourB }) {
         if (next >= 0 && next !== cur && (S.act < 0 || next > S.act)) { mark(next); return; }
         if (S.phase === 'idle' && t < b.of[0].t && S.act === -2) { /* looped round: start again */ }
       }
+      /* the slider's guide above the phone (28 Oct, Nitish: "a very similar dotted faded out line… very short on the top of
+         the phone, and it'll move with the slider… with lens and without lens… on each side of it on the top… changes the
+         transparency"): while the slider plays it stands over the handle, the two sides named either side of it; as in
+         the app, the name on the side the handle closes in on dims (the app's own labels, measured: full while its side
+         has over half the screen, down to about a third near the edge) */
+      const gd = guide.current;
+      if (gd && b.track) {
+        const riding = S.act >= 0 && b.of[S.act].at === 'track';
+        gd.classList.toggle('on', riding);
+        if (riding) {
+          const x = lerpX(b.track, S.phase === 'mark' ? b.of[S.act].t : t);
+          const B = bx.getBoundingClientRect(), P = ph.getBoundingClientRect(), z = B.width / (bx.offsetWidth || 1) || 1;
+          gd.style.transform = `translate(${((P.left - B.left + x * P.width) / z).toFixed(1)}px, ${((P.top - B.top) / z).toFixed(1)}px)`;
+          const dim = (room: number) => { const k = Math.min(1, Math.max(0, (room - .3) / .25)); return (.3 + .7 * k * k * (3 - 2 * k)).toFixed(3); };
+          if (gl.current) gl.current.style.opacity = dim(x);
+          if (gr.current) gr.current.style.opacity = dim(1 - x);
+        }
+      }
       if (S.act < 0) return;
       const f = b.of[S.act];
       const at: [number, number] = f.at === 'track' ? [lerpX(b.track ?? [[0, .5]], S.phase === 'mark' ? f.t : t), b.ty ?? .6] : f.at;
@@ -344,12 +363,13 @@ function Tour({ b }: { b: TourB }) {
     );
   };
   return (
-    <div ref={box} className={`cs4-tour${act >= 0 ? ' live' : ''}${nodeOn ? ' marked' : ''}${phase === 'play' ? ' playing' : ''}${reduce ? ' still' : ''}`}>
+    <div ref={box} className={`cs4-tour${b.guide ? ' guided' : ''}${act >= 0 ? ' live' : ''}${nodeOn ? ' marked' : ''}${phase === 'play' ? ' playing' : ''}${reduce ? ' still' : ''}`}>
       <div className="cs4-tour-col l">{b.of.map((f, i) => f.side === 'l' ? card(f, i) : null)}</div>
       <div ref={phone} className="cs4-media phone filled cs4-tour-phone" role="img" aria-label={b.label}>
         <video ref={vid} src={b.src} poster={b.poster} muted loop playsInline preload="metadata" aria-hidden="true" />
       </div>
       <div className="cs4-tour-col r">{b.of.map((f, i) => f.side === 'r' ? card(f, i) : null)}</div>
+      {b.guide && <div ref={guide} className="cs4-tour-guide" aria-hidden="true"><span ref={gl} className="gl">{b.guide[0]}</span><i /><span ref={gr} className="gr">{b.guide[1]}</span></div>}
       <svg className="cs4-tour-svg" aria-hidden="true">
         <path ref={line} className="ln" d="" />
         <g ref={node} className="node"><circle className="ring" r="10" /><circle className="dot" r="3.5" /></g>
