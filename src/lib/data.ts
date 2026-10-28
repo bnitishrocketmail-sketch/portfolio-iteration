@@ -18,7 +18,7 @@ export type Project = {
 export const PROJECTS: Project[] = [
   { id: 'magic-scale', title: 'Magic Scale', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'M', m1: '#5B8C85', m2: '#CFE0DC',
     blurb: 'A frame (glasses) size measuring tool — patent pending.', tags: ['App feature', 'UX/UI', 'Interaction/Motion'],
-    cover: { video: '/cases/magic-scale/hero.mp4', poster: '/cases/magic-scale/hero-poster.webp' } },
+    cover: { video: '/cases/magic-scale/cover.mp4', poster: '/cases/magic-scale/cover-poster.webp' } }, /* the hero clip with its grey ground carried 60 px further above and below (16:10), so the cards show it 10% smaller without bars (28 Oct, Nitish: "zoom it out a little… by 10%"); the case page keeps hero.mp4 */
   { id: 'lenskart-b', title: "B — Lenskart's AI assistant", client: 'Lenskart', role: 'Motion & interaction', year: '2026', letter: 'B', m1: '#7B7EE4', m2: '#DFB3F3', wide: true,
     blurb: 'State Lotties for an AI-assisted eyeglass-buying journey, with the transitions recorded end to end.', tags: ['Lottie', 'State machine', 'Product'],
     cover: { lottie: 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie', still: 300, bg: '#fff' } }, /* B's states back to back (LOTTIES.b), on white, held listening (Nitish, 22 Oct) */
