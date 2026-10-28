@@ -9,7 +9,7 @@ export type Project = {
   features?: string[]; /* listed beside the visual where there's room (RideQuest's, 23 Oct) */
   featuresTitle?: string; /* the list's heading */
   href?: string; /* a project that lives elsewhere: its card's arrow is a link out to it (Coin Rig's plugin page, 28 Oct) */
-  cover?: { video: string; poster: string; side?: boolean; bg?: string; size?: number /* a side clip's height, a fraction of the card's (.92 by default) */ } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' | 'motion' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
+  cover?: { video: string; poster: string; side?: boolean; bg?: string; size?: number /* a side clip's height, a fraction of the card's (.92 by default) */; phone?: boolean /* a screen recording, shown in a phone at the card's right, on the card's own ground (28 Oct) */ } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' | 'motion' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
 };
 
 /* PLACEHOLDER set: these are projects I know exist; confirm which are showable. */
@@ -29,7 +29,9 @@ export const PROJECTS: Project[] = [
     blurb: 'Landing pages, campaign visuals, a 3D product guide and GenAI characters for launches.', tags: ['Promotional', 'Visual communication', 'UI', 'Interaction/Motion'],
     cover: { comp: 'launches' } }, /* the two phones of its hero, in small (22 Oct) */
   { id: 'ar-try-on', title: 'Interactive experiences', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'I', m1: '#0E6B5C', m2: '#BFEDE2',
-    blurb: 'Interactions I worked on and built — starting with the AR try-on: a contact-lens try-on with a slider, and frame removal.', tags: ['App feature', 'AR', 'Interaction/Motion'] }, /* (26 Oct) its visual, here and in its hero, to come; the year to confirm */
+    blurb: 'Interactions I worked on and built — starting with the AR try-on: a contact-lens try-on with a slider, and frame removal.', tags: ['App feature', 'AR', 'Interaction/Motion'], /* the year to confirm */
+    /* its thumbnail (28 Oct, Nitish: "the animation that we are using for contact lens try on with the slider… we can use that in our thumbnail"): the try-on's recording — the slider and its nudge, zoom, the praise, the colours — in a phone */
+    cover: { video: '/cases/ar-try-on/lens-tour.mp4', poster: '/cases/ar-try-on/lens-tour-poster.webp', phone: true } },
   { id: 'coin-rig', title: 'Coin Rig', client: 'Lottie Creator plugin', role: 'Design & build', year: '2026', letter: 'C', m1: '#F5BD56', m2: '#C94A3A', /* the plugin named where the client was (23 Oct: "mention it is a Lottie Creator plugin") */
     blurb: 'A faux-3D rig as a native Lottie Creator plugin, published on the Bazaar.', tags: ['Lottie Creator plugin', 'Faux 3D', 'Tool'],
     /* his recording of the plugin in Creator, cropped to its panel at square pixels (the recording's are 571:640) (23 Oct) */

@@ -29,6 +29,8 @@ function Visual({ p, on, mid = false }: { p: Project; on: boolean; mid?: boolean
   const c = p.cover;
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !reduce) v.play().catch(() => {}); else v.pause(); }, [on, reduce]);
   /* a clip of a phone on its own ground (RideQuest's, `side`) sits whole at the right on that ground, clear of the text */
+  /* a screen recording (the try-on's, 28 Oct) in a phone at the right, on the card's own ground */
+  if (c && 'video' in c && c.phone) return <div className="pp4-vl"><div className="pp4-ph"><video ref={ref} src={c.video} poster={c.poster} muted loop playsInline preload="metadata" /></div></div>;
   if (c && 'video' in c) return c.side
     ? <div className="pp4-vl" style={{ background: c.bg }}><video ref={ref} className="pp4-vid side" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" style={c.size ? { '--vid-h': `${c.size * 100}%` } as React.CSSProperties : undefined} /></div>
     : <video ref={ref} className="pp4-vid" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />;
@@ -49,7 +51,7 @@ function useDark(p: Project) {
   const known = c && 'comp' in c ? c.comp !== 'motion' && lumOf(c.comp === 'fintech' ? FIN_BG : LAU_BG) < .35 : c && 'lottie' in c && c.bg ? lumOf(c.bg) < .35 : false;
   const [dark, setDark] = useState(known);
   useEffect(() => {
-    if (!(c && 'video' in c)) return;
+    if (!(c && 'video' in c) || c.phone) return; /* a phone sits on the card's own light ground */
     const img = new Image(); img.src = c.poster;
     img.onload = () => { try { const cv = document.createElement('canvas'); cv.width = cv.height = 16; const g = cv.getContext('2d')!; g.drawImage(img, 0, 0, 16, 16); const d = g.getImageData(0, 0, 16, 16).data; let L = 0; for (let i = 0; i < d.length; i += 4) { const h = '#' + [d[i], d[i + 1], d[i + 2]].map(v => v.toString(16).padStart(2, '0')).join(''); L += lum(h); } setDark(L / (d.length / 4) < .35); } catch { /* a cross-origin poster can't be read: keep light */ } };
   }, [c]);
