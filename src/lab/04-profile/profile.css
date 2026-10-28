@@ -733,8 +733,16 @@
      top and its baseline .412em over its foot */
   .pp4 { gap: 14px; padding: 0; } .pp4-head { flex-direction: column; gap: 8px; padding: 4px 4px 0; } .pp4-right { max-width: none; } /* the inside pages (cases, the motion system) keep theirs until their own pass */
   .navpage4.pp4 { gap: 0; } .navpage4 .pp4-head { gap: 0; padding: 4px 0 0; } /* the tabs only (Projects, Workflow, Lab, Notes) */
-  .navpage4 .pp4-head .pp4-note { margin-top: calc(14px - .176 * var(--t-h2) - .338em); }
-  .navpage4.pp4 > :not(.pp4-head) { margin-top: calc(17px - .412 * var(--t-body)); }
+  /* the tabs' header and content (28 Oct, Nitish: "the text near the heading looks very cramped up, the tiles below it
+     looks very cramped up… analyze and fix the space hygiene… as you did on home page"). Measured on screen at 390: the
+     note's line sat 2.8 px under the heading's and the first card 8.5 px under the note, so heading, note and cards read
+     as one block. One scale for the phone's pages, in px as seen (the page is drawn at --ph-zoom, so each is divided by
+     it): 4 a label and its title · 6 a title and its line · 8 a heading and its note, a meta and its chips, a list's
+     heading and its items · 16 between groups inside a card · 20 between cards · 24 a card's room above and below its
+     text, and from a page's header to its content · 12 a home section's heading to its content · ~32 between the
+     home's sections. Gaps are between the lines' boxes */
+  .navpage4 .pp4-head .pp4-note { margin-top: calc(8px / var(--ph-zoom, .85)); }
+  .navpage4.pp4 > :not(.pp4-head) { margin-top: calc(24px / var(--ph-zoom, .85)); }
   .pp4-head .h2-4 { color: var(--name-ink); } .pp4-head .pp4-note { color: var(--glass-ink); } /* on the picture: the name's and the lede's inks, which already sit on it */
   .it04.light .pp4-head .pp4-note, .it04.light .cs4-head .pp4-note { color: var(--line-ink); } /* light: the page is light here, so the line's dark ink (the glass's light ink was for over the dark picture) */
   .pp4 > :not(.pp4-head) { border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); padding: 12px; } /* the container's inset the cards' gap, all round (24 Oct: was 16 / 14 / 18) */
@@ -745,7 +753,7 @@
      own shadow (--shadow-el) and rim. Floating apart on their shadows, 20px between them (the system's group step;
      they were 12 inside the box). Workflow's holder was already bare */
   .navpage4.pp4 > :not(.pp4-head) { background: none; box-shadow: none; padding: 0; }
-  .navpage4 .pp4-row, .navpage4 .nt4-grid { gap: 20px; }
+  .navpage4 .pp4-row, .navpage4 .nt4-grid { gap: calc(20px / var(--ph-zoom, .85)); }
   .cr4 > .cm4-wrap { background: none; box-shadow: none; padding: 0; }
   /* the projects: the desktop's fan of cards, one open, becomes a plain list — every card open, its content in flow
      (title, blurb, meta, chips, the arrow), the letter faint behind; the pieces were absolutely placed for the fan */
@@ -775,10 +783,10 @@
      arrow on the text's right edge (24px in, was 14), centred on the title's first line. Offsets on Outfit, from the
      lines' boxes: a display title's capitals .23em under its top; the rest folded into the margins */
   .pp4-open { gap: 0; padding: calc(28px - .23 * var(--t-display)) 24px 28px; }
-  .pp4-top { gap: 3px; }
-  .pp4-feat { margin-top: 9.5px; gap: 3.4px; } /* inside the title's group now (28 Oct): its 3px gap plus this, the 12.5 it had */
-  .pp4-meta { margin-top: 13.2px; } .pp4-top:has(.pp4-feat) + .pp4-foot > .pp4-meta { margin-top: 14px; }
-  .pp4-chips { margin-top: 8px; }
+  .pp4-top { gap: calc(6px / var(--ph-zoom, .85)); } /* the title and its line (28 Oct: 6, was 2.5) */
+  .pp4-feat { margin-top: calc(10px / var(--ph-zoom, .85)); gap: calc(8px / var(--ph-zoom, .85)); } /* 16 under the line (with the group's 6), its heading 8 over its list (28 Oct: were 10.6 and 2.9) */ /* inside the title's group now (28 Oct): its 3px gap plus this, the 12.5 it had */
+  .pp4-meta { margin-top: calc(16px / var(--ph-zoom, .85)); } .pp4-top:has(.pp4-feat) + .pp4-foot > .pp4-meta { margin-top: calc(16px / var(--ph-zoom, .85)); } /* the next group, 16 (were 11.2 and 11.9) */
+  .pp4-chips { margin-top: calc(8px / var(--ph-zoom, .85)); } /* the meta's chips, 8 (was 6.8) */
   .pp4-open .pp4-arrow { right: 24px; top: calc(28px + .35 * var(--t-display) - 20px); }
   /* Notes' cards (24 Oct), the same anatomy: each thumbnail one shape, 16 : 10 as a project card's visual (the square
      card had squeezed it by its text — 300 to 340px tall), the card's height its content's; the text 24px in (was 16),
@@ -786,7 +794,7 @@
      was 17), a label and its title one line of thought; the title and its line one group, 14px (was 20); 28px under
      the last line (was 23, and 48 where a one-line note kept the grid's two-line height) */
   .nt4-card { aspect-ratio: auto; gap: 0; padding: 8px 8px 28px; } .nt4-thumb { flex: none; aspect-ratio: 16 / 10; }
-  .nt4-body { gap: 0; padding: 0 16px; margin-top: 24.1px; } .nt4-body h3 { margin-top: 2.5px; } .nt4-body p { min-height: 0; margin: 1.85px 0 -.412em; }
+  .nt4-body { gap: 0; padding: 0 16px; margin-top: 24.1px; } .nt4-body h3 { margin-top: calc(4px / var(--ph-zoom, .85)); } .nt4-body p { min-height: 0; margin: calc(6px / var(--ph-zoom, .85)) 0 -.412em; } /* the label 4 over its title, the title 6 over its line (28 Oct: were 2.1 and 1.5) */
   /* the right column: Projects' pill and the stack and Off duty, each a container */
   .col4 { display: flex; flex-direction: column; gap: 12px; } .pill4 { padding: 6px 4px; } .stack4 { flex: none; } .off4 { flex: none; min-height: 240px; }
   /* the home's projects on the phone (24 Oct): a row that scrolls sideways, edge to edge with the gutter as its inset, a
@@ -800,7 +808,7 @@
      baseline (it sat 10px high) with its arrow on the boxes' right edge. Measured to the letters: a heading's
      capitals start .222em under its line box (H2, 28px, 1.1) */
   .col4 { gap: 0; } .pill4 { justify-content: space-between; align-items: baseline; padding: 0; margin-top: calc(var(--sec) - 12px / var(--ph-zoom, .85) - .222 * var(--t-h2)); } .col4 > .pill4.off { margin-top: calc(var(--sec) - 4px - .222 * var(--t-h2)); } /* less the frame's 12px gap (outside the zoom); less the row's 4px foot */
-  .col4 > .stack4, .col4 > .off4 { margin-top: 12px; }
+  .col4 > .stack4, .col4 > .off4 { margin-top: calc(12px / var(--ph-zoom, .85)); } /* a section's heading 12 over its content, as seen (28 Oct: was 10.2) */
   /* inside the boxes, one inset, the intro's 24px sides: Off duty's caption and count, and the project cards' names
      (were 14 / 12), so every box's text starts on one line down the page. A title's capitals start .2em under its
      line (Title, 17px, 1.2) */
@@ -809,7 +817,7 @@
   .stack4 { aspect-ratio: auto; width: auto; margin: 0 calc(-1 * var(--gut)); } /* edge to edge: the gutter as the row's inset */
   .deck4.rail { position: static; display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gut); padding: 6px var(--gut) 32px; margin: -6px 0 -28px; scrollbar-width: none; } .deck4.rail::-webkit-scrollbar { display: none; } /* room for the cards' whole shadow (24 Oct: a scroller clips its overflow, and the 4px foot cut the shadow — it reaches 32px under a card, 4 over it), given back with the negative margins so the spacing stays */
   .deck4.rail .pcard4 { position: relative; bottom: auto; flex: 0 0 78%; scroll-snap-align: start; transform: none !important; z-index: auto; box-shadow: var(--shadow-el); }
-  .deck4.rail .pc-name { left: 24px; right: 24px; top: calc(24px - .2 * var(--t-title)); gap: 3px; }
+  .deck4.rail .pc-name { left: 24px; right: 24px; top: calc(24px - .2 * var(--t-title)); gap: calc(4px / var(--ph-zoom, .85)); } /* a name and its meta, 4 as seen (28 Oct: was 2.5) */
 
 }
 

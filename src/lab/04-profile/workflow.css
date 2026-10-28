@@ -65,8 +65,9 @@
   /* the map takes the screen's height down to the bar (27 Oct: at 3 : 4 it ended two-thirds of the way down and left a
      fifth of the screen empty over the bar): from 3 : 4 up to 3 : 4.8 at most (short of the 720 that looked stretched),
      ending 24px over the bar; the page is zoomed (--ph-zoom), so its own px are the screen's over the zoom. The pills are
-     placed in percent, so they only gain air */
-  .cm4.v2 { aspect-ratio: auto; height: clamp(calc((100vw - 32px) / var(--ph-zoom, .85) * 4 / 3), calc((100svh - 212px - env(safe-area-inset-bottom)) / var(--ph-zoom, .85)), calc((100vw - 32px) / var(--ph-zoom, .85) * 1.6)); }
+     placed in percent, so they only gain air. 28 Oct: the header is 21 px taller (its note 8 under the heading, the map 24
+     under the note), so 233 where it was 212 */
+  .cm4.v2 { aspect-ratio: auto; height: clamp(calc((100vw - 32px) / var(--ph-zoom, .85) * 4 / 3), calc((100svh - 233px - env(safe-area-inset-bottom)) / var(--ph-zoom, .85)), calc((100vw - 32px) / var(--ph-zoom, .85) * 1.6)); }
   /* the pills closer in size, and smaller, so sixteen fit a 3 : 4 map: the gap between the biggest and the smallest narrowed */
   /* all at the phone's smallest style, Meta (27 Oct, Nitish: "reducing the size of the name… the smallest one should work
      specifically for the phone layout"): the kinds told apart by their fill and weight, not their size; the skills'
