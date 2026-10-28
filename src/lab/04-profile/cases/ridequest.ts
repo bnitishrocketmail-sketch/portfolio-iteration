@@ -1,7 +1,10 @@
 import type { Case, Media } from './types';
 
 const A = '/cases/ridequest'; /* public/cases/ridequest: his recording of the prototype (thumb.mp4, the Lab card's), cut into its six moments and cropped to the screen (446 × 892), each with its first frame as its poster (28 Oct) */
-const scr = (id: string, label: string, cap: string): Media => ({ k: 'media', shape: 'phone', ratio: '446 / 892', label, cap, src: `${A}/${id}.mp4`, poster: `${A}/${id}-poster.webp` });
+/* 28 Oct (Nitish: "cramped up from the top… the UI is all the way on the sides… adjust the phone ratio"): each clip extended
+   to 460 × 986 — the status bar's room above (60), the home indicator's below (34), 7 at the sides — the extension carried
+   on from the screen's own edges and softened (scratchpad rqtools/ios.py), and the phone draws its own marks there (ios) */
+const scr = (id: string, label: string, cap: string): Media => ({ k: 'media', shape: 'phone', ratio: '460 / 986', label, cap, src: `${A}/${id}-ios.mp4`, poster: `${A}/${id}-ios-poster.webp`, ios: true });
 
 /* RideQuest (Nitish, 28 Oct: "create one page for it, and the screens on the right side, content on the left side. However
    you want to manage the containers and segregation and categorization"). His concept, in his own categorisation (Aug): the

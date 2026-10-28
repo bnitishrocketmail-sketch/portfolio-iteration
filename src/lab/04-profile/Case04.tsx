@@ -28,6 +28,21 @@ import './case.css';
 
 const f2 = (n: number) => n.toFixed(1);
 const text = (r: Rich): ReactNode => r.map((x, i) => (typeof x === 'string' ? x : <b key={i}>{x.b}</b>));
+/* an iPhone's own marks over a recording that has room for them (28 Oct, Nitish on RideQuest: "cramped up from the top…
+   no spacing hygiene on the left and the top"): his prototype's screens start at the very top, so the clips are
+   extended — the status bar's room above, the home indicator's below, a little at the sides — and the phone draws its
+   time, Dynamic Island, signal, wi-fi and battery, and the home indicator, at an iPhone 15's proportions (case.css) */
+function IosChrome() {
+  return (
+    <span className="cs4-ios" aria-hidden="true">
+      <span className="cs4-ios-time">9:41</span>
+      <i className="cs4-ios-island" />
+      <svg className="cs4-ios-ind" viewBox="0 0 68 12"><path d="M0 8.5a1 1 0 0 1 1-1h1.6a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zM4.6 6.2a1 1 0 0 1 1-1h1.6a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1H5.6a1 1 0 0 1-1-1zM9.2 3.8a1 1 0 0 1 1-1h1.6a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1.6a1 1 0 0 1-1-1zM13.8 1.2a1 1 0 0 1 1-1h1.6a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1.6a1 1 0 0 1-1-1z" /><path d="M29.2 2.4a10.6 10.6 0 0 1 7.4 3l1.2-1.2a12.3 12.3 0 0 0-17.2 0l1.2 1.2a10.6 10.6 0 0 1 7.4-3zm0 3.6a7 7 0 0 1 4.9 2l1.2-1.2a8.7 8.7 0 0 0-12.2 0l1.2 1.2a7 7 0 0 1 4.9-2zm0 3.6a3.4 3.4 0 0 1 2.4 1l-2.4 2.4-2.4-2.4a3.4 3.4 0 0 1 2.4-1z" /><rect x="42.5" y=".5" width="22" height="11" rx="3.4" fill="none" stroke="currentColor" strokeOpacity=".4" /><rect x="44.5" y="2.5" width="18" height="7" rx="1.8" /><path d="M66 4v4a2.2 2.2 0 0 0 0-4z" fillOpacity=".45" /></svg>
+      <i className="cs4-ios-home" />
+    </span>
+  );
+}
+
 const RATIO: Record<Media['shape'], string> = { wide: '2 / 1', video: '16 / 9', image: '4 / 3', phone: '9 / 19.5', 'phone-land': '19.5 / 9', small: '3 / 2', screen: '9 / 14.5' };
 function Clip({ src, poster, on, crop, fit }: { src: string; poster?: string; on: boolean; crop?: number; fit?: Media['fit'] }) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -47,9 +62,10 @@ function Slot({ m, fl, active = true }: { m: Media; fl?: string; active?: boolea
   const clip = !!m.src && /\.mp4$/.test(m.src);
   const filled = !!(m.src || m.lottie || m.layers?.length); /* a slot of layers alone (a Lottie set to cover a phone) is filled too */
   return (
-    <div ref={ref} className={`cs4-media ${m.shape}${filled ? ' filled' : ''}${m.lottie ? ' lot' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape], background: m.bg }} role="img" aria-label={filled ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
+    <div ref={ref} className={`cs4-media ${m.shape}${filled ? ' filled' : ''}${m.lottie ? ' lot' : ''}${m.ios ? ' ios' : ''}`} data-fl={fl} style={{ aspectRatio: m.ratio ?? RATIO[m.shape], background: m.bg }} role="img" aria-label={filled ? `${m.cap ?? m.label}` : `${m.label} (to come)`}>
       {m.src ? (clip ? <Clip src={m.src} poster={m.poster} on={on} crop={m.crop} fit={m.fit} /> : <img src={m.src} alt="" loading="lazy" decoding="async" style={m.crop ? { left: `-${m.crop}%`, top: `-${m.crop}%`, width: `${100 + 2 * m.crop}%`, height: `${100 + 2 * m.crop}%` } : undefined} />) : m.lottie ? <Lottie className="cs4-lot" src={m.lottie} playing={on} /> : <span className="cs4-slot">{m.label}</span>}
       {m.layers?.filter(l => !l.over).map((l, i) => <LayerBox key={i} l={l} on={on} />)}
+      {m.ios && <IosChrome />}
     </div>
   );
 }
