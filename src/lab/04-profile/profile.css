@@ -28,6 +28,12 @@
   --c-ai-x: 11%; --c-ai-y: 38%; --c-ai-z: 3; --c-coin-x: 59%; --c-coin-y: 10%; --c-coin-z: 1; --c-loader-x: 60%; --c-loader-y: 59%; --c-loader-z: 1; --c-micro-x: 3%; --c-micro-y: 51%; --c-micro-z: 3; --c-gold-x: 18%; --c-gold-y: 12%; --c-gold-z: 3;
   --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 3;
   --c-ai-v: block; --c-coin-v: block; --c-loader-v: block; --c-micro-v: none; --c-gold-v: block; --c-pers-v: block; /* each card shown or hidden */
+  /* the phone's (28 Oct): each card's centre in % of the square picture, and whether it shows there — the four he asked
+     for shown, the coin and the micro-interactions hidden; their places carried over from the desktop's (the same spot
+     on the drawing); the persuasion card, whose desktop spot (right of his head) is the links' notch here, takes the
+     coin's at the top right — the coin is hidden here — beside the success card */
+  --c-ai-px: 17%; --c-ai-py: 57%; --c-loader-px: 70%; --c-loader-py: 72%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
+  --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: block; --c-coin-pv: none; --c-micro-pv: none;
   --name-box-v: flex; /* the name box with the one-liner, shown or hidden (the design system page) */
   --pcard-open: var(--nav-bg); --pcard-open-ink: var(--frame); --pcard-fold: var(--nav-hl); --pcard-fold-ink: var(--nav-bg); /* the project page's cards: the theme's two greys, the open one light with dark text, the folded dark with light text (Nitish, 14 Oct) */
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
@@ -689,7 +695,22 @@
   .notch4 { aspect-ratio: 1; } /* the picture's square, so the links centre on it */
   .notch4 .links4 { position: absolute; right: 0; top: 50%; transform: translateY(-50%); flex-direction: column; gap: 2px; padding: 8px 6px; border-radius: 0; } /* the links stacked, centred on the picture's height */
   .notch4 .links4 a { width: 36px; height: 34px; } .notch4 .links4 a svg { width: 17px; height: 17px; } /* a finger's target; the notch's links only — the case pages' Let's talk card uses .links4 too (found 24 Oct: p172 had pulled its icons to the screen's edge) */
-  .fl4:not(.sig-bg) { display: none !important; } /* the floating Lotties come back later (his note, 24 Oct) */
+  /* the floating Lottie cards on the phone (28 Oct, Nitish: "adding some of the floating Lottie containers on the home phone
+     layout… the same text sizing [as Workflow's pills]… Lenskart AI assistant, loader animation… success state animation
+     and persuasion animation… positioned as they are positioned on the desktop layout"): each card in the picture's grid
+     cell, its centre at its phone place (% of the square picture: the desktop's spot on the drawing, which the phone shows
+     whole), on its desktop layer (in front of him or behind his cutout); a phone's own show/hide and x/y (Controls,
+     Intro cards). The caption at the pills' size (meta, 500), the glass a step tighter, each animation sized for its
+     caption: at the drawing's scale the desktop's cards would carry 5 px text */
+  .fl4:not(.sig-bg) { grid-area: pic; position: relative; inset: auto; align-self: start; justify-self: start; translate: -50% -50%; }
+  .fl4.ai-card { left: var(--c-ai-px); top: var(--c-ai-py); display: var(--c-ai-pv); } .fl4.loader-card { left: var(--c-loader-px); top: var(--c-loader-py); display: var(--c-loader-pv); }
+  .fl4.gold-card { left: var(--c-gold-px); top: var(--c-gold-py); display: var(--c-gold-pv); } .fl4.pers-card { left: var(--c-pers-px); top: var(--c-pers-py); display: var(--c-pers-pv); }
+  .fl4.coin-card { left: var(--c-coin-px); top: var(--c-coin-py); display: var(--c-coin-pv); } .fl4.micro-card { left: var(--c-micro-px); top: var(--c-micro-py); display: var(--c-micro-pv); }
+  .fl4-in { gap: 6px; padding: 8px 10px; border-radius: calc(14px * var(--ios-k, 1)); }
+  .fl4 .cap, .loader-card .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
+  .fl4 .bl { width: 58px; margin: -4px 0 -2px -5px; } .fl4 .lk { width: 48px; } .fl4 .coin { width: 46px; }
+  .fl4 .gm { --cw: calc(140px / var(--gw)); } .fl4 .pa, .fl4 .mli { width: 140px; }
+  .loader-card .fl4-in { gap: 4px; padding: 7px 10px; } .gold-card .fl4-in, .pers-card .fl4-in, .micro-card .fl4-in { gap: 6px; }
   /* the signature on the wall here too (27 Oct, Nitish: "it's only there in desktop… in the phone layout, it's not
      there"): its layer takes the picture's cell, clipped to it, and his cutout comes back over it (it went with the
      floating cards, which needed it to sit behind him), masked with the picture's notch as the picture is */

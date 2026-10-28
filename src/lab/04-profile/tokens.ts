@@ -18,7 +18,13 @@ const card = (id: string, name: string, x: string, y: string, z: string, v: stri
   { group: 'Intro cards', sub: name, kind: 'range', key: `--c-${id}-y`, label: 'y', def: y, light: y, min: -20, max: 90, step: 1, unit: '%' },
   { group: 'Intro cards', sub: name, kind: 'select', key: `--c-${id}-z`, label: 'Layer', def: z, light: z, options: layer },
   { group: 'Intro cards', sub: name, kind: 'select', key: `--c-${id}-v`, label: 'Shown', def: v, light: v, options: shown },
+  /* the phone's own (28 Oct): its centre on the square picture, and shown or hidden there */
+  { group: 'Intro cards', sub: name, kind: 'range', key: `--c-${id}-px`, label: 'x on the phone', def: PH[id][0], light: PH[id][0], min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Intro cards', sub: name, kind: 'range', key: `--c-${id}-py`, label: 'y on the phone', def: PH[id][1], light: PH[id][1], min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Intro cards', sub: name, kind: 'select', key: `--c-${id}-pv`, label: 'Shown on the phone', def: PH[id][2], light: PH[id][2], options: shown },
 ];
+/* the phone's defaults (profile.css :root): centre x, y (% of the square picture) and shown */
+const PH: Record<string, [string, string, string]> = { ai: ['17%', '57%', 'block'], loader: ['70%', '72%', 'block'], gold: ['27%', '30%', 'block'], pers: ['67%', '23%', 'block'], coin: ['66%', '33%', 'none'], micro: ['40%', '85%', 'none'] };
 
 export const CONTROLS: Control[] = [
   /* type */
