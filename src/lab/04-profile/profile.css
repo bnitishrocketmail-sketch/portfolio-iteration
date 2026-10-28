@@ -705,10 +705,15 @@
      whole), on its desktop layer (in front of him or behind his cutout); a phone's own show/hide and x/y (Controls,
      Intro cards). The caption at the pills' size (meta, 500), the glass a step tighter, each animation sized for its
      caption: at the drawing's scale the desktop's cards would carry 5 px text */
-  .fl4:not(.sig-bg) { grid-area: pic; position: relative; inset: auto; align-self: start; justify-self: start; translate: -50% -50%; }
-  .fl4.ai-card { left: var(--c-ai-px); top: var(--c-ai-py); display: var(--c-ai-pv); } .fl4.loader-card { left: var(--c-loader-px); top: var(--c-loader-py); display: var(--c-loader-pv); }
-  .fl4.gold-card { left: var(--c-gold-px); top: var(--c-gold-py); display: var(--c-gold-pv); } .fl4.pers-card { left: var(--c-pers-px); top: var(--c-pers-py); display: var(--c-pers-pv); }
-  .fl4.coin-card { left: var(--c-coin-px); top: var(--c-coin-py); display: var(--c-coin-pv); } .fl4.micro-card { left: var(--c-micro-px); top: var(--c-micro-py); display: var(--c-micro-pv); }
+  /* 28 Oct, second pass (Nitish: "they are all way above the top of the container… clipped"): placed relatively in the
+     grid cell, their `top` in % had nothing to resolve against in Safari (an auto-height cell), so every card sat at
+     the picture's top edge, half cut off. Now each card is a layer the picture's square (as the signature's), and its
+     glass is placed absolutely inside it — a % of a box with a size, the same in every browser */
+  .fl4:not(.sig-bg) { grid-area: pic; position: relative; inset: auto; align-self: start; width: 100%; aspect-ratio: 1; transform: none; pointer-events: none; }
+  .fl4:not(.sig-bg) > .fl4-in { position: absolute; left: var(--fx); top: var(--fy); width: max-content; translate: -50% -50%; pointer-events: auto; }
+  .fl4.ai-card { --fx: var(--c-ai-px); --fy: var(--c-ai-py); display: var(--c-ai-pv); } .fl4.loader-card { --fx: var(--c-loader-px); --fy: var(--c-loader-py); display: var(--c-loader-pv); }
+  .fl4.gold-card { --fx: var(--c-gold-px); --fy: var(--c-gold-py); display: var(--c-gold-pv); } .fl4.pers-card { --fx: var(--c-pers-px); --fy: var(--c-pers-py); display: var(--c-pers-pv); }
+  .fl4.coin-card { --fx: var(--c-coin-px); --fy: var(--c-coin-py); display: var(--c-coin-pv); } .fl4.micro-card { --fx: var(--c-micro-px); --fy: var(--c-micro-py); display: var(--c-micro-pv); }
   .fl4-in { gap: 6px; padding: 8px 10px; border-radius: calc(14px * var(--ios-k, 1)); }
   .fl4 .cap, .loader-card .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
   .fl4 .bl { width: 58px; margin: -4px 0 -2px -5px; } .fl4 .lk { width: 48px; } .fl4 .coin { width: 46px; }
