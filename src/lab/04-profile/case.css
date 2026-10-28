@@ -313,7 +313,7 @@
   .cs4-tour-phone { grid-area: 1 / 1; }
   .cs4-tour-col, .cs4-tour-col.l { grid-area: 2 / 1; display: grid; justify-content: center; align-items: start; width: 100%; } .cs4-tour-col > * { grid-area: 1 / 1; } /* both columns in one slot under the phone, every card in the same cell, each its own height (the slot is as tall as the tallest), so nothing below moves */
   .cs4-tour-card, .cs4-tour-col.l .cs4-tour-card, .cs4-tour-col.r .cs4-tour-card { position: static; width: auto; max-width: 30ch; --tour-dx: 0; transform: translateY(6px); } .cs4-tour-card.on { transform: none; }
-  .cs4-tour-svg .ln { display: none; }
+  .cs4-tour-svg .ln { display: none; } .cs4-tour-svg .dot { fill-opacity: .5; } /* on the phone the dot sits on small controls: half see-through, so what it marks shows under it (28 Oct); the ring keeps its edge */
   .cs4-tour.still .cs4-tour-col { display: flex; align-items: center; } .cs4-tour.still .cs4-tour-col.r { margin-top: var(--s2); }
 }
 /* a recording with its list in time (26 Oct): the standard phone, the list beside it; an item a row — its view as a small

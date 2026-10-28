@@ -313,18 +313,20 @@ function Tour({ b }: { b: TourB }) {
       if (S.act < 0) return;
       const f = b.of[S.act];
       const at: [number, number] = f.at === 'track' ? [lerpX(b.track ?? [[0, .5]], S.phase === 'mark' ? f.t : t), b.ty ?? .6] : f.at;
-      const B = bx.getBoundingClientRect(), P = ph.getBoundingClientRect();
-      const ax = P.left - B.left + at[0] * P.width, ay = P.top - B.top + at[1] * P.height;
+      /* measured on screen, drawn in the box's own px: the phone's page is zoomed (.85), so screen px are divided by the
+         zoom (28 Oct, Nitish: on the phone "the dot which is supposed to be on the slider… is not on the slider") */
+      const B = bx.getBoundingClientRect(), P = ph.getBoundingClientRect(), z = B.width / (bx.offsetWidth || 1) || 1;
+      const ax = (P.left - B.left + at[0] * P.width) / z, ay = (P.top - B.top + at[1] * P.height) / z;
       g.setAttribute('transform', `translate(${ax.toFixed(1)} ${ay.toFixed(1)})`);
       const c = cards.current[S.act]; if (!c) return;
       if (S.phase === 'mark' && !c.dataset.placed) { /* the card level with the node, kept inside its column */
-        const col = c.parentElement!, Col = col.getBoundingClientRect(), h = c.getBoundingClientRect().height;
-        c.style.top = `${Math.max(0, Math.min(ay - (Col.top - B.top) - h / 2, Col.height - h)).toFixed(1)}px`; c.dataset.placed = '1';
+        const col = c.parentElement!, Col = col.getBoundingClientRect(), h = c.getBoundingClientRect().height / z;
+        c.style.top = `${Math.max(0, Math.min(ay - (Col.top - B.top) / z - h / 2, Col.height / z - h)).toFixed(1)}px`; c.dataset.placed = '1';
       }
       const C = c.getBoundingClientRect();
       const beside = C.bottom > P.top && C.top < P.bottom && (C.right <= P.left || C.left >= P.right);
       if (!beside) { l.setAttribute('d', ''); return; }
-      const cx = (C.right <= P.left ? C.right : C.left) - B.left;
+      const cx = ((C.right <= P.left ? C.right : C.left) - B.left) / z;
       l.setAttribute('d', `M${ax.toFixed(1)} ${ay.toFixed(1)}H${cx.toFixed(1)}`);
     };
     raf = requestAnimationFrame(tick);
