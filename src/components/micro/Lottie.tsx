@@ -105,6 +105,9 @@ export function Lottie({ src, className, loop = true, speed = 1, still = 0, labe
   const reduce = useReducedMotion();
   const animRef = useRef<AnimationItem | null>(null);
   const play = playing && !reduce;
+  /* the latest wish, for a player that finishes loading after it changed (28 Oct: a card that came on screen while its
+     file was still loading was built paused, and the change had found no player to start) */
+  const playRef = useRef(play); playRef.current = play;
   useEffect(() => { const a = animRef.current; if (!a) return; if (play) a.play(); else a.goToAndStop(still, true); }, [play, still]);
   useEffect(() => { const a = animRef.current; if (!a || !segment) return; a.loop = loop; a.playSegments([segment[0], segment[1]], true); if (!play) a.pause(); }, [segment, play, loop]);
   useEffect(() => {
@@ -119,7 +122,7 @@ export function Lottie({ src, className, loop = true, speed = 1, still = 0, labe
         data.layers = data.layers.filter(l => !drop(l));
         if (data.assets) data.assets = data.assets.filter(a => !(dropped.has(a.id) && a.p));
       }
-      anim = lottie.loadAnimation({ container: el, renderer: 'svg', loop, autoplay: play, animationData: data,
+      anim = lottie.loadAnimation({ container: el, renderer: 'svg', loop, autoplay: playRef.current, animationData: data,
         rendererSettings: { preserveAspectRatio: 'xMidYMid meet', progressiveLoad: true, ...(viewBox ? { viewBoxSize: viewBox } : {}) } });
       anim.setSpeed(speed);
       if (onFrame) anim.addEventListener('enterFrame', () => { if (anim) onFrame(anim.currentFrame); });
@@ -127,8 +130,8 @@ export function Lottie({ src, className, loop = true, speed = 1, still = 0, labe
       if (onComplete) anim.addEventListener('complete', onComplete);
       if (onLoop) anim.addEventListener('loopComplete', onLoop);
       animRef.current = anim;
-      if (segment) anim.addEventListener('DOMLoaded', () => { anim?.playSegments([segment[0], segment[1]], true); if (!play) anim?.pause(); });
-      else if (!play) anim.addEventListener('DOMLoaded', () => anim?.goToAndStop(still, true));
+      if (segment) anim.addEventListener('DOMLoaded', () => { anim?.playSegments([segment[0], segment[1]], true); if (!playRef.current) anim?.pause(); });
+      else anim.addEventListener('DOMLoaded', () => { if (!playRef.current) anim?.goToAndStop(still, true); else anim?.play(); });
     }).catch(err => console.warn(err)); /* a failed load leaves the card's label in place */
     return () => { gone = true; animRef.current = null; anim?.destroy(); };
   }, [src, speed, still, reduce, drop, viewBox, effects, onFrame, onComplete, onLoaded, onLoop]); // eslint-disable-line react-hooks/exhaustive-deps -- `segment` is applied by its own effect; a change must not rebuild the player

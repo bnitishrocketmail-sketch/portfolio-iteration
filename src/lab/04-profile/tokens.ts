@@ -24,7 +24,7 @@ const card = (id: string, name: string, x: string, y: string, z: string, v: stri
   { group: 'Intro cards', sub: name, kind: 'select', key: `--c-${id}-pv`, label: 'Shown on the phone', def: PH[id][2], light: PH[id][2], options: shown },
 ];
 /* the phone's defaults (profile.css :root): centre x, y (% of the square picture) and shown */
-const PH: Record<string, [string, string, string]> = { ai: ['17%', '57%', 'block'], loader: ['70%', '72%', 'block'], gold: ['27%', '30%', 'block'], pers: ['67%', '23%', 'block'], coin: ['66%', '33%', 'none'], micro: ['40%', '85%', 'none'] };
+const PH: Record<string, [string, string, string]> = { ai: ['17%', '64%', 'block'], loader: ['71%', '77%', 'block'], gold: ['27%', '30%', 'block'], pers: ['67%', '23%', 'none'], coin: ['66%', '33%', 'none'], micro: ['40%', '85%', 'none'] };
 
 export const CONTROLS: Control[] = [
   /* type */

@@ -32,8 +32,8 @@
      for shown, the coin and the micro-interactions hidden; their places carried over from the desktop's (the same spot
      on the drawing); the persuasion card, whose desktop spot (right of his head) is the links' notch here, takes the
      coin's at the top right — the coin is hidden here — beside the success card */
-  --c-ai-px: 17%; --c-ai-py: 57%; --c-loader-px: 70%; --c-loader-py: 72%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
-  --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: block; --c-coin-pv: none; --c-micro-pv: none;
+  --c-ai-px: 17%; --c-ai-py: 64%; --c-loader-px: 71%; --c-loader-py: 77%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
+  --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: none; /* three on the phone (28 Oct, Nitish: the persuasion card removed there) */ --c-coin-pv: none; --c-micro-pv: none;
   --name-box-v: flex; /* the name box with the one-liner, shown or hidden (the design system page) */
   --pcard-open: var(--nav-bg); --pcard-open-ink: var(--frame); --pcard-fold: var(--nav-hl); --pcard-fold-ink: var(--nav-bg); /* the project page's cards: the theme's two greys, the open one light with dark text, the folded dark with light text (Nitish, 14 Oct) */
   /* realistic shadows, very subtle (Nitish, 13 Oct): a contact line, a near key and a far soft one, all falling downward —
@@ -714,7 +714,10 @@
   .fl4.ai-card { --fx: var(--c-ai-px); --fy: var(--c-ai-py); display: var(--c-ai-pv); } .fl4.loader-card { --fx: var(--c-loader-px); --fy: var(--c-loader-py); display: var(--c-loader-pv); }
   .fl4.gold-card { --fx: var(--c-gold-px); --fy: var(--c-gold-py); display: var(--c-gold-pv); } .fl4.pers-card { --fx: var(--c-pers-px); --fy: var(--c-pers-py); display: var(--c-pers-pv); }
   .fl4.coin-card { --fx: var(--c-coin-px); --fy: var(--c-coin-py); display: var(--c-coin-pv); } .fl4.micro-card { --fx: var(--c-micro-px); --fy: var(--c-micro-py); display: var(--c-micro-pv); }
-  .fl4-in { gap: 6px; padding: 8px 10px; border-radius: calc(14px * var(--ios-k, 1)); }
+  .fl4-in { gap: 6px; padding: 8px 10px; border-radius: calc(14px * var(--ios-k, 1)); -webkit-backdrop-filter: none; backdrop-filter: none; background: color-mix(in srgb, var(--glass-bg) calc(min(1, var(--glass-a) + .35) * 100%), transparent); }
+  /* no backdrop blur on the phone (28 Oct, the lag): a blur over the moving picture under three floating cards was
+     redrawn every frame — measured with the CPU slowed 4×, it halved the frame rate. The glass a step darker instead,
+     so the drawing behind stays quiet */
   .fl4 .cap, .loader-card .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
   .fl4 .bl { width: 58px; margin: -4px 0 -2px -5px; } .fl4 .lk { width: 48px; } .fl4 .coin { width: 46px; }
   .fl4 .gm { --cw: calc(140px / var(--gw)); } .fl4 .pa, .fl4 .mli { width: 140px; }

@@ -11,6 +11,7 @@ import illustrationCutout from '../../assets/nitish-desk-illustration-cutout.web
 import deskCutout from '../../assets/nitish-desk-cutout.webp';
 import { Arrow04 } from './Arrow04';
 import Controls04 from './Controls04';
+import { useInView } from './inview';
 import { Lottie } from '../../components/micro/Lottie';
 import Projects04 from './Projects04';
 import Workflow04 from './Workflow04';
@@ -114,6 +115,15 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
     </div>
   );
 }
+/* a floating Lottie card (28 Oct, Nitish: "the homepage of the phone layout has become a little laggy since we have added
+   these Lotties"): its Lottie plays only while the card is on screen — not once the page is scrolled past the picture, and
+   never while the card is hidden (a hidden card's player had kept drawing every frame, unseen) */
+function FloatCard({ cls, depth, dur, dl, children }: { cls: string; depth: string; dur: string; dl: string; children: (on: boolean) => React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const on = useInView(ref, 0);
+  return <div ref={ref} className={`fl4 ${cls}`} data-depth={depth} style={{ '--dur': dur, '--dl': dl } as React.CSSProperties}><div className="fl4-in">{children(on)}</div></div>;
+}
+
 /* a card's clip: held on its first frame in black and white; on hover it plays and turns to colour (the filter eases in CSS) */
 function Cover({ src, poster, on }: { src: string; poster: string; on: boolean }) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -384,33 +394,21 @@ export default function Iteration04() {
                   background… not dominating"): the nav's old "Nitish", wide across the wall at his head's height, in the
                   dark at a low opacity so it reads as the wall a shade darker; behind him and the cards, leaning least */}
               {sigBg && <div className="fl4 sig-bg" data-depth=".2" aria-hidden="true"><SigWall /></div>}
-              <div className="fl4 coin-card" data-depth=".5" style={{ '--dur': '7s', '--dl': '-3.3s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></div>
-              </div>
-              <div className="fl4 loader-card" data-depth=".6" style={{ '--dur': '5.8s', '--dl': '-1.7s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></div>
-              </div>
+              <FloatCard cls="coin-card" depth=".5" dur="7s" dl="-3.3s">{on => <><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} playing={on} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></>}</FloatCard>
+              <FloatCard cls="loader-card" depth=".6" dur="5.8s" dl="-1.7s">{on => <><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} playing={on} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></>}</FloatCard>
               {depthOn
                 ? <DepthImg className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} depth={`${dd}${dn}.png`} layers={`${dd}${dn}-layers.png`} fg={`${dd}${dn}-fg.webp`} {...dfs} tilt={tilt} k={depthK} alt="" />
                 : <img className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} alt="" aria-hidden="true" />}
-              <div className="fl4 ai-card" data-depth="1.3" style={{ '--dur': '5.6s', '--dl': '-1s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="bl" src={LOTTIES.b} still={STILL.b} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></div>
-              </div>
+              <FloatCard cls="ai-card" depth="1.3" dur="5.6s" dl="-1s">{on => <><Lottie className="bl" src={LOTTIES.b} still={STILL.b} playing={on} label="B, Lenskart's AI assistant, cycling through its states" /><span className="cap">Lenskart's<br />AI assistant</span></>}</FloatCard>
               {/* the fifth card (Nitish, 13 Oct): the Gold membership reveal — the glass is padded to the rounded card inside the
                   Lottie (its canvas is laid with negative margins so that rectangle is the content box), and the confetti flies
                   past the glass; the Lottie's corners are its own */}
-              <div className="fl4 gold-card" data-depth="1.15" style={{ '--dur': '6.1s', '--dl': '-3.8s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state animation</span></div>
-              </div>
+              <FloatCard cls="gold-card" depth="1.15" dur="6.1s" dl="-3.8s">{on => <><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} playing={on} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state animation</span></>}</FloatCard>
               {/* the sixth card (Nitish, 13 Oct): the persuasion animation, the whole canvas in the glass with the standard padding and
                   no rounding of its own */}
-              <div className="fl4 pers-card" data-depth="1.2" style={{ '--dur': '6.6s', '--dl': '-.9s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects label="The persuasion animation" /><span className="cap">Persuasion animation</span></div>
-              </div>
+              <FloatCard cls="pers-card" depth="1.2" dur="6.6s" dl="-.9s">{on => <><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects playing={on} label="The persuasion animation" /><span className="cap">Persuasion animation</span></>}</FloatCard>
               {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
-              <div className="fl4 micro-card" data-depth="1.1" style={{ '--dur': '6.4s', '--dl': '-2.4s' } as React.CSSProperties}>
-                <div className="fl4-in"><Lottie className="mli" src={LOTTIES.micro} still={STILL.micro} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></div>
-              </div>
+              <FloatCard cls="micro-card" depth="1.1" dur="6.4s" dl="-2.4s">{on => <><Lottie className="mli" src={LOTTIES.micro} still={STILL.micro} playing={on} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></>}</FloatCard>
               <div className="name4">
                 {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}
                 <p className="lede4">{COPY.lede}<span className="lede4-more"> I design feedback{'\u00a0'}rich interfaces powered by motion.</span></p> {/* the phone (24 Oct): the one-liner joins the description as one paragraph; hidden on the desktop, where it sits under the title */}
