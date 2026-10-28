@@ -77,6 +77,9 @@ export type Block =
      bridge and the success when the payment is confirmed (a trigger: the button, or on its own after a while), the state
      lit in a strip; a switch shows the state machine itself — his map of it (`map`), a picture */
   | { k: 'coinmachine'; map?: string }
+  /* a live prototype beside its words (the multi-store nav study, 28 Oct; Proto in Case04.tsx): its number and name, a tag,
+     the paragraphs, what to try in it, and the prototype itself — his HTML, in a frame that takes the height it reports */
+  | { k: 'proto'; n: string; h: string; tag?: string; p: Rich[]; tips?: Rich[]; src: string; title: string; cap: string }
   | { k: 'fintech' } | { k: 'launches' };
 export type Section = { id: string; title: string; blocks: Block[]; tone?: 'white' /* a white card, for a clip whose own background is white (the floating phone) */ };
 export type Case = {

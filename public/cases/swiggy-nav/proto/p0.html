@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Primary · 08 — iOS layout</title>
+<style>
+  :root{
+    --ink:#0f1222;--muted:#6b7280;--line:#e7e9f0;--bg:#f6f7fb;
+    --blue:#2f6bff;--blue-deep:#12306b;--lightblue:#bcd3ff;--pill:#d8e6ff;
+    --shadow:0 12px 34px rgba(20,30,70,.12);--ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;padding:22px 16px 40px}
+  .wrap{max-width:392px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  h1{font-size:19px;margin:4px 0 6px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:13px;margin:0 0 14px;line-height:1.5}
+  .sub b{color:var(--ink)}
+
+  .seg{display:flex;background:#eef1f8;border-radius:11px;padding:4px;margin:0 auto 4px}
+  .seg button{flex:1;border:0;background:transparent;border-radius:8px;padding:9px 6px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s}
+  .seg button.on{background:#fff;color:var(--blue);box-shadow:0 2px 8px rgba(20,30,70,.10)}
+  .segcap{text-align:center;font-size:11px;color:#9aa2b6;margin-bottom:14px}
+
+  /* ---- iPhone mock: 324×702 (19.5:9) ---- */
+  .phone{width:100%;max-width:324px;height:702px;margin:0 auto;background:#fbfcff;border:1px solid var(--line);
+    border-radius:42px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:112px;height:30px;background:#101322;border-radius:999px;z-index:9}
+  .homebar{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:#101322;opacity:.85;z-index:9;pointer-events:none}
+  .topbar{position:absolute;top:56px;left:0;right:0;height:48px;display:flex;gap:6px;align-items:center;
+    padding:0 14px;overflow-x:auto;scrollbar-width:none;z-index:7;background:#fbfcff;border-bottom:1px solid #f0f2f8}
+  .topbar::-webkit-scrollbar{display:none}
+  .tabhl{position:absolute;border-radius:999px;z-index:0;opacity:0;pointer-events:none}
+  .ttab{position:relative;z-index:1}
+  .ttab{flex:0 0 auto;border:0;background:transparent;padding:8px 14px;border-radius:999px;font-size:13px;
+    font-weight:700;color:#aab1c4;cursor:pointer;transition:all .22s ease;white-space:nowrap}
+  .ttab.active{color:#fff}
+  .screen{position:absolute;top:104px;left:0;right:0;bottom:0}
+  .stitle{text-align:center;font-size:12px;font-weight:700;color:#aab1c4;margin-top:12px;transition:color .4s}
+  .skel{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+  .sk{background:#eef1f8;border-radius:14px}.sk.big{height:150px}.sk.r{height:16px}.sk.w85{width:85%}.sk.w60{width:60%}.sk.w40{width:40%}
+  .immersive{position:absolute;inset:104px 0 0;background:linear-gradient(160deg,#1a2140,#2f2170);opacity:0;transition:opacity .4s ease;display:flex;align-items:center;justify-content:center;color:#cdd4ff;font-size:13px;font-weight:600;z-index:2;pointer-events:none}
+  .immersive.on{opacity:1}
+
+  /* ---- nav: vl-06 bar language. Same inner layout in both modes; docked adds safe area. ---- */
+  .nav{position:absolute;left:0;right:0;bottom:0;height:98px;background:#fff;border-radius:0;
+    box-shadow:0 -0.5px 0 rgba(15,18,34,.10), 0 -10px 26px rgba(20,30,70,.05);
+    z-index:5;
+    transition:transform .4s var(--ease), opacity .4s ease,
+      left .45s var(--ease), right .45s var(--ease), bottom .45s var(--ease),
+      height .45s var(--ease), border-radius .45s var(--ease), box-shadow .45s ease}
+  .nav.float{left:14px;right:14px;bottom:28px;height:72px;border-radius:22px;
+    box-shadow:0 0 0 1px #eef0f6, 0 6px 16px rgba(20,30,70,.07)}
+  .nav.dropped{transform:translateY(140%);opacity:0}
+  .bar{position:relative;height:100%;display:flex;align-items:stretch;padding:0 6px}
+  .item{flex:1 1 0;min-width:0;position:relative;cursor:pointer;overflow:hidden;will-change:flex-grow,opacity,transform}
+  .iconwrap{position:absolute;top:17px;left:0;right:0;display:flex;justify-content:center;
+    transition:transform .22s var(--ease);will-change:transform}
+  .item.on .iconwrap{transform:scale(1.1)}   /* select = +10% icon, highlight unchanged */
+  .icon{width:24px;height:24px;border-radius:7px;background:var(--blue);will-change:transform}
+  .icon.deep{background:var(--blue-deep)}
+  .cap{position:absolute;top:52px;left:0;right:0;text-align:center;font-size:9.5px;font-weight:600;color:#9aa2b6;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
+  .item.on .cap{color:var(--blue-deep)}
+  .pill{position:absolute;top:9px;height:40px;width:40px;border-radius:14px;background:var(--pill);left:0;z-index:0;pointer-events:none;opacity:0}
+
+  .controls{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .toggle{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);cursor:pointer;user-select:none}
+  .switch{width:36px;height:21px;border-radius:999px;background:#d5d9e6;position:relative;transition:background .2s}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s}
+  .toggle.on .switch{background:var(--blue)}.toggle.on .switch::after{transform:translateX(15px)}
+  .spec{text-align:center;font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#9aa2b6;margin-top:14px;line-height:1.7}
+  .hint{text-align:center;font-size:12px;color:#9aa2b6;margin-top:10px;line-height:1.55}
+
+
+
+
+
+
+
+
+
+
+/* ===== embedded mode + nudges (injected) ===== */
+body.embedded .eyebrow, body.embedded h1, body.embedded .sub, body.embedded .spec{display:none !important}
+/* embedded: one column, everything flush with the phone's edges */
+body.embedded{padding:16px 12px 22px}
+body.embedded .wrap{max-width:324px}
+body.embedded .seg{max-width:none}
+/* room reserved for the two outside call-outs, so nothing ever shifts or clips */
+body.embedded .seg{margin-bottom:36px}
+body.embedded .controls{margin-top:42px}
+.nudge{position:absolute;z-index:60;display:inline-flex;align-items:center;gap:7px;
+  background:#0f1222;color:#fff;font-size:11px;font-weight:700;letter-spacing:.005em;
+  padding:6px 11px;border-radius:999px;white-space:nowrap;pointer-events:none;
+  box-shadow:0 8px 22px rgba(20,30,70,.26);opacity:0;transform:translateY(5px);
+  transition:opacity .34s cubic-bezier(.22,1,.36,1),transform .34s cubic-bezier(.22,1,.36,1)}
+.nudge.show{opacity:1;transform:translateY(0)}
+.nudge.cx{left:50%;transform:translate(-50%,5px)}
+.nudge.cx.show{transform:translate(-50%,0)}
+.nudge::after{content:'';position:absolute;width:9px;height:9px;background:#0f1222;transform:rotate(45deg);border-radius:1.5px}
+.nudge.up::after{top:-3.5px;left:50%;margin-left:-4.5px}
+.nudge.down::after{bottom:-3.5px;left:50%;margin-left:-4.5px}
+.nudge .dot{width:6px;height:6px;border-radius:50%;background:#7a5cff;flex:0 0 auto;
+  box-shadow:0 0 0 0 rgba(122,92,255,.6);animation:ndot 1.9s ease-out infinite}
+@keyframes ndot{0%{box-shadow:0 0 0 0 rgba(122,92,255,.6)}70%{box-shadow:0 0 0 7px rgba(122,92,255,0)}100%{box-shadow:0 0 0 0 rgba(122,92,255,0)}}
+.nhalo{animation:nhalo 2.2s ease-out infinite}
+@keyframes nhalo{0%{box-shadow:0 0 0 0 rgba(122,92,255,.45)}70%{box-shadow:0 0 0 9px rgba(122,92,255,0)}100%{box-shadow:0 0 0 0 rgba(122,92,255,0)}}
+@media (prefers-reduced-motion: reduce){.nudge .dot,.nhalo{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Primary track · 10</div>
+  <h1>iOS layout</h1>
+  <p class="sub">The hygiene base re-laid on <b>iPhone metrics</b> (19.5:9, Dynamic Island, safe area) with the <b>vl-06 bar language</b>: 24px icons, 9.5px labels, 40px pill r14, radius-22 container, hairline stroke + soft shadow. Select state simplified: the <b>icon grows 10%</b>, the highlight doesn't move. Toggle <b>docked ↔ floating</b>. Page stacks now load with the same motion — fade constant, staggered.</p>
+
+  <div class="seg" id="seg">
+    <button data-s="rise" class="on">Fade + Rise</button>
+    <button data-s="scale">Fade + Scale</button>
+    <button data-s="glideL">Fade + Glide-L</button>
+  </div>
+  <div class="segcap" id="segcap">Items fade and rise into place.</div>
+
+  <div class="phone">
+    <div class="island"></div>
+    <div class="topbar" id="topbar"><div class="tabhl" id="tabhl"></div></div>
+    <div class="screen">
+      <div class="stitle" id="stitle">Food</div>
+      <div class="skel">
+        <div class="sk big"></div><div class="sk r w85"></div><div class="sk r w40"></div>
+        <div class="sk big"></div><div class="sk r w60"></div>
+      </div>
+    </div>
+    <div class="immersive" id="immersive">Scenes · full-screen (bar dropped)</div>
+    <div class="nav float" id="nav">
+      <div class="bar" id="bar"><div class="pill" id="pill"></div></div>
+    </div>
+    <div class="homebar"></div>
+  </div>
+
+  <div class="controls">
+    <div class="toggle on" id="float"><span class="switch"></span><span>Floating bar</span></div>
+    <div class="toggle" id="reduce"><span class="switch"></span><span>Reduced motion</span></div>
+  </div>
+  <div class="spec" id="spec"></div>
+  <div class="hint">Open on your phone. Tap around — the active icon grows a touch; flip the bar to docked.</div>
+</div>
+
+<script>
+const EASE='cubic-bezier(.22,1,.36,1)';
+let reduced=false, floating=true; const d=ms=>reduced?0:ms;
+const T={ out:130, in:200, stagger:40, grow:360, glide:340, pulse:220, label:170 };
+const PILLW=40, PAD=6;
+const STYLES={
+  rise:  { out:'translateY(-8px) scale(.9)', inFrom:'translateY(10px)', cap:'Items fade and rise into place.' },
+  scale: { out:'scale(.55)',                 inFrom:'scale(.55)',       cap:'Items fade and scale in and out.' },
+  glideL:{ out:'translateX(-16px)',          inFrom:'translateX(-16px)',cap:'Items fade and glide in from the left.' },
+};
+let styleKey='rise';
+
+const EXP={
+  food:      {name:'Food',      items:[{k:'food',label:'Food'},{k:'bolt',label:'Bolt'},{k:'gourmet',label:'Gourmet'},{k:'reorder',label:'Reorder'},{k:'eatright',label:'Eat Right'}]},
+  instamart: {name:'Instamart', items:[{k:'instamart',label:'Instamart'},{k:'categories',label:'Categories'},{k:'print',label:'Print'},{k:'reorder',label:'Reorder'},{k:'promo_i',label:'Promo'}]},
+  dineout:   {name:'Dineout',   items:[{k:'dineout',label:'Dineout'},{k:'bites',label:'Bites'},{k:'mycorner',label:'My Corner'},{k:'scenes',label:'Scenes'},{k:'promo_d',label:'Promo'}]},
+  scenes:    {name:'Scenes',    items:[]},
+  giftables: {name:'Giftables', items:[{k:'giftables',label:'Giftables'},{k:'allcat',label:'All Categories'}]},
+};
+const ORDER=['food','instamart','dineout','scenes','giftables'];
+let currentKey='food', activeIdx=0;
+
+const el=(t,c)=>{const e=document.createElement(t);if(c)e.className=c;return e;};
+const nav=document.getElementById('nav'), bar=document.getElementById('bar'),
+      pill=document.getElementById('pill'), immersive=document.getElementById('immersive');
+const styleVec=()=>STYLES[styleKey];
+const slots=()=>[...bar.querySelectorAll('.item:not(.exit)')];
+
+function mkItem(item,isHome){
+  const s=el('div','item'+(isHome?' home':'')); s.dataset.k=item.k;
+  const wrap=el('div','iconwrap'); const ic=el('div','icon'); wrap.appendChild(ic);
+  const cap=el('div','cap'); cap.textContent=item.label;
+  s.append(wrap,cap);
+  s.onclick=()=>{ const arr=slots(); selectItem(arr.indexOf(s), s.querySelector('.cap').textContent); };
+  return s;
+}
+function placePill(index,count,animate){
+  if(count<=0){ pill.style.opacity=0; return; }
+  const contentW=bar.clientWidth-2*PAD;
+  const slotW=contentW/count;
+  const center=PAD+slotW*index+slotW/2;
+  pill.style.opacity=1;
+  pill.style.transition=(animate&&!reduced)?`left ${T.glide}ms ${EASE}, opacity ${d(T.in)}ms ease`:'none';
+  pill.style.left=Math.round(center-PILLW/2)+'px';
+}
+function setActive(index){
+  slots().forEach((s,i)=>{ const on=(i===index); s.classList.toggle('on',on); s.querySelector('.icon').classList.toggle('deep',on); });
+}
+function selectItem(index,label){
+  activeIdx=index; setActive(index); placePill(index, slots().length, true);
+  document.getElementById('stitle').textContent=label;
+  animateContent(contentKind());
+}
+function morphHome(s,item){
+  const ic=s.querySelector('.icon'), cap=s.querySelector('.cap');
+  s.dataset.k=item.k; s.classList.add('home');
+  cap.style.transition=`opacity ${d(T.label)}ms ease`; cap.style.opacity='0';
+  setTimeout(()=>{ cap.textContent=item.label; cap.style.opacity='1'; }, d(T.label));
+  ic.style.transition='none'; ic.style.transform='scale(1.12)';
+  requestAnimationFrame(()=>{ ic.style.transition=`transform ${d(T.pulse)}ms ${EASE}`; ic.style.transform='none'; });
+}
+function swapContent(s,item,delay){
+  const st=styleVec(), cap=s.querySelector('.cap'), ic=s.querySelector('.icon');
+  s.dataset.k=item.k;
+  const outT=`opacity ${d(T.out)}ms ease ${delay}ms, transform ${d(T.out)}ms ease ${delay}ms`;
+  ic.style.transition=outT; cap.style.transition=outT;
+  requestAnimationFrame(()=>{ ic.style.opacity='0'; ic.style.transform=st.out; cap.style.opacity='0'; });
+  setTimeout(()=>{
+    cap.textContent=item.label;
+    const inT=`opacity ${d(T.in)}ms ${EASE}, transform ${d(T.in)}ms ${EASE}`;
+    ic.style.transition=inT; cap.style.transition=inT;
+    ic.style.opacity='1'; ic.style.transform='none'; cap.style.opacity='1';
+  }, delay + d(T.out) + 10);
+}
+function enterSlot(item,delay){
+  const st=styleVec(); const s=mkItem(item,false);
+  s.style.flexGrow='0'; s.style.opacity='0'; s.style.transform=st.inFrom;
+  bar.appendChild(s); void s.offsetWidth;
+  requestAnimationFrame(()=>{
+    s.style.transition=`flex-grow ${d(T.grow)}ms ${EASE} ${delay}ms, opacity ${d(T.in)}ms ${EASE} ${delay}ms, transform ${d(T.in)}ms ${EASE} ${delay}ms`;
+    s.style.flexGrow='1'; s.style.opacity='1'; s.style.transform='none';
+  });
+}
+function exitSlot(s){
+  const st=styleVec(); s.classList.add('exit');
+  s.style.transition=`flex-grow ${d(T.grow)}ms ${EASE}, opacity ${d(T.out)}ms ease, transform ${d(T.out)}ms ease`;
+  requestAnimationFrame(()=>{ s.style.flexGrow='0'; s.style.opacity='0'; s.style.transform=st.out; });
+  setTimeout(()=>s.remove(), Math.max(d(T.grow),d(T.out))+60);
+}
+function reconcile(cfg){
+  const items=cfg.items, cur=slots(), oldN=cur.length, newN=items.length, min=Math.min(oldN,newN);
+  for(let i=newN;i<oldN;i++) exitSlot(cur[i]);
+  let stg=0;
+  for(let i=0;i<min;i++){
+    if(i===0) morphHome(cur[0], items[0]);
+    else { swapContent(cur[i], items[i], d(30+stg*T.stagger)); stg++; }
+  }
+  for(let i=oldN;i<newN;i++){ enterSlot(items[i], d(30+stg*T.stagger)); stg++; }
+}
+function buildFull(cfg){
+  [...bar.querySelectorAll('.item')].forEach(n=>n.remove());
+  cfg.items.forEach((item,i)=>bar.appendChild(mkItem(item,i===0)));
+  activeIdx=0; setActive(0);
+}
+/* top-tab highlight: adjacent tab = true glide; skips = capped directional shift (no full sweep) */
+const tabhl=document.getElementById('tabhl');
+let tabIdx=-1;
+function placeTabHL(t){ tabhl.style.left=t.offsetLeft+'px'; tabhl.style.top=t.offsetTop+'px';
+  tabhl.style.width=t.offsetWidth+'px'; tabhl.style.height=t.offsetHeight+'px'; }
+function moveTabHL(newT,newIdx,color){
+  if(!newT) return;
+  tabhl.style.background=color;
+  tabhl.getAnimations().forEach(a=>a.cancel());
+  const first=(tabIdx<0), delta=newIdx-tabIdx, d=Math.sign(delta)||1, adj=Math.abs(delta)<=1;
+  tabIdx=newIdx;
+  if(first||reduced){ tabhl.style.transition='none'; placeTabHL(newT); tabhl.style.opacity=1; return; }
+  if(adj){
+    tabhl.style.transition='left .3s cubic-bezier(.22,1,.36,1), width .3s cubic-bezier(.22,1,.36,1)';
+    tabhl.style.opacity=1; placeTabHL(newT);
+  } else {
+    tabhl.style.transition='none';
+    const out=tabhl.animate(
+      [{transform:'translateX(0)',opacity:1},{transform:'translateX('+(14*d)+'px)',opacity:0}],
+      {duration:130,easing:'ease-in',fill:'forwards'});
+    out.onfinish=()=>{ out.cancel();
+      placeTabHL(newT);
+      tabhl.style.opacity=1;
+      tabhl.animate(
+        [{transform:'translateX('+(-20*d)+'px)',opacity:0},{transform:'translateX(0)',opacity:1}],
+        {duration:220,easing:'cubic-bezier(.22,1,.36,1)'});
+    };
+  }
+}
+function markTabs(k){
+  const tabs=[...document.querySelectorAll('.ttab')];
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.k===k));
+  const i=tabs.findIndex(t=>t.dataset.k===k);
+  moveTabHL(tabs[i], i, '#2f6bff');
+}
+function dropBar(){ pill.style.opacity=0; nav.classList.add('dropped'); immersive.classList.add('on'); }
+function riseBar(){ nav.classList.remove('dropped'); immersive.classList.remove('on'); }
+/* page content loads with the nav's motion: fade constant, slight stagger between stacks */
+function animateContent(kind){
+  if(reduced) return;
+  const els=[...document.querySelectorAll('.skel .sk')];
+  els.forEach((el,i)=>{
+    const from = kind==='rise' ? 'translateY(26px)'
+      : kind==='glide'  ? 'translateX(36px)'
+      : kind==='scale'  ? 'scale(.94)'
+      : kind==='slideL' ? 'translateX(46px)'
+      : 'translateX(-46px)';
+    el.animate([{opacity:0, transform:from},{opacity:1, transform:'none'}],
+      { duration:380, delay:i*70, easing:EASE, fill:'backwards' });
+  });
+}
+const contentKind=()=>({rise:'rise',scale:'scale',glideL:'glide'}[styleKey]||'rise');
+function switchStore(newKey){
+  if(newKey===currentKey) return;
+  const prev=currentKey; currentKey=newKey; const cfg=EXP[newKey];
+  markTabs(newKey); document.getElementById('stitle').textContent=cfg.name;
+  if(newKey==='scenes'){ dropBar(); return; }
+  if(prev==='scenes'){ buildFull(cfg); riseBar(); animateContent(contentKind()); requestAnimationFrame(()=>placePill(0,cfg.items.length,false)); return; }
+  reconcile(cfg);
+  animateContent(contentKind());
+  activeIdx=0; setActive(0);
+  requestAnimationFrame(()=>placePill(0, cfg.items.length, true));
+}
+const topbar=document.getElementById('topbar');
+ORDER.forEach(k=>{
+  const b=el('button','ttab'+(k===currentKey?' active':'')); b.textContent=EXP[k].name;
+  b.dataset.k=k; b.onclick=()=>switchStore(k); topbar.appendChild(b);
+});
+const segcap=document.getElementById('segcap');
+document.getElementById('seg').addEventListener('click',e=>{
+  const btn=e.target.closest('button'); if(!btn) return;
+  styleKey=btn.dataset.s;
+  document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===btn));
+  segcap.textContent=styleVec().cap; updateSpec();
+});
+document.getElementById('float').onclick=function(){
+  floating=!floating; this.classList.toggle('on',floating);
+  nav.classList.toggle('float',floating);
+  if(currentKey!=='scenes') placePill(activeIdx, slots().length, true);
+  updateSpec();
+};
+document.getElementById('reduce').onclick=function(){ reduced=!reduced; this.classList.toggle('on',reduced); };
+window.addEventListener('resize',()=>{ if(currentKey!=='scenes') placePill(activeIdx, slots().length, false); });
+function updateSpec(){
+  document.getElementById('spec').innerHTML=
+    `mock 360×780 · bar ${floating?'floating 72 · inset 14 · r22 · stroke #eef0f6':'docked 72+26 safe'} · icon 24 → 26.4 on select<br>pill 40² r14 (fixed) · label 9.5px · style ${styleKey}`;
+}
+buildFull(EXP.food); updateSpec(); animateContent(contentKind());
+requestAnimationFrame(()=>markTabs('food'));
+requestAnimationFrame(()=>placePill(0,5,false));
+</script>
+<script>
+/* ===== nudges / call-outs (injected) ===== */
+(function(){
+  var EMB = window.self!==window.top;
+  if(EMB) document.body.classList.add('embedded');
+
+  /* the frame must hug the content — no dead space below, and it follows
+     the nudge gaps as they open and close */
+  if(EMB){
+    var last=0;
+    var post=function(){
+      var h=Math.ceil(document.body.getBoundingClientRect().height);
+      if(h && Math.abs(h-last)>1){ last=h;
+        try{ parent.postMessage({__ph:1,h:h},'*'); }catch(e){} }
+    };
+    if(window.ResizeObserver) new ResizeObserver(post).observe(document.body);
+    [0,120,400,900,1600,2600].forEach(function(t){setTimeout(post,t)});
+    window.addEventListener('resize',post);
+  }
+  var live=[];
+  function mk(text,cls){var n=document.createElement('div');n.className='nudge cx '+cls;
+    n.innerHTML='<span class="dot"></span>'+text;return n;}
+  function show(n){requestAnimationFrame(function(){requestAnimationFrame(function(){n.classList.add('show')})});}
+  function kill(n){if(!n||n._d)return;n._d=1;n.classList.remove('show');setTimeout(function(){n.remove()},400);}
+  function killAll(){live.forEach(kill);}
+
+  function boot(){
+    var phone=document.querySelector('.phone'),
+        topbar=document.getElementById('topbar'),
+        nav=document.getElementById('nav'),
+        seg=document.querySelector('.seg'),
+        controls=document.querySelector('.controls'),
+        floatT=document.getElementById('float');
+    if(!phone) return;
+    phone.style.position='relative';
+
+    /* 1 — the primary control: store tabs */
+    var nTabs=null;
+    if(topbar){
+      nTabs=mk('Switch stores from these tabs','up');
+      nTabs.style.top=(topbar.offsetTop+topbar.offsetHeight+9)+'px';
+      phone.appendChild(nTabs); live.push(nTabs); show(nTabs);
+    }
+
+    /* 2 — after the first switch (or a wait): the bar, the options, the switches */
+    var stage2=false;
+    function second(){
+      if(stage2) return; stage2=true;
+      kill(nTabs);
+      if(nav){
+        var nBar=mk('Tap items in the bar','down');
+        nBar.style.bottom=(phone.clientHeight-nav.offsetTop+9)+'px';
+        phone.appendChild(nBar); live.push(nBar); show(nBar);
+        setTimeout(function(){kill(nBar)},5200);
+      }
+      setTimeout(function(){
+        if(seg){
+          var id=seg.id, txt=id==='tiltseg'?'Two swap settings — compare'
+            :id==='dirseg'?'Two direction conventions — compare'
+            :'Three content-load styles — compare';
+          /* below the seg, not above — the seg is the topmost element and
+             anything above it is clipped by the frame edge */
+          var nSeg=mk(txt,'up');
+          seg.style.position='relative';
+          nSeg.style.top='calc(100% + 10px)';
+          seg.appendChild(nSeg); live.push(nSeg); show(nSeg);
+          seg.addEventListener('click',function(){kill(nSeg)},{once:true});
+          setTimeout(function(){kill(nSeg)},14000);
+        }
+        if(controls){
+          /* sit ABOVE the toggles, in a gap opened for it — below it is the hint line */
+          var nCtl=mk('Flip docked \u2194 floating','down');
+          controls.style.position='relative';
+          nCtl.style.bottom='calc(100% + 10px)';
+          controls.appendChild(nCtl); live.push(nCtl); show(nCtl);
+          controls.addEventListener('click',function(){kill(nCtl)},{once:true});
+          setTimeout(function(){kill(nCtl)},14000);
+        }
+        if(floatT){
+          var sw=floatT.querySelector('.switch');
+          if(sw){ sw.classList.add('nhalo');
+            floatT.addEventListener('click',function(){sw.classList.remove('nhalo')},{once:true});
+            setTimeout(function(){sw.classList.remove('nhalo')},16000); }
+        }
+      },500);
+    }
+    if(topbar) topbar.addEventListener('click',second,{once:true});
+    setTimeout(second,5200);
+    setTimeout(killAll,26000);
+  }
+  /* never wait on window.load — the Lottie CDN can hang and the nudges must still appear */
+  setTimeout(boot,900);
+})();
+</script>
+</body>
+</html>

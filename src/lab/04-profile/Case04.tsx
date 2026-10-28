@@ -681,6 +681,54 @@ function Carousel({ of }: { of: Media[] }) {
   );
 }
 
+/* a live prototype beside its words (the multi-store nav study, 28 Oct): his prototype pages, served as they are, in a
+   frame. Framed, each turns to its embedded mode (its own headings hidden, the phone and its controls only) and posts its
+   content's height ({__ph: 1, h}), which the frame takes, so it hugs the prototype as it opens and closes its nudges.
+   Loaded when near the screen; the words at the left — number and name, a tag, the paragraphs, what to try */
+function Proto({ b }: { b: Extract<Block, { k: 'proto' }> }) {
+  const ref = useRef<HTMLIFrameElement>(null), fig = useRef<HTMLElement>(null);
+  const [h, setH] = useState(820);
+  const [fit, setFit] = useState(1);
+  useEffect(() => {
+    const on = (e: MessageEvent) => { const d = e.data as { __ph?: number; h?: number } | null; if (d && d.__ph === 1 && typeof d.h === 'number' && e.source === ref.current?.contentWindow) setH(Math.round(d.h)); };
+    addEventListener('message', on); return () => removeEventListener('message', on);
+  }, []);
+  /* the whole prototype in view at once (28 Oct): the study is the top of the screen answering at the bottom — the tabs
+     and the bar have to be seen together — so the prototype is scaled down (never up) to the height the page shows under
+     its head: the study's own scroller on desktop, the screen above the phone's nav bar on the phone. In the frame's own
+     px (the phone's page is zoomed), less the caption and room above and below */
+  useLayoutEffect(() => {
+    const f = fig.current; if (!f) return;
+    const measure = () => {
+      const z = f.getBoundingClientRect().width / (f.offsetWidth || 1) || 1;
+      const body = f.closest<HTMLElement>('.cs4-body'), head = f.closest('.cs4')?.querySelector('.cs4-head');
+      let top = 0, bottom = innerHeight;
+      if (body && getComputedStyle(body).overflowY !== 'visible' && body.scrollHeight > body.clientHeight + 1) {
+        const r = body.getBoundingClientRect(); top = r.top; bottom = r.bottom;
+        if (head && getComputedStyle(head).position === 'absolute') top = Math.max(top, head.getBoundingClientRect().bottom);
+      } else { const nav = document.querySelector('.pn4'); if (nav) bottom = Math.min(bottom, nav.getBoundingClientRect().top); }
+      const cap = f.querySelector('figcaption'), capH = cap ? cap.getBoundingClientRect().height / z : 0;
+      const room = parseFloat(getComputedStyle(f).getPropertyValue('--fit-room')) || 24;
+      const avail = (bottom - top) / z - capH - 2 * room;
+      setFit(Math.max(.55, Math.min(1, avail / h)));
+    };
+    measure(); addEventListener('resize', measure); return () => removeEventListener('resize', measure);
+  }, [h]);
+  return (
+    <div className="cs4-proto" style={{ '--fit': fit } as CSSProperties}>
+      <div className="cs4-proto-text">
+        <div className="cs4-proto-head"><span className="cs4-ver-chip">{b.n}</span><h4 className="cs4-sub">{b.h}</h4>{b.tag && <span className="cs4-proto-tag">{b.tag}</span>}</div>
+        {b.p.map((t, i) => <p key={i} className="cs4-p">{text(t)}</p>)}
+        {b.tips && <div className="cs4-try"><span className="cs4-faq-label">Try this in the prototype</span><ul className="cs4-ul">{b.tips.map((t, i) => <li key={i}>{text(t)}</li>)}</ul></div>}
+      </div>
+      <figure className="cs4-proto-fig" ref={fig}>
+        <div className="cs4-proto-frame" style={{ height: Math.round(h * fit) }}><iframe ref={ref} src={b.src} title={b.title} loading="lazy" style={{ height: h }} /></div>
+        <figcaption>{b.cap}</figcaption>
+      </figure>
+    </div>
+  );
+}
+
 function Render({ b }: { b: Block }) {
   switch (b.k) {
     case 'p': return <p className="cs4-p">{text(b.t)}</p>;
@@ -758,13 +806,14 @@ function Render({ b }: { b: Block }) {
     case 'machine': return <BMachine />;
     case 'simpick': return <SimPick />;
     case 'coinmachine': return <CoinMachine map={b.map} />;
+    case 'proto': return <Proto b={b} />;
     case 'fintech': return <Fintech3D />;
     case 'launches': return <Launches3D />;
   }
 }
 
 /* `items`: the list it belongs to (Projects, or the Lab's), for its next card (23 Oct) */
-export default function Case04({ id, back, onOpen, items = PROJECTS04, card = 'collab' }: { id: string; back: () => void; onOpen: (id: string) => void; items?: Project[]; card?: string /* the bottom-right card for a project with a collaborator: its credit, or the contact card (a control, 26 Oct) */ }) {
+export default function Case04({ id, back, onOpen, items = PROJECTS04, card = 'collab', backTo = 'Projects' }: { id: string; back: () => void; onOpen: (id: string) => void; items?: Project[]; backTo?: string /* the back link's label: the tab it returns to (28 Oct) */; card?: string /* the bottom-right card for a project with a collaborator: its credit, or the contact card (a control, 26 Oct) */ }) {
   const PROJECTS = items;
   const k = PROJECTS.findIndex(p => p.id === id); const p = PROJECTS[k];
   const c = CASES[id];
@@ -801,7 +850,7 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04, card = 'c
         <div className="cs4-glass" aria-hidden="true" />
         <div className="cs4-head-in">
         <div className="cs4-title">
-          <button type="button" className="cs4-back" onClick={back}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M12 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>Projects</button>
+          <button type="button" className="cs4-back" onClick={back}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M12 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>{backTo}</button>
           <h2 className="h2-4">{c?.title ?? p.title}</h2>
         </div>
         <div className="cs4-side"><p className="pp4-note">{c?.sub ?? p.blurb}</p>{c && <ul className="cs4-chips">{c.chips.map(t => <li key={t}>{t}</li>)}</ul>}</div>

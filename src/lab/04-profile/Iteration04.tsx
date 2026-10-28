@@ -354,7 +354,7 @@ export default function Iteration04() {
           /* the experiments (Lab04.tsx); the Motion system's card opens its page */
           <motion.div key={lid ? `lab-${lid}` : 'lab'} className="page4" {...PAGE_IN}>
             {/* the Lab is the Projects page with the Lab's list (23 Oct); the Motion system's arrow opens its page */}
-            {lid ? <Case04 id={lid} items={LAB04} back={() => go('lab')} onOpen={id => (id === 'motion-system' ? go('motion') : go('lab', id))} />
+            {lid ? <Case04 id={lid} items={LAB04} backTo="Lab" back={() => go('lab')} onOpen={id => (id === 'motion-system' ? go('motion') : go('lab', id))} />
               : <Projects04 items={LAB04} title="Lab" note="Experiments: the rigs, the plugin, the systems and the concepts, built to be played with." onOpen={id => (id === 'motion-system' ? go('motion') : go('lab', id))} />}
           </motion.div>
         ) : tab === 'articles' ? (
