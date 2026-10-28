@@ -452,7 +452,7 @@ export default function Iteration04() {
       </div>
       {/* the design system — the type, the colours, the cards' places, in both modes, with their controls — is its own page */}
       {/* the control centre (22 Oct, back from the first cut): a panel at the side of the page, with the way to the whole design-system page at its top */}
-      <Controls04 values={tweaks} onChange={setTweaks} dark={isDark} toggle={toggle} />
+      <Controls04 values={tweaks} onChange={setTweaks} dark={isDark} toggle={toggle} secret={tab === 'workflow'} /> {/* hidden on Workflow until tapped five times (28 Oct) */}
       <Link className="labtag" to="/lab">Lab · 04 Profile</Link>
     </div>
   );

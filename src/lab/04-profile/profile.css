@@ -590,6 +590,9 @@
 
 /* the temporary colour controls: a pill at the page's bottom-left; open, a small panel of pickers */
 .tweaks4 { position: fixed; left: 18px; bottom: 10px; z-index: 60; }
+/* a control hidden in place until tapped five times (secret.ts): there and tappable, unseen; no tap flash, no double-tap zoom eating the taps */
+.secret4 { opacity: 0 !important; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: opacity .3s ease; }
+.tw-toggle, .ot4-chip { transition: opacity .3s ease; touch-action: manipulation; }
 .tw-toggle, .tw-row button { border: 0; border-radius: 999px; padding: 6px 12px; background: var(--g2); color: var(--ink); font: 500 11.5px var(--body); cursor: pointer; letter-spacing: .02em; text-decoration: none; }
 .tw-panel { order: -1; display: grid; gap: 10px; padding: 12px 14px; border-radius: calc(14px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--g1); box-shadow: var(--shadow-el), 0 0 0 1px rgba(255, 255, 255, .08); max-height: calc(100vh - 80px); overflow: auto; scrollbar-width: thin; width: 268px; }
 .tw-panel section { display: grid; gap: 5px; }

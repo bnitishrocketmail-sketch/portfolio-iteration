@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from 'react';
 import { SlideGroup } from './SlidePill04';
 import { createPortal } from 'react-dom';
 import { drawOrb, geodesic, projectOrb, type V3 } from './Orb04';
+import { useFiveTaps } from './secret';
 import './orb.css';
 
 /* Variant 2 of the Workflow page (Nitish, 17 Oct). The point of the page: the skills and tools came before today's AI,
@@ -26,7 +27,7 @@ import './orb.css';
 export type OrbTune = { size: number; freq: number; speedX: number; speedY: number; dot: number; line: number; fade: number; pace: number; float: boolean; drift?: number }; // drift: a scale on how far the pills float (the phone halves it)
 /* the orb's diameter is `size`% of the map's height; the dot and wire sizes are the ones he approved, at the default size,
    and scale with it — the whole orb scales as one, keeping its proportions */
-export const TUNE0: OrbTune = { size: 21, freq: 2, speedX: 14, speedY: 22, dot: 2.2, line: 1, fade: .78, pace: 1, float: true };
+export const TUNE0: OrbTune = { size: 21, freq: 2, speedX: 14, speedY: 22, dot: 2.2, line: .5, fade: .78, pace: 1, float: true }; /* the wires .5 px by default (28 Oct, Nitish; was 1) */
 
 export type Pin = { id: string; x: number; y: number }; // the pill's centre, in % of the map
 
@@ -147,7 +148,7 @@ export function OrbField({ pins, links, wired, mapRef, openId, tune }: { pins: P
       /* the orb, with "AI" between its halves */
       const lit = new Set(wires.filter(w => w.phase === 'hold').map(w => w.v));
       drawOrb(ctx, P, geo.current.edges, { dot: o.dot * k, line: o.line * k, fade: o.fade, ink, lit }, () => {
-        ctx.fillStyle = ink; ctx.font = `600 ${Math.round(R * .34)}px ${font}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = ink; ctx.font = `600 ${Math.round(R * .425)}px ${font}`; /* a quarter bigger (28 Oct, Nitish: "1.5x bigger"; was .34 of the radius) */ ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText('AI', cx, cy + R * .02);
       });
       /* the wires, from the pill (under it — the canvas is below the pills) to the dot it holds, growing out, sliding
@@ -189,6 +190,7 @@ export function OrbTuner({ tune, setTune, anchor }: { tune: OrbTune; setTune: (t
   const [open, setOpen] = useState(false);
   const [host, setHost] = useState<HTMLElement | null>(null);
   useEffect(() => { setHost(anchor.current?.closest<HTMLElement>('.it04') ?? document.body); }, [anchor]);
+  const five = useFiveTaps('tune', !open); /* hidden in place until tapped five times (28 Oct; secret.ts) */
   if (!host) return null;
   const set = <K extends keyof OrbTune>(key: K, v: OrbTune[K]) => setTune({ ...tune, [key]: v });
   const slider = (label: string, key: 'size' | 'speedX' | 'speedY' | 'dot' | 'line' | 'fade' | 'pace', min: number, max: number, step: number, unit = '') => (
@@ -213,7 +215,7 @@ export function OrbTuner({ tune, setTune, anchor }: { tune: OrbTune; setTune: (t
         </SlideGroup>
         <p className="ot4-note">Size is the orb’s diameter as a share of the map’s height; dots and wires scale with it. Rewiring: how long the three hold before the next swap (×1 ≈ 2.2–3.2 s).</p>
       </div>
-    ) : <button type="button" className="ot4-chip" onClick={() => setOpen(true)}>Tune orb</button>,
+    ) : <button type="button" className={`ot4-chip${five.hidden ? ' secret4' : ''}`} tabIndex={five.hidden ? -1 : undefined} onClickCapture={five.capture} onClick={() => setOpen(true)}>Tune orb</button>,
     host,
   );
 }

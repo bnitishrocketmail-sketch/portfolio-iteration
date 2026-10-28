@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CONTROLS, defOf, writeTweaks, type Control } from './tokens';
+import { useFiveTaps } from './secret';
 import './system.css';
 
 /* The control centre (Nitish, 22 Oct: "the earlier approach — a panel that opens at the side of the same screen — was
    better; a button in it opens the whole design-system page"): the chip at the page's foot opens a panel down the left
    side with the same controls the design-system page has (tokens.ts), for the mode the site is in; at its top, the way
    to the whole page. Values go to the browser as before, so the page and the design system stay in step. */
-export default function Controls04({ values, onChange, dark, toggle, onSystem }: { values: Record<string, string>; onChange: (v: Record<string, string>) => void; dark: boolean; toggle: () => void; onSystem?: boolean }) {
+export default function Controls04({ values, onChange, dark, toggle, onSystem, secret = false }: { values: Record<string, string>; onChange: (v: Record<string, string>) => void; dark: boolean; toggle: () => void; onSystem?: boolean; secret?: boolean /* hidden in place until tapped five times (Workflow, 28 Oct; secret.ts) */ }) {
   const [open, setOpen] = useState(false);
+  const five = useFiveTaps('controls', secret && !open);
   const [copied, setCopied] = useState(false);
   const set = (k: string, v: string) => { const next = { ...values, [k]: v }; onChange(next); writeTweaks(dark, next); };
   const reset = () => { onChange({}); writeTweaks(dark, {}); };
@@ -26,7 +28,7 @@ export default function Controls04({ values, onChange, dark, toggle, onSystem }:
   };
   return (
     <>
-      <button type="button" className="tweaks4 tw-toggle" aria-expanded={open} onClick={() => setOpen(o => !o)}>{open ? 'Close' : 'Controls'}</button>
+      <button type="button" className={`tweaks4 tw-toggle${five.hidden ? ' secret4' : ''}`} aria-expanded={open} tabIndex={five.hidden ? -1 : undefined} onClickCapture={five.capture} onClick={() => setOpen(o => !o)}>{open ? 'Close' : 'Controls'}</button>
       {open && (
         <aside className="sys-controls ctl4" aria-label="Controls">
           {onSystem ? <Link className="ctl4-sys" to="/lab/04-profile">← Back to the profile</Link> : <Link className="ctl4-sys" to="/lab/04-system">Open the design system →</Link>}
