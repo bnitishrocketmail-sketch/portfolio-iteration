@@ -526,9 +526,14 @@
 .pp4-card.inv .pp4-arrow { color: var(--ink-dark); }
 .pp4-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .pp4-vid.side { inset: auto; top: 50%; height: 92%; width: auto; right: 4%; transform: translateY(-50%); object-fit: contain; -webkit-mask-image: linear-gradient(#000 90%, transparent); mask-image: linear-gradient(#000 90%, transparent); } /* the phone whole, at its own proportion (the clip is cropped round it), centred on the card's height, at the card's right (4% in: a long title, Swiggy's, ran into it when it was centred at 68%) */
-.pp4-feat { position: absolute; left: 2cqw; top: 50%; transform: translateY(-50%); width: 34%; display: flex; flex-direction: column; gap: 1.2cqw; font: var(--copy-w) var(--t-body)/1.4 var(--f-copy); color: var(--pcard-open-ink); }
+/* the parts (28 Oct, Nitish: centred on the card's height they floated away from their title — "top align them…
+   maintaining the spacing hierarchy… between the main heading, the subtext… the points' title… the points"): in the
+   text's column, under the title and its line, three steps of the system's spacing — the title and its line one group
+   (.7cqw apart), the parts a new group under it (--s4, 2.4cqw), the parts' heading over its list (--s2, 1.2cqw), the
+   points closer than that to each other (.8cqw), so each gap says what it separates. As wide as before (34% of the card) */
+.pp4-feat { margin-top: calc(2.4cqw - .7cqw); width: 17.7cqw; max-width: 100%; display: flex; flex-direction: column; gap: 1.2cqw; font: var(--copy-w) var(--t-body)/1.4 var(--f-copy); color: var(--pcard-open-ink); }
 .pp4-feat b { font: 600 var(--t-title)/1.25 var(--f-copy); } /* the list's heading (title) */
-.pp4-feat ol { margin: 0; padding: 0; list-style: none; counter-reset: f; display: flex; flex-direction: column; gap: 1cqw; }
+.pp4-feat ol { margin: 0; padding: 0; list-style: none; counter-reset: f; display: flex; flex-direction: column; gap: .8cqw; }
 .pp4-feat li { counter-increment: f; display: flex; gap: .7em; } .pp4-feat li::before { content: counter(f, decimal-leading-zero); flex: none; opacity: .4; font-variant-numeric: tabular-nums; }
 .pp4-vl { position: absolute; inset: 0; }
 .pp4-vl-in { position: absolute; left: 40%; right: 2%; top: 8%; bottom: 8%; display: grid; place-items: center; }
@@ -758,8 +763,8 @@
      lines' boxes: a display title's capitals .23em under its top; the rest folded into the margins */
   .pp4-open { gap: 0; padding: calc(28px - .23 * var(--t-display)) 24px 28px; }
   .pp4-top { gap: 3px; }
-  .pp4-feat { margin-top: 12.5px; gap: 3.4px; }
-  .pp4-meta { margin-top: 13.2px; } .pp4-feat + .pp4-foot > .pp4-meta { margin-top: 14px; }
+  .pp4-feat { margin-top: 9.5px; gap: 3.4px; } /* inside the title's group now (28 Oct): its 3px gap plus this, the 12.5 it had */
+  .pp4-meta { margin-top: 13.2px; } .pp4-top:has(.pp4-feat) + .pp4-foot > .pp4-meta { margin-top: 14px; }
   .pp4-chips { margin-top: 8px; }
   .pp4-open .pp4-arrow { right: 24px; top: calc(28px + .35 * var(--t-display) - 20px); }
   /* Notes' cards (24 Oct), the same anatomy: each thumbnail one shape, 16 : 10 as a project card's visual (the square

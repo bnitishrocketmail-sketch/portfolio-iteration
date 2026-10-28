@@ -117,8 +117,10 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
             </div>
             {/* the open layout: ref 7's wide card */}
             <motion.div className="pp4-open" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }} style={{ pointerEvents: open ? 'auto' : 'none' }}>
-              <div className="pp4-top"><h3 className="pp4-title">{p.title}</h3><p className="pp4-blurb">{p.blurb}</p></div>
-              {p.features && <div className="pp4-feat">{p.featuresTitle && <b>{p.featuresTitle}</b>}<ol>{p.features.map(f => <li key={f}>{f}</li>)}</ol></div>} {/* the project's parts, at the left beside its visual (RideQuest's, 23 Oct) */}
+              {/* the project's parts in the text's flow, under the title and its line (28 Oct, Nitish: they were centred on the
+                  card's height — "top align them… maintaining the spacing hierarchy"; RideQuest's first, 23 Oct) */}
+              <div className="pp4-top"><h3 className="pp4-title">{p.title}</h3><p className="pp4-blurb">{p.blurb}</p>
+                {p.features && <div className="pp4-feat">{p.featuresTitle && <b>{p.featuresTitle}</b>}<ol>{p.features.map(f => <li key={f}>{f}</li>)}</ol></div>}</div>
               {/* the meta above the chips' panel, stacked from the foot, so the gap holds however many rows the chips take (23 Oct) */}
               <div className="pp4-foot">
                 <span className="pp4-meta">{p.client} · {p.role} · {p.year}</span>
