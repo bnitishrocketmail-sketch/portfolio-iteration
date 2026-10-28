@@ -30,7 +30,7 @@ function Visual({ p, on, mid = false }: { p: Project; on: boolean; mid?: boolean
   useEffect(() => { const v = ref.current; if (!v) return; if (on && !reduce) v.play().catch(() => {}); else v.pause(); }, [on, reduce]);
   /* a clip of a phone on its own ground (RideQuest's, `side`) sits whole at the right on that ground, clear of the text */
   if (c && 'video' in c) return c.side
-    ? <div className="pp4-vl" style={{ background: c.bg }}><video ref={ref} className="pp4-vid side" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" /></div>
+    ? <div className="pp4-vl" style={{ background: c.bg }}><video ref={ref} className="pp4-vid side" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" style={c.size ? { '--vid-h': `${c.size * 100}%` } as React.CSSProperties : undefined} /></div>
     : <video ref={ref} className="pp4-vid" src={c.video} poster={c.poster} muted loop playsInline preload="metadata" />;
   if (c && 'lottie' in c) return <div className="pp4-vl" style={{ background: c.bg }}><Lottie className="pp4-vl-in" src={c.lottie} still={c.still} playing={on && !reduce} /></div>;
   if (c && 'comp' in c && c.comp === 'motion') return <div className="pp4-vms"><MotionThumb on={on} /></div>;

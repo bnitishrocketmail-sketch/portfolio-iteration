@@ -8,7 +8,7 @@ export type Project = {
   letter: string; m1: string; m2: string; wide?: boolean; blurb: string; tags: string[];
   features?: string[]; /* listed beside the visual where there's room (RideQuest's, 23 Oct) */
   featuresTitle?: string; /* the list's heading */
-  cover?: { video: string; poster: string; side?: boolean; bg?: string } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' | 'motion' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
+  cover?: { video: string; poster: string; side?: boolean; bg?: string; size?: number /* a side clip's height, a fraction of the card's (.92 by default) */ } | { lottie: string; still?: number; bg?: string } | { comp: 'fintech' | 'launches' | 'motion' }; /* the home stack's card plays this on hover (22 Oct): a clip, a Lottie on a ground of its own, or a composed scene (Fintech3D) */
 };
 
 /* PLACEHOLDER set: these are projects I know exist; confirm which are showable. */
@@ -44,7 +44,7 @@ export const PROJECTS: Project[] = [
   { id: 'swiggy-nav', title: 'Swiggy bottom navigation', client: 'Swiggy', role: 'Interaction design', year: '2026', letter: 'S', m1: '#4A4C56', m2: '#F5BD56',
     blurb: 'One hybrid nav across five sub-apps, made consistent through motion.', tags: ['Interaction', 'Navigation'],
     /* his recording of the case study's A1 card shuffle prototype, cropped to the phone on its frame's ground (23 Oct) */
-    cover: { video: '/cases/swiggy-nav/nav.mp4', poster: '/cases/swiggy-nav/nav-poster.webp', side: true, bg: '#f3f5f9' },
+    cover: { video: '/cases/swiggy-nav/nav.mp4', poster: '/cases/swiggy-nav/nav-poster.webp', side: true, bg: '#f3f5f9', size: .69 }, /* a quarter smaller (28 Oct, Nitish: "make the phone 1.5x smaller… it's too big") */
     /* the case study's heading and its pieces: the hygiene base and the four explorations (A1, A2, B1, B2) */
     featuresTitle: 'One bar, five stores',
     features: ['Interaction hygiene first: the base every idea sits on', 'Card shuffle: the new bar comes forward from the stack', 'Directional slide: bars exchange the way you moved', 'Cavity ball: one element that never leaves', 'Colour drop: the store’s colour crosses the gap'] },
