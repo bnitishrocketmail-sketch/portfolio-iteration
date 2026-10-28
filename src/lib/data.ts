@@ -41,8 +41,11 @@ export const PROJECTS: Project[] = [
     /* its five parts, as he set them out for the case study (Aug) */
     featuresTitle: 'Gamified Uber ride experience', /* his heading for the list (23 Oct) */
     features: ['Your route as a 3D street-view world', 'A garage: choose, customise and flex your car', 'Riders nearby: wave, challenge, play', 'Route chat rooms: travel updates, nearby picks', 'Live ads: hoardings, banners and store signs from real locations'] },
-  { id: 'swiggy-nav', title: 'Swiggy bottom navigation', client: 'Swiggy', role: 'Interaction design', year: '2026', letter: 'S', m1: '#4A4C56', m2: '#F5BD56',
-    blurb: 'One hybrid nav across five sub-apps, made consistent through motion.', tags: ['Interaction', 'Navigation'],
+  /* renamed (28 Oct, Nitish: "this project was about fixing interaction hygiene of a multi bottom nav experience, which
+     happens to be of Swiggy… add Swiggy somewhere, but it shouldn't be starting with Swiggy"); its letter N, for the nav
+     (M is the Motion system's, the card beside it in the Lab) */
+  { id: 'swiggy-nav', title: 'Multi-store bottom nav', client: 'Swiggy', role: 'Interaction design', year: '2026', letter: 'N', m1: '#4A4C56', m2: '#F5BD56',
+    blurb: 'The interaction hygiene of a bottom nav that changes with every store, fixed through motion, for Swiggy’s super app.', tags: ['Interaction', 'Navigation'],
     /* his recording of the case study's A1 card shuffle prototype, cropped to the phone on its frame's ground (23 Oct) */
     cover: { video: '/cases/swiggy-nav/nav.mp4', poster: '/cases/swiggy-nav/nav-poster.webp', side: true, bg: '#f3f5f9', size: .69 }, /* a quarter smaller (28 Oct, Nitish: "make the phone 1.5x smaller… it's too big") */
     /* the case study's heading and its pieces: the hygiene base and the four explorations (A1, A2, B1, B2) */

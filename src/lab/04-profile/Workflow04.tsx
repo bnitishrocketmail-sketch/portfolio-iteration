@@ -23,7 +23,7 @@ export const NODES: Node[] = [
   /* the crafts */
   { id: 'motion', label: 'Animation', kind: 'core', x: 45, y: 40, text: 'One animation playing, with its timing drawn as a strip underneath — where the holds and the overshoot are.', demo: 'an animation and its timing strip' },
   { id: 'interaction', label: 'Interaction design', kind: 'core', x: 30, y: 59, text: 'Two or three micro-interactions running live, the trigger named under each.', demo: 'micro-interactions, live' },
-  { id: 'product', label: 'Product & UX design', kind: 'core', x: 53, y: 64, text: 'The product work — Lenskart’s B, Swiggy’s navigation, RideQuest — as tiles that jump to their project.' },
+  { id: 'product', label: 'Product & UX design', kind: 'core', x: 53, y: 64, text: 'The product work — Lenskart’s B, the multi-store bottom nav for Swiggy, RideQuest — as tiles that jump to their project.' },
   /* the tools, each beside the craft it serves */
   { id: 'ae', label: 'After Effects', kind: 'tool', x: 52, y: 23, text: 'Where the motion is made.' },
   { id: 'lottie', label: 'Lottie', kind: 'tool', x: 61, y: 33, text: 'Delivery: animation as data. Coin Rig — a rig as a Creator plugin, on the LottieFiles Bazaar.' },
