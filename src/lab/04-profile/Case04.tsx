@@ -729,6 +729,21 @@ function Proto({ b }: { b: Extract<Block, { k: 'proto' }> }) {
   );
 }
 
+/* a screen beside its words (28 Oct, Nitish on RideQuest: "screens on the right side, content on the left side"): the
+   Proto's two columns, the words at the left and a recording in a phone at the right, its caption under it */
+function Shot({ b }: { b: Extract<Block, { k: 'shot' }> }) {
+  return (
+    <div className="cs4-proto shot">
+      <div className="cs4-proto-text">
+        {(b.n || b.h) && <div className="cs4-proto-head">{b.n && <span className="cs4-ver-chip">{b.n}</span>}{b.h && <h4 className="cs4-sub">{b.h}</h4>}{b.tag && <span className="cs4-proto-tag">{b.tag}</span>}</div>}
+        {b.p.map((t, i) => <p key={i} className="cs4-p">{text(t)}</p>)}
+        {b.ul && <div className="cs4-try"><span className="cs4-faq-label">{b.ulh ?? 'How it works'}</span><ul className="cs4-ul">{b.ul.map((t, i) => <li key={i}>{text(t)}</li>)}</ul></div>}
+      </div>
+      <Fig m={b.m} cls="shot" />
+    </div>
+  );
+}
+
 function Render({ b }: { b: Block }) {
   switch (b.k) {
     case 'p': return <p className="cs4-p">{text(b.t)}</p>;
@@ -807,6 +822,7 @@ function Render({ b }: { b: Block }) {
     case 'simpick': return <SimPick />;
     case 'coinmachine': return <CoinMachine map={b.map} />;
     case 'proto': return <Proto b={b} />;
+    case 'shot': return <Shot b={b} />;
     case 'fintech': return <Fintech3D />;
     case 'launches': return <Launches3D />;
   }

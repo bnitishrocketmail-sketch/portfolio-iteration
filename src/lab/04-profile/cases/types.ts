@@ -80,6 +80,9 @@ export type Block =
   /* a live prototype beside its words (the multi-store nav study, 28 Oct; Proto in Case04.tsx): its number and name, a tag,
      the paragraphs, what to try in it, and the prototype itself — his HTML, in a frame that takes the height it reports */
   | { k: 'proto'; n: string; h: string; tag?: string; p: Rich[]; tips?: Rich[]; src: string; title: string; cap: string }
+  /* a screen beside its words (the RideQuest study, 28 Oct; Shot in Case04.tsx): the Proto's layout with a recording in a
+     phone in the prototype's place — its number and name, the paragraphs, a labelled list (`ulh`) of how it behaves */
+  | { k: 'shot'; n?: string; h?: string /* none when the section's title says it (one screen to a section) */; tag?: string; p: Rich[]; ul?: Rich[]; ulh?: string; m: Media }
   | { k: 'fintech' } | { k: 'launches' };
 export type Section = { id: string; title: string; blocks: Block[]; tone?: 'white' /* a white card, for a clip whose own background is white (the floating phone) */ };
 export type Case = {

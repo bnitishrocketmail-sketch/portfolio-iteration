@@ -508,7 +508,12 @@
 .cs4-proto-frame { transition: height .25s ease; }
 .cs4-proto-frame iframe { display: block; width: calc(100% / var(--fit, 1)); border: 0; background: #f6f7fb; transform: scale(var(--fit, 1)); transform-origin: 0 0; } /* laid out at its own width, scaled to fit (Proto) */
 .cs4-proto-fig figcaption { font: 500 var(--t-meta)/1.3 var(--f-copy); color: var(--pcard-open-ink); opacity: .6; text-align: center; }
+/* a screen in the prototype's place (Shot): the phone 1.7 times the system's (a recording of a world wants room), never taller than the page shows under
+   its head (the frame's height less the head, the caption and air), its words from its top, as the section's title leaves them (28 Oct: top-aligned, as the Lab cards) */
+.cs4-proto.shot { --shot-w: clamp(180px, min(calc(var(--ph-w) * 1.7), calc((100svh - 330px) * 446 / 892)), 320px); grid-template-columns: minmax(0, 1fr) var(--shot-w); }
+.cs4-proto.shot > .cs4-fig.phone { width: var(--shot-w); }
 @media (max-width: 700px) {
   .cs4-proto { grid-template-columns: minmax(0, 1fr); row-gap: var(--s3); }
   .cs4-proto-fig { width: calc(min(100%, 372px) * var(--fit, 1)); justify-self: center; }
+  .cs4-proto.shot { grid-template-columns: minmax(0, 1fr); } .cs4-proto.shot > .cs4-fig.phone { width: min(100%, 240px); justify-self: center; }
 }
