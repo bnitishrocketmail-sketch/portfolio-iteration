@@ -294,9 +294,7 @@ export default function Iteration04() {
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
      mode change, and when the system page writes them from another tab */
   const [tweaks, setTweaks] = useState<Record<string, string>>(() => readTweaks(isDark));
-  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && matchMedia('(max-width: 700px)').matches);
-  useEffect(() => { const q = matchMedia('(max-width: 700px)'), on = () => setPhone(q.matches); q.addEventListener('change', on); return () => q.removeEventListener('change', on); }, []);
-  const picV = tweaks['--pic-v'] ?? (phone ? 'illo' : 'illo-bw'); /* the drawing in black and white by default on the desktop (28 Oct, his settings); the phone keeps the colour drawing */
+  const picV = tweaks['--pic-v'] ?? 'illo-bw'; /* the drawing in black and white by default (28 Oct, his desktop settings, then his phone's) */
   const depthOn = (tweaks['--pic-depth'] ?? 'warp') === 'warp' && !(typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches); /* the spatial picture (Spatial04, 23 Oct; a control) */
   const ios = (tweaks['--corners'] ?? 'ios') === 'ios'; /* iOS corners (a control, 22 Oct) */
   const glass = tweaks['--frame-v'] === 'glass'; /* the main container as glass (a control, 22 Oct) */

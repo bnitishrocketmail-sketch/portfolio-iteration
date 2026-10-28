@@ -421,7 +421,9 @@
    from above inside (the cut's upper wall), its lower lip catching the light (inside and out), and a rim lit top and
    bottom fading round the ends (the iOS rim, as the containers'). The knob, a bead: white in light, black in dark, lit
    from the upper left (a radial body, a specular ellipse, a lit upper edge, a shadowed lower one) and resting on the
-   track's floor with a short contact shadow; it slides right for dark on a small overshoot */
+   track's floor with a short contact shadow; it slides right for dark on a small overshoot. 28 Oct, second pass (Nitish: "you
+   made it… a sphere… it should be a flat with a rounded bezel on the corners"): a flat face inside a rounded bevel — the
+   bevel lit at the upper left and turning away at the lower right, the face flat */
 .ts4 { --ts-surface: var(--frame); grid-area: cv; justify-self: start; align-self: end; display: inline-flex; align-items: center; gap: .6em; padding: 0; border: 0; background: none; color: var(--line-ink); font: 500 clamp(11.5px, 1.15cqw, 13.5px)/1.2 var(--body); cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .cut4 > .cv4 { align-self: end; }
 .ts4-track { --tw: 3.2em; --th: 1.8em; --kn: 1.36em; --pad: calc((var(--th) - var(--kn)) / 2); position: relative; flex: none; width: var(--tw); height: var(--th); border-radius: 999px;
@@ -431,13 +433,14 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, .04), transparent 35%, transparent 62%, rgba(255, 255, 255, .16));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
 .ts4-knob { position: absolute; left: var(--pad); top: var(--pad); width: var(--kn); height: var(--kn); border-radius: 50%; transition: transform .38s cubic-bezier(.34, 1.36, .5, 1);
-  background: radial-gradient(circle at 34% 28%, #ffffff 0, #f4f4f5 38%, #d9d9dc 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1.5px 1.5px rgba(0, 0, 0, .14), 0 1.5px 2.5px rgba(0, 0, 0, .35), 0 .5px .5px rgba(0, 0, 0, .3); }
-.ts4-knob::after { content: ''; position: absolute; left: 22%; top: 12%; width: 46%; height: 30%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, .9), rgba(255, 255, 255, 0)); } /* the specular highlight */
+  background: linear-gradient(155deg, #ffffff 0%, #ececee 45%, #c4c4c8 100%); /* the bevel: lit at the upper left, turning away at the lower right */
+  box-shadow: 0 1.5px 2.5px rgba(0, 0, 0, .32), 0 .5px .5px rgba(0, 0, 0, .3); }
+.ts4-knob::after { content: ''; position: absolute; inset: 12%; border-radius: 50%; /* the face: flat, a hair lighter at the top */
+  background: linear-gradient(180deg, #f6f6f7, #ededef); box-shadow: 0 0 .5px .3px rgba(0, 0, 0, .06), inset 0 .5px 0 rgba(255, 255, 255, .8); }
 .ts4.on .ts4-knob { transform: translateX(calc(var(--tw) - var(--kn) - 2 * var(--pad)));
-  background: radial-gradient(circle at 34% 28%, #5a5a5e 0, #252527 40%, #0b0b0c 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 -1.5px 1.5px rgba(0, 0, 0, .6), 0 1.5px 2.5px rgba(0, 0, 0, .6), 0 .5px .5px rgba(0, 0, 0, .55); }
-.ts4.on .ts4-knob::after { background: radial-gradient(closest-side, rgba(255, 255, 255, .32), rgba(255, 255, 255, 0)); }
+  background: linear-gradient(155deg, #5c5c61 0%, #2a2a2d 45%, #050506 100%);
+  box-shadow: 0 1.5px 2.5px rgba(0, 0, 0, .6), 0 .5px .5px rgba(0, 0, 0, .55); }
+.ts4.on .ts4-knob::after { background: linear-gradient(180deg, #1f1f21, #19191b); box-shadow: 0 0 .5px .3px rgba(0, 0, 0, .35), inset 0 .5px 0 rgba(255, 255, 255, .06); }
 .ts4-label { min-width: 2.6em; text-align: left; }
 .ts4:focus-visible { outline: 2px solid var(--line-ink); outline-offset: 3px; border-radius: 999px; }
 .it04.light .ts4-track { background: linear-gradient(180deg, color-mix(in srgb, var(--ts-surface), #000 18%), color-mix(in srgb, var(--ts-surface), #000 9%));
@@ -757,7 +760,7 @@
      floating cards, which needed it to sit behind him), masked with the picture's notch as the picture is */
   .fl4.sig-bg { grid-area: pic; position: relative; inset: auto; aspect-ratio: 1; overflow: hidden; transform: none; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round);
     -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, linear-gradient(#000 0 0); } /* the picture's notch out of it too */
-  .sig-bg svg { left: var(--sig-x, 50%); top: calc(var(--sig-y, 34%) + 10%); width: var(--sig-w, 100%); } .sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, 0)) * 2px); } .sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, 0)) * 2px); } /* the phone keeps its own defaults (28 Oct: the desktop's moved) */ /* the square crop shows the wall lower than the desktop's wide one: at the desktop's height it ran across the ring light; the same control, a tenth lower */
+  .sig-bg svg { left: var(--sig-x, 48%); top: calc(var(--sig-y, 47%) + 10%); width: var(--sig-w, 115%); } /* the phone's own defaults, his phone settings (28 Oct): 48 / 47%, 115% wide; the stroke 0.35 thinner as the desktop's */ /* the square crop shows the wall lower than the desktop's wide one: at the desktop's height it ran across the ring light; the same control, a tenth lower */
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }
