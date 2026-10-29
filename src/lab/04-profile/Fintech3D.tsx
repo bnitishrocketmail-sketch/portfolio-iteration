@@ -21,8 +21,8 @@ export const LAU_BG = 'linear-gradient(100deg, #07170c 0%, #0b2a15 38%, #0a1230 
 const SW = 600, SH = 1304; /* a screen's flat box, in the picture's pixels: ~9 : 19.5, the glass's own shape */
 const R = SW * .11; /* the glass's corner, from the mock */
 
-/* the homography from the flat box's corners to the four measured corners, as a CSS matrix3d (transform-origin 0 0) */
-function project(quad: number[][]): string {
+/* the homography from the flat box's corners to the four measured corners: h11 h12 h13 h21 h22 h23 h31 h32 (h33 = 1) */
+function homography(quad: number[][]): number[] {
   const src = [[0, 0], [SW, 0], [SW, SH], [0, SH]];
   /* eight equations for the eight unknowns of H (h33 = 1), solved by elimination */
   const M: number[][] = [], b: number[] = [];
@@ -37,11 +37,54 @@ function project(quad: number[][]): string {
     [M[c], M[p]] = [M[p], M[c]]; [b[c], b[p]] = [b[p], b[c]];
     for (let r = 0; r < n; r++) { if (r === c) continue; const f = M[r][c] / M[c][c]; for (let k = c; k < n; k++) M[r][k] -= f * M[c][k]; b[r] -= f * b[c]; }
   }
-  const h = b.map((v, i) => v / M[i][i]); /* h11 h12 h13 h21 h22 h23 h31 h32 */
-  const f = (v: number) => v.toFixed(6);
-  return `matrix3d(${f(h[0])}, ${f(h[3])}, 0, ${f(h[6])}, ${f(h[1])}, ${f(h[4])}, 0, ${f(h[7])}, 0, 0, 1, 0, ${f(h[2])}, ${f(h[5])}, 0, 1)`;
+  return b.map((v, i) => v / M[i][i]);
 }
-const MAT = Q.quads.map(project);
+const f6 = (v: number) => v.toFixed(6);
+/* as a CSS matrix3d (transform-origin 0 0) */
+const project = (h: number[]) => `matrix3d(${f6(h[0])}, ${f6(h[3])}, 0, ${f6(h[6])}, ${f6(h[1])}, ${f6(h[4])}, 0, ${f6(h[7])}, 0, 0, 1, 0, ${f6(h[2])}, ${f6(h[5])}, 0, 1)`;
+const map = (h: number[], x: number, y: number): [number, number] => { const w = h[6] * x + h[7] * y + 1; return [(h[0] * x + h[1] * y + h[2]) / w, (h[3] * x + h[4] * y + h[5]) / w]; };
+const HS = Q.quads.map(homography);
+const MAT = HS.map(project);
+
+/* Safari (29 Oct, Nitish on the phone: "the lotties in the phone screens are actually misaligned"): WebKit can paint a
+   perspective transform with its flat (affine) part only — the perspective dropped — so each screen landed a few
+   percent off its glass, white spilling over the bezel at one corner (seen in WebKit, the engine of every iPhone
+   browser; Chrome and Firefox draw it true). There, each screen is placed instead by the flat transform that fits the
+   true projection best (least squares over a 9 × 17 grid of the screen's points), a hair larger (so it covers the glass
+   everywhere), and cut to the glass's exact shape — the rounded screen, carried through the true projection, as a
+   polygon in the picture's pixels. Both drawn the same in every engine; the content is off its true perspective by
+   under 1% of the screen */
+const WEBKIT = typeof navigator !== 'undefined' && /AppleWebKit/.test(navigator.userAgent) && !/Chrome\/|Chromium|Edg\/|Firefox/.test(navigator.userAgent);
+function flatFit(h: number[]): { m: string; clip: string } {
+  /* least squares: X = a x + c y + e, Y = b x + d y + f over the grid */
+  const P: [number, number, number, number][] = [];
+  for (let i = 0; i <= 8; i++) for (let j = 0; j <= 16; j++) { const x = SW * i / 8, y = SH * j / 16; const [X, Y] = map(h, x, y); P.push([x, y, X, Y]); }
+  const solve3 = (A: number[][], r: number[]) => { /* 3 × 3, Cramer */
+    const det = (m: number[][]) => m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+    const D = det(A); return [0, 1, 2].map(c => det(A.map((row, i) => row.map((v, k) => (k === c ? r[i] : v)))) / D);
+  };
+  const N = [[0, 0, 0], [0, 0, 0], [0, 0, 0]], rx = [0, 0, 0], ry = [0, 0, 0];
+  for (const [x, y, X, Y] of P) { const v = [x, y, 1]; for (let i = 0; i < 3; i++) { for (let k = 0; k < 3; k++) N[i][k] += v[i] * v[k]; rx[i] += v[i] * X; ry[i] += v[i] * Y; } }
+  let [a, c, e] = solve3(N, rx), [b, d, f] = solve3(N, ry);
+  /* a hair larger about the screen's middle, so the flat box covers the true screen everywhere: the true outline mapped
+     back through the flat transform must fall inside the box */
+  const det = a * d - b * c, inv = (X: number, Y: number) => { const x = X - e, y = Y - f; return [(d * x - c * y) / det, (-b * x + a * y) / det]; };
+  let s = 1; const cx = SW / 2, cy = SH / 2;
+  for (let i = 0; i <= 40; i++) for (const [x, y] of [[SW * i / 40, 0], [SW * i / 40, SH], [0, SH * i / 40], [SW, SH * i / 40]]) {
+    const [X, Y] = map(h, x, y), [u, w] = inv(X, Y); s = Math.max(s, Math.abs(u - cx) / cx, Math.abs(w - cy) / cy);
+  }
+  s *= 1.004;
+  /* the flat transform with that scale about the middle: T = A · (translate(c) · scale(s) · translate(−c)) */
+  const tx = cx - s * cx, ty = cy - s * cy;
+  const m = `matrix(${f6(a * s)}, ${f6(b * s)}, ${f6(c * s)}, ${f6(d * s)}, ${f6(a * tx + c * ty + e)}, ${f6(b * tx + d * ty + f)})`;
+  /* the glass's exact shape: the rounded screen's outline, through the true projection */
+  const pts: [number, number][] = [];
+  const arc = (ox: number, oy: number, a0: number) => { for (let k = 0; k <= 8; k++) { const t = a0 + (Math.PI / 2) * k / 8; pts.push(map(h, ox + R * Math.cos(t), oy + R * Math.sin(t))); } };
+  arc(SW - R, R, -Math.PI / 2); arc(SW - R, SH - R, 0); arc(R, SH - R, Math.PI / 2); arc(R, R, Math.PI);
+  const clip = `polygon(${pts.map(([X, Y]) => `${X.toFixed(1)}px ${Y.toFixed(1)}px`).join(', ')})`;
+  return { m, clip };
+}
+const FLAT = HS.map(flatFit);
 
 /* the scene: the phones' picture on a ground, the two screens' content (drawn flat, SW × SH) carried onto the glass, the
    islands over them. `on` plays the clips and Lotties (in view, or the card's hover); `mini` is the stack card's version */
@@ -63,8 +106,12 @@ export function Phones3D({ on: onProp, mini, fit, at, cls, bg, logo, label, left
       {logo && <span className="ft3d-logo" aria-hidden="true">{logo}</span>}
       <div className="ft3d-stage" style={{ width: W, height: H, transform: `translate(-50%, 0) scale(${k.toFixed(4)})`, ...(at != null ? { left: `${at}%` } : {}) }}>
         <img className="ft3d-phones" src="/cases/fintech/phones.webp" alt="" width={W} height={H} draggable={false} />
-        <div className="ft3d-scr" style={{ width: SW, height: SH, borderRadius: R, transform: MAT[0] }}>{left(on)}</div>
-        <div className="ft3d-scr" style={{ width: SW, height: SH, borderRadius: R, transform: MAT[1] }}>{right(on)}</div>
+        {WEBKIT ? [left, right].map((draw, i) => (
+          <div key={i} className="ft3d-cl" style={{ clipPath: FLAT[i].clip }}><div className="ft3d-scr" style={{ width: SW, height: SH, transform: FLAT[i].m }}>{draw(on)}</div></div>
+        )) : <>
+          <div className="ft3d-scr" style={{ width: SW, height: SH, borderRadius: R, transform: MAT[0] }}>{left(on)}</div>
+          <div className="ft3d-scr" style={{ width: SW, height: SH, borderRadius: R, transform: MAT[1] }}>{right(on)}</div>
+        </>}
         <img className="ft3d-island" src="/cases/fintech/island.webp" alt="" width={W} height={H} draggable={false} />
       </div>
     </div>
