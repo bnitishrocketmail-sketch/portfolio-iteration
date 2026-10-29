@@ -73,6 +73,73 @@ function Slot({ m, fl, active = true }: { m: Media; fl?: string; active?: boolea
 function Asker() {
   return <svg className="cs4-faq-asker" viewBox="0 0 22 30" aria-hidden="true"><circle cx="11" cy="6.5" r="6" /><rect x="0" y="14" width="22" height="16" rx="7" /></svg>;
 }
+/* his FAQ panel (rebuilt 23 Oct from his Framer page: "it doesn't look like UI, the questions lost the user icon, no space
+   hygiene"): each step's screen whole, in a white screen card, then the questions it raised — a white card per kind of
+   question, its label inside, every question with the asker in front of it. On the desktop the steps stand side by
+   side; on the phone (29 Oct, Nitish: "rather than aligning it vertically one below the other, this could be a slow auto
+   scroll horizontal carousel with these screens as it is … with the question containers below as one card … placed
+   side by side, playing horizontally, slowly") they ride a belt across the section card, edge to edge, drifting left
+   and coming round again; a finger can drag it either way, and the drift picks up again a moment after */
+type FaqStep = { m: Media; qs: { label: string; q: string[] }[] };
+function FaqCol({ c, clone }: { c: FaqStep; clone?: boolean }) {
+  return (
+    <div className="cs4-faq-col" aria-hidden={clone || undefined} inert={clone || undefined}>
+      <div className="cs4-faq-ui">{c.m.src && <img src={c.m.src} alt={clone ? '' : c.m.label} loading="lazy" decoding="async" draggable={false} />}</div>
+      {c.qs.map(q => (
+        <div key={q.label} className="cs4-faq-card">
+          <span className="cs4-faq-label">{q.label}</span>
+          {q.q.map(t => <p key={t} className="cs4-faq-ask"><Asker /><span>{t}</span></p>)}
+        </div>
+      ))}
+    </div>
+  );
+}
+const FAQ_V = 16; /* the belt's drift, px a second: slow enough to read a card as it passes */
+const FAQ_REST = 1600; /* ms the belt waits after a drag before drifting again */
+function FaqBelt({ of }: { of: FaqStep[] }) {
+  const view = useRef<HTMLDivElement>(null), track = useRef<HTMLDivElement>(null);
+  const on = useInView(view);
+  const st = useRef({ x: 0, period: 0, z: 1, rest: 0, drag: null as null | { id: number; x0: number; y0: number; at: number; h: boolean } });
+  useLayoutEffect(() => {
+    const v = view.current, t = track.current; if (!v || !t) return; const S = st.current;
+    /* one set of steps is the belt's period: the copy starts exactly a period after the first; the zoom round the belt
+       turns a finger's screen pixels into the belt's own */
+    const measure = () => { const k = t.children; if (k.length > of.length) S.period = (k[of.length] as HTMLElement).offsetLeft - (k[0] as HTMLElement).offsetLeft; let z = 1; for (let e: HTMLElement | null = t; e; e = e.parentElement) z *= parseFloat(getComputedStyle(e).zoom) || 1; S.z = z; };
+    measure(); const ro = new ResizeObserver(measure); ro.observe(t);
+    const paint = () => { if (S.period > 0) { S.x %= S.period; if (S.x > 0) S.x -= S.period; } t.style.transform = `translate3d(${S.x.toFixed(2)}px, 0, 0)`; };
+    const down = (e: PointerEvent) => { if (!e.isPrimary || (e.pointerType === 'mouse' && e.button !== 0)) return; S.drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, at: S.x, h: false }; };
+    const move = (e: PointerEvent) => {
+      const d = S.drag; if (!d || e.pointerId !== d.id) return;
+      const dx = e.clientX - d.x0, dy = e.clientY - d.y0;
+      if (!d.h) { if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return; d.h = true; v.setPointerCapture(e.pointerId); v.classList.add('drag'); } /* across: the belt's; down the page: the page's (touch-action: pan-y) */
+      S.x = d.at + dx / S.z; paint();
+    };
+    const up = (e: PointerEvent) => { const d = S.drag; if (!d || e.pointerId !== d.id) return; S.drag = null; v.classList.remove('drag'); if (d.h) S.rest = performance.now() + FAQ_REST; };
+    v.addEventListener('pointerdown', down); v.addEventListener('pointermove', move); v.addEventListener('pointerup', up); v.addEventListener('pointercancel', up);
+    paint();
+    return () => { ro.disconnect(); v.removeEventListener('pointerdown', down); v.removeEventListener('pointermove', move); v.removeEventListener('pointerup', up); v.removeEventListener('pointercancel', up); };
+  }, [of.length]);
+  useEffect(() => { /* the drift, only while the belt is on screen; none for reduced motion (it still drags) */
+    if (!on || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const S = st.current, t = track.current; if (!t) return;
+    let raf = 0, last = 0;
+    const tick = (now: number) => { const dt = last ? Math.min(.05, (now - last) / 1000) : 0; last = now; if (!S.drag?.h && now > S.rest) { S.x -= FAQ_V * dt; if (S.period > 0) { S.x %= S.period; if (S.x > 0) S.x -= S.period; } t.style.transform = `translate3d(${S.x.toFixed(2)}px, 0, 0)`; } raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick); return () => cancelAnimationFrame(raf);
+  }, [on]);
+  return (
+    <div className="cs4-faq-belt" ref={view} role="group" aria-label="The questions each step raised">
+      <div className="cs4-faq-track" ref={track}>
+        {of.map((c, i) => <FaqCol key={i} c={c} />)}
+        {of.map((c, i) => <FaqCol key={'c' + i} c={c} clone />)}
+      </div>
+    </div>
+  );
+}
+function Faq({ of }: { of: FaqStep[] }) {
+  const [phone, setPhone] = useState(() => typeof window !== 'undefined' && matchMedia('(max-width: 700px)').matches);
+  useEffect(() => { const q = matchMedia('(max-width: 700px)'), on = () => setPhone(q.matches); q.addEventListener('change', on); return () => q.removeEventListener('change', on); }, []);
+  if (phone) return <FaqBelt of={of} />;
+  return <div className={`cs4-faq n${of.length}`}>{of.map((c, i) => <FaqCol key={i} c={c} />)}</div>;
+}
 /* a layer by its box: a Lottie or a picture; a Lottie is fetched once its slot has been on screen (the fintech page's
    six cells carry 3 MB of them) */
 function LayerBox({ l, on }: { l: Layer; on: boolean }) {
@@ -822,24 +889,7 @@ function Render({ b }: { b: Block }) {
     );
     case 'flow': return <Flow steps={b.steps} tight={b.tight} />;
     case 'carousel': return <Carousel of={b.of} />;
-    /* his FAQ panel (rebuilt 23 Oct from his Framer page: "it doesn't look like UI, the questions lost the user icon,
-       no space hygiene"): each step's screen whole, in a white screen card, then the questions it raised — a white card
-       per kind of question, its label inside, every question with the asker in front of it */
-    case 'faq': return (
-      <div className={`cs4-faq n${b.of.length}`}>
-        {b.of.map((c, i) => (
-          <div key={i} className="cs4-faq-col">
-            <div className="cs4-faq-ui">{c.m.src && <img src={c.m.src} alt={c.m.label} loading="lazy" decoding="async" />}</div>
-            {c.qs.map(q => (
-              <div key={q.label} className="cs4-faq-card">
-                <span className="cs4-faq-label">{q.label}</span>
-                {q.q.map(t => <p key={t} className="cs4-faq-ask"><Asker /><span>{t}</span></p>)}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
+    case 'faq': return <Faq of={b.of} />;
     case 'converge': return <Converge of={b.of} to={b.to} />;
     case 'peek': return <Peek label={b.label} show={b.show} screen={b.screen} at={b.at} of={b.of} />;
     case 'loaders': return <div className="cs4-row cs4-ld-row">{b.of.map((l, i) => <LoaderPhone key={i} l={l} />)}</div>;

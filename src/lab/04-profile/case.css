@@ -498,6 +498,15 @@
   .cs4-cols { grid-template-columns: 1fr; }
   .cs4-hero.block { padding: 20px 12px; overflow: hidden; } /* the sides run past the card's edge on a phone, cut by it */
   .cs4-faq, .cs4-faq.n6 { grid-template-columns: 1fr; gap: var(--s4); padding: 0; background: none; border-radius: 0; } .cs4-faq-ui > img { width: 52%; margin: 0 auto; } /* one step under another (two columns were too narrow for the system's body size and chips); the screen centred in its card at a phone's width; the steps --s4 apart, a section's parts */
+  /* the belt (29 Oct; Case04.tsx FaqBelt): the steps side by side, edge to edge of the section card, drifting; a step a
+     fixed width so the next one shows past it; the gap between steps a step wider than the one inside a step, so each
+     screen and its questions read as one; the screens in boxes of one height (the cart's, shorter, centred in its
+     white), so the question cards start level as they pass */
+  .cs4-faq-belt { margin-inline: calc(-1 * var(--s3)); overflow: hidden; touch-action: pan-y; -webkit-user-select: none; user-select: none; cursor: grab; }
+  .cs4-faq-belt.drag { cursor: grabbing; }
+  .cs4-faq-track { display: flex; align-items: flex-start; gap: var(--s3); width: max-content; padding-inline: var(--s3); will-change: transform; }
+  .cs4-faq-belt .cs4-faq-col { flex: none; width: 264px; }
+  .cs4-faq-belt .cs4-faq-ui > img { width: 72%; aspect-ratio: 720 / 1158; object-fit: contain; margin: 0 auto; -webkit-user-drag: none; }
   .cs4-row.cs4-ld-row { grid-template-columns: repeat(2, var(--ph-w)) !important; column-gap: var(--s4); row-gap: var(--s3); } .cs4-ld-row > :last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; } .cs4-sx { grid-template-columns: minmax(0, 1fr); } .cs4-sx-item, .cs4-sx-item.wide { grid-template-columns: minmax(0, 1fr); justify-items: center; } .cs4-sx-item > .cs4-fig.phone { width: var(--ph-w); } .cs4-sx-text { justify-self: stretch; } /* the loaders two to a row; each success panel the screen over its words */
   .cs4-jn { grid-template-columns: minmax(0, 1fr); } .cs4-jn-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "entry" "foot" "cards"; justify-items: center; } .cs4-jn-entry, .cs4-jn-cards { justify-self: stretch; } /* one column: the text, then the top and its card, the foot and its cards; the cards the column's width (the phone's body size runs short lines in a phone-wide card) */
   .cs4-conv-row { gap: 12px; } .cs4-conv-row .cs4-fig.phone { width: 28%; } .cs4-conv .cs4-over .cs4-layer { display: none; } /* no room for the pills past the phones */
