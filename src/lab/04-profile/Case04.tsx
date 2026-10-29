@@ -730,6 +730,7 @@ function Carousel({ of }: { of: Media[] }) {
    frame. Framed, each turns to its embedded mode (its own headings hidden, the phone and its controls only) and posts its
    content's height ({__ph: 1, h}), which the frame takes, so it hugs the prototype as it opens and closes its nudges.
    Loaded when near the screen; the words at the left — number and name, a tag, the paragraphs, what to try */
+const PW = 348; /* his prototypes' own width in the portfolio: the 324 phone and 12 either side (their embedded mode) */
 function Proto({ b }: { b: Extract<Block, { k: 'proto' }> }) {
   const ref = useRef<HTMLIFrameElement>(null), fig = useRef<HTMLElement>(null);
   const [h, setH] = useState(820);
@@ -755,7 +756,11 @@ function Proto({ b }: { b: Extract<Block, { k: 'proto' }> }) {
       const cap = f.querySelector('figcaption'), capH = cap ? cap.getBoundingClientRect().height / z : 0;
       const room = parseFloat(getComputedStyle(f).getPropertyValue('--fit-room')) || 24;
       const avail = (bottom - top) / z - capH - 2 * room;
-      setFit(Math.max(.55, Math.min(1, avail / h)));
+      /* and never wider than the column it has (29 Oct: on the phone the frame was narrower than the prototype's own
+         width, so his phone squeezed inside it — its tabs cut, its bar cramped); the prototype keeps its own width (PW)
+         and the whole of it is scaled */
+      const row = f.parentElement as HTMLElement | null, availW = row ? (matchMedia('(max-width: 700px)').matches ? row.offsetWidth : PW) : PW;
+      setFit(Math.max(.55, Math.min(1, avail / h, availW / PW)));
     };
     measure(); addEventListener('resize', measure); return () => removeEventListener('resize', measure);
   }, [h]);
@@ -768,7 +773,7 @@ function Proto({ b }: { b: Extract<Block, { k: 'proto' }> }) {
       </div>
       <figure className="cs4-proto-fig" ref={fig}>
         <div className="cs4-proto-frame" style={{ height: Math.round(h * fit) }}><iframe ref={ref} src={b.src} title={b.title} loading="lazy" style={{ height: h }} /></div>
-        <figcaption>{b.cap}</figcaption>
+        <figcaption>{b.hint && <span className="cs4-proto-hint">{b.hint}</span>}<span>{b.cap}</span></figcaption>
       </figure>
     </div>
   );

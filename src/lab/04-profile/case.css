@@ -508,7 +508,7 @@
    aligned with the prototype — its number chip, name and tag in one line, the paragraphs, what to try in a panel — and the
    prototype at the right on its own light ground (his pages' #f6f7fb), rounded as the system's panels, its caption under
    it. On the phone the prototype goes under its words, centred */
-.cs4-proto { --fit-room: 24px; display: grid; grid-template-columns: minmax(0, 1fr) calc(min(100%, 372px) * var(--fit, 1)); column-gap: var(--s4); align-items: start; }
+.cs4-proto { --fit-room: 24px; --pw: 348px; display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--pw) * var(--fit, 1)); /* the prototype at its own width (348: Proto's PW), scaled */ column-gap: var(--s4); align-items: start; }
 .cs4-proto + .cs4-proto { margin-top: var(--s5); }
 .cs4-proto-text { display: flex; flex-direction: column; gap: var(--s2); }
 .cs4-proto-head { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s1); }
@@ -519,15 +519,16 @@
 .cs4-proto-fig { margin: 0; display: flex; flex-direction: column; gap: var(--s1); }
 .cs4-proto-frame { border-radius: calc(calc(var(--r) - .6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: #f6f7fb; -webkit-mask-image: linear-gradient(#000 0 0); }
 .cs4-proto-frame { transition: height .25s ease; }
-.cs4-proto-frame iframe { display: block; width: calc(100% / var(--fit, 1)); border: 0; background: #f6f7fb; transform: scale(var(--fit, 1)); transform-origin: 0 0; } /* laid out at its own width, scaled to fit (Proto) */
-.cs4-proto-fig figcaption { font: 500 var(--t-meta)/1.3 var(--f-copy); color: var(--pcard-open-ink); opacity: .6; text-align: center; }
+.cs4-proto-frame iframe { display: block; width: var(--pw); border: 0; background: #f6f7fb; transform: scale(var(--fit, 1)); transform-origin: 0 0; } /* laid out at its own width, scaled to fit (Proto) */
+.cs4-proto-fig figcaption { display: flex; flex-direction: column; align-items: center; gap: 4px; font: 500 var(--t-meta)/1.35 var(--f-copy); color: var(--pcard-open-ink); text-align: center; text-wrap: balance; } .cs4-proto-fig figcaption > span:last-child { opacity: .55; } /* the line about trying it, then what it is, quieter */
+.cs4-proto-hint { max-width: 30ch; }
 /* a screen in the prototype's place (Shot): the phone a third over the system's (28 Oct: a quarter smaller than it first was — Nitish: "too big… 1.5x smaller"), never taller than the page shows under
    its head (the frame's height less the head, the caption and air), its words from its top, as the section's title leaves them (28 Oct: top-aligned, as the Lab cards) */
 .cs4-proto.shot { --shot-w: clamp(160px, min(calc(var(--ph-w) * 1.32), calc((100svh - 330px) * 460 / 986)), 260px); grid-template-columns: minmax(0, 1fr) var(--shot-w); }
 .cs4-proto.shot > .cs4-fig.phone { width: var(--shot-w); }
 @media (max-width: 700px) {
   .cs4-proto { grid-template-columns: minmax(0, 1fr); row-gap: var(--s3); }
-  .cs4-proto-fig { width: calc(min(100%, 372px) * var(--fit, 1)); justify-self: center; }
+  .cs4-proto-fig { width: calc(var(--pw) * var(--fit, 1)); justify-self: center; }
   .cs4-proto.shot { grid-template-columns: minmax(0, 1fr); } .cs4-proto.shot > .cs4-fig.phone { width: min(100%, 192px); justify-self: center; }
 }
 
