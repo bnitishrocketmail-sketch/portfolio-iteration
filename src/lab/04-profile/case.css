@@ -479,6 +479,11 @@
   .cs4-title { gap: 4px; } .cs4-back { color: var(--glass-ink); } .it04.light .cs4-back { color: var(--line-ink); } /* light: the page is light here (24 Oct) */
   .it04 .cs4-head { position: static; display: flex; flex-direction: column; padding: 4px 4px 0; border-radius: 0; } .cs4-glass { display: none; } .cs4-head-in { flex-direction: column; align-items: flex-start; gap: 8px; padding: 0; } .cs4-side { align-items: flex-start; text-align: left; max-width: none; } .cs4-side .cs4-chips { justify-content: flex-start; }
   .cs4-main { margin-top: 0; } .cs4-aside { margin-top: 0; } .cs4-body { padding-top: 0; }
+  /* light (29 Oct, Nitish: "the gray container, which has all the containers, that should not be visible … no iOS rim
+     also for that. The iOS rim is for the containers inside it"): the study's holder loses its ground, its shadow and
+     its rim, and its side inset, so the cards it held sit on the page, at the page's edge, under the title */
+  .it04.light .pp4.cs4 > .cs4-main { background: none; box-shadow: none; padding-inline: 0; }
+  .it04.it04.light .pp4.cs4 > .cs4-main::after { content: none; }
   .it04 .cs4 > .cs4-body { overflow: visible; padding: 0; background: none; box-shadow: none; border-radius: 0; } /* not the phone's card treatment of a .pp4 page's body — its own parts are the cards */
   .cs4-hero, .cs4-strip, .cs4-sec { box-shadow: var(--shadow-frame); }
   .cs4-strip { grid-template-columns: 1fr 1fr; } .cs4-strip > div:nth-child(5) { grid-column: 1 / -1; }
