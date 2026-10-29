@@ -189,7 +189,8 @@ function Rig() {
        read off a probe styled as the study's phones are, sent on load and whenever the page resizes */
     const probe = document.createElement('div'); probe.className = 'brig-probe'; fr.parentElement?.appendChild(probe);
     const probeIn = document.createElement('div'); probeIn.className = 'brig-probe in'; fr.parentElement?.appendChild(probeIn); /* the page's inner radius, for the rig's editor and status */
-    const send = () => { const cs = getComputedStyle(probe); fr.contentWindow?.postMessage({ phone: { w: parseFloat(cs.width), r: parseFloat(cs.borderTopLeftRadius), ri: parseFloat(getComputedStyle(probeIn).borderTopLeftRadius), shape: (cs.getPropertyValue('corner-shape') || 'round').trim() || 'round', ink: (getComputedStyle(fr).getPropertyValue('--pcard-open-ink') || '').trim() } }, location.origin); };
+    const send = () => { const cs = getComputedStyle(probe); let z = 1; for (let e: HTMLElement | null = fr; e; e = e.parentElement) z *= parseFloat(getComputedStyle(e).zoom) || 1; /* the zoom round the frame and the page's pixel ratio, so the rig can match the page where the browser doesn't carry the zoom in (Safari) */
+      fr.contentWindow?.postMessage({ phone: { z, dpr: devicePixelRatio, w: parseFloat(cs.width), r: parseFloat(cs.borderTopLeftRadius), ri: parseFloat(getComputedStyle(probeIn).borderTopLeftRadius), shape: (cs.getPropertyValue('corner-shape') || 'round').trim() || 'round', ink: (getComputedStyle(fr).getPropertyValue('--pcard-open-ink') || '').trim() } }, location.origin); };
     const ro = new ResizeObserver(send); ro.observe(fr);
     const onLoad = () => { setReady(true); send(); };
     fr.addEventListener('load', onLoad);
@@ -200,7 +201,6 @@ function Rig() {
   return (
     <div className={`brig${ready ? ' ready' : ''}`}>
       <iframe ref={frame} className="brig-frame" src={`${A}/rig/index.html?embed&theme=light`} title="B's state rig: the phone and the controls that drive it through its states" style={{ minHeight: h }} loading="lazy" /> {/* its own height as its least; it grows to fill the panel (the framework's height) */}
-      <p className="brig-hint">Keys drive it too: 1–5 and 0 for the states, Q/W/E/R for the results sheet, P plays the scripted conversation.</p>
     </div>
   );
 }
