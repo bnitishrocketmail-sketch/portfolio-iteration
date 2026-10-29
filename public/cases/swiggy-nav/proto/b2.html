@@ -93,6 +93,16 @@ body.embedded .seg{max-width:none}
 /* in the portfolio (29 Oct): the phone alone — the options above it, the switches and the line under it are hidden;
    the bar stays floating (its default), and the line about trying it is set by the page, beside the phone */
 body.embedded .seg, body.embedded .segcap, body.embedded .controls, body.embedded .hint{display:none !important}
+/* in the portfolio, the phone itself (29 Oct, Nitish: "the phones still look weird inside white containers … all I need is
+   the phone outside that white container"): no ground or margin round it, the frame is the phone; drawn as the study's
+   phones are — no drop shadow, their dark 3px edge over the screen, their radius for this width and their corner curve
+   (handed in by the page: --hedge, --hr, --hshape, --hink) */
+body.embedded{background:transparent;padding:0}
+html:has(body.embedded){overflow:hidden}
+body.embedded .wrap{max-width:none;width:100%}
+body.embedded .phone{width:100%;max-width:none;border:0;box-shadow:none;border-radius:var(--hr,42px);corner-shape:var(--hshape,round)}
+body.embedded .phone::after{content:"";position:absolute;inset:0;border-radius:inherit;corner-shape:inherit;pointer-events:none;z-index:70;
+  box-shadow:inset 0 0 0 var(--hedge,3.6px) var(--hink,rgba(18,18,18,.72))}
 .nudge{position:absolute;z-index:60;display:inline-flex;align-items:center;gap:7px;
   background:#0f1222;color:#fff;font-size:11px;font-weight:700;letter-spacing:.005em;
   padding:6px 11px;border-radius:999px;white-space:nowrap;pointer-events:none;
@@ -556,6 +566,19 @@ window.__bootNav=boot;
   /* never wait on window.load — the Lottie CDN can hang and the nudges must still appear */
   setTimeout(boot,900);
 })();
+</script>
+<script>
+/* ===== the page's hand-off (29 Oct) ===== the zoom round the frame and the page's pixel ratio: Chromium carries the
+   phone page's zoom (.85) into the frame, Safari does not, which left the phone narrower than its 324 and as tall —
+   stretched; the part not carried is put on here. And the study's phone: its edge, radius and curve, its ink */
+addEventListener('message', function(e){
+  var d = e.data && e.data.__host; if (!d || e.source !== window.parent) return; var r = document.documentElement.style;
+  if (typeof d.z === 'number' && typeof d.dpr === 'number' && d.z > .3 && d.z <= 2) { var m = d.z * d.dpr / devicePixelRatio; m = Math.abs(m - 1) < .02 ? 1 : m; document.body.style.zoom = m === 1 ? '' : String(m); }
+  if (typeof d.edge === 'number' && d.edge > 0 && d.edge < 12) r.setProperty('--hedge', d.edge.toFixed(2) + 'px');
+  if (typeof d.r === 'number' && d.r > 4 && d.r < 120) r.setProperty('--hr', d.r.toFixed(2) + 'px');
+  if (typeof d.shape === 'string' && /^(round|superellipse\([\d.]+\))$/.test(d.shape)) r.setProperty('--hshape', d.shape);
+  if (typeof d.ink === 'string' && /^#[0-9a-f]{6}$/i.test(d.ink)) r.setProperty('--hink', 'color-mix(in srgb, ' + d.ink + ' 72%, transparent)');
+});
 </script>
 </body>
 </html>

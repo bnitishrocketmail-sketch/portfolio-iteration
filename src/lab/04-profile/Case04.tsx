@@ -797,7 +797,7 @@ function Carousel({ of }: { of: Media[] }) {
    frame. Framed, each turns to its embedded mode (its own headings hidden, the phone and its controls only) and posts its
    content's height ({__ph: 1, h}), which the frame takes, so it hugs the prototype as it opens and closes its nudges.
    Loaded when near the screen; the words at the left — number and name, a tag, the paragraphs, what to try */
-const PW = 348; /* his prototypes' own width in the portfolio: the 324 phone and 12 either side (their embedded mode) */
+const PW = 324; /* his prototypes' own width in the portfolio: the phone itself, 324 (29 Oct: no margin round it) */
 function Proto({ b }: { b: Extract<Block, { k: 'proto' }> }) {
   const ref = useRef<HTMLIFrameElement>(null), fig = useRef<HTMLElement>(null);
   const [h, setH] = useState(820);
@@ -831,6 +831,22 @@ function Proto({ b }: { b: Extract<Block, { k: 'proto' }> }) {
     };
     measure(); addEventListener('resize', measure); return () => removeEventListener('resize', measure);
   }, [h]);
+  /* the prototype's phone drawn as the study's (29 Oct, Nitish: "the phones still look weird inside white containers …
+     all I need is the phone outside that white container"): the study's phone read off a probe styled as its phones are
+     (its radius for its width, scaled to the prototype's 324; its corner curve; its ink), its 3px edge in the
+     prototype's own px at this scale; and the zoom round the frame with the page's pixel ratio, so the prototype can
+     put on the zoom Safari doesn't carry into a frame (there the phone was narrower than its 324 and as tall) */
+  useEffect(() => {
+    const fr = ref.current, f = fig.current; if (!fr || !f) return;
+    const probe = document.createElement('div'); probe.className = 'brig-probe'; f.appendChild(probe);
+    const send = () => {
+      const cs = getComputedStyle(probe), w = parseFloat(cs.width) || 1, r = parseFloat(cs.borderTopLeftRadius) || 0;
+      let z = 1; for (let e: HTMLElement | null = fr; e; e = e.parentElement) z *= parseFloat(getComputedStyle(e).zoom) || 1;
+      fr.contentWindow?.postMessage({ __host: { z, dpr: devicePixelRatio, edge: 3 / fit, r: r * PW / w, shape: (cs.getPropertyValue('corner-shape') || 'round').trim() || 'round', ink: getComputedStyle(f).getPropertyValue('--pcard-open-ink').trim() } }, location.origin);
+    };
+    send(); fr.addEventListener('load', send); addEventListener('resize', send);
+    return () => { fr.removeEventListener('load', send); removeEventListener('resize', send); probe.remove(); };
+  }, [fit]);
   return (
     <div className="cs4-proto" style={{ '--fit': fit } as CSSProperties}>
       <div className="cs4-proto-text">

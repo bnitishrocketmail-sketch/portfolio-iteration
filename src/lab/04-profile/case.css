@@ -521,7 +521,7 @@
    aligned with the prototype — its number chip, name and tag in one line, the paragraphs, what to try in a panel — and the
    prototype at the right on its own light ground (his pages' #f6f7fb), rounded as the system's panels, its caption under
    it. On the phone the prototype goes under its words, centred */
-.cs4-proto { --fit-room: 24px; --pw: 348px; display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--pw) * var(--fit, 1)); /* the prototype at its own width (348: Proto's PW), scaled */ column-gap: var(--s4); align-items: start; }
+.cs4-proto { --fit-room: 24px; --pw: 324px; display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--pw) * var(--fit, 1)); /* the prototype at its own width (348: Proto's PW), scaled */ column-gap: var(--s4); align-items: start; }
 .cs4-proto + .cs4-proto { margin-top: var(--s5); }
 .cs4-proto-text { display: flex; flex-direction: column; gap: var(--s2); }
 .cs4-proto-head { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s1); }
@@ -530,9 +530,9 @@
 .cs4-try { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s1); margin-top: var(--s1); padding: var(--s3); border-radius: calc(calc(var(--r) - .6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--pcard-open-ink) 5%, var(--pcard-open)); }
 .cs4-try .cs4-ul { margin: 0; }
 .cs4-proto-fig { margin: 0; display: flex; flex-direction: column; gap: var(--s1); }
-.cs4-proto-frame { border-radius: calc(calc(var(--r) - .6cqw) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: #f6f7fb; -webkit-mask-image: linear-gradient(#000 0 0); }
+.cs4-proto-frame { overflow: hidden; } /* no ground or rounding of its own (29 Oct): the prototype's phone fills it, and is the frame's shape */
 .cs4-proto-frame { transition: height .25s ease; }
-.cs4-proto-frame iframe { display: block; width: var(--pw); border: 0; background: #f6f7fb; transform: scale(var(--fit, 1)); transform-origin: 0 0; } /* laid out at its own width, scaled to fit (Proto) */
+.cs4-proto-frame iframe { display: block; width: var(--pw); border: 0; background: transparent; color-scheme: light; /* the prototype's own scheme, so the frame stays see-through under the dark theme */ transform: scale(var(--fit, 1)); transform-origin: 0 0; } /* laid out at its own width, scaled to fit (Proto) */
 .cs4-proto-fig figcaption { display: flex; flex-direction: column; align-items: center; gap: 4px; font: 500 var(--t-meta)/1.35 var(--f-copy); color: var(--pcard-open-ink); text-align: center; text-wrap: balance; } .cs4-proto-fig figcaption > span:last-child { opacity: .55; } /* the line about trying it, then what it is, quieter */
 .cs4-proto-hint { max-width: 30ch; }
 /* a screen in the prototype's place (Shot): the phone a third over the system's (28 Oct: a quarter smaller than it first was — Nitish: "too big… 1.5x smaller"), never taller than the page shows under
