@@ -160,12 +160,19 @@ function Peek({ label, show = 25, screen, at, of }: { label: string; show?: numb
    (16dp in from each side, 16dp over the bar's scan button: jtBox). Held off screen; under reduced motion they fade. */
 const JT_W = 360, JT_SIDE = 16, JT_UP = JT_W * (19.5 / 9) / (1520 / 720) * (531 / 1480) + 16; /* the card's foot, up from the screen's: the bar's picture (1480 × 531 across the home's 369.5dp, 2.6% over the screen's width) is 132.6dp tall, its top the scan button's */
 const JT_LINE = JT_W * (19.5 / 9) / (1520 / 720) * ((531 - 55) / 1480); /* the bar's own top edge (the picture's row 55), up from the screen's foot: 118.8dp */
-const cq = (v: number) => `${(v / JT_W * 100).toFixed(2)}cqw`;
+/* positions in the screen's plane (29 Oct, Nitish on the iPhone: "the loan journey lotties are still misaligned… from the
+   phone screens they are in"): they were container units (cqw), which a browser has to combine with the phone page's own
+   scale (zoom .85) — the one thing these screens did that the pictures under them did not. Now plain percentages of a
+   plane the screen's width and its full 9 : 19.5 height (.cs4-jn-plane), laid from the same edge as the home picture —
+   the top for the entry point, the foot for the nudges — so the Lotties and the picture are placed by the same rule in
+   every browser. Across: of the width (360dp); down: of the plane's height (780dp) */
+const JT_H = JT_W * 19.5 / 9;
+const px = (v: number) => `${(v / JT_W * 100).toFixed(3)}%`, py = (v: number) => `${(v / JT_H * 100).toFixed(3)}%`;
 /* a nudge's box: its drawn card (`vis`) 16dp in from each side, its foot JT_UP up; and how far it sinks to be out of
    sight behind the bar (the comp's whole box, glow and all, under the bar's edge) */
 const jtBox = (ratio: number, [x0, x1, , y1]: number[]) => {
   const w = (JT_W - 2 * JT_SIDE) / (x1 - x0), h = w / ratio, foot = JT_UP - (1 - y1) * h;
-  return { left: cq(JT_SIDE - x0 * w), width: cq(w), height: cq(h), bottom: cq(foot), '--sink': cq(foot + h - JT_LINE + 4) } as CSSProperties;
+  return { left: px(JT_SIDE - x0 * w), width: px(w), height: py(h), bottom: py(foot), '--sink': `${((foot + h - JT_LINE + 4) / h * 100).toFixed(3)}%` /* of its own height (a translate's %) */ } as CSSProperties;
 };
 const JN_OUT = 450; /* the sinking (ms), as case.css's */
 type Stage = { label: string; q: string; lottie: string; ratio: number; vis: [number, number, number, number]; dur: number };
@@ -198,13 +205,13 @@ function Journey({ text: told, screen, bar, of, entry }: { text: Told[]; screen:
         <div className="cs4-jn-win top" role="img" aria-label={`${entry.label}: the Pay Mobile / UPI ID icon flipping on the home screen`}>
           <div className="cs4-jn-fade"><div className="cs4-jn-ph"><div className="cs4-jn-scr">
             <img className="home" src={screen} alt="" width={720} height={1520} decoding="async" />
-            <div className="cs4-jn-icon" style={{ left: cq(cx * k - JT_W * .013158 - size * k / 2), top: cq((cy - size / 2) * k), width: cq(size * k), height: cq(size * k) }}><Lottie className="cs4-lot" src={entry.lottie} playing={on} /></div>
+            <div className="cs4-jn-plane"><div className="cs4-jn-icon" style={{ left: px(cx * k - JT_W * .013158 - size * k / 2), top: py((cy - size / 2) * k), width: px(size * k), height: py(size * k) }}><Lottie className="cs4-lot" src={entry.lottie} playing={on} /></div></div>
           </div></div></div>
         </div>
         <div className="cs4-jn-win foot" role="img" aria-label={st.i >= 0 ? `${of[st.i].label}: its nudge rising over the home's bottom bar` : 'The home screen’s foot'}>
           <div className="cs4-jn-fade"><div className="cs4-jn-ph"><div className="cs4-jn-scr"><img className="home" src={screen} alt="" width={720} height={1520} decoding="async" /></div></div></div>
           <div className="cs4-jn-ph over"><div className="cs4-jn-scr">
-            {of.map((n, j) => <div key={j} className={`cs4-jn-nudge${j === st.i && st.up ? ' up' : ''}`} style={jtBox(n.ratio, n.vis)}><Lottie className="cs4-lot" src={n.lottie} playing={on && j === st.i} /></div>)}
+            <div className="cs4-jn-plane">{of.map((n, j) => <div key={j} className={`cs4-jn-nudge${j === st.i && st.up ? ' up' : ''}`} style={jtBox(n.ratio, n.vis)}><Lottie className="cs4-lot" src={n.lottie} playing={on && j === st.i} /></div>)}</div>
             <img className="bar" src={bar} alt="" width={720} height={258} decoding="async" />
           </div></div>
         </div>

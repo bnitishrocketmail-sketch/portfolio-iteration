@@ -230,6 +230,7 @@
 .cs4-jn-scr > img { position: absolute; display: block; max-width: none; left: -1.316%; width: 102.632%; height: auto; } /* the home at the screen's width and 2.6% (as it covers the screen), from the top or the foot */
 .cs4-jn-win.top .home { top: 0; } .cs4-jn-win.foot .home { bottom: 0; }
 .cs4-jn-scr > .bar { bottom: 0; z-index: 2; } /* the bottom bar over the nudges: they rise from behind it */
+.cs4-jn-plane { position: absolute; left: 0; width: 100%; aspect-ratio: 9 / 19.5; } .cs4-jn-win.top .cs4-jn-plane { top: 0; } .cs4-jn-win.foot .cs4-jn-plane { bottom: 0; } /* the screen's plane, from the home picture's edge (Journey: px / py) */
 .cs4-jn-icon { position: absolute; } .cs4-jn-icon .cs4-lot { position: absolute; inset: 0; }
 .cs4-jn-nudge { position: absolute; z-index: 1; transform: translateY(var(--sink)); transition: transform .45s cubic-bezier(.4, 0, 1, 1); } /* sinking: easing in, under the bar */
 .cs4-jn-nudge.up { transform: none; transition: transform .7s cubic-bezier(.16, 1, .3, 1); } /* rising: out of the bar, settling */
