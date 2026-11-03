@@ -886,7 +886,7 @@ function Render({ b }: { b: Block }) {
     case 'media': return <Slot m={b} />;
     case 'figure': return <Fig m={b.of} cls={b.width} />;
     case 'row': return <div className={`cs4-row${b.align === 'center' ? ' center' : ''}`} style={{ gridTemplateColumns: b.ratio ?? `repeat(${b.of.length}, minmax(0, 1fr))` }}>{b.of.map((x, i) => <Render key={i} b={x} />)}</div>;
-    case 'phones': return <div className={`cs4-phones${b.close ? ' close' : ''}`}>{b.of.map((m, i) => <Fig key={i} m={m} />)}</div>;
+    case 'phones': return <div className={`cs4-phones${b.close ? ' close' : ''}${b.pair ? ' pair' : ''}`}>{b.of.map((m, i) => <Fig key={i} m={m} />)}</div>;
     case 'group': return <div className="cs4-group">{b.of.map((x, i) => <Render key={i} b={x} />)}</div>;
     case 'stats': return (
       <div className={`cs4-stats${b.tone ? ' ' + b.tone : ''}${b.more ? ' has-more' : ''}`} tabIndex={b.more ? 0 : undefined}>

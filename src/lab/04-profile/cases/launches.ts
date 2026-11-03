@@ -33,16 +33,16 @@ export const launches: Case = {
     ] },
     { id: 'phonic', title: 'Lenskart Phonic — smart glasses user guide', blocks: [
       { k: 'p', t: ['Created 3D product visualisations and interaction demos to explain the features of Phonic smart glasses — covering button locations, controls and interactions for different functions in a more intuitive, visual format.'] },
-      { k: 'phones', of: [
+      { k: 'phones', pair: true, of: [ /* the two pieces' pairs set alike (3 Nov, Nitish: "one is too cramped … the other one is too far apart … match the spaces between them") */
         { k: 'media', shape: 'phone', label: 'Know your Phonic', src: `${A}/phonic.webp`, cap: 'The guide' },
         clip('phonic-guide', 'The guide, scrolling', { cap: 'Buttons, controls and gestures, demonstrated' }),
       ] },
     ] },
     { id: 'hustlr', title: 'T20 × Hustlr campaign', blocks: [
       { k: 'p', t: ['Designed a cricket-themed promotional landing experience for Hustlr, with team-specific colour treatments and campaign visuals. The experience opened with a ', { b: 'Lottie-powered hero animation' }, ', creating an energetic entry point into the campaign.'] },
-      { k: 'row', ratio: '1fr 1fr', align: 'center', of: [
-        { k: 'figure', of: { k: 'media', shape: 'phone', label: 'The hero animation', src: `${A}/t20-hero.mp4`, poster: `${A}/t20-hero-poster.webp`, cap: 'The Lottie hero, opening the page', bg: '#000', fit: { box: T20_FIT, fade: 12 } }, width: 'phone' },
-        { k: 'figure', of: clip('t20-landing', 'The landing page, scrolling', { cap: 'Cheer for your team: a colour for each' }), width: 'phone' },
+      { k: 'phones', pair: true, of: [ /* a pair as the guide's above (was a row of two halves, each phone centred in its half: far apart) */
+        { k: 'media', shape: 'phone', label: 'The hero animation', src: `${A}/t20-hero.mp4`, poster: `${A}/t20-hero-poster.webp`, cap: 'The Lottie hero, opening the page', bg: '#000', fit: { box: T20_FIT, fade: 12 } },
+        clip('t20-landing', 'The landing page, scrolling', { cap: 'Cheer for your team: a colour for each' }),
       ] },
     ] },
     { id: 'genai', title: 'GenAI 3D characters', blocks: [

@@ -16,7 +16,7 @@ export type Block =
   | Media
   | { k: 'figure'; of: Media; width?: 'half' | 'phone' | 'wide' }
   | { k: 'row'; of: Block[]; ratio?: string; align?: 'start' | 'center' }
-  | { k: 'phones'; of: Media[]; close?: boolean /* the screens a step closer: three of one flow */ }
+  | { k: 'phones'; of: Media[]; close?: boolean /* the screens a step closer: three of one flow */; pair?: boolean /* two phones as a pair: half a phone apart (Case04 .cs4-phones.pair) */ }
   | { k: 'group'; of: Block[] }
   | { k: 'stats'; title?: string; tone?: 'dark'; items: { n: string; l: string }[]; more?: Rich /* on hover the numbers give way to this (his page) */ }
   | { k: 'legend'; items: string[]; colors?: string[] }

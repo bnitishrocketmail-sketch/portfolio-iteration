@@ -116,6 +116,7 @@
 .cs4-fig.half .cs4-media::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; pointer-events: none; z-index: 2; box-shadow: inset 3px 3px 8px rgba(0, 0, 0, .28), inset 1px 1px 2px rgba(0, 0, 0, .18), inset -2px -2px 6px rgba(255, 255, 255, .55); } /* engraved: dark from the top-left, light from the bottom-right (22 Oct) */
 .cs4-phones { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--s2) var(--s5); padding: var(--s2) 0; }
 .cs4-phones.close { gap: var(--s2) var(--s4); } /* three screens of one flow, a step closer (the snap-on, 27 Oct) */
+.cs4-phones.pair { column-gap: calc(var(--ph-w) * .5); } /* two phones as a pair (3 Nov, launches): half a phone apart — clearly one group against the wide margins either side of it, with room between the captions; the step (--s5) had them touching, a row's halves had them a section apart */
 
 /* the flow: the steps down the card, --s5 apart, the curves drawn over them */
 .cs4-flow { position: relative; display: flex; flex-direction: column; gap: calc(var(--s5) + var(--s3)); padding-top: var(--s2); } /* the steps further apart than anything else: the knots need the room */
@@ -490,7 +491,7 @@
     .cs4-row { grid-template-columns: 1fr !important; }
   .cs4-media, .cs4-faq-ui, .cs4-faq-card { border-radius: calc(calc(var(--r) - 8px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); }
   .cs4-fig.phone { width: min(100%, var(--ph-w)); } .cs4-fig.phone-land { width: min(100%, var(--ph-h)); }
-  .cs4-phones { display: grid; grid-template-columns: repeat(2, minmax(0, var(--ph-w))); justify-content: center; gap: var(--s3) var(--s4); padding: 0; } .cs4-phones .cs4-fig.phone { width: 100%; } /* two to a row, each a phone's width, centred with air between */
+  .cs4-phones, .cs4-phones.pair { display: grid; grid-template-columns: repeat(2, minmax(0, var(--ph-w))); justify-content: center; gap: var(--s3) var(--s4); padding: 0; } .cs4-phones .cs4-fig.phone { width: 100%; } /* two to a row, each a phone's width, centred with air between */
   .cs4-hero .cs4-phones:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); } /* a hero of three screens (RideQuest's, the interactive experiences', 28 Oct) keeps them side by side, a third of the row each, rather than two and one under them */
   .cs4-step.with-text, .cs4-step.with-side, .cs4-flow.tight .cs4-step.with-text { grid-template-columns: 1fr; padding: 0; }
   .cs4-screens { flex-direction: column; gap: var(--s4); }
