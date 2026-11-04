@@ -23,6 +23,17 @@ const card = (id: string, name: string, x: string, y: string, z: string, v: stri
   { group: 'Intro cards', sub: name, kind: 'range', key: `--c-${id}-py`, label: 'y on the phone', def: PH[id][1], light: PH[id][1], min: 0, max: 100, step: 1, unit: '%' },
   { group: 'Intro cards', sub: name, kind: 'select', key: `--c-${id}-pv`, label: 'Shown on the phone', def: PH[id][2], light: PH[id][2], options: shown },
 ];
+/* the showcase's containers (Showcase04, 4 Nov, Nitish: "the position controls of the campaign banner and a few more that we
+   will add… should be there in the control sections, like the other floating containers have"): each one's centre — of
+   the whole thing, the phone and its card together — in % of the picture, and shown or hidden; the phone's own too */
+const show = (id: string, name: string, x: string, y: string, px: string, py: string, v = 'block', pv = 'block'): Control[] => [
+  { group: 'Showcase cards', sub: name, kind: 'range', key: `--sc-${id}-x`, label: 'x', def: x, light: x, min: -20, max: 120, step: 1, unit: '%' },
+  { group: 'Showcase cards', sub: name, kind: 'range', key: `--sc-${id}-y`, label: 'y', def: y, light: y, min: -20, max: 120, step: 1, unit: '%' },
+  { group: 'Showcase cards', sub: name, kind: 'select', key: `--sc-${id}-v`, label: 'Shown', def: v, light: v, options: shown },
+  { group: 'Showcase cards', sub: name, kind: 'range', key: `--sc-${id}-px`, label: 'x on the phone', def: px, light: px, min: -20, max: 120, step: 1, unit: '%' },
+  { group: 'Showcase cards', sub: name, kind: 'range', key: `--sc-${id}-py`, label: 'y on the phone', def: py, light: py, min: -20, max: 120, step: 1, unit: '%' },
+  { group: 'Showcase cards', sub: name, kind: 'select', key: `--sc-${id}-pv`, label: 'Shown on the phone', def: pv, light: pv, options: shown },
+];
 /* the phone's defaults (profile.css :root): centre x, y (% of the square picture) and shown */
 const PH: Record<string, [string, string, string]> = { ai: ['17%', '64%', 'block'], loader: ['71%', '77%', 'block'], gold: ['27%', '30%', 'block'], pers: ['67%', '23%', 'none'], coin: ['66%', '33%', 'none'], micro: ['40%', '85%', 'none'] };
 
@@ -71,6 +82,7 @@ export const CONTROLS: Control[] = [
   col('Controls and marks', '--social-ink', 'Social icons', '#a6a6a6', '#2f2e30'),
   col('Controls and marks', '--corner-ink', 'Corner bracket', '#bababa', '#2f2e30'),
   /* the intro's floating cards */
+  ...show('camp', 'Campaign banners', '67%', '47%', '44%', '48%'),
   ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'none'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
   ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'),
   /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */

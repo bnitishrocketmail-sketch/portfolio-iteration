@@ -122,7 +122,7 @@ export default function Showcase04({ open }: { open: boolean }) {
       <div className="sc4-in">
         <AnimatePresence>
           {open && (
-            <motion.div key="camp" className="sc4-cardwrap" initial={reduce ? false : { opacity: 0, y: 28, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: 0 } : { duration: .62, delay: .3, ease: EASE_IN } }} exit={{ opacity: 0, y: 14, scale: .95, transition: { duration: reduce ? 0 : .26, ease: [.4, 0, 1, 1] } }}>
+            <motion.div key="camp" className="sc4-cardwrap camp" initial={reduce ? false : { opacity: 0, y: 28, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: 0 } : { duration: .62, delay: .3, ease: EASE_IN } }} exit={{ opacity: 0, y: 14, scale: .95, transition: { duration: reduce ? 0 : .26, ease: [.4, 0, 1, 1] } }}>
               <Belt><span className="cap">Campaign banners</span></Belt>
             </motion.div>
           )}
