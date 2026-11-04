@@ -417,8 +417,8 @@ export default function Iteration04() {
               <FloatCard cls="pers-card" hold={show} depth="1.2" dur="6.6s" dl="-.9s">{on => <><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects playing={on} label="The persuasion animation" /><span className="cap">Persuasion animation</span></>}</FloatCard>
               {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
               <FloatCard cls="micro-card" hold={show} depth="1.1" dur="6.4s" dl="-2.4s">{on => <><Lottie className="mli" src={LOTTIES.micro} still={STILL.micro} playing={on} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></>}</FloatCard>
-              {/* the showcase's tag (4 Nov; its look is to come — a plain glass pill for now) and the showcase itself, over everything in the picture */}
-              <button type="button" className="sc4-tag" aria-expanded={show} onClick={() => setShow(s => !s)}>{show ? 'Close' : 'More Lotties'}</button>
+              {/* the showcase's tag (4 Nov: a tab standing up from the picture's foot, profile.css) and the showcase itself, over everything in the picture */}
+              <button type="button" className="sc4-tag" aria-expanded={show} onClick={() => setShow(s => !s)}>{show ? 'Close' : 'Visual motion'}</button>
               <Showcase04 open={show} />
               <div className="name4">
                 {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}

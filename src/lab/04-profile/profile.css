@@ -296,10 +296,18 @@
 @media (prefers-reduced-motion: reduce) { .fl4-in { animation: none; } }
 
 /* ---- the showcase (Showcase04.tsx, 4 Nov): the picture's second state, for the Lotties the old site's home carried ---- */
-/* the tag that opens it (its design is to come): a glass pill at the picture's bottom-right corner, in from the edge by
-   the cut-out's padding */
-.sc4-tag { position: absolute; right: 1.6cqw; bottom: 1.5cqw; z-index: 6; display: inline-flex; align-items: center; padding: .55em 1em; border: 1px solid rgba(255, 255, 255, .14); border-radius: 999px; background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); color: var(--glass-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); cursor: pointer; transition: transform .2s, background .2s; }
-.sc4-tag:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--glass-bg) calc(min(1, var(--glass-a) + .15) * 100%), transparent); }
+/* the tag that opens it (4 Nov, Nitish: "a tag at the bottom right of this container… coming from the behind side… it can
+   have rounded corners, but it should seem like it is curving from behind to the front… a solid background… dark or light
+   based on where it is placed"): a tab standing up from the picture's bottom edge, in from the rounded corner by the corner's
+   own radius and a step — its top corners the system's curve, its foot flaring into the edge on both sides with a concave
+   fillet (two squares with a quarter circle taken out, the tab's colour), so it reads as a tab coming round from behind the
+   edge. Solid, in the folded card's dark with its light ink: the drawing's desk is white there in both themes. Two words:
+   "Visual motion" (his visual motion-design work, beside the product work); "Close" while open */
+.sc4-tag { --tagf: 10px; position: absolute; right: calc(var(--r) * var(--ios-k, 1) + 1.4cqw); bottom: 0; z-index: 6; display: inline-flex; align-items: center; padding: .5em 1.05em .6em; border: 0; border-radius: calc(var(--r) * .5 * var(--ios-k, 1)) calc(var(--r) * .5 * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); line-height: 1.1; cursor: pointer; transition: filter .2s; }
+.sc4-tag::before, .sc4-tag::after { content: ''; position: absolute; bottom: 0; width: var(--tagf); height: var(--tagf); pointer-events: none; }
+.sc4-tag::before { left: calc(-1 * var(--tagf)); background: radial-gradient(circle at 0 0, transparent calc(var(--tagf) - .5px), var(--pcard-fold) var(--tagf)); } /* the flare at its left: the square's fill outside a quarter circle centred on its top-left */
+.sc4-tag::after { right: calc(-1 * var(--tagf)); background: radial-gradient(circle at 100% 0, transparent calc(var(--tagf) - .5px), var(--pcard-fold) var(--tagf)); }
+.sc4-tag:hover { filter: brightness(1.12); }
 /* open: the floating cards zoom past — each on its own heading (--ox/--oy, from where it sits: the loader to the bottom
    right, the persuasion animation to the right, the success state up and a little left, the assistant down and to the
    left; the coin and the micro bar, when shown, likewise), a little bigger as it goes, fading — then rest hidden */
@@ -833,7 +841,7 @@
   /* the showcase on the phone (4 Nov): the tag in the picture's top-right corner; the layer fills the picture's cell, and
      should its containers ever stand taller than the square, the cell grows to them and the picture and his cutout
      stretch with it, so the blurred drawing stays behind; the cards' headings a little shorter for the square */
-  .sc4-tag { position: relative; grid-area: pic; align-self: start; justify-self: end; inset: auto; margin: 12px 12px 0 0; padding: .5em .85em; z-index: 6; font-size: 12px; } /* the top-right corner here: the links' pocket and the desk take the right and the foot */
+  .sc4-tag { --tagf: 8px; position: relative; grid-area: pic; align-self: end; justify-self: end; inset: auto; margin: 0 calc(var(--r) * var(--ios-k, 1) + 10px) 0 0; padding: .45em .9em .55em; z-index: 6; font-size: 12px; border-radius: calc(10px * var(--ios-k, 1)) calc(10px * var(--ios-k, 1)) 0 0; } /* standing up from the picture's foot here too, in from the corner */
   .sc4 { position: relative; grid-area: pic; inset: auto; align-self: stretch; width: 100%; }
   .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; }
   .sc4-cardwrap { --sw: 115px; --hp-r: 13px; }
