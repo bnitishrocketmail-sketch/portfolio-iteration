@@ -13,7 +13,13 @@
 .cn4.on { opacity: 0; } /* the card has grown out of it; it stays a target, so a tap's click lands on it (a no-op) and not on the floor */
 .cn4.core { padding: .95em 1.35em; background: var(--pcard-open); color: var(--pcard-open-ink); font-size: var(--t-title); font-weight: var(--title-w); box-shadow: var(--shadow-el); }
 .cn4.flow { padding: .8em 1.15em; background: var(--pcard-fold); color: var(--pcard-fold-ink); font-size: var(--t-body); font-weight: 500; box-shadow: var(--shadow-el); }
-.cn4.tool { padding: .6em 1em; border: 1px solid color-mix(in srgb, var(--line-ink) 38%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); }
+.cn4.tool { display: inline-flex; align-items: center; gap: .55em; padding: .4em .95em .4em .45em; border: 1px solid color-mix(in srgb, var(--line-ink) 38%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); }
+/* the tool's mark (4 Nov): a tile the text's line tall (1.45em), rounded, a tint of the ink; the mark in the ink at .74 of
+   it; the tile sits .45em in from the pill's edge, the label .55em after it, and the pill's vertical padding shrinks so
+   the pill stays the height it was */
+.tl4 { flex: none; display: grid; place-items: center; width: 1.45em; height: 1.45em; border-radius: calc(.4em * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--line-ink) 12%, transparent); }
+.tl4 svg { width: .74em; height: .74em; display: block; }
+.tl4.blank { background: color-mix(in srgb, var(--line-ink) 7%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--line-ink) 22%, transparent); }
 .cn4.ai { padding: .6em 1em; border: 1px dashed color-mix(in srgb, var(--line-ink) 40%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); opacity: .8; }
 /* the card a node opens into: the open card's grey, the standard radius; its box is animated (Workflow04.tsx), the content
    is laid out at the card's full width from the start so nothing reflows while it grows */
@@ -73,14 +79,14 @@
      specifically for the phone layout"): the kinds told apart by their fill and weight, not their size; the skills'
      padding a step more than the tools' */
   .cm4.v2 .cn4.core { padding: .62em .95em; font-size: var(--t-meta); } .cm4.v2 .cn4.flow { padding: .58em .85em; font-size: var(--t-meta); }
-  .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { padding: .5em .8em; font-size: var(--t-meta); }
+  .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { padding: .5em .8em; font-size: var(--t-meta); } .cm4.v2 .cn4.tool { padding: .3em .8em .3em .35em; }
   .cm4:not(.v2) { width: 760px; height: 400px; } .cr4 > .cm4-wrap:has(.cm4:not(.v2)) { overflow: auto; }
   .vs4 { align-self: flex-start; }
   /* on the picture, not the grey: the picture is dark in both themes, so the orb, lines, wires and the outline pills take a
      light ink here whatever the theme (the light theme's name ink is dark, for its grey frame) */
   .cm4.v2 { --map-ink: #dfdfdf; }
   .cm4.v2 .ow4 { color: var(--map-ink); }
-  .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { color: var(--map-ink); border-color: color-mix(in srgb, var(--map-ink) 45%, transparent); background: rgba(20, 20, 22, .35); }
+  .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { color: var(--map-ink); border-color: color-mix(in srgb, var(--map-ink) 45%, transparent); background: rgba(20, 20, 22, .35); } .cm4.v2 .tl4 { background: color-mix(in srgb, var(--map-ink) 14%, transparent); } .cm4.v2 .tl4.blank { background: color-mix(in srgb, var(--map-ink) 7%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--map-ink) 25%, transparent); }
   /* light (24 Oct, Nitish: "in the light version … the orb, AI written in the center, the nodes, they are all white …
      they should have been inverted"): the light theme's page is light now, not the dark picture, so the map's ink
      inverts to that theme's dark (its name ink, #2f2e30) — the orb, its "AI", the lines and the wires (the canvas

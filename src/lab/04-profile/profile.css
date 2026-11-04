@@ -34,11 +34,11 @@
      coin's at the top right — the coin is hidden here — beside the success card */
   --c-ai-px: 17%; --c-ai-py: 64%; --c-loader-px: 71%; --c-loader-py: 77%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
   --sc-camp-x: 50%; --sc-camp-y: 37%; --sc-camp-v: block; --sc-camp-px: 54%; --sc-camp-py: 45%; --sc-camp-pv: block; /* the showcase's containers (4 Nov): each one's centre, % of the picture — his places (his copied values, made the defaults) */
-  --sc-splash-x: 27%; --sc-splash-y: 15.7%; --sc-splash-v: block; --sc-splash-px: 13%; --sc-splash-py: 12%; --sc-splash-pv: none;
-  --sc-t20-x: 12%; --sc-t20-y: 49%; --sc-t20-v: block; --sc-t20-px: 20%; --sc-t20-py: 12%; --sc-t20-pv: none;
-  --sc-avatars-x: 77%; --sc-avatars-y: 48.5%; --sc-avatars-v: block; --sc-avatars-px: 30%; --sc-avatars-py: 86%; --sc-avatars-pv: none;
+  --sc-splash-x: 77%; --sc-splash-y: 19%; --sc-splash-v: block; --sc-splash-px: 13%; --sc-splash-py: 12%; --sc-splash-pv: none;
+  --sc-t20-x: 12%; --sc-t20-y: 46%; --sc-t20-v: block; --sc-t20-px: 20%; --sc-t20-py: 12%; --sc-t20-pv: none;
+  --sc-avatars-x: 84%; --sc-avatars-y: 55%; --sc-avatars-v: block; --sc-avatars-px: 30%; --sc-avatars-py: 86%; --sc-avatars-pv: none;
   --sc-insta-x: 83%; --sc-insta-y: 83.3%; --sc-insta-v: block; --sc-insta-px: 64%; --sc-insta-py: 84%; --sc-insta-pv: block;
-  --sc-view360-x: 79%; --sc-view360-y: 24%; --sc-view360-v: block; --sc-view360-px: 64%; --sc-view360-py: 86%; --sc-view360-pv: none;
+  --sc-view360-x: 22%; --sc-view360-y: 18%; --sc-view360-v: block; --sc-view360-px: 64%; --sc-view360-py: 86%; --sc-view360-pv: none;
   --sc-sale1-x: 54%; --sc-sale1-y: 77%; --sc-sale1-v: block; --sc-sale1-px: 24%; --sc-sale1-py: 84%; --sc-sale1-pv: block;
   --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: none; /* three on the phone (28 Oct, Nitish: the persuasion card removed there) */ --c-coin-pv: none; --c-micro-pv: none;
   --name-box-v: none; /* the name box with the one-liner, shown or hidden (the design system page); hidden by default (28 Oct, his desktop settings) */
