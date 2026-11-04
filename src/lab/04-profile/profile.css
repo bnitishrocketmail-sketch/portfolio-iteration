@@ -244,6 +244,10 @@
 /* its place, size and weight are controls (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than
    what it is"): --sig-x / --sig-y the centre, --sig-w the width, all of the picture; --sig-weight added to each side of
    the strokes, in the drawing's units — below zero the mask's stroke takes it off, above it the shape's own stroke adds it */
+/* the word version (4 Nov): PORTFOLIO in Oswald, drawn as SVG text spread to the drawing's full width (textLength), so
+   --sig-w sizes it as it sizes the signature; level, not tilted — a set word on a wall, where the signature is a hand's */
+.sig-bg svg.sig-word { rotate: 0deg; overflow: visible; }
+.sig-bg .sig-word text { font: 500 235px/1 'Oswald', 'Outfit', sans-serif; letter-spacing: .02em; }
 .sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, -.35)) * 2px); }
 .sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, -.35)) * 2px); }
 .fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); display: var(--c-ai-v); } /* each card's place, layer (1 behind him, 3 in front) and whether it shows are tokens */
@@ -311,7 +315,8 @@
    --gone: where down the screen the fade has hidden it (.83 — just above the home page's referral strip, which starts at
    .835), and the caption sits under that point. The card's glass (the floating cards' recipe, at their radius and padding) with a
    few words, as theirs; the screen stands out of its top with its lower fifth inside */
-.sc4-camp { --sw: clamp(100px, 9.8cqw, 126px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(11px, 1.3cqw, 18px); --in: .28; --gone: .83; position: relative; width: var(--cw); margin-top: calc(var(--sh) * (1 - var(--in))); padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 1cqw) 1.3cqw 1.1cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
+.sc4-cardwrap { --sw: clamp(100px, 9.8cqw, 126px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(11px, 1.3cqw, 18px); --in: .28; --gone: .83; position: relative; width: var(--cw); margin-top: calc(var(--sh) * (1 - var(--in))); pointer-events: auto; } /* the card and its two stages share these; the faint stage sits behind the card (4 Nov, Nitish: "let's keep them behind the container"), the window and the edge in it */
+.sc4-camp { position: relative; width: 100%; padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 1cqw) 1.3cqw 1.1cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) 80%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); /* the glass at 80% here (4 Nov, Nitish: the card "too transparent… at least 80%"), where the floating cards sit at 20 */
   border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); }
 .sc4-camp .cap { display: block; text-align: center; font: 600 clamp(10.5px, .95cqw, 13px)/1.25 var(--f-copy); }
@@ -321,7 +326,7 @@
    part fades out (from .66 of its height, gone by .83 — 4 Nov, Nitish: "hide up till the text where have invite referral code is written"), but only across the phone's width (a second mask layer, excluded from the first), so the middle
    screen dissolves into the card and the sides keep their feet (4 Nov: the column had been the card's width, and a side
    screen crossing the card's edge showed a seam) */
-.sc4-car { position: absolute; left: 50%; top: calc((var(--in) - 1) * var(--sh)); width: calc(var(--sw) * 3.2); height: var(--sh); margin-left: calc(var(--sw) * -1.6); perspective: 1100px;
+.sc4-car { position: absolute; left: 50%; top: calc((var(--in) - 1) * var(--sh)); width: calc(var(--sw) * 3.2); height: var(--sh); margin-left: calc(var(--sw) * -1.6); perspective: 1100px; pointer-events: none;
   -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(to bottom, transparent 66%, #000 83%); -webkit-mask-size: 100% 100%, var(--sw) 100%; -webkit-mask-position: 0 0, 50% 0; -webkit-mask-repeat: no-repeat; -webkit-mask-composite: xor;
   mask-image: linear-gradient(#000 0 0), linear-gradient(to bottom, transparent 66%, #000 83%); mask-size: 100% 100%, var(--sw) 100%; mask-position: 0 0, 50% 0; mask-repeat: no-repeat; mask-composite: exclude; }
 .sc4-car-item { position: absolute; left: 50%; top: 0; width: var(--sw); margin-left: calc(var(--sw) / -2); transform-origin: 50% 50%; will-change: transform, opacity; filter: grayscale(1); opacity: .2; } /* the stage's copies: grey, at a fifth */
@@ -419,14 +424,14 @@
   .intro-card.plate-dark .picwrap4::before, .intro-card.plate-dark .picwrap4::after { background: var(--nav-hl); }
   .intro-card.plate-dark .picwrap4 { --name-ink: var(--nav-hl-ink); --line-ink: var(--nav-hl-ink); --corner-ink: var(--nav-hl-ink); --cv-bg: var(--nav-bg); --cv-ink: var(--nav-ink); --social-ink: var(--nav-hl-ink); }
   .intro-card.plate-dark .links4 a:hover { background: rgba(255, 255, 255, .1); }
-  .intro-card.plate-dark .cut4 .me4 { box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18); }
+  .intro-card.plate-dark .cut4 .me4 { box-shadow: 0 0 0 2px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); }
   .intro-card.plate-dark:not(.nav-float).home .frame4 .nav4.icons ul button { color: var(--nav-hl-ink); }
   .intro-card.plate-dark:not(.nav-float).home .frame4 .nav4.icons ul button.on { color: var(--nav-ink); }
   .intro-card.plate-dark:not(.nav-float).home .frame4 .hl4.tile { background: var(--nav-bg); }
   .intro-card.plate-dark:not(.nav-float).home .frame4 .navtag4 { background: var(--nav-bg); color: var(--nav-ink); }
   .intro-card .picwrap4 { --name-ink: var(--nav-ink); --line-ink: var(--nav-ink); --corner-ink: var(--nav-ink); --cv-bg: var(--nav-hl); --cv-ink: var(--nav-hl-ink); --social-ink: var(--nav-ink); }
   .intro-card .links4 a:hover { background: rgba(0, 0, 0, .08); } /* the links' hover, dark on the light plate */
-  .intro-card .cut4 .me4 { box-shadow: 0 0 0 1px rgba(0, 0, 0, .14), inset 0 1px 0 rgba(255, 255, 255, .3); } /* the disc's ring, dark on the plate */
+  .intro-card .cut4 .me4 { box-shadow: 0 0 0 2px rgba(0, 0, 0, .14), inset 0 1px 0 rgba(255, 255, 255, .3), var(--shadow-el); } /* the disc's ring, dark on the plate */
   /* the corner bracket lifted (27 Oct, Nitish: "lift it upwards and align it with the same spacing of left and bottom
      with the text"; then: "from the bottom alignment, it is fine, but from the left side, let's align it from the
      container"): its bottom leg on the content's bottom line (the CV pill's foot, the cut-out's padding up), its left
@@ -450,7 +455,7 @@
 .corner4.tr::before { left: auto; top: auto; right: calc(-1 * var(--sw)); bottom: calc(-.5 * var(--sw)); } /* the right leg's bottom end */
 .corner4.tr::after { right: auto; bottom: auto; left: calc(-.5 * var(--sw)); top: calc(-1 * var(--sw)); } /* the top leg's left end */
 /* his photo in a disc in the space beside the name (Nitish, 13 Oct), as tall as the name and the title together */
-.me4 { grid-area: me; align-self: start; width: clamp(60px, 7cqw, 96px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; background: var(--g2); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18); }
+.me4 { grid-area: me; align-self: start; width: clamp(60px, 7cqw, 96px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; position: relative; background: var(--g2); box-shadow: 0 0 0 2px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); } /* the ring 2px (from 1) and the page's soft shadow under the disc (4 Nov, Nitish: "there is no shadow of the ellipse… give it stroke… increase that a bit by 1 point") */
 .me4 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; transform: scale(2.2); transform-origin: 50% 60%; display: block; } /* the stand-in desk photo, zoomed to his face */
 .lede4 { color: var(--glass-ink); font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); max-width: 36ch; } /* body */ .lede4-more { display: none; }
 /* the name box: the reference's glass box at the bottom-right, the name in the marker lettering (ref 6) */
@@ -810,7 +815,8 @@
   .sc4 { position: relative; grid-area: pic; inset: auto; align-self: stretch; width: 100%; }
   .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; }
   .sc4-in { padding: 16px 55px 24px 8px; } /* centred on the room left of the links' pocket, the sides clear of it */
-  .sc4-camp { --sw: 96px; --hp-r: 11px; padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 8px) 8px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; } /* no blur, as the floating cards' here */
+  .sc4-cardwrap { --sw: 96px; --hp-r: 11px; }
+  .sc4-camp { padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 8px) 8px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; } /* no blur, as the floating cards' here */
   .sc4-camp .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); white-space: nowrap; } /* one line in the narrower card */
   .fl4:not(.sig-bg) > .fl4-in { transition: translate .35s cubic-bezier(.2, .8, .2, 1), scale .35s; } /* the glass moves here (the layer round it stays put, transform: none above) */
   .sc-open .fl4:not(.sig-bg) > .fl4-in { translate: calc(-50% + var(--ox, 0px)) calc(-50% + var(--oy, 0px)); scale: 1.14; transition: translate .7s cubic-bezier(.3, .6, .2, 1), scale .7s cubic-bezier(.3, .6, .2, 1); }

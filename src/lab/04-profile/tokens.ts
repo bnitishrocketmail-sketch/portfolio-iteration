@@ -94,6 +94,10 @@ export const CONTROLS: Control[] = [
   { group: 'Intro picture', sub: 'Name area', kind: 'select', key: '--plate', label: 'Plate', def: 'light', light: 'light', options: [['Light (the nav’s grey)', 'light'], ['Dark (the selection’s colour)', 'dark']] },
   /* his signature on the picture's wall, behind him (27 Oct) */
   { group: 'Intro picture', sub: 'Signature on the wall', kind: 'select', key: '--sig-bg', label: 'Shown', def: 'on', light: 'on', options: [['Shown', 'on'], ['Hidden', 'off']] },
+  /* what is written on the wall (4 Nov, Nitish: "one more version… instead of that SVG, we will have portfolio written in the
+     background… a font which is taller"): his signature, or PORTFOLIO in Oswald — a condensed face with tall letters, not an
+     extreme one; it takes the same place, size and opacity, level rather than tilted */
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'select', key: '--sig-v', label: 'Written', def: 'sig', light: 'sig', options: [['The signature', 'sig'], ['PORTFOLIO (Oswald)', 'word']] },
   /* its place, size and weight (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than what it is"):
      the centre and the width as percent of the picture; the weight added to (or, below zero, taken off) each side of the
      strokes, in the drawing's units — its strokes are about 1.7 wide, so −.5 leaves them about two-fifths as thick */

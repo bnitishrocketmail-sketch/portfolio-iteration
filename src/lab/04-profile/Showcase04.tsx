@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react';
 import { Lottie } from '../../components/micro/Lottie';
 import { useInView } from './inview';
@@ -46,7 +46,7 @@ function Screen({ b, active }: { b: typeof BANNERS[number]; active: boolean }) {
    screen is inside the phone is full, and whatever is outside is faint, with no fade along the way; a screen passes
    into the phone the way it passes under the B hero's bezel. A screen plays while it is in the phone, and while it is
    leaving; parked at a side it pauses where it is. */
-function Belt() {
+function Belt({ children }: { children?: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const els = useRef<(HTMLDivElement | null)[]>([]);
   const wins = useRef<(HTMLDivElement | null)[]>([]);
@@ -60,7 +60,7 @@ function Belt() {
   const [ghostOf, setGhostOf] = useState(first[2]);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const places = () => {
-    const el = ref.current; const w = el?.querySelector<HTMLElement>('.sc4-car-phone')?.offsetWidth ?? 150;
+    const el = ref.current; const w = el?.parentElement?.querySelector<HTMLElement>('.sc4-car-phone')?.offsetWidth ?? 150;
     const gap = w * .048; const off = w / 2 + gap + w * CAR.side / 2;
     return { off, L: -off, R: off };
   };
@@ -95,17 +95,24 @@ function Belt() {
     return () => { live = false; clearTimeout(t); };
   }, [on, still]);
   const playing = (i: number) => inPhone === i || leaving === i;
-  return (
-    <div className="sc4-car" ref={ref}>
-      {BANNERS.map((b, i) => <div key={b.id} ref={el => { els.current[i] = el; }} className="sc4-car-item" aria-hidden="true"><Screen b={b} active={playing(i)} /></div>)}
-      <div ref={ghost} className="sc4-car-item ghost" aria-hidden="true"><Screen key={ghostOf} b={BANNERS[ghostOf]} active={false} /></div>
-      {/* the window: the phone's shape, clipping; the same belt inside it, whole */}
-      <div className="sc4-win">
-        {BANNERS.map((b, i) => <div key={b.id} ref={el => { wins.current[i] = el; }} className="sc4-car-item win" style={{ zIndex: inPhone === i ? 2 : 1 }}><Screen b={b} active={playing(i)} /></div>)}
-      </div>
-      <div className="sc4-car-phone" aria-hidden="true"><i className="sc4-island" /></div>
+  /* two stages of the same geometry: the faint copies behind the card (4 Nov, Nitish: "keep them behind the container"),
+     the window and the phone's edge in the card, over its glass; the card's words under the fade */
+  return (<>
+    <div className="sc4-car back" ref={ref} aria-hidden="true">
+      {BANNERS.map((b, i) => <div key={b.id} ref={el => { els.current[i] = el; }} className="sc4-car-item"><Screen b={b} active={playing(i)} /></div>)}
+      <div ref={ghost} className="sc4-car-item ghost"><Screen key={ghostOf} b={BANNERS[ghostOf]} active={false} /></div>
     </div>
-  );
+    <div className="sc4-card sc4-camp">
+      <div className="sc4-car front">
+        {/* the window: the phone's shape, clipping; the same belt inside it, whole */}
+        <div className="sc4-win">
+          {BANNERS.map((b, i) => <div key={b.id} ref={el => { wins.current[i] = el; }} className="sc4-car-item win" style={{ zIndex: inPhone === i ? 2 : 1 }}><Screen b={b} active={playing(i)} /></div>)}
+        </div>
+        <div className="sc4-car-phone" aria-hidden="true"><i className="sc4-island" /></div>
+      </div>
+      {children}
+    </div>
+  </>);
 }
 
 export default function Showcase04({ open }: { open: boolean }) {
@@ -115,9 +122,8 @@ export default function Showcase04({ open }: { open: boolean }) {
       <div className="sc4-in">
         <AnimatePresence>
           {open && (
-            <motion.div key="camp" className="sc4-card sc4-camp" initial={reduce ? false : { opacity: 0, y: 28, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: 0 } : { duration: .62, delay: .3, ease: EASE_IN } }} exit={{ opacity: 0, y: 14, scale: .95, transition: { duration: reduce ? 0 : .26, ease: [.4, 0, 1, 1] } }}>
-              <Belt />
-              <span className="cap">Campaign banners</span>
+            <motion.div key="camp" className="sc4-cardwrap" initial={reduce ? false : { opacity: 0, y: 28, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: 0 } : { duration: .62, delay: .3, ease: EASE_IN } }} exit={{ opacity: 0, y: 14, scale: .95, transition: { duration: reduce ? 0 : .26, ease: [.4, 0, 1, 1] } }}>
+              <Belt><span className="cap">Campaign banners</span></Belt>
             </motion.div>
           )}
         </AnimatePresence>

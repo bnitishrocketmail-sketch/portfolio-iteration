@@ -304,6 +304,7 @@ export default function Iteration04() {
   const plateDark = tweaks['--plate'] === 'dark'; /* the plate in the selection's dark, what is on it inverted (a control, 27 Oct) */
   const navFloat = (tweaks['--nav-bar'] ?? 'bar') === 'float'; /* the bar by default (28 Oct) */ /* the other pages' nav: the icons on the frame, no bar (a control, 27 Oct) */
   const sigBg = (tweaks['--sig-bg'] ?? 'on') === 'on'; /* his signature on the picture's wall, behind him (a control, 27 Oct) */
+  const sigWord = tweaks['--sig-v'] === 'word'; /* PORTFOLIO on the wall instead of the signature (a control, 4 Nov) */
   const frameRef = useRef<HTMLDivElement>(null);
   usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '24') || 0); /* the phone's rims, at the Light angle (24 Oct); the phone keeps 24° unless it's set (the desktop's default is 20°, 28 Oct) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
@@ -400,7 +401,7 @@ export default function Iteration04() {
                   illustration container background, even behind my picture… like a silhouette… a little darker than the
                   background… not dominating"): the nav's old "Nitish", wide across the wall at his head's height, in the
                   dark at a low opacity so it reads as the wall a shade darker; behind him and the cards, leaning least */}
-              {sigBg && <div className="fl4 sig-bg" data-depth=".2" aria-hidden="true"><SigWall /></div>}
+              {sigBg && <div className="fl4 sig-bg" data-depth=".2" aria-hidden="true">{sigWord ? <svg className="sig-word" viewBox="0 0 1000 200" aria-hidden="true"><text x="500" y="188" textAnchor="middle" textLength="1000" lengthAdjust="spacing" fill="currentColor">PORTFOLIO</text></svg> : <SigWall />}</div>}
               <FloatCard cls="coin-card" hold={show} depth=".5" dur="7s" dl="-3.3s">{on => <><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} playing={on} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></>}</FloatCard>
               <FloatCard cls="loader-card" hold={show} depth=".6" dur="5.8s" dl="-1.7s">{on => <><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} playing={on} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></>}</FloatCard>
               {depthOn
