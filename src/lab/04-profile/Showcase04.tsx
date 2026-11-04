@@ -27,7 +27,7 @@ const BANNERS = [
   { id: 'mother', src: 'https://lottie.host/ac24a6ad-8d75-4134-8c40-e115eeac12ae/nWXZCNoEkA.lottie', still: 399, label: 'Mother’s Day' },
 ];
 /* the belt's rule, the B hero's (Case04 CAR): the hold, the step's length and ease, the sides' size and tilt */
-const CAR = { hold: 3800, slide: 1, side: .92, tilt: 16, ease: [.3, .1, .25, 1] as [number, number, number, number] };
+const CAR = { hold: 3800, slide: 1, side: .92, sideA: .2, tilt: 16, ease: [.3, .1, .25, 1] as [number, number, number, number] };
 
 /* one screen: the home page, the banner over its top */
 function Screen({ b, active }: { b: typeof BANNERS[number]; active: boolean }) {
@@ -58,7 +58,7 @@ function Belt() {
   };
   const put = (el: HTMLElement, x: number, side: number, turn: number, opacity = 1) => {
     el.style.transform = `translateX(${x.toFixed(2)}px) scale(${(1 - (1 - CAR.side) * side).toFixed(4)}) rotateY(${(turn * CAR.tilt * side).toFixed(2)}deg)`;
-    el.style.filter = `grayscale(${side.toFixed(3)})`; el.style.opacity = opacity.toFixed(3);
+    el.style.filter = `grayscale(${side.toFixed(3)})`; el.style.opacity = ((1 - (1 - CAR.sideA) * side) * opacity).toFixed(3); /* a side screen at a fifth (4 Nov, Nitish: "not more than 20%"); the extra factor is the ghost's and the arriving screen's fade */
   };
   const settle = () => { const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (E[l]) put(E[l], P.L, 1, -1); if (E[c]) put(E[c], 0, 0, 0); if (E[r]) put(E[r], P.R, 1, 1); if (ghost.current) put(ghost.current, P.R, 1, 1, 0); };
   useLayoutEffect(() => { settle(); const ro = new ResizeObserver(settle); if (ref.current) ro.observe(ref.current); return () => ro.disconnect(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
