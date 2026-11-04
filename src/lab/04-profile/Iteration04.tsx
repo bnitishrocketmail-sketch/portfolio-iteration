@@ -465,9 +465,10 @@ export default function Iteration04() {
               frame shows through (useNotchClip; the phone's mask, usePhoneNotch), its words up it in the links' ink */}
           <button type="button" className="sc4-tag" ref={tagRef} aria-expanded={show} onClick={() => setShow(s => !s)}>
             {/* both words in the tab, one shown: the tab's height runs from one's length to the other's and the words
-                scroll through it, fading (4 Nov, Nitish: "the resizing of that nudge… should be smoother… sliding from
-                the left or towards the right… with fade") — useTagSize measures them, profile.css moves them */}
-            <span className="sc4-tag-in"><span className="w w0" aria-hidden={show}>Promotional motion</span><span className="w w1" aria-hidden={!show}>Close</span></span>
+                scroll along it, fading (4 Nov, Nitish: "the resizing of that nudge… should be smoother"; 5 Nov: "the word
+                can scroll towards up… and the close can scroll in from below") — useTagSize measures them, profile.css
+                moves them. "Monetisation motion" (5 Nov: "something about monetization"; was "Promotional motion") */}
+            <span className="sc4-tag-in"><span className="w w0" aria-hidden={show}>Monetisation motion</span><span className="w w1" aria-hidden={!show}>Close</span></span>
           </button>
           <div className="notch4">
             <div className="links4" ref={linksRef}>
