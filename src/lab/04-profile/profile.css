@@ -317,15 +317,16 @@
 .sc4-in { position: relative; min-height: 0; } /* each container placed by its tokens (--sc-<id>-x/y: the centre of the phone and its card together, % of the picture) */
 .sc4-card { pointer-events: auto; }
 /* the campaign-banners card: --sw the screen's width — a fifth under the studies' phone (4 Nov, Nitish: "reduce the size of
-   phones and screens in equal proportions"; the corner radius with it) —, --sh its height, --cw the card's (the screen and
+   phones and screens in equal proportions"; the corner radius with it), then a fifth up again that evening ("1.5x bigger…
+   the phone and the screens specifically, and the container will be adjusted": 151px at 1440, the card 189) —, --sh its height, --cw the card's (the screen and
    a quarter). --in: how much of the screen stands inside the card (.28; 4 Nov: "push the phone more towards the bottom"),
    --gone: where down the screen the fade has hidden it (.84 — the referral strip, which starts at .835, is all but gone
    by then), and the caption sits under that point. The card's glass (the floating cards' recipe, at their radius and padding) with a
    few words, as theirs; the screen stands out of its top with its lower fifth inside */
-.sc4-cardwrap { --sw: clamp(100px, 9.8cqw, 126px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(11px, 1.3cqw, 18px); --in: .28; --gone: .84; position: absolute; width: var(--cw); translate: -50% calc(-50% + (1 - var(--in)) * var(--sh) / 2); pointer-events: auto; } /* its box is the card's; the translate puts the centre of the card and the phone standing out of it on its x, y */
+.sc4-cardwrap { --sw: clamp(120px, 11.8cqw, 151px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(13px, 1.56cqw, 22px); --in: .28; --gone: .84; position: absolute; width: var(--cw); translate: -50% calc(-50% + (1 - var(--in)) * var(--sh) / 2); pointer-events: auto; } /* its box is the card's; the translate puts the centre of the card and the phone standing out of it on its x, y */
 .sc4-cardwrap.camp { left: var(--sc-camp-x); top: var(--sc-camp-y); display: var(--sc-camp-v); }
 /* the eight floating cards (Showcase04 CARDS): the intro cards' glass (.fl4-in) and caption, each placed by its centre; the
-   Lottie's box at its own width (CARDS lw: the banners 12cqw, the T20 page and the 360 view 11, the splash 9.6, the sale banner 9.2 — the T20 page, the splash and the 360 view up a fifth again, 4 Nov) — with the
+   Lottie's box at its own width (CARDS lw: the avatars' and the Instagram banners 14.4cqw, the T20 page and the 360 view 11, the splash 9.6, the sale banner 9.2 — each a fifth up on a 4 Nov ask) — with the
    micro card's corners, half the standard radius, which rounds the square-cornered ones and leaves the others' own */
 .sc4-flo { position: absolute; z-index: 1; translate: -50% -50%; pointer-events: auto; }
 .sc4-flo .fl4-in { align-items: flex-start; gap: .8cqw; padding: .66cqw .78cqw 1.1cqw; } /* the glass's top and sides at 60% of the intro cards' (4 Nov, Nitish: "the padding inside the container… a bit much… 60%… only on top and left and right"); the foot and the gap to the caption as they were */
@@ -835,7 +836,7 @@
   .sc4-tag { position: relative; grid-area: pic; align-self: start; justify-self: end; inset: auto; margin: 12px 12px 0 0; padding: .5em .85em; z-index: 6; font-size: 12px; } /* the top-right corner here: the links' pocket and the desk take the right and the foot */
   .sc4 { position: relative; grid-area: pic; inset: auto; align-self: stretch; width: 100%; }
   .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; }
-  .sc4-cardwrap { --sw: 96px; --hp-r: 11px; }
+  .sc4-cardwrap { --sw: 115px; --hp-r: 13px; }
   .sc4-cardwrap.camp { left: var(--sc-camp-px); top: var(--sc-camp-py); display: var(--sc-camp-pv); }
   .sc4-flo .fl4-in { gap: 6px; padding: 5px 6px 8px; } .sc4-flo .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
   .sc4-flo .lot { width: var(--plw); } /* the phone's widths (CARDS plw): under the intro cards' phone sizes, two sit in the band under the phone */
