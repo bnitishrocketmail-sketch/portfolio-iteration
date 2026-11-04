@@ -305,22 +305,25 @@
 .sc4 { position: absolute; inset: 0; z-index: 5; display: grid; grid-template-rows: 1fr; pointer-events: none; }
 .sc4-in { min-height: 0; display: grid; place-items: center; padding: 3% 3% 8.5% 38%; } /* centred on the room beside the cut-out (the picture's bottom-left 40%), a little above the middle — its centre at .67 of the width, .47 of the height */
 .sc4-card { pointer-events: auto; }
-/* the campaign-banners card: --sw the screen's width — the studies' phone (--ph-w's clamp) —, --sh its height, --cw the
-   card's (the screen and a quarter). The card's glass (the floating cards' recipe, at their radius and padding) with a
+/* the campaign-banners card: --sw the screen's width — a fifth under the studies' phone (4 Nov, Nitish: "reduce the size of
+   phones and screens in equal proportions"; the corner radius with it) —, --sh its height, --cw the card's (the screen and
+   a quarter). --in: how much of the screen stands inside the card (.28; 4 Nov: "push the phone more towards the bottom"),
+   --gone: where down the screen the fade has hidden it (.83 — just above the home page's referral strip, which starts at
+   .835), and the caption sits under that point. The card's glass (the floating cards' recipe, at their radius and padding) with a
    few words, as theirs; the screen stands out of its top with its lower fifth inside */
-.sc4-camp { --sw: clamp(125px, 12.2cqw, 158px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(14px, 1.6cqw, 22px); position: relative; width: var(--cw); margin-top: calc(var(--sh) * .8); padding: calc(var(--sh) * .2 + 1cqw) 1.3cqw 1.1cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
+.sc4-camp { --sw: clamp(100px, 9.8cqw, 126px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(11px, 1.3cqw, 18px); --in: .28; --gone: .83; position: relative; width: var(--cw); margin-top: calc(var(--sh) * (1 - var(--in))); padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 1cqw) 1.3cqw 1.1cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) 80%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); /* the glass at 80% here (4 Nov, Nitish: the card "too transparent… at least 80%"), where the floating cards sit at 20 */
   border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); }
 .sc4-camp .cap { display: block; text-align: center; font: 600 clamp(10.5px, .95cqw, 13px)/1.25 var(--f-copy); }
 /* the belt (Showcase04 Belt, the B hero's Carousel rule): a stage three screens wide centred on the card, the phone's
    height, standing out of the card's top; the three screens on it, the one in the phone flat and in colour, the two at
    its sides smaller, turned 16° and grey; the phone's edge and island drawn over the middle one. The stage's lower
-   fifth fades out (from .72 of its height, gone by .94 — 4 Nov, Nitish: "at least 20% of the phone should be masked from the bottom"), but only across the phone's width (a second mask layer, excluded from the first), so the middle
+   part fades out (from .66 of its height, gone by .83 — 4 Nov, Nitish: "hide up till the text where have invite referral code is written"), but only across the phone's width (a second mask layer, excluded from the first), so the middle
    screen dissolves into the card and the sides keep their feet (4 Nov: the column had been the card's width, and a side
    screen crossing the card's edge showed a seam) */
-.sc4-car { position: absolute; left: 50%; top: calc(-.8 * var(--sh)); width: calc(var(--sw) * 3.2); height: var(--sh); margin-left: calc(var(--sw) * -1.6); perspective: 1100px;
-  -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(to bottom, transparent 72%, #000 94%); -webkit-mask-size: 100% 100%, var(--sw) 100%; -webkit-mask-position: 0 0, 50% 0; -webkit-mask-repeat: no-repeat; -webkit-mask-composite: xor;
-  mask-image: linear-gradient(#000 0 0), linear-gradient(to bottom, transparent 72%, #000 94%); mask-size: 100% 100%, var(--sw) 100%; mask-position: 0 0, 50% 0; mask-repeat: no-repeat; mask-composite: exclude; }
+.sc4-car { position: absolute; left: 50%; top: calc((var(--in) - 1) * var(--sh)); width: calc(var(--sw) * 3.2); height: var(--sh); margin-left: calc(var(--sw) * -1.6); perspective: 1100px;
+  -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(to bottom, transparent 66%, #000 83%); -webkit-mask-size: 100% 100%, var(--sw) 100%; -webkit-mask-position: 0 0, 50% 0; -webkit-mask-repeat: no-repeat; -webkit-mask-composite: xor;
+  mask-image: linear-gradient(#000 0 0), linear-gradient(to bottom, transparent 66%, #000 83%); mask-size: 100% 100%, var(--sw) 100%; mask-position: 0 0, 50% 0; mask-repeat: no-repeat; mask-composite: exclude; }
 .sc4-car-item { position: absolute; left: 50%; top: 0; width: var(--sw); margin-left: calc(var(--sw) / -2); transform-origin: 50% 50%; will-change: transform, opacity; filter: grayscale(1); opacity: .2; } /* the stage's copies: grey, at a fifth */
 .sc4-win { position: absolute; left: 50%; top: 0; z-index: 2; width: var(--sw); height: 100%; margin-left: calc(var(--sw) / -2); border-radius: calc(var(--hp-r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; perspective: 1100px; } /* the phone as a window: the belt again inside it, whole */
 .sc4-car-item.win { filter: none; opacity: 1; }
@@ -807,8 +810,8 @@
   .sc4 { position: relative; grid-area: pic; inset: auto; align-self: stretch; width: 100%; }
   .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; }
   .sc4-in { padding: 16px 55px 24px 8px; } /* centred on the room left of the links' pocket, the sides clear of it */
-  .sc4-camp { --sw: 120px; --hp-r: 14px; padding: calc(var(--sh) * .2 + 8px) 10px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; } /* no blur, as the floating cards' here */
-  .sc4-camp .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
+  .sc4-camp { --sw: 96px; --hp-r: 11px; padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 8px) 8px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; } /* no blur, as the floating cards' here */
+  .sc4-camp .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); white-space: nowrap; } /* one line in the narrower card */
   .fl4:not(.sig-bg) > .fl4-in { transition: translate .35s cubic-bezier(.2, .8, .2, 1), scale .35s; } /* the glass moves here (the layer round it stays put, transform: none above) */
   .sc-open .fl4:not(.sig-bg) > .fl4-in { translate: calc(-50% + var(--ox, 0px)) calc(-50% + var(--oy, 0px)); scale: 1.14; transition: translate .7s cubic-bezier(.3, .6, .2, 1), scale .7s cubic-bezier(.3, .6, .2, 1); }
   .sc-open .fl4.loader-card { --ox: 44px; --oy: 40px; } .sc-open .fl4.pers-card { --ox: 64px; --oy: -4px; }
