@@ -235,7 +235,10 @@ function Nav({ tab, go, cav }: { tab: Tab; go: (v: ViewName) => void; cav?: bool
    notch at the top-centre to the links' — every convex corner rounded with the tile's radius (the notch's top ends with
    the notch's smaller one) and the inner corners rounded the other way; measured from the boxes, as a clip path, so the
    tile and its shadow follow it. On the phone the cut-out sits below the picture, so there is none. */
-function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.RefObject<HTMLDivElement | null>, links: React.RefObject<HTMLDivElement | null>, key: string) {
+/* and, since 4 Nov, the showcase's tag on the right edge (Nitish: "follow this adaptation hierarchy from the top nudge… the
+   background color, the icon color… and the curves"): a second cut-out, the tag's box, its outer corners the tag's radius
+   and its joins to the edge curving out as the notch's do — so the tag, too, is the frame showing through the tile */
+function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.RefObject<HTMLDivElement | null>, links: React.RefObject<HTMLDivElement | null>, tag: React.RefObject<HTMLButtonElement | null>, key: string) {
   const [clip, setClip] = useState<string | null>(null);
   useLayoutEffect(() => { /* re-run when the tile comes back after another tab (key) */
     const w = wrap.current, c = cut.current, l = links.current; if (!w || !c || !l) return;
@@ -243,20 +246,23 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
       if (getComputedStyle(c).position !== 'absolute') { setClip(null); return; }
       const W = w.clientWidth, H = w.clientHeight, cw = c.offsetLeft + c.offsetWidth, ch = H - c.offsetTop, r = parseFloat(getComputedStyle(c).borderTopRightRadius) || 0; /* the cut runs from the tile's left edge and foot to the box's right and top: the box may sit in from both (the light plate version lifts it with the plate's own edges, 27 Oct) */
       const wr = w.getBoundingClientRect(), lr = l.getBoundingClientRect(); const nx = lr.left - wr.left, nw = lr.width, nh = lr.height, rn = parseFloat(getComputedStyle(l).borderBottomLeftRadius) || 0;
+      const t = tag.current, tr = t && getComputedStyle(t).position === 'absolute' ? t.getBoundingClientRect() : null; const ty = tr ? tr.top - wr.top : 0, th = tr ? tr.height : 0, tw = tr ? tr.width : 0, rt = t ? parseFloat(getComputedStyle(t).borderTopLeftRadius) || 0 : 0;
       const { K } = sysCurve(w); /* the radii are already the system's (× --ios-k, computed); the curve too (24 Oct: they were round arcs) */
       const d = [
         `M ${r} 0`,
         sCorner([nx, 0], [1, 0], [0, 1], rn, K), sCorner([nx, nh], [0, 1], [1, 0], rn, K), /* the top edge to the notch, down its left side */
         sCorner([nx + nw, nh], [1, 0], [0, -1], rn, K), sCorner([nx + nw, 0], [0, -1], [1, 0], rn, K), /* along its bottom, up its right side */
-        sCorner([W, 0], [1, 0], [0, 1], r, K), sCorner([W, H], [0, 1], [-1, 0], r, K), /* the top-right and bottom-right corners */
+        sCorner([W, 0], [1, 0], [0, 1], r, K), /* the top-right corner */
+        ...(tr ? [sCorner([W, ty], [0, 1], [-1, 0], rt, K), sCorner([W - tw, ty], [-1, 0], [0, 1], rt, K), sCorner([W - tw, ty + th], [0, 1], [1, 0], rt, K), sCorner([W, ty + th], [1, 0], [0, 1], rt, K)] : []), /* down the right edge, in round the tag and out again */
+        sCorner([W, H], [0, 1], [-1, 0], r, K), /* the bottom-right corner */
         sCorner([cw, H], [-1, 0], [0, -1], r, K), sCorner([cw, H - ch], [0, -1], [-1, 0], r, K), sCorner([0, H - ch], [-1, 0], [0, -1], r, K), /* the cut-out */
         sCorner([0, 0], [0, -1], [1, 0], r, K), 'Z',
       ].join(' ');
       setClip(`path("${d}")`);
     };
     measure();
-    const ro = new ResizeObserver(measure); ro.observe(w); ro.observe(c); ro.observe(l); return () => ro.disconnect();
-  }, [wrap, cut, links, key]);
+    const ro = new ResizeObserver(measure); ro.observe(w); ro.observe(c); ro.observe(l); if (tag.current) ro.observe(tag.current); return () => ro.disconnect();
+  }, [wrap, cut, links, tag, key]);
   return clip;
 }
 
@@ -276,7 +282,22 @@ function usePhoneNotch(wrap: React.RefObject<HTMLDivElement | null>, key: string
     const d = `M ${D} 0 ${sCorner([D, R], [0, 1], [-1, 0], R, K)} ${sCorner([0, R], [-1, 0], [0, 1], R, K)} ${sCorner([0, R + NH], [0, 1], [1, 0], R, K)} ${sCorner([D, R + NH], [1, 0], [0, 1], R, K)} Z`;
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${D}' height='${HH.toFixed(2)}' viewBox='0 0 ${D} ${HH.toFixed(2)}'><path d='${d}'/></svg>`;
     w.style.setProperty('--pic-notch', `url("data:image/svg+xml,${encodeURIComponent(svg)}")`); w.style.setProperty('--pic-notch-h', `${HH.toFixed(2)}px`);
-    return () => { w.style.removeProperty('--pic-notch'); w.style.removeProperty('--pic-notch-h'); };
+    /* the showcase's tag's pocket (4 Nov), the same shape at the tag's size, on the right edge at the tag's height: the
+       tag is measured (it stands in the picture's cell, its centre at --sc-tag-py of the cell's height), the pocket drawn
+       to its box with its radius, and placed by a pixel offset so its centre is the tag's (a mask's % position would land
+       elsewhere) — re-measured as the picture resizes */
+    const tag = w.querySelector<HTMLElement>('.sc4-tag');
+    const place = () => {
+      if (!tag || getComputedStyle(tag).position === 'absolute') return;
+      const tr = tag.getBoundingClientRect(), cell = w.querySelector<HTMLElement>('.pic4-img')?.getBoundingClientRect(); if (!cell || !tr.height) return;
+      const Rt = parseFloat(getComputedStyle(tag).borderTopLeftRadius) || R, TW = tr.width, TH = tr.height, H2 = TH + 2 * Rt;
+      const d2 = `M ${TW} 0 ${sCorner([TW, Rt], [0, 1], [-1, 0], Rt, K)} ${sCorner([0, Rt], [-1, 0], [0, 1], Rt, K)} ${sCorner([0, Rt + TH], [0, 1], [1, 0], Rt, K)} ${sCorner([TW, Rt + TH], [1, 0], [0, 1], Rt, K)} Z`;
+      const svg2 = `<svg xmlns='http://www.w3.org/2000/svg' width='${TW.toFixed(2)}' height='${H2.toFixed(2)}' viewBox='0 0 ${TW.toFixed(2)} ${H2.toFixed(2)}'><path d='${d2}'/></svg>`;
+      w.style.setProperty('--pic-tag', `url("data:image/svg+xml,${encodeURIComponent(svg2)}")`); w.style.setProperty('--pic-tag-w', `${TW.toFixed(2)}px`); w.style.setProperty('--pic-tag-h', `${H2.toFixed(2)}px`);
+      w.style.setProperty('--pic-tag-top', `${(tr.top - cell.top - Rt).toFixed(2)}px`);
+    };
+    place(); const ro = new ResizeObserver(place); ro.observe(w); if (tag) ro.observe(tag);
+    return () => { ro.disconnect(); for (const k of ['--pic-notch', '--pic-notch-h', '--pic-tag', '--pic-tag-w', '--pic-tag-h', '--pic-tag-top']) w.style.removeProperty(k); };
   }, [wrap, key]);
 }
 
@@ -308,8 +329,8 @@ export default function Iteration04() {
   const frameRef = useRef<HTMLDivElement>(null);
   usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '24') || 0); /* the phone's rims, at the Light angle (24 Oct); the phone keeps 24° unless it's set (the desktop's default is 20°, 28 Oct) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
-  const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null);
-  const clip = useNotchClip(wrapRef, cutRef, linksRef, tab);
+  const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null), tagRef = useRef<HTMLButtonElement>(null);
+  const clip = useNotchClip(wrapRef, cutRef, linksRef, tagRef, tab);
   usePhoneNotch(wrapRef, `${tab}${ios}`);
   /* the Lottie showcase (Showcase04, 4 Nov): open, the floating cards zoom past and the picture steps back, blurred and
      still — the tilt holds, the lean stops, the cards' Lotties rest. Closed again on its tag, on Escape, or on leaving Home */
@@ -417,8 +438,7 @@ export default function Iteration04() {
               <FloatCard cls="pers-card" hold={show} depth="1.2" dur="6.6s" dl="-.9s">{on => <><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects playing={on} label="The persuasion animation" /><span className="cap">Persuasion animation</span></>}</FloatCard>
               {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
               <FloatCard cls="micro-card" hold={show} depth="1.1" dur="6.4s" dl="-2.4s">{on => <><Lottie className="mli" src={LOTTIES.micro} still={STILL.micro} playing={on} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></>}</FloatCard>
-              {/* the showcase's tag (4 Nov: a tab standing up from the picture's foot, profile.css) and the showcase itself, over everything in the picture */}
-              <button type="button" className="sc4-tag" aria-expanded={show} onClick={() => setShow(s => !s)}>{show ? 'Close' : 'Visual motion'}</button>
+              {/* the showcase itself, over everything in the picture; its tag sits outside the tile, in its cut-out (below) */}
               <Showcase04 open={show} />
               <div className="name4">
                 {/* the one-liner only — the "I make UI move." line went (Nitish, 13 Oct: he may bring it back later) */}
@@ -428,6 +448,9 @@ export default function Iteration04() {
           </section>
           {/* the notch at the top: the links sit on the frame, in a second cut-out of the tile (Nitish, 13 Oct — no background
               of their own); the assistant lives behind the nav's button and opens here */}
+          {/* the showcase's tag (4 Nov): on the picture's right edge, as the notch at the top — a cut-out of the tile the
+              frame shows through (useNotchClip; the phone's mask, usePhoneNotch), its words up it in the links' ink */}
+          <button type="button" className="sc4-tag" ref={tagRef} aria-expanded={show} onClick={() => setShow(s => !s)}><span>{show ? 'Close' : 'Visual motion'}</span></button>
           <div className="notch4">
             <div className="links4" ref={linksRef}>
               {SOCIAL.map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}
