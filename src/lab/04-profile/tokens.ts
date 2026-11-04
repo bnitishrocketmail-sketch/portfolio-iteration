@@ -82,6 +82,9 @@ export const CONTROLS: Control[] = [
   col('Controls and marks', '--social-ink', 'Social icons', '#a6a6a6', '#2f2e30'),
   col('Controls and marks', '--corner-ink', 'Corner bracket', '#bababa', '#2f2e30'),
   /* the intro's floating cards */
+  /* the tag that opens the showcase: its height on the picture's right edge (4 Nov) */
+  { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-y', label: 'y (on the right edge)', def: '29%', light: '29%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-py', label: 'y on the phone', def: '92%', light: '92%', min: 0, max: 100, step: 1, unit: '%' },
   ...show('camp', 'Campaign banners', '50%', '37%', '54%', '45%'),
   /* the six round it, at his places (4 Nov, his copied values made the defaults); the phone shows two, under the phone */
   ...show('splash', 'Splash screen', '77%', '19%', '13%', '12%', 'block', 'none'),

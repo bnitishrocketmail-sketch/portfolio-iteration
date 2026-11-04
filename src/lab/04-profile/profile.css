@@ -33,6 +33,7 @@
      on the drawing); the persuasion card, whose desktop spot (right of his head) is the links' notch here, takes the
      coin's at the top right — the coin is hidden here — beside the success card */
   --c-ai-px: 17%; --c-ai-py: 64%; --c-loader-px: 71%; --c-loader-py: 77%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
+  --sc-tag-y: 29%; --sc-tag-py: 92%; /* the tag's height on the picture's right edge (4 Nov): under the camera's lens; on the phone on the white desk at the foot, under the links' pocket and the loader card (the camera fills the edge above) */
   --sc-camp-x: 50%; --sc-camp-y: 37%; --sc-camp-v: block; --sc-camp-px: 54%; --sc-camp-py: 45%; --sc-camp-pv: block; /* the showcase's containers (4 Nov): each one's centre, % of the picture — his places (his copied values, made the defaults) */
   --sc-splash-x: 77%; --sc-splash-y: 19%; --sc-splash-v: block; --sc-splash-px: 13%; --sc-splash-py: 12%; --sc-splash-pv: none;
   --sc-t20-x: 12%; --sc-t20-y: 46%; --sc-t20-v: block; --sc-t20-px: 20%; --sc-t20-py: 12%; --sc-t20-pv: none;
@@ -296,18 +297,20 @@
 @media (prefers-reduced-motion: reduce) { .fl4-in { animation: none; } }
 
 /* ---- the showcase (Showcase04.tsx, 4 Nov): the picture's second state, for the Lotties the old site's home carried ---- */
-/* the tag that opens it (4 Nov, Nitish: "a tag at the bottom right of this container… coming from the behind side… it can
-   have rounded corners, but it should seem like it is curving from behind to the front… a solid background… dark or light
-   based on where it is placed"): a tab standing up from the picture's bottom edge, in from the rounded corner by the corner's
-   own radius and a step — its top corners the system's curve, its foot flaring into the edge on both sides with a concave
-   fillet (two squares with a quarter circle taken out, the tab's colour), so it reads as a tab coming round from behind the
-   edge. Solid, in the folded card's dark with its light ink: the drawing's desk is white there in both themes. Two words:
-   "Visual motion" (his visual motion-design work, beside the product work); "Close" while open */
-.sc4-tag { --tagf: 10px; position: absolute; right: calc(var(--r) * var(--ios-k, 1) + 1.4cqw); bottom: 0; z-index: 6; display: inline-flex; align-items: center; padding: .5em 1.05em .6em; border: 0; border-radius: calc(var(--r) * .5 * var(--ios-k, 1)) calc(var(--r) * .5 * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); background: var(--pcard-fold); color: var(--pcard-fold-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); line-height: 1.1; cursor: pointer; transition: filter .2s; }
-.sc4-tag::before, .sc4-tag::after { content: ''; position: absolute; bottom: 0; width: var(--tagf); height: var(--tagf); pointer-events: none; }
-.sc4-tag::before { left: calc(-1 * var(--tagf)); background: radial-gradient(circle at 0 0, transparent calc(var(--tagf) - .5px), var(--pcard-fold) var(--tagf)); } /* the flare at its left: the square's fill outside a quarter circle centred on its top-left */
-.sc4-tag::after { right: calc(-1 * var(--tagf)); background: radial-gradient(circle at 100% 0, transparent calc(var(--tagf) - .5px), var(--pcard-fold) var(--tagf)); }
-.sc4-tag:hover { filter: brightness(1.12); }
+/* the tag that opens it (4 Nov, Nitish: "a tag… coming from the behind side… it can have rounded corners, but it should seem
+   like it is curving from behind to the front… a solid background… dark or light based on where it is placed"; then "placed
+   on the right side upward, till the camera lens starts… on the edge of this container only"): a tab standing out from the
+   picture's right edge, under the camera's lens (its centre at --sc-tag-y of the picture's height, a control) — its left
+   corners the system's curve, its root flaring into the edge above and below with a concave fillet (two squares with a
+   quarter circle taken out, the tab's colour), so it reads as a tab coming round from behind the edge. Solid, in the open
+   card's light with its dark ink: the wall is dark where it sits, on the desktop under the camera and on the phone at the
+   foot of the edge ("dark or light based on where it is placed"). Two words: "Visual motion" (his visual motion-design work, beside the product work);
+   "Close" while open */
+.sc4-tag { --tagf: 10px; position: absolute; right: 0; top: var(--sc-tag-y); translate: 0 -50%; z-index: 6; display: inline-flex; align-items: center; padding: .5em 1.1em .55em 1.05em; border: 0; border-radius: calc(var(--r) * .5 * var(--ios-k, 1)) 0 0 calc(var(--r) * .5 * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); --tag-bg: var(--pcard-open); background: var(--tag-bg); color: var(--pcard-open-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); line-height: 1.1; cursor: pointer; transition: filter .2s; } /* light on the dark wall under the camera (both themes: the drawing is the same) */
+.sc4-tag::before, .sc4-tag::after { content: ''; position: absolute; right: 0; width: var(--tagf); height: var(--tagf); pointer-events: none; }
+.sc4-tag::before { top: calc(-1 * var(--tagf)); background: radial-gradient(circle at 0 0, transparent calc(var(--tagf) - .5px), var(--tag-bg) var(--tagf)); } /* the flare above: the square's fill outside a quarter circle centred on its top-left */
+.sc4-tag::after { bottom: calc(-1 * var(--tagf)); background: radial-gradient(circle at 0 100%, transparent calc(var(--tagf) - .5px), var(--tag-bg) var(--tagf)); }
+.sc4-tag:hover { filter: brightness(.94); }
 /* open: the floating cards zoom past — each on its own heading (--ox/--oy, from where it sits: the loader to the bottom
    right, the persuasion animation to the right, the success state up and a little left, the assistant down and to the
    left; the coin and the micro bar, when shown, likewise), a little bigger as it goes, fading — then rest hidden */
@@ -841,7 +844,7 @@
   /* the showcase on the phone (4 Nov): the tag in the picture's top-right corner; the layer fills the picture's cell, and
      should its containers ever stand taller than the square, the cell grows to them and the picture and his cutout
      stretch with it, so the blurred drawing stays behind; the cards' headings a little shorter for the square */
-  .sc4-tag { --tagf: 8px; position: relative; grid-area: pic; align-self: end; justify-self: end; inset: auto; margin: 0 calc(var(--r) * var(--ios-k, 1) + 10px) 0 0; padding: .45em .9em .55em; z-index: 6; font-size: 12px; border-radius: calc(10px * var(--ios-k, 1)) calc(10px * var(--ios-k, 1)) 0 0; } /* standing up from the picture's foot here too, in from the corner */
+  .sc4-tag { --tagf: 8px; position: relative; grid-area: pic; align-self: start; justify-self: end; inset: auto; margin: var(--sc-tag-py) 0 0; padding: .45em .95em .55em .9em; z-index: 6; font-size: 12px; border-radius: calc(10px * var(--ios-k, 1)) 0 0 calc(10px * var(--ios-k, 1)); } /* from the right edge here too, at the foot under the links' pocket and the loader card — the wall is dark there as well, so the same light tab (the square cell: a % margin is of its width) */
   .sc4 { position: relative; grid-area: pic; inset: auto; align-self: stretch; width: 100%; }
   .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; }
   .sc4-cardwrap { --sw: 115px; --hp-r: 13px; }
