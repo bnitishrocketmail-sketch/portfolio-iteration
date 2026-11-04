@@ -312,23 +312,27 @@
 /* the campaign-banners card: --sw the screen's width — a fifth under the studies' phone (4 Nov, Nitish: "reduce the size of
    phones and screens in equal proportions"; the corner radius with it) —, --sh its height, --cw the card's (the screen and
    a quarter). --in: how much of the screen stands inside the card (.28; 4 Nov: "push the phone more towards the bottom"),
-   --gone: where down the screen the fade has hidden it (.83 — just above the home page's referral strip, which starts at
-   .835), and the caption sits under that point. The card's glass (the floating cards' recipe, at their radius and padding) with a
+   --gone: where down the screen the fade has hidden it (.84 — the referral strip, which starts at .835, is all but gone
+   by then), and the caption sits under that point. The card's glass (the floating cards' recipe, at their radius and padding) with a
    few words, as theirs; the screen stands out of its top with its lower fifth inside */
-.sc4-cardwrap { --sw: clamp(100px, 9.8cqw, 126px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(11px, 1.3cqw, 18px); --in: .28; --gone: .83; position: relative; width: var(--cw); margin-top: calc(var(--sh) * (1 - var(--in))); pointer-events: auto; } /* the card and its two stages share these; the faint stage sits behind the card (4 Nov, Nitish: "let's keep them behind the container"), the window and the edge in it */
+.sc4-cardwrap { --sw: clamp(100px, 9.8cqw, 126px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(11px, 1.3cqw, 18px); --in: .28; --gone: .84; position: relative; width: var(--cw); margin-top: calc(var(--sh) * (1 - var(--in))); pointer-events: auto; } /* the card and its two stages share these; the faint stage sits behind the card (4 Nov, Nitish: "let's keep them behind the container"), the window and the edge in it */
 .sc4-camp { position: relative; width: 100%; padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 1cqw) 1.3cqw 1.1cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) 80%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); /* the glass at 80% here (4 Nov, Nitish: the card "too transparent… at least 80%"), where the floating cards sit at 20 */
   border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); }
 .sc4-camp .cap { display: block; text-align: center; font: 600 clamp(10.5px, .95cqw, 13px)/1.25 var(--f-copy); }
 /* the belt (Showcase04 Belt, the B hero's Carousel rule): a stage three screens wide centred on the card, the phone's
    height, standing out of the card's top; the three screens on it, the one in the phone flat and in colour, the two at
-   its sides smaller, turned 16° and grey; the phone's edge and island drawn over the middle one. The stage's lower
-   part fades out (from the card's top edge, .72 of its height, gone by .83 — 4 Nov, Nitish: "hide up till the text where have invite referral code is written"; then "the gradient… shouldn't be spilled outside of the container… the phone… should be above the container": whole above the edge, so it covers the card's line), but only across the phone's width (a second mask layer, excluded from the first), so the middle
-   screen dissolves into the card and the sides keep their feet (4 Nov: the column had been the card's width, and a side
-   screen crossing the card's edge showed a seam) */
-.sc4-car { position: absolute; left: 50%; top: calc((var(--in) - 1) * var(--sh)); width: calc(var(--sw) * 3.2); height: var(--sh); margin-left: calc(var(--sw) * -1.6); perspective: 1100px; pointer-events: none;
-  -webkit-mask-image: linear-gradient(#000 0 0), linear-gradient(to bottom, transparent calc((1 - var(--in)) * 100%), #000 calc(var(--gone) * 100%)); -webkit-mask-size: 100% 100%, var(--sw) 100%; -webkit-mask-position: 0 0, 50% 0; -webkit-mask-repeat: no-repeat; -webkit-mask-composite: xor;
-  mask-image: linear-gradient(#000 0 0), linear-gradient(to bottom, transparent calc((1 - var(--in)) * 100%), #000 calc(var(--gone) * 100%)); mask-size: 100% 100%, var(--sw) 100%; mask-position: 0 0, 50% 0; mask-repeat: no-repeat; mask-composite: exclude; }
+   its sides smaller, turned 16° and grey; the phone's edge and island drawn over the middle one. The front stage's lower
+   part fades out (from the card's top edge, .72 of its height — 4 Nov, Nitish: "hide up till the text where have invite referral code is written"; then "the gradient… shouldn't be spilled outside of the container… the phone… should be above the container": whole above the edge, so it covers the card's line), so the middle
+   screen dissolves into the card; the faint copies on the back stage keep their feet behind it */
+.sc4-car { position: absolute; left: 50%; top: calc((var(--in) - 1) * var(--sh)); width: calc(var(--sw) * 3.2); height: var(--sh); margin-left: calc(var(--sw) * -1.6); perspective: 1100px; pointer-events: none; }
+/* the fade is the front stage's alone — the window and the edge, which are the phone's width, so a plain gradient does it
+   (4 Nov: a column mask the phone's width had left a sliver of the screen unfaded at its bottom-right edge). It runs from
+   the card's top edge (--in) to --gone as an eased curve, slow out of solid and slow into nothing (4 Nov, Nitish: "a very
+   clear visible edge where the black ends… should be a little seamless") */
+.sc4-car.front { --f0: calc((1 - var(--in)) * 100%); --fl: calc((var(--gone) - 1 + var(--in)) * 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 var(--f0), rgb(0 0 0 / .97) calc(var(--f0) + var(--fl) * .15), rgb(0 0 0 / .88) calc(var(--f0) + var(--fl) * .32), rgb(0 0 0 / .68) calc(var(--f0) + var(--fl) * .5), rgb(0 0 0 / .4) calc(var(--f0) + var(--fl) * .68), rgb(0 0 0 / .15) calc(var(--f0) + var(--fl) * .85), transparent calc(var(--f0) + var(--fl)));
+  mask-image: linear-gradient(to bottom, #000 var(--f0), rgb(0 0 0 / .97) calc(var(--f0) + var(--fl) * .15), rgb(0 0 0 / .88) calc(var(--f0) + var(--fl) * .32), rgb(0 0 0 / .68) calc(var(--f0) + var(--fl) * .5), rgb(0 0 0 / .4) calc(var(--f0) + var(--fl) * .68), rgb(0 0 0 / .15) calc(var(--f0) + var(--fl) * .85), transparent calc(var(--f0) + var(--fl))); }
 .sc4-car-item { position: absolute; left: 50%; top: 0; width: var(--sw); margin-left: calc(var(--sw) / -2); transform-origin: 50% 50%; will-change: transform, opacity; filter: grayscale(1); opacity: .2; } /* the stage's copies: grey, at a fifth */
 .sc4-win { position: absolute; left: 50%; top: 0; z-index: 2; width: var(--sw); height: 100%; margin-left: calc(var(--sw) / -2); border-radius: calc(var(--hp-r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; perspective: 1100px; } /* the phone as a window: the belt again inside it, whole */
 .sc4-car-item.win { filter: none; opacity: 1; }
