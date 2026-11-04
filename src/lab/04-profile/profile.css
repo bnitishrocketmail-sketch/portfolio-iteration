@@ -34,14 +34,14 @@
      coin's at the top right — the coin is hidden here — beside the success card */
   --c-ai-px: 17%; --c-ai-py: 64%; --c-loader-px: 71%; --c-loader-py: 77%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
   --sc-tag-y: 10%; --sc-tag-py: 86%; /* the tag on the picture's right edge (5 Nov, Nitish: "shifted… more upward… the top edge of it could be aligned at the 10% from the top"): its top at --sc-tag-y of the picture's height; on the phone on the white desk at the foot, under the links' pocket and the loader card (the camera fills the edge above) */
-  --sc-camp-x: 50%; --sc-camp-y: 37%; --sc-camp-v: block; --sc-camp-px: 54%; --sc-camp-py: 45%; --sc-camp-pv: block; /* the showcase's containers (4 Nov): each one's centre, % of the picture — his places (his copied values, made the defaults) */
+  --sc-camp-x: 50%; --sc-camp-y: 36%; --sc-camp-v: block; --sc-camp-px: 54%; --sc-camp-py: 45%; --sc-camp-pv: block; /* the showcase's containers (4 Nov): each one's centre, % of the picture — his places (his copied values, made the defaults) */
   --sc-splash-x: 56%; --sc-splash-y: 80%; --sc-splash-v: block; --sc-splash-px: 13%; --sc-splash-py: 12%; --sc-splash-pv: none;
-  --sc-t20-x: 12%; --sc-t20-y: 46%; --sc-t20-v: block; --sc-t20-px: 20%; --sc-t20-py: 12%; --sc-t20-pv: none;
+  --sc-t20-x: 21%; --sc-t20-y: 46%; --sc-t20-v: block; --sc-t20-px: 20%; --sc-t20-py: 12%; --sc-t20-pv: none;
   --sc-avatars-x: 83%; --sc-avatars-y: 59%; --sc-avatars-v: block; --sc-avatars-px: 30%; --sc-avatars-py: 86%; --sc-avatars-pv: none;
   --sc-insta-x: 83%; --sc-insta-y: 83.3%; --sc-insta-v: block; --sc-insta-px: 64%; --sc-insta-py: 84%; --sc-insta-pv: block;
   --sc-view360-x: 12%; --sc-view360-y: 18%; --sc-view360-v: block; --sc-view360-px: 64%; --sc-view360-py: 86%; --sc-view360-pv: none;
-  --sc-sale1-x: 31%; --sc-sale1-y: 30%; --sc-sale1-v: block; --sc-sale1-px: 24%; --sc-sale1-py: 84%; --sc-sale1-pv: block;
-  --sc-note-x: 82%; --sc-note-y: 22%; --sc-note-v: block; --sc-note-px: 50%; --sc-note-py: 20%; --sc-note-pv: none; /* the note on the work (4 Nov) */
+  --sc-sale1-x: 31%; --sc-sale1-y: 30%; --sc-sale1-v: none; --sc-sale1-px: 24%; --sc-sale1-py: 84%; --sc-sale1-pv: block;
+  --sc-note-x: 80%; --sc-note-y: 34%; --sc-note-v: block; --sc-note-px: 50%; --sc-note-py: 20%; --sc-note-pv: none; /* the note on the work (4 Nov); his fifth set of places (5 Nov): the sale banner off on the desktop, the note by the picture's middle right */
   --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: none; /* three on the phone (28 Oct, Nitish: the persuasion card removed there) */ --c-coin-pv: none; --c-micro-pv: none;
   --name-box-v: none; /* the name box with the one-liner, shown or hidden (the design system page); hidden by default (28 Oct, his desktop settings) */
   --pcard-open: var(--nav-bg); --pcard-open-ink: var(--frame); --pcard-fold: var(--nav-hl); --pcard-fold-ink: var(--nav-bg); /* the project page's cards: the theme's two greys, the open one light with dark text, the folded dark with light text (Nitish, 14 Oct) */
@@ -249,7 +249,7 @@
    them) and him; black at 22%, so the wall reads a shade darker where it runs (the wall is ~#2f2e31, the strokes ~#252427).
    Tried at his head's height and narrower first: the head and the cards covered all but a few strokes */
 .fl4.sig-bg { inset: 0; z-index: 1; color: #000; opacity: var(--sig-a, .22); pointer-events: none; } /* a layer the picture's size; the drawing placed in it (the phone puts the layer in the picture's grid cell) */
-.sig-bg svg { position: absolute; left: var(--sig-x, 48%); top: var(--sig-y, 46%); width: var(--sig-w, 109%); height: auto; translate: -50% -50%; rotate: -6deg; }
+.sig-bg svg { position: absolute; left: var(--sig-x, 50%); top: var(--sig-y, 39%); width: var(--sig-w, 90%); height: auto; translate: -50% -50%; rotate: -6deg; } /* the word's places are the defaults now (5 Nov, his copied values): 50 / 39%, 90% wide — the signature had sat at 48 / 46%, 109% */
 /* its place, size and weight are controls (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than
    what it is"): --sig-x / --sig-y the centre, --sig-w the width, all of the picture; --sig-weight added to each side of
    the strokes, in the drawing's units — below zero the mask's stroke takes it off, above it the shape's own stroke adds it */
@@ -257,8 +257,8 @@
    --sig-w sizes it as it sizes the signature; level, not tilted — a set word on a wall, where the signature is a hand's */
 .sig-bg svg.sig-word { rotate: 0deg; overflow: visible; }
 .sig-bg .sig-word text { font: 500 235px/1 'Oswald', 'Outfit', sans-serif; letter-spacing: .02em; }
-.sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, -.35)) * 2px); }
-.sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, -.35)) * 2px); }
+.sig-bg .sig-fill { stroke-width: calc(max(0, var(--sig-weight, -.25)) * 2px); }
+.sig-bg .sig-thin { stroke-width: calc(max(0, -1 * var(--sig-weight, -.25)) * 2px); }
 .fl4.ai-card { left: var(--c-ai-x); top: var(--c-ai-y); z-index: var(--c-ai-z); display: var(--c-ai-v); } /* each card's place, layer (1 behind him, 3 in front) and whether it shows are tokens */
 .fl4.coin-card { left: var(--c-coin-x); top: var(--c-coin-y); z-index: var(--c-coin-z); display: var(--c-coin-v); }
 .fl4.loader-card { left: var(--c-loader-x); top: var(--c-loader-y); z-index: var(--c-loader-z); display: var(--c-loader-v); }
@@ -885,7 +885,7 @@
      floating cards, which needed it to sit behind him), masked with the picture's notch as the picture is */
   .fl4.sig-bg { grid-area: pic; position: relative; inset: auto; aspect-ratio: 1; overflow: hidden; transform: none; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round);
     -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, var(--pic-tag, none) right var(--pic-tag-top, 0px) / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, var(--pic-tag, none) right var(--pic-tag-top, 0px) / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat exclude, linear-gradient(#000 0 0); } /* the picture's notch out of it too */
-  .sig-bg svg { left: var(--sig-x, 48%); top: calc(var(--sig-y, 47%) + 10%); width: var(--sig-w, 115%); } /* the phone's own defaults, his phone settings (28 Oct): 48 / 47%, 115% wide; the stroke 0.35 thinner as the desktop's */ /* the square crop shows the wall lower than the desktop's wide one: at the desktop's height it ran across the ring light; the same control, a tenth lower */
+  .sig-bg svg { left: var(--sig-x, 50%); top: calc(var(--sig-y, 39%) + 10%); width: var(--sig-w, 100%); } /* the phone’s own defaults: the word’s (5 Nov) — 50 / 39% as the desktop’s, the picture’s full width where the desktop has 90 (the square crop is narrower: at 90 the letters read small, at the signature’s 115 they ran off both sides); the signature had sat at 48 / 47%, 115% (his phone settings, 28 Oct) */ /* the square crop shows the wall lower than the desktop's wide one: at the desktop's height it ran across the ring light; the same control, a tenth lower */
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }
   .it04 .island::before, .it04 .island::after { display: block; }

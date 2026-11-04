@@ -337,7 +337,7 @@ export default function Iteration04() {
   const plateDark = tweaks['--plate'] === 'dark'; /* the plate in the selection's dark, what is on it inverted (a control, 27 Oct) */
   const navFloat = (tweaks['--nav-bar'] ?? 'bar') === 'float'; /* the bar by default (28 Oct) */ /* the other pages' nav: the icons on the frame, no bar (a control, 27 Oct) */
   const sigBg = (tweaks['--sig-bg'] ?? 'on') === 'on'; /* his signature on the picture's wall, behind him (a control, 27 Oct) */
-  const sigWord = tweaks['--sig-v'] === 'word'; /* PORTFOLIO on the wall instead of the signature (a control, 4 Nov) */
+  const sigWord = (tweaks['--sig-v'] ?? 'word') === 'word'; /* PORTFOLIO on the wall instead of the signature (a control, 4 Nov; the word the default since 5 Nov, his copied values) */
   const frameRef = useRef<HTMLDivElement>(null);
   usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '24') || 0); /* the phone's rims, at the Light angle (24 Oct); the phone keeps 24° unless it's set (the desktop's default is 20°, 28 Oct) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);

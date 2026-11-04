@@ -85,16 +85,16 @@ export const CONTROLS: Control[] = [
   /* the tag that opens the showcase: its height on the picture's right edge (4 Nov) */
   { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-y', label: 'top (on the right edge)', def: '10%', light: '10%', min: 0, max: 100, step: 1, unit: '%' },
   { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-py', label: 'centre on the phone', def: '86%', light: '86%', min: 0, max: 100, step: 1, unit: '%' },
-  ...show('camp', 'Campaign banners', '50%', '37%', '54%', '45%'),
+  ...show('camp', 'Campaign banners', '50%', '36%', '54%', '45%'),
   /* the six round it, at his places (4 Nov, his copied values made the defaults); the phone shows two, under the phone */
   ...show('splash', 'Splash screen', '56%', '80%', '13%', '12%', 'block', 'none'),
-  ...show('t20', 'Campaign landing page', '12%', '46%', '20%', '12%', 'block', 'none'),
+  ...show('t20', 'Campaign landing page', '21%', '46%', '20%', '12%', 'block', 'none'),
   ...show('avatars', '3D avatars', '83%', '59%', '30%', '86%', 'block', 'none'),
   ...show('insta', 'Instagram store', '83%', '83.3%', '64%', '84%'),
   ...show('view360', '360° view feature', '12%', '18%', '64%', '86%', 'block', 'none'),
-  ...show('sale1', 'Sale banner', '31%', '30%', '24%', '84%'),
+  ...show('sale1', 'Sale banner', '31%', '30%', '24%', '84%', 'none', 'block'),
   /* the note on the work (4 Nov): the one-liner box's glass with a few lines on these pieces, their making and their weight; top right, where he made room */
-  ...show('note', 'About the work', '82%', '22%', '50%', '20%', 'block', 'none'),
+  ...show('note', 'About the work', '80%', '34%', '50%', '20%', 'block', 'none'),
   ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'none'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
   ...card('gold', 'Feedback', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'),
   /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */
@@ -121,14 +121,14 @@ export const CONTROLS: Control[] = [
   /* what is written on the wall (4 Nov, Nitish: "one more version… instead of that SVG, we will have portfolio written in the
      background… a font which is taller"): his signature, or PORTFOLIO in Oswald — a condensed face with tall letters, not an
      extreme one; it takes the same place, size and opacity, level rather than tilted */
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'select', key: '--sig-v', label: 'Written', def: 'sig', light: 'sig', options: [['The signature', 'sig'], ['PORTFOLIO (Oswald)', 'word']] },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'select', key: '--sig-v', label: 'Written', def: 'word', light: 'word', options: [['The signature', 'sig'], ['PORTFOLIO (Oswald)', 'word']] },
   /* its place, size and weight (27 Oct, Nitish: "its position, size, and the stroke width… even thinner than what it is"):
      the centre and the width as percent of the picture; the weight added to (or, below zero, taken off) each side of the
      strokes, in the drawing's units — its strokes are about 1.7 wide, so −.5 leaves them about two-fifths as thick */
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-x', label: 'x', def: '48%', light: '48%', min: 0, max: 100, step: 1, unit: '%' },
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-y', label: 'y', def: '46%', light: '46%', min: 0, max: 100, step: 1, unit: '%' },
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-w', label: 'Size (width)', def: '109%', light: '109%', min: 30, max: 180, step: 1, unit: '%' },
-  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-weight', label: 'Stroke (thinner ← → thicker)', def: '-0.35', light: '-0.35', min: -0.7, max: 1, step: 0.05 },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-x', label: 'x', def: '50%', light: '50%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-y', label: 'y', def: '39%', light: '39%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-w', label: 'Size (width)', def: '90%', light: '90%', min: 30, max: 180, step: 1, unit: '%' },
+  { group: 'Intro picture', sub: 'Signature on the wall', kind: 'range', key: '--sig-weight', label: 'Stroke (thinner ← → thicker)', def: '-0.25', light: '-0.25', min: -0.7, max: 1, step: 0.05 },
   /* corners: plain round, or iOS's continuous curve (22 Oct) */
   { group: 'Main container', sub: 'Corners', kind: 'select', key: '--corners', label: 'Curve', def: 'ios', light: 'ios', options: [['iOS (continuous)', 'ios'], ['Round', 'round']] },
   /* the selection: the dark pill, or a ball in the bar's colour in a cavity (23 Oct) */
