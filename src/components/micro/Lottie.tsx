@@ -91,10 +91,11 @@ function toBase64(bytes: Uint8Array): string {
 type Layer = { nm?: string; ty?: number; refId?: string };
 type Anim = { layers: Layer[]; assets?: { id: string; p?: string; u?: string; e?: number }[]; fonts?: { list?: { fName?: string; fPath?: string; origin?: number }[] } };
 
-export function Lottie({ src, className, loop = true, speed = 1, still = 0, label, drop, viewBox, effects = false, playing = true, onFrame, onComplete, segment, onLoaded, onLoop }: {
+export function Lottie({ src, className, loop = true, speed = 1, still = 0, label, drop, viewBox, effects = false, playing = true, holdFrame = false, onFrame, onComplete, segment, onLoaded, onLoop }: {
   src: string; className?: string; loop?: boolean; speed?: number; still?: number; label?: string;
   drop?: (layer: Layer) => boolean; viewBox?: string; effects?: boolean;
   playing?: boolean; /* false holds it on its still frame (the Lab's thumbs: one plays at a time) */
+  holdFrame?: boolean; /* with it, playing → false pauses where it is instead of going to the still frame (the showcase's belt, 4 Nov: a screen parks at the side on the frame it reached, as the B hero's clips pause in place); the still frame is still the first shown */
   onFrame?: (frame: number) => void; /* each frame drawn, with its number (a screen that changes its words with the animation's state) */
   onComplete?: () => void; /* a run through, when not looping */
   segment?: [number, number] | null; /* a state machine's state: the frames to play at once; with `loop` the segment loops inside the player (no round trip at its end), and `onLoop` fires each time round; without, it plays once and onComplete fires */
@@ -108,7 +109,7 @@ export function Lottie({ src, className, loop = true, speed = 1, still = 0, labe
   /* the latest wish, for a player that finishes loading after it changed (28 Oct: a card that came on screen while its
      file was still loading was built paused, and the change had found no player to start) */
   const playRef = useRef(play); playRef.current = play;
-  useEffect(() => { const a = animRef.current; if (!a) return; if (play) a.play(); else a.goToAndStop(still, true); }, [play, still]);
+  useEffect(() => { const a = animRef.current; if (!a) return; if (play) a.play(); else if (holdFrame) a.pause(); else a.goToAndStop(still, true); }, [play, still, holdFrame]);
   useEffect(() => { const a = animRef.current; if (!a || !segment) return; a.loop = loop; a.playSegments([segment[0], segment[1]], true); if (!play) a.pause(); }, [segment, play, loop]);
   useEffect(() => {
     const el = ref.current; if (!el) return;

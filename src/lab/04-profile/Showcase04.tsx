@@ -34,21 +34,29 @@ function Screen({ b, active }: { b: typeof BANNERS[number]; active: boolean }) {
   return (
     <div className="sc4-scr" role="img" aria-label={`The store app's home with the ${b.label} banner`}>
       <img src={HOME} alt="" draggable={false} />
-      <div className="sc4-ban"><Lottie src={b.src} still={b.still} playing={active} /></div>
+      <div className="sc4-ban"><Lottie src={b.src} still={b.still} playing={active} holdFrame /></div>
     </div>
   );
 }
 
-/* the three screens taking turns in the phone — the Carousel's loop, for these screens */
+/* the three screens taking turns in the phone — the Carousel's loop, for these screens. The phone is a window (4 Nov,
+   Nitish: "it should be 100 inside the mask… when it is outside and getting inside, there should not be any opacity
+   fading"): the belt is drawn twice — once across the stage, every screen grey and at a fifth, and once inside a box
+   the phone's exact shape that clips to it, every screen in colour and whole — moved as one. So whatever part of a
+   screen is inside the phone is full, and whatever is outside is faint, with no fade along the way; a screen passes
+   into the phone the way it passes under the B hero's bezel. A screen plays while it is in the phone, and while it is
+   leaving; parked at a side it pauses where it is. */
 function Belt() {
   const ref = useRef<HTMLDivElement>(null);
   const els = useRef<(HTMLDivElement | null)[]>([]);
+  const wins = useRef<(HTMLDivElement | null)[]>([]);
   const ghost = useRef<HTMLDivElement>(null);
   const on = useInView(ref, .3);
   const n = BANNERS.length;
   const first = [n - 1, 0, 1];
   const orderRef = useRef<number[]>(first);
   const [inPhone, setInPhone] = useState(first[1]);
+  const [leaving, setLeaving] = useState<number | null>(null);
   const [ghostOf, setGhostOf] = useState(first[2]);
   const still = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const places = () => {
@@ -56,36 +64,45 @@ function Belt() {
     const gap = w * .048; const off = w / 2 + gap + w * CAR.side / 2;
     return { off, L: -off, R: off };
   };
-  const put = (el: HTMLElement, x: number, side: number, turn: number, opacity = 1) => {
-    el.style.transform = `translateX(${x.toFixed(2)}px) scale(${(1 - (1 - CAR.side) * side).toFixed(4)}) rotateY(${(turn * CAR.tilt * side).toFixed(2)}deg)`;
-    el.style.filter = `grayscale(${side.toFixed(3)})`; el.style.opacity = ((1 - (1 - CAR.sideA) * side) * opacity).toFixed(3); /* a side screen at a fifth (4 Nov, Nitish: "not more than 20%"); the extra factor is the ghost's and the arriving screen's fade */
+  /* a screen's place on the belt (x), its size and its turn, written to both its copies; the stage copy grey and faint
+     (the extra factor is the ghost's and the arriving screen's fade at the belt's far ends), the window copy as it is */
+  const put = (i: number | HTMLElement, x: number, side: number, turn: number, opacity = 1) => {
+    const t = `translateX(${x.toFixed(2)}px) scale(${(1 - (1 - CAR.side) * side).toFixed(4)}) rotateY(${(turn * CAR.tilt * side).toFixed(2)}deg)`;
+    const o = typeof i === 'number' ? els.current[i] : i, w = typeof i === 'number' ? wins.current[i] : null;
+    if (o) { o.style.transform = t; o.style.opacity = (CAR.sideA * opacity).toFixed(3); }
+    if (w) { w.style.transform = t; }
   };
-  const settle = () => { const P = places(); const [l, c, r] = orderRef.current; const E = els.current; if (E[l]) put(E[l], P.L, 1, -1); if (E[c]) put(E[c], 0, 0, 0); if (E[r]) put(E[r], P.R, 1, 1); if (ghost.current) put(ghost.current, P.R, 1, 1, 0); };
+  const settle = () => { const P = places(); const [l, c, r] = orderRef.current; put(l, P.L, 1, -1); put(c, 0, 0, 0); put(r, P.R, 1, 1); if (ghost.current) put(ghost.current, P.R, 1, 1, 0); };
   useLayoutEffect(() => { settle(); const ro = new ResizeObserver(settle); if (ref.current) ro.observe(ref.current); return () => ro.disconnect(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!on || still) return;
     let live = true; let t = 0;
     const step = async () => {
       if (!live) return;
-      const P = places(); const [l, c, r] = orderRef.current; const E = els.current, G = ghost.current; if (!E[l] || !E[c] || !E[r] || !G) return;
-      orderRef.current = [r, l, c]; setInPhone(l);
+      const P = places(); const [l, c, r] = orderRef.current; const G = ghost.current; if (!G) return;
+      orderRef.current = [r, l, c]; setInPhone(l); setLeaving(c);
       await animate(0, 1, { duration: CAR.slide, ease: CAR.ease, onUpdate: p => {
-        put(E[l]!, P.L + P.off * p, 1 - p, -1);
-        put(E[c]!, P.off * p, p, 1);
+        put(l, P.L + P.off * p, 1 - p, -1);
+        put(c, P.off * p, p, 1);
         put(G, P.R + P.off * p, 1, 1, 1 - p);
-        put(E[r]!, P.L - P.off + P.off * p, 1, -1, p);
+        put(r, P.L - P.off + P.off * p, 1, -1, p);
       } });
       if (!live) return;
-      put(G, P.R, 1, 1, 0); setGhostOf(c);
+      put(G, P.R, 1, 1, 0); setGhostOf(c); setLeaving(null);
       t = window.setTimeout(step, CAR.hold);
     };
     t = window.setTimeout(step, CAR.hold);
     return () => { live = false; clearTimeout(t); };
   }, [on, still]);
+  const playing = (i: number) => inPhone === i || leaving === i;
   return (
     <div className="sc4-car" ref={ref}>
-      {BANNERS.map((b, i) => <div key={b.id} ref={el => { els.current[i] = el; }} className="sc4-car-item" style={{ zIndex: inPhone === i ? 2 : 1 }}><Screen b={b} active={inPhone === i} /></div>)}
+      {BANNERS.map((b, i) => <div key={b.id} ref={el => { els.current[i] = el; }} className="sc4-car-item" aria-hidden="true"><Screen b={b} active={playing(i)} /></div>)}
       <div ref={ghost} className="sc4-car-item ghost" aria-hidden="true"><Screen key={ghostOf} b={BANNERS[ghostOf]} active={false} /></div>
+      {/* the window: the phone's shape, clipping; the same belt inside it, whole */}
+      <div className="sc4-win">
+        {BANNERS.map((b, i) => <div key={b.id} ref={el => { wins.current[i] = el; }} className="sc4-car-item win" style={{ zIndex: inPhone === i ? 2 : 1 }}><Screen b={b} active={playing(i)} /></div>)}
+      </div>
       <div className="sc4-car-phone" aria-hidden="true"><i className="sc4-island" /></div>
     </div>
   );
