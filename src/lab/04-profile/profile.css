@@ -303,9 +303,8 @@
    so the frame shows through as it does behind the links, with the notch's 16px corners on its free side and its joins
    curving out into the edge; no ground of its own, the words in the links' ink, running up the tab. Its centre at --sc-tag-y
    of the picture's height (a control). "Visual motion"; "Close" while open */
-.sc4-tag { position: absolute; right: 0; top: var(--sc-tag-y); translate: 0 -50%; z-index: 6; display: inline-flex; align-items: center; padding: 14px 7px 14px 8px; border: 0; border-radius: calc(16px * var(--ios-k, 1)) 0 0 calc(16px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: none; color: var(--social-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); line-height: 1.1; cursor: pointer; transition: background .2s; }
+.sc4-tag { position: absolute; right: 0; top: var(--sc-tag-y); translate: 0 -50%; z-index: 6; display: inline-flex; align-items: center; padding: 14px 7px 14px 8px; border: 0; border-radius: calc(16px * var(--ios-k, 1)) 0 0 calc(16px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: none; color: var(--social-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); line-height: 1.1; cursor: pointer; }
 .sc4-tag > span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); border-radius: 999px; } /* the words run up the tab, bottom to top (as the first nav's names ran up its bar); the span turns, not the tab */
-.sc4-tag:hover { background: rgba(255, 255, 255, .1); } /* the links' hover */
 /* open: the floating cards zoom past — each on its own heading (--ox/--oy, from where it sits: the loader to the bottom
    right, the persuasion animation to the right, the success state up and a little left, the assistant down and to the
    left; the coin and the micro bar, when shown, likewise), a little bigger as it goes, fading — then rest hidden */
@@ -372,7 +371,7 @@
    the notch's inner corners); no background of their own (Nitish, 13 Oct). The assistant opens here, from the nav's button. */
 .notch4 { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: flex; justify-content: center; }
 .links4 { display: flex; gap: 2px; padding: 4px 10px 6px; border-radius: 0 0 calc(16px * var(--ios-k, 1)) calc(16px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); position: relative; }
-.links4 a { width: 30px; height: 26px; display: grid; place-items: center; color: var(--social-ink); border-radius: calc(8px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); transition: background .2s; }
+.links4 a { width: 30px; height: 26px; display: grid; place-items: center; color: var(--social-ink); border-radius: calc(8px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); } /* the hover at once, no fade (4 Nov, Nitish: moving across the icons quickly, the fading highlights overlapped and flickered) */
 .links4 a:hover { background: rgba(255, 255, 255, .1); }
 .links4 a svg { width: 15px; height: 15px; }
 .notch4 .island-wrap { position: absolute; }
