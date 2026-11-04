@@ -19,11 +19,13 @@ export const DEPTH_K = { subtle: K, pronounced: K * 2.5 } as const;
 const FOCUS = .55; /* the subject's depth (him, ~.51–.57 in the maps), where nothing moves */
 
 /* the pointer over the picture (or the phone's tilt) as a smoothed offset, -1…1 on each axis */
-export function useTilt(area: RefObject<HTMLElement | null>, on: boolean) {
+/* hold (4 Nov): while it is set the scene stays still — the pointer and the gyro are ignored, and the tilt settles to the
+   centre on its own easing (the Lottie showcase, Showcase04: the picture goes static behind its containers) */
+export function useTilt(area: RefObject<HTMLElement | null>, on: boolean, hold?: RefObject<boolean>) {
   const t = useRef<Tilt>({ x: 0, y: 0, tx: 0, ty: 0, frame: 0 });
   useEffect(() => {
     const el = area.current; if (!el || !on) return;
-    const move = (e: PointerEvent) => { if (e.pointerType === 'touch') return; const r = el.getBoundingClientRect(); t.current.tx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - .5) * 2)); t.current.ty = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - .5) * 2)); };
+    const move = (e: PointerEvent) => { if (e.pointerType === 'touch' || hold?.current) return; const r = el.getBoundingClientRect(); t.current.tx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - .5) * 2)); t.current.ty = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - .5) * 2)); };
     const leave = () => { t.current.tx = 0; t.current.ty = 0; };
     /* the phone (24 Oct, Nitish: "the pronounced effect, working with my phone's gyro"): its tilt — turning it left or
        right (gamma), tipping its top toward or away (beta), turned with the screen if it is held sideways — from a
@@ -32,7 +34,7 @@ export function useTilt(area: RefObject<HTMLElement | null>, on: boolean) {
        iPhones ask for motion access once, on the first tap on the intro (a tap, or a click, is what iOS accepts) */
     let base: { b: number; g: number } | null = null, last = 0;
     const orient = (e: DeviceOrientationEvent) => {
-      if (e.beta == null || e.gamma == null) return;
+      if (e.beta == null || e.gamma == null || hold?.current) return;
       const now = performance.now(), dt = last ? Math.min(.2, (now - last) / 1000) : 0; last = now;
       if (!base || Math.abs(e.beta - base.b) > 60 || Math.abs(e.gamma - base.g) > 60) base = { b: e.beta, g: e.gamma };
       const f = 1 - Math.exp(-dt / 3); base.b += (e.beta - base.b) * f; base.g += (e.gamma - base.g) * f;
@@ -50,7 +52,7 @@ export function useTilt(area: RefObject<HTMLElement | null>, on: boolean) {
     const tick = (now: number) => { const s = t.current, k = 1 - Math.exp(-(now - prev) / 190); prev = now; s.x += (s.tx - s.x) * k; s.y += (s.ty - s.y) * k; s.frame++; raf = requestAnimationFrame(tick); }; /* eased by time (~.08 a frame at 60fps), so a slow frame rate settles as soon */
     raf = requestAnimationFrame(tick);
     return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('touchend', ask); el.removeEventListener('click', ask); removeEventListener('deviceorientation', orient); cancelAnimationFrame(raf); t.current = { x: 0, y: 0, tx: 0, ty: 0, frame: 0 }; };
-  }, [area, on]);
+  }, [area, on, hold]);
   return t;
 }
 

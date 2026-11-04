@@ -284,6 +284,43 @@
 @keyframes float4 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @media (prefers-reduced-motion: reduce) { .fl4-in { animation: none; } }
 
+/* ---- the showcase (Showcase04.tsx, 4 Nov): the picture's second state, for the Lotties the old site's home carried ---- */
+/* the tag that opens it (its design is to come): a glass pill at the picture's bottom-right corner, in from the edge by
+   the cut-out's padding */
+.sc4-tag { position: absolute; right: 1.6cqw; bottom: 1.5cqw; z-index: 6; display: inline-flex; align-items: center; padding: .55em 1em; border: 1px solid rgba(255, 255, 255, .14); border-radius: 999px; background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); color: var(--glass-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); cursor: pointer; transition: transform .2s, background .2s; }
+.sc4-tag:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--glass-bg) calc(min(1, var(--glass-a) + .15) * 100%), transparent); }
+/* open: the floating cards zoom past — each on its own heading (--ox/--oy, from where it sits: the loader to the bottom
+   right, the persuasion animation to the right, the success state up and a little left, the assistant down and to the
+   left; the coin and the micro bar, when shown, likewise), a little bigger as it goes, fading — then rest hidden */
+.fl4:not(.sig-bg) { transform: translate(calc(var(--px, 0px) + var(--ox, 0px)), calc(var(--py, 0px) + var(--oy, 0px))) scale(var(--os, 1)); transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .35s; }
+.sc-open .fl4:not(.sig-bg) { --os: 1.14; opacity: 0; pointer-events: none; transition: transform .7s cubic-bezier(.3, .6, .2, 1), opacity .55s ease-out .05s, visibility 0s .7s; visibility: hidden; }
+.sc-open .fl4.loader-card { --ox: 64px; --oy: 56px; } .sc-open .fl4.pers-card { --ox: 96px; --oy: -4px; }
+.sc-open .fl4.gold-card { --ox: -36px; --oy: -84px; } .sc-open .fl4.ai-card { --ox: -92px; --oy: 48px; }
+.sc-open .fl4.coin-card { --ox: -56px; --oy: -64px; } .sc-open .fl4.micro-card { --ox: 8px; --oy: 76px; }
+/* the picture steps back 5%, blurs and holds still (the tilt is held in Iteration04); the signature on the wall goes with it */
+.pic4-img { transition: transform .8s cubic-bezier(.3, .6, .2, 1), filter .8s cubic-bezier(.3, .6, .2, 1); }
+.sc-open .pic4-img { transform: scale(.95); filter: blur(14px); } .sc-open .pic4.bw .pic4-img { filter: grayscale(1) blur(14px); } /* set only while open: a filter on the canvas is a surface drawn every frame */
+.fl4.sig-bg { transition: opacity .6s; } .sc-open .fl4.sig-bg { opacity: 0; }
+/* the showcase's layer: the picture's whole box, over him and the cards; its containers centred in it */
+.sc4 { position: absolute; inset: 0; z-index: 5; display: grid; grid-template-rows: 1fr; pointer-events: none; }
+.sc4-in { min-height: 0; display: grid; place-items: center; padding: 3% 3% 8.5% 38%; } /* centred on the room beside the cut-out (the picture's bottom-left 40%), a little above the middle — its centre at .67 of the width, .47 of the height */
+.sc4-card { pointer-events: auto; }
+/* the campaign-banners card: --sw the screen's width, --sh its height, --cw the card's (the screen and a quarter). The
+   card's glass (the floating cards' recipe, at their radius); the screen stands out of its top with its lower fifth
+   inside, fading out over that fifth; the words sit under the fade */
+.sc4-camp { --sw: 272px; --sh: calc(var(--sw) * 1.2); --cw: calc(var(--sw) * 1.25); position: relative; width: var(--cw); margin-top: calc(var(--sh) * .8); padding: calc(var(--sh) * .2 + 10px) 20px 18px; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
+  background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); }
+.sc4-screen { position: absolute; left: 50%; top: calc(-.8 * var(--sh)); width: var(--sw); height: var(--sh); translate: -50% 0; border-radius: calc(clamp(14px, 1.6cqw, 22px) * var(--ios-k, 1)) calc(clamp(14px, 1.6cqw, 22px) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); overflow: hidden; background: var(--pcard-open); color: var(--pcard-open-ink);
+  -webkit-mask-image: linear-gradient(#000 80%, transparent 100%); mask-image: linear-gradient(#000 80%, transparent 100%); } /* the screen's lower fifth — the part inside the card — fades out */
+.sc4-screen::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--pcard-open-ink) 72%, transparent); pointer-events: none; } /* the device's edge, as the studies' phones draw it */
+.sc4-slot { display: grid; place-items: center; height: 17%; margin: 7% 7% 0; border: 1.5px dashed color-mix(in srgb, var(--pcard-open-ink) 35%, transparent); border-radius: calc(10px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); font: 500 var(--t-meta)/1.2 var(--f-copy); color: color-mix(in srgb, var(--pcard-open-ink) 55%, transparent); } /* the three banners' places, until the Lotties come */
+.sc4-slot:first-child { margin-top: 15%; } /* under the status bar's room */
+.sc4-text { display: flex; flex-direction: column; gap: 5px; }
+.sc4-h { display: block; font: 600 var(--t-title)/1.25 var(--f-copy); }
+.sc4-p { margin: 0; font: 500 var(--t-meta)/1.4 var(--f-copy); color: color-mix(in srgb, var(--glass-ink) 82%, transparent); text-wrap: pretty; }
+@media (prefers-reduced-motion: reduce) { .fl4:not(.sig-bg), .sc-open .fl4:not(.sig-bg), .pic4-img, .fl4.sig-bg { transition: none; } }
+
 /* the notch: the links sit on the frame in a cut-out at the tile's top-centre (its shape follows this box, the radius being
    the notch's inner corners); no background of their own (Nitish, 13 Oct). The assistant opens here, from the nav's button. */
 .notch4 { position: absolute; left: 0; right: 0; top: 0; z-index: 5; display: flex; justify-content: center; }
@@ -752,6 +789,19 @@
      redrawn every frame — measured with the CPU slowed 4×, it halved the frame rate. The glass a step darker instead,
      so the drawing behind stays quiet */
   .fl4 .cap, .loader-card .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
+  /* the showcase on the phone (4 Nov): the tag in the picture's top-right corner; the layer fills the picture's cell, and
+     should its containers ever stand taller than the square, the cell grows to them and the picture and his cutout
+     stretch with it, so the blurred drawing stays behind; the cards' headings a little shorter for the square */
+  .sc4-tag { position: relative; grid-area: pic; align-self: start; justify-self: end; inset: auto; margin: 12px 12px 0 0; padding: .5em .85em; z-index: 6; font-size: 12px; } /* the top-right corner here: the links' pocket and the desk take the right and the foot */
+  .sc4 { position: relative; grid-area: pic; inset: auto; align-self: stretch; width: 100%; }
+  .sc4-in { padding: 16px 64px 24px 16px; } /* centred on the room left of the links' pocket */
+  .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; }
+  .sc4-camp { --sw: 160px; padding: calc(var(--sh) * .2 + 8px) 16px 16px; }
+  .fl4:not(.sig-bg) > .fl4-in { transition: translate .35s cubic-bezier(.2, .8, .2, 1), scale .35s; } /* the glass moves here (the layer round it stays put, transform: none above) */
+  .sc-open .fl4:not(.sig-bg) > .fl4-in { translate: calc(-50% + var(--ox, 0px)) calc(-50% + var(--oy, 0px)); scale: 1.14; transition: translate .7s cubic-bezier(.3, .6, .2, 1), scale .7s cubic-bezier(.3, .6, .2, 1); }
+  .sc-open .fl4.loader-card { --ox: 44px; --oy: 40px; } .sc-open .fl4.pers-card { --ox: 64px; --oy: -4px; }
+  .sc-open .fl4.gold-card { --ox: -24px; --oy: -56px; } .sc-open .fl4.ai-card { --ox: -60px; --oy: 36px; }
+  .sc-open .fl4.coin-card { --ox: -40px; --oy: -44px; } .sc-open .fl4.micro-card { --ox: 6px; --oy: 52px; }
   .fl4 .bl { width: 58px; margin: -4px 0 -2px -5px; } .fl4 .lk { width: 48px; } .fl4 .coin { width: 46px; }
   .fl4 .gm { --cw: calc(140px / var(--gw)); } .fl4 .pa, .fl4 .mli { width: 140px; }
   .loader-card .fl4-in { gap: 4px; padding: 7px 10px; } .gold-card .fl4-in, .pers-card .fl4-in, .micro-card .fl4-in { gap: 6px; }
