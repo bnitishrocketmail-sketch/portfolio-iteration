@@ -87,12 +87,14 @@ export const CONTROLS: Control[] = [
   { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-py', label: 'y on the phone', def: '86%', light: '86%', min: 0, max: 100, step: 1, unit: '%' },
   ...show('camp', 'Campaign banners', '50%', '37%', '54%', '45%'),
   /* the six round it, at his places (4 Nov, his copied values made the defaults); the phone shows two, under the phone */
-  ...show('splash', 'Splash screen', '77%', '19%', '13%', '12%', 'block', 'none'),
+  ...show('splash', 'Splash screen', '56%', '80%', '13%', '12%', 'block', 'none'),
   ...show('t20', 'Campaign landing page', '12%', '46%', '20%', '12%', 'block', 'none'),
-  ...show('avatars', '3D avatars', '84%', '55%', '30%', '86%', 'block', 'none'),
+  ...show('avatars', '3D avatars', '83%', '59%', '30%', '86%', 'block', 'none'),
   ...show('insta', 'Instagram store', '83%', '83.3%', '64%', '84%'),
-  ...show('view360', '360° view feature', '22%', '18%', '64%', '86%', 'block', 'none'),
-  ...show('sale1', 'Sale banner', '54%', '77%', '24%', '84%'),
+  ...show('view360', '360° view feature', '12%', '18%', '64%', '86%', 'block', 'none'),
+  ...show('sale1', 'Sale banner', '31%', '30%', '24%', '84%'),
+  /* the note on the work (4 Nov): the one-liner box's glass with a few lines on these pieces, their making and their weight; top right, where he made room */
+  ...show('note', 'About the work', '82%', '22%', '50%', '20%', 'block', 'none'),
   ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'none'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
   ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'),
   /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */

@@ -35,12 +35,13 @@
   --c-ai-px: 17%; --c-ai-py: 64%; --c-loader-px: 71%; --c-loader-py: 77%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
   --sc-tag-y: 33%; --sc-tag-py: 86%; /* the tag's height on the picture's right edge (4 Nov): under the camera's lens; on the phone on the white desk at the foot, under the links' pocket and the loader card (the camera fills the edge above) */
   --sc-camp-x: 50%; --sc-camp-y: 37%; --sc-camp-v: block; --sc-camp-px: 54%; --sc-camp-py: 45%; --sc-camp-pv: block; /* the showcase's containers (4 Nov): each one's centre, % of the picture — his places (his copied values, made the defaults) */
-  --sc-splash-x: 77%; --sc-splash-y: 19%; --sc-splash-v: block; --sc-splash-px: 13%; --sc-splash-py: 12%; --sc-splash-pv: none;
+  --sc-splash-x: 56%; --sc-splash-y: 80%; --sc-splash-v: block; --sc-splash-px: 13%; --sc-splash-py: 12%; --sc-splash-pv: none;
   --sc-t20-x: 12%; --sc-t20-y: 46%; --sc-t20-v: block; --sc-t20-px: 20%; --sc-t20-py: 12%; --sc-t20-pv: none;
-  --sc-avatars-x: 84%; --sc-avatars-y: 55%; --sc-avatars-v: block; --sc-avatars-px: 30%; --sc-avatars-py: 86%; --sc-avatars-pv: none;
+  --sc-avatars-x: 83%; --sc-avatars-y: 59%; --sc-avatars-v: block; --sc-avatars-px: 30%; --sc-avatars-py: 86%; --sc-avatars-pv: none;
   --sc-insta-x: 83%; --sc-insta-y: 83.3%; --sc-insta-v: block; --sc-insta-px: 64%; --sc-insta-py: 84%; --sc-insta-pv: block;
-  --sc-view360-x: 22%; --sc-view360-y: 18%; --sc-view360-v: block; --sc-view360-px: 64%; --sc-view360-py: 86%; --sc-view360-pv: none;
-  --sc-sale1-x: 54%; --sc-sale1-y: 77%; --sc-sale1-v: block; --sc-sale1-px: 24%; --sc-sale1-py: 84%; --sc-sale1-pv: block;
+  --sc-view360-x: 12%; --sc-view360-y: 18%; --sc-view360-v: block; --sc-view360-px: 64%; --sc-view360-py: 86%; --sc-view360-pv: none;
+  --sc-sale1-x: 31%; --sc-sale1-y: 30%; --sc-sale1-v: block; --sc-sale1-px: 24%; --sc-sale1-py: 84%; --sc-sale1-pv: block;
+  --sc-note-x: 82%; --sc-note-y: 22%; --sc-note-v: block; --sc-note-px: 50%; --sc-note-py: 20%; --sc-note-pv: none; /* the note on the work (4 Nov) */
   --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: none; /* three on the phone (28 Oct, Nitish: the persuasion card removed there) */ --c-coin-pv: none; --c-micro-pv: none;
   --name-box-v: none; /* the name box with the one-liner, shown or hidden (the design system page); hidden by default (28 Oct, his desktop settings) */
   --pcard-open: var(--nav-bg); --pcard-open-ink: var(--frame); --pcard-fold: var(--nav-hl); --pcard-fold-ink: var(--nav-bg); /* the project page's cards: the theme's two greys, the open one light with dark text, the folded dark with light text (Nitish, 14 Oct) */
@@ -338,6 +339,10 @@
 .sc4-flo .lot { position: relative; width: calc(var(--lw) * 1cqw); } .sc4-flo .lot > div { position: absolute; inset: 0; } .sc4-flo .lot svg { display: block; overflow: visible; } /* the player fills the box absolutely, so the box keeps its own ratio — a cropped file's svg still carries the whole canvas's width and height, and in flow it had stretched the box to those (the avatars' banner read 2 : 1 instead of its 2.7) */
 .sc4-flo .lot.round { border-radius: calc(calc(var(--r) / 2) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; } /* only the square-cornered files take the box's corners (4 Nov, Nitish: the Instagram banner "already had corner radius… it is currently cutting the information") */
 .sc4-flo .cap { display: block; font: 600 clamp(10.5px, .95cqw, 13px)/1.25 var(--f-copy); white-space: nowrap; } /* a long name breaks where its label says (the T20 page's, as the assistant's does) */
+.sc4-note { width: 30%; min-width: 240px; padding: 1.4cqw 1.6cqw 1.5cqw; border-radius: calc(calc(var(--r) * .8) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
+  background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 18px 40px -18px rgba(0, 0, 0, .6); } /* the one-liner box's recipe (.name4), as a showcase card (4 Nov: "the text container will be like the one that we had on the home page initially") */
+.sc4-note p { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); text-wrap: pretty; }
+.sc4-flo.note { left: var(--sc-note-x); top: var(--sc-note-y); display: var(--sc-note-v); }
 .sc4-flo.splash { left: var(--sc-splash-x); top: var(--sc-splash-y); display: var(--sc-splash-v); } .sc4-flo.t20 { left: var(--sc-t20-x); top: var(--sc-t20-y); display: var(--sc-t20-v); } .sc4-flo.avatars { left: var(--sc-avatars-x); top: var(--sc-avatars-y); display: var(--sc-avatars-v); } .sc4-flo.insta { left: var(--sc-insta-x); top: var(--sc-insta-y); display: var(--sc-insta-v); } .sc4-flo.view360 { left: var(--sc-view360-x); top: var(--sc-view360-y); display: var(--sc-view360-v); } .sc4-flo.sale1 { left: var(--sc-sale1-x); top: var(--sc-sale1-y); display: var(--sc-sale1-v); } /* the card and its two stages share these; the faint stage sits behind the card (4 Nov, Nitish: "let's keep them behind the container"), the window and the edge in it */
 .sc4-camp { position: relative; width: 100%; padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 1cqw) 1.3cqw 1.1cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) 80%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); /* the glass at 80% here (4 Nov, Nitish: the card "too transparent… at least 80%"), where the floating cards sit at 20 */
@@ -845,6 +850,8 @@
   .sc4-cardwrap.camp { left: var(--sc-camp-px); top: var(--sc-camp-py); display: var(--sc-camp-pv); }
   .sc4-flo .fl4-in { gap: 6px; padding: 5px 6px 8px; } .sc4-flo .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
   .sc4-flo .lot { width: var(--plw); } /* the phone's widths (CARDS plw): under the intro cards' phone sizes, two sit in the band under the phone */
+  .sc4-note { width: 72%; min-width: 0; padding: 14px 16px 15px; } .sc4-note p { font-size: var(--t-body); }
+  .sc4-flo.note { left: var(--sc-note-px); top: var(--sc-note-py); display: var(--sc-note-pv); }
   .sc4-flo.splash { left: var(--sc-splash-px); top: var(--sc-splash-py); display: var(--sc-splash-pv); } .sc4-flo.t20 { left: var(--sc-t20-px); top: var(--sc-t20-py); display: var(--sc-t20-pv); } .sc4-flo.avatars { left: var(--sc-avatars-px); top: var(--sc-avatars-py); display: var(--sc-avatars-pv); } .sc4-flo.insta { left: var(--sc-insta-px); top: var(--sc-insta-py); display: var(--sc-insta-pv); } .sc4-flo.view360 { left: var(--sc-view360-px); top: var(--sc-view360-py); display: var(--sc-view360-pv); } .sc4-flo.sale1 { left: var(--sc-sale1-px); top: var(--sc-sale1-py); display: var(--sc-sale1-pv); }
   .sc4-camp { padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 8px) 8px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; } /* no blur, as the floating cards' here */
   .sc4-camp .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); white-space: nowrap; } /* one line in the narrower card */
