@@ -16,11 +16,11 @@ import './workflow.css';
 const CODE_PATH = 'M8.3 6.3 2.6 12l5.7 5.7 1.4-1.4L5.4 12l4.3-4.3-1.4-1.4zm7.4 0-1.4 1.4 4.3 4.3-4.3 4.3 1.4 1.4L21.4 12l-5.7-5.7z';
 function Mark({ id }: { id: string }) {
   switch (id) {
-    case 'ae': return <span className="tl4 full" aria-hidden="true"><svg viewBox={`0 0 ${AE.w} ${AE.h}`} preserveAspectRatio="none" dangerouslySetInnerHTML={{ __html: AE.body }} /></span>;
+    case 'ae': return <span className="tl4 full ae" aria-hidden="true"><svg viewBox={`0 0 ${AE.w} ${AE.h}`} dangerouslySetInnerHTML={{ __html: AE.body.replace(/<rect[^>]*\/>/, '') }} /></span>; /* the tile is the icon's blue (workflow.css) and the Ae sits in it at .95 of the tile (the glyph carries its own air) — the icon's own plate, stretched to the tile, had read cramped and ragged (4 Nov) */
     case 'lottie': return <span className="tl4 full lottie" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={LOTTIE.path} fill={LOTTIE.hex} /></svg></span>;
     case 'figma': return <span className="tl4" aria-hidden="true"><svg viewBox={`0 0 ${FIGMA.w} ${FIGMA.h}`} className="tall" dangerouslySetInnerHTML={{ __html: FIGMA.body }} /></span>;
     case 'rive': return <span className="tl4" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={RIVE.path} fill="currentColor" /></svg></span>;
-    case 'protopie': return <span className="tl4" aria-hidden="true"><img src="/workflow/protopie.svg" alt="" draggable={false} /></span>;
+    case 'protopie': return <span className="tl4 pie" aria-hidden="true"><img src="/workflow/protopie.svg" alt="" draggable={false} /></span>; /* its file has air round the symbol, so it sits a size up */
     case 'code': return <span className="tl4" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={CODE_PATH} fill="currentColor" /></svg></span>;
     default: return null;
   }
