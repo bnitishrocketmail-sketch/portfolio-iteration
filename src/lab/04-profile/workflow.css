@@ -20,7 +20,7 @@
 .tl4 { flex: none; display: grid; place-items: center; width: 1.45em; height: 1.45em; border-radius: calc(.4em * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: color-mix(in srgb, var(--line-ink) 12%, transparent); overflow: hidden; }
 .tl4 svg, .tl4 img { width: .78em; height: .78em; display: block; } .tl4 svg.tall { width: auto; } /* a glyph at .78 of the tile; Figma's keeps its 2 : 3 */
 .tl4.full { background: #fff; } .tl4.full svg { width: 100%; height: 100%; } /* a square mark is the tile — the tile's corners cut its own (both are shallower than the system's) */
-.tl4.ae { background: #00005b; } .tl4.ae svg { width: .95em; height: .95em; } /* After Effects: the icon's plate colour as the tile, its Ae in it at .95 (the glyph has air of its own) */
+.tl4.ae { background: #00005b; } .tl4.ae svg { width: 1.2em; height: 1.2em; } /* After Effects: the icon's plate colour as the tile, its Ae in it at 1.2 (the glyph has air of its own; a size up again, 4 Nov) */
 .tl4.pie img { width: 1em; height: 1em; } /* ProtoPie's symbol has air in its file: a size up */
 .cn4.ai { padding: .6em 1em; border: 1px dashed color-mix(in srgb, var(--line-ink) 40%, transparent); color: var(--line-ink); font-size: var(--t-meta); font-weight: 500; background: var(--frame); opacity: .8; }
 /* the card a node opens into: the open card's grey, the standard radius; its box is animated (Workflow04.tsx), the content
