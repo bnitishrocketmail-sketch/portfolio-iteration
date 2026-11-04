@@ -3,15 +3,28 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useSearchParams } from 'react-router-dom';
 import StateMachine04 from './StateMachine04';
 import { OrbField, OrbTuner, TUNE0, type OrbTune } from './WorkflowOrb04';
-import { siFigma, siLottiefiles, siRive } from 'simple-icons';
+import { AE, FIGMA, LOTTIE, RIVE } from './toolmarks';
 import './workflow.css';
 
 /* the tools' marks (4 Nov, Nitish: "a small logo aligned on the left hand side of them… in a square with rounded corners…
-   height… based on the text size"): simple-icons' paths (CC0) for Figma, Rive and Lottie (LottieFiles' mark), drawn in the
-   pill's ink on a tinted tile the text's height; Code gets a bracket glyph. After Effects and ProtoPie aren't in the set
-   (Adobe's marks were withdrawn from it; ProtoPie never had one) — their tiles wait, empty, for his files */
+   height… based on the text size"; then "they should be what color they originally are… if the logo is square, then the
+   whole container can be square with the same curve radius"): a tile the text's line tall at the system's corners. Three
+   marks sit in it as glyphs in their own colours — Figma's four colours, ProtoPie's coral symbol (their media kit's),
+   Rive's in the ink (its mark is black or white) — and Code's bracket in the ink. Two marks are square themselves, so the
+   tile is the mark: After Effects' (its own dark blue with the lilac Ae, cut to the system's corners) and Lottie's
+   (LottieFiles' teal with the white curve: its path is a square with the curve as a hole, laid in teal over a white tile) */
 const CODE_PATH = 'M8.3 6.3 2.6 12l5.7 5.7 1.4-1.4L5.4 12l4.3-4.3-1.4-1.4zm7.4 0-1.4 1.4 4.3 4.3-4.3 4.3 1.4 1.4L21.4 12l-5.7-5.7z';
-const MARKS: Record<string, string | null> = { figma: siFigma.path, rive: siRive.path, lottie: siLottiefiles.path, code: CODE_PATH, ae: null, protopie: null };
+function Mark({ id }: { id: string }) {
+  switch (id) {
+    case 'ae': return <span className="tl4 full" aria-hidden="true"><svg viewBox={`0 0 ${AE.w} ${AE.h}`} preserveAspectRatio="none" dangerouslySetInnerHTML={{ __html: AE.body }} /></span>;
+    case 'lottie': return <span className="tl4 full lottie" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={LOTTIE.path} fill={LOTTIE.hex} /></svg></span>;
+    case 'figma': return <span className="tl4" aria-hidden="true"><svg viewBox={`0 0 ${FIGMA.w} ${FIGMA.h}`} className="tall" dangerouslySetInnerHTML={{ __html: FIGMA.body }} /></span>;
+    case 'rive': return <span className="tl4" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={RIVE.path} fill="currentColor" /></svg></span>;
+    case 'protopie': return <span className="tl4" aria-hidden="true"><img src="/workflow/protopie.svg" alt="" draggable={false} /></span>;
+    case 'code': return <span className="tl4" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={CODE_PATH} fill="currentColor" /></svg></span>;
+    default: return null;
+  }
+}
 
 /* 04's Workflow page (Nitish, 15–16 Oct; named Craft until 16 Oct): "how I work" as a map of connected nodes with little text — the crafts at the
    centre, the tools as satellites of the craft each serves, the workflows chained to the right, and the model as a ring
@@ -181,7 +194,7 @@ export default function Workflow04() {
             <button key={n.id} type="button" data-id={n.id} className={`cn4 ${n.kind}${open?.id === n.id ? ' on' : ''}`} style={{ left: `${pos(n).x}%`, top: `${pos(n).y}%` }} aria-expanded={open?.id === n.id}
               onPointerEnter={e => { if (e.pointerType === 'touch') return; hold(); window.clearTimeout(enterT.current); enterT.current = window.setTimeout(() => show(n.id), 70); }}
               onPointerLeave={e => { if (e.pointerType === 'touch') return; window.clearTimeout(enterT.current); letGo(); }}
-              onFocus={() => show(n.id)} onClick={() => show(n.id)}>{n.kind === 'tool' && <span className={`tl4${MARKS[n.id] ? '' : ' blank'}`} aria-hidden="true">{MARKS[n.id] && <svg viewBox="0 0 24 24"><path d={MARKS[n.id]!} fill="currentColor" /></svg>}</span>}{n.label}</button>
+              onFocus={() => show(n.id)} onClick={() => show(n.id)}>{n.kind === 'tool' && <Mark id={n.id} />}{n.label}</button>
           ))}
           {/* the card: grows out of the node's box, anchored at the edges nearest the map's centre, and shrinks back — the
               node shows again as soon as it closes, and the card fades out over it in the last stretch of the shrink */}
