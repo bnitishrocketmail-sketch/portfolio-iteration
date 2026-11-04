@@ -30,18 +30,16 @@ const BANNERS = [
    of the floating containers on the first… side of the home page… the padding from the corners and everything… the same
    way like we did for the intro cards… the names… what kind of a Lottie visual it is… corner radiuses, if any of these
    doesn't have"): the intro cards' glass and caption, each Lottie in a box of its own shape with the micro card's corners
-   (half the standard radius — the sale banners and the T20 page had square ones); their places are tokens (--sc-<id>-x/y,
-   the centre, % of the picture; the phone's own, where three show by default). `shape` picks the box's width */
-const CARDS: { id: string; label: string; src: string; still: number; w: number; h: number; shape: 'tall' | 'wide' | 'mid' | 'sq'; round?: boolean; crop?: string }[] = [ /* round: the file's corners are square, so the box rounds them; crop: the box is this part of the canvas ("x y w h") */
-  { id: 'splash', label: 'Splash screen', src: 'https://lottie.host/eefce00b-b527-45d7-91c4-d9e9ff3b2bae/RLHZEVAu99.lottie', still: 266, w: 400, h: 500, shape: 'tall', round: true },
-  { id: 't20', label: 'Campaign|landing page', src: 'https://lottie.host/bcf5542a-77a0-48aa-a743-ed79fb84d80a/1P6ByfieyT.lottie', still: 497, w: 360, h: 360, shape: 'sq', round: true },
-  { id: 'avatars', label: '3D avatars', src: 'https://lottie.host/66b797f3-eccf-4de5-99dd-d2d166fe5f8b/ymFeJeiMZA.lottie', still: 270, w: 656, h: 245, shape: 'wide', crop: '0 56 656 245' } /* the box is the dark card inside the canvas (y 56–301 of 328, measured); the characters' heads spill above it, as they do in the file */,
-  { id: 'insta', label: 'Instagram store', src: 'https://lottie.host/d8e6ae3a-09f6-4405-8d24-cffb5a303bf7/p5EAoC17eD.lottie', still: 358, w: 328, h: 164, shape: 'wide' },
-  { id: 'view360', label: '360° view feature', src: 'https://lottie.host/124c7e10-cb74-4302-b5c5-730a7f0103d2/PZADq44JAU.lottie', still: 225, w: 324, h: 248, shape: 'mid' },
-  { id: 'sale1', label: 'Sale banner', src: 'https://lottie.host/fd58bb53-7af6-44f1-84ee-3792ca7d898a/ZjKjPHjBUB.lottie', still: 179, w: 1126, h: 1126, shape: 'sq', round: true },
-  { id: 'sale2', label: 'Offer banner', src: 'https://lottie.host/1a9e93eb-f035-46cc-8c62-2e29358fb86b/vtZFgfU7J2.lottie', still: 194, w: 600, h: 600, shape: 'sq', round: true },
-  { id: 'tryon', label: 'Try-on feature', src: 'https://lottie.host/f1d3fb66-d613-478d-9e6b-ef1f51fbde37/pF3zSKEDC8.lottie', still: 359, w: 328, h: 437, shape: 'tall' },
-];
+   (half the standard radius — the sale banner and the T20 page had square ones); their places are tokens (--sc-<id>-x/y,
+   the centre, % of the picture; the phone's own, where two show by default). `lw` is the box's width */
+const CARDS: { id: string; label: string; src: string; still: number; w: number; h: number; lw: number; plw: number; round?: boolean; crop?: string }[] = [ /* lw: the box's width in cqw, plw: on the phone in px; round: the file's corners are square, so the box rounds them; crop: the box is this part of the canvas ("x y w h") */
+  { id: 'splash', label: 'Splash screen', src: 'https://lottie.host/eefce00b-b527-45d7-91c4-d9e9ff3b2bae/RLHZEVAu99.lottie', still: 266, w: 400, h: 500, lw: 9.6, plw: 70, round: true },
+  { id: 't20', label: 'Campaign|landing page', src: 'https://lottie.host/bcf5542a-77a0-48aa-a743-ed79fb84d80a/1P6ByfieyT.lottie', still: 497, w: 360, h: 360, lw: 11, plw: 70, round: true },
+  { id: 'avatars', label: '3D avatars', src: 'https://lottie.host/66b797f3-eccf-4de5-99dd-d2d166fe5f8b/ymFeJeiMZA.lottie', still: 270, w: 656, h: 245, lw: 12, plw: 96, crop: '0 56 656 245' }, /* the box is the dark card inside the canvas (y 56–301 of 328, measured); the characters' heads spill above it, as they do in the file */
+  { id: 'insta', label: 'Instagram store', src: 'https://lottie.host/d8e6ae3a-09f6-4405-8d24-cffb5a303bf7/p5EAoC17eD.lottie', still: 358, w: 328, h: 164, lw: 12, plw: 96 },
+  { id: 'view360', label: '360° view feature', src: 'https://lottie.host/124c7e10-cb74-4302-b5c5-730a7f0103d2/PZADq44JAU.lottie', still: 225, w: 324, h: 248, lw: 11, plw: 88 },
+  { id: 'sale1', label: 'Sale banner', src: 'https://lottie.host/fd58bb53-7af6-44f1-84ee-3792ca7d898a/ZjKjPHjBUB.lottie', still: 179, w: 1126, h: 1126, lw: 9.2, plw: 58, round: true },
+]; /* the offer banner (Stock Up) and the try-on feature were here, hidden; taken out (4 Nov, Nitish: "remove them for now… so that they don't take a lot of space on the memory") — their files: 1a9e93eb…/vtZFgfU7J2.lottie (600 × 600) and f1d3fb66…/pF3zSKEDC8.lottie (328 × 437) */
 function Card({ c, i }: { c: typeof CARDS[number]; i: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref, 0);
@@ -49,7 +47,7 @@ function Card({ c, i }: { c: typeof CARDS[number]; i: number }) {
   return (
     <motion.div ref={ref} className={`sc4-flo ${c.id}`} initial={reduce ? false : { opacity: 0, y: 22, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: 0 } : { duration: .58, delay: .42 + i * .06, ease: EASE_IN } }} exit={{ opacity: 0, y: 10, scale: .95, transition: { duration: reduce ? 0 : .22, ease: [.4, 0, 1, 1] } }}>
       <div className="fl4-in" style={{ '--dur': `${5.4 + (i % 4) * .5}s`, '--dl': `${-(i * .7)}s` } as CSSProperties}>
-        <div className={`lot ${c.shape}${c.round ? ' round' : ''}`} style={{ aspectRatio: `${c.w} / ${c.h}` }}><Lottie src={c.src} still={c.still} playing={on} viewBox={c.crop} label={c.label.replace('|', ' ')} /></div>
+        <div className={`lot${c.round ? ' round' : ''}`} style={{ aspectRatio: `${c.w} / ${c.h}`, '--lw': c.lw, '--plw': `${c.plw}px` } as CSSProperties}><Lottie src={c.src} still={c.still} playing={on} viewBox={c.crop} label={c.label.replace('|', ' ')} /></div>
         <span className="cap">{c.label.split('|').map((t, k) => k ? <><br />{t}</> : t)}</span>
       </div>
     </motion.div>

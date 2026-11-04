@@ -82,16 +82,14 @@ export const CONTROLS: Control[] = [
   col('Controls and marks', '--social-ink', 'Social icons', '#a6a6a6', '#2f2e30'),
   col('Controls and marks', '--corner-ink', 'Corner bracket', '#bababa', '#2f2e30'),
   /* the intro's floating cards */
-  ...show('camp', 'Campaign banners', '67%', '47%', '44%', '45%'),
-  /* the eight round it (4 Nov): two down the left, three down the right, the sale banner at the foot — 3% in from the picture's edges, a step apart, clear of the cut-out, the notch, the Close tag and the belt's faint sides; the phone shows two, under the phone; the offer banner and the try-on hidden everywhere for now (4 Nov, Nitish) */
-  ...show('splash', 'Splash screen', '10%', '15.7%', '20%', '12%', 'block', 'none'),
-  ...show('t20', 'Campaign landing page', '10.9%', '42.4%', '20%', '12%', 'block', 'none'),
-  ...show('avatars', '3D avatars', '87.1%', '48.5%', '30%', '86%', 'block', 'none'),
-  ...show('insta', 'Instagram store', '87.1%', '83.3%', '64%', '84%', 'block', 'block'),
-  ...show('view360', '360° view feature', '89.3%', '13%', '64%', '86%', 'block', 'none'),
-  ...show('sale1', 'Sale banner', '49.8%', '85.4%', '24%', '84%', 'block', 'block'),
-  ...show('sale2', 'Offer banner', '66.1%', '80.8%', '24%', '86%', 'block', 'none'),
-  ...show('tryon', 'Try-on feature', '90.3%', '14.9%', '80%', '12%', 'none', 'none'),
+  ...show('camp', 'Campaign banners', '50%', '37%', '54%', '45%'),
+  /* the six round it, at his places (4 Nov, his copied values made the defaults); the phone shows two, under the phone */
+  ...show('splash', 'Splash screen', '27%', '15.7%', '13%', '12%', 'block', 'none'),
+  ...show('t20', 'Campaign landing page', '12%', '49%', '20%', '12%', 'block', 'none'),
+  ...show('avatars', '3D avatars', '77%', '48.5%', '30%', '86%', 'block', 'none'),
+  ...show('insta', 'Instagram store', '83%', '83.3%', '64%', '84%'),
+  ...show('view360', '360° view feature', '79%', '24%', '64%', '86%', 'block', 'none'),
+  ...show('sale1', 'Sale banner', '54%', '77%', '24%', '84%'),
   ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'none'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
   ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'),
   /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */
