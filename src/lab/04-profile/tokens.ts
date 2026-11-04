@@ -83,7 +83,7 @@ export const CONTROLS: Control[] = [
   col('Controls and marks', '--corner-ink', 'Corner bracket', '#bababa', '#2f2e30'),
   /* the intro's floating cards */
   /* the tag that opens the showcase: its height on the picture's right edge (4 Nov) */
-  { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-y', label: 'y (on the right edge)', def: '33%', light: '33%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-y', label: 'y (on the right edge)', def: '42%', light: '42%', min: 0, max: 100, step: 1, unit: '%' },
   { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-py', label: 'y on the phone', def: '86%', light: '86%', min: 0, max: 100, step: 1, unit: '%' },
   ...show('camp', 'Campaign banners', '50%', '37%', '54%', '45%'),
   /* the six round it, at his places (4 Nov, his copied values made the defaults); the phone shows two, under the phone */
@@ -96,7 +96,7 @@ export const CONTROLS: Control[] = [
   /* the note on the work (4 Nov): the one-liner box's glass with a few lines on these pieces, their making and their weight; top right, where he made room */
   ...show('note', 'About the work', '82%', '22%', '50%', '20%', 'block', 'none'),
   ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'none'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
-  ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'),
+  ...card('gold', 'Feedback', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'),
   /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */
   { group: 'Intro cards', sub: 'Name box (the one-liner)', kind: 'select', key: '--name-box-v', label: 'Shown', def: 'none', light: 'none', options: [['Shown', 'flex'], ['Hidden', 'none']] },
   /* the intro's picture (Nitish, 22 Oct): the drawing as it is, the drawing in black and white, or his photo — the cutout

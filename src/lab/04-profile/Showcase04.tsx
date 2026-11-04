@@ -159,7 +159,7 @@ export default function Showcase04({ open }: { open: boolean }) {
               motion assets… the process, as well as how I made sure these assets were optimized and not more than 250 KB") */}
           {open && (
             <motion.div key="note" className="sc4-flo note" initial={reduce ? false : { opacity: 0, y: 22, scale: .94 }} animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: 0 } : { duration: .58, delay: .4, ease: EASE_IN } }} exit={{ opacity: 0, y: 10, scale: .96, transition: { duration: reduce ? 0 : .22, ease: [.4, 0, 1, 1] } }}>
-              <div className="sc4-note"><p>Visual motion for the store app: campaign banners, splash screens and feature stories, each a Lottie. Made in After Effects, rebuilt as shapes rather than images, and trimmed layer by layer until every file sits under 250{'\u00a0'}KB — so the app stays light.</p></div>
+              <div className="sc4-note"><p>The animations round my drawing are functional: feedback, loaders, states. These are the promotional ones — campaign banners, splash screens, feature stories, each a Lottie. Made in After Effects and trimmed layer by layer until every file sits under 250{'\u00a0'}KB, so the app stays light.</p></div>
             </motion.div>
           )}
         </AnimatePresence>

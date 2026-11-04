@@ -432,7 +432,7 @@ export default function Iteration04() {
               {/* the fifth card (Nitish, 13 Oct): the Gold membership reveal — the glass is padded to the rounded card inside the
                   Lottie (its canvas is laid with negative margins so that rectangle is the content box), and the confetti flies
                   past the glass; the Lottie's corners are its own */}
-              <FloatCard cls="gold-card" hold={show} depth="1.15" dur="6.1s" dl="-3.8s">{on => <><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} playing={on} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state animation</span></>}</FloatCard>
+              <FloatCard cls="gold-card" hold={show} depth="1.15" dur="6.1s" dl="-3.8s">{on => <><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} playing={on} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Feedback animation</span></>}</FloatCard>
               {/* the sixth card (Nitish, 13 Oct): the persuasion animation, the whole canvas in the glass with the standard padding and
                   no rounding of its own */}
               <FloatCard cls="pers-card" hold={show} depth="1.2" dur="6.6s" dl="-.9s">{on => <><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects playing={on} label="The persuasion animation" /><span className="cap">Persuasion animation</span></>}</FloatCard>
@@ -450,7 +450,7 @@ export default function Iteration04() {
               of their own); the assistant lives behind the nav's button and opens here */}
           {/* the showcase's tag (4 Nov): on the picture's right edge, as the notch at the top — a cut-out of the tile the
               frame shows through (useNotchClip; the phone's mask, usePhoneNotch), its words up it in the links' ink */}
-          <button type="button" className="sc4-tag" ref={tagRef} aria-expanded={show} onClick={() => setShow(s => !s)}><span>{show ? 'Close' : 'Visual motion'}</span></button>
+          <button type="button" className="sc4-tag" ref={tagRef} aria-expanded={show} onClick={() => setShow(s => !s)}><span>{show ? 'Close' : 'Promotional motion'}</span></button>
           <div className="notch4">
             <div className="links4" ref={linksRef}>
               {SOCIAL.map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}
