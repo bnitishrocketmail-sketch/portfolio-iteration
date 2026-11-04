@@ -306,7 +306,21 @@
    of the picture's height (a control). "Promotional motion" (4 Nov, Nitish: the cards round his drawing are the functional animations — feedback, loaders,
    states; these are the delightful, promotional ones); "Close" while open */
 .sc4-tag { position: absolute; right: 0; top: var(--sc-tag-y); translate: 0 -50%; z-index: 6; display: inline-flex; align-items: center; padding: 14px 7px 14px 8px; border: 0; border-radius: calc(16px * var(--ios-k, 1)) 0 0 calc(16px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: none; color: var(--social-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); line-height: 1.1; cursor: pointer; }
-.sc4-tag > span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); border-radius: 999px; } /* the words run up the tab, bottom to top (as the first nav's names ran up its bar); the span turns, not the tab */
+/* the swap (4 Nov, Nitish: "the resizing of that nudge… should be smoother… the word fading in and fading out should also
+   be smooth… sliding from the left or towards the right… with fade"): both words sit in the tab, centred on it, each
+   measured (useTagSize: --tag-l0/--tag-l1 their lengths up the tab, --tag-w the line's width); the inner box takes the
+   shown word's length and runs to the other's in half a second, the words scroll across it as a strip would — the one
+   leaving slides out towards the picture and fades, the one arriving slides in from the frame's edge — and the two
+   cut-outs follow the tab's box frame by frame (their observers). The words run up the tab, bottom to top (as the
+   first nav's names ran up its bar): each span turns, not the tab */
+.sc4-tag { overflow: hidden; }
+.sc4-tag-in { position: relative; display: block; width: var(--tag-w, auto); height: var(--tag-l0, auto); transition: height .55s cubic-bezier(.4, 0, .2, 1); } /* an even curve for the size, not the house fast-out one: the change should read as a steady resize (4 Nov: "smoother, like increasing or decreasing in size") */
+.sc4-tag[aria-expanded="true"] .sc4-tag-in { height: var(--tag-l1, auto); }
+.sc4-tag .w { position: absolute; left: 50%; top: 50%; display: block; writing-mode: vertical-rl; white-space: nowrap; transform: translate(-50%, -50%) rotate(180deg); transition: opacity .32s ease, transform .55s cubic-bezier(.4, 0, .2, 1); } /* centred by the transform itself, not the translate property: the build's minifier (Lightning CSS, Vite 8) drops a translate that shares a block with a transform (4 Nov — the words hung off the tab's foot) */
+.sc4-tag .w1 { opacity: 0; transform: translate(-50%, -50%) rotate(180deg) translateX(-6px); } /* "Close" waits at the frame's side (the turn flips x: a minus here is to the right) */
+.sc4-tag[aria-expanded="true"] .w1 { opacity: 1; transform: translate(-50%, -50%) rotate(180deg); }
+.sc4-tag[aria-expanded="true"] .w0 { opacity: 0; transform: translate(-50%, -50%) rotate(180deg) translateX(6px); } /* "Promotional motion" leaves towards the picture */
+@media (prefers-reduced-motion: reduce) { .sc4-tag-in, .sc4-tag .w { transition: none; } }
 /* open: the floating cards zoom past — each on its own heading (--ox/--oy, from where it sits: the loader to the bottom
    right, the persuasion animation to the right, the success state up and a little left, the assistant down and to the
    left; the coin and the micro bar, when shown, likewise), a little bigger as it goes, fading — then rest hidden */

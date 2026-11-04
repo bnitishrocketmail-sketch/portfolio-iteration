@@ -239,11 +239,12 @@ function Nav({ tab, go, cav }: { tab: Tab; go: (v: ViewName) => void; cav?: bool
    background color, the icon color… and the curves"): a second cut-out, the tag's box, its outer corners the tag's radius
    and its joins to the edge curving out as the notch's do — so the tag, too, is the frame showing through the tile */
 function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.RefObject<HTMLDivElement | null>, links: React.RefObject<HTMLDivElement | null>, tag: React.RefObject<HTMLButtonElement | null>, key: string) {
-  const [clip, setClip] = useState<string | null>(null);
   useLayoutEffect(() => { /* re-run when the tile comes back after another tab (key) */
     const w = wrap.current, c = cut.current, l = links.current; if (!w || !c || !l) return;
+    const tile = () => w.querySelector<HTMLElement>('.pic4-in'); /* the path goes straight onto the tile, not through state: the tag's pocket follows its height frame by frame as the tab resizes (4 Nov), and a render of the whole home for each frame is not wanted */
     const measure = () => {
-      if (getComputedStyle(c).position !== 'absolute') { setClip(null); return; }
+      const el = tile(); if (!el) return;
+      if (getComputedStyle(c).position !== 'absolute') { el.style.clipPath = ''; return; }
       const W = w.clientWidth, H = w.clientHeight, cw = c.offsetLeft + c.offsetWidth, ch = H - c.offsetTop, r = parseFloat(getComputedStyle(c).borderTopRightRadius) || 0; /* the cut runs from the tile's left edge and foot to the box's right and top: the box may sit in from both (the light plate version lifts it with the plate's own edges, 27 Oct) */
       const wr = w.getBoundingClientRect(), lr = l.getBoundingClientRect(); const nx = lr.left - wr.left, nw = lr.width, nh = lr.height, rn = parseFloat(getComputedStyle(l).borderBottomLeftRadius) || 0;
       const t = tag.current, tr = t && getComputedStyle(t).position === 'absolute' ? t.getBoundingClientRect() : null; const ty = tr ? tr.top - wr.top : 0, th = tr ? tr.height : 0, tw = tr ? tr.width : 0, rt = t ? parseFloat(getComputedStyle(t).borderTopLeftRadius) || 0 : 0;
@@ -258,12 +259,23 @@ function useNotchClip(wrap: React.RefObject<HTMLDivElement | null>, cut: React.R
         sCorner([cw, H], [-1, 0], [0, -1], r, K), sCorner([cw, H - ch], [0, -1], [-1, 0], r, K), sCorner([0, H - ch], [-1, 0], [0, -1], r, K), /* the cut-out */
         sCorner([0, 0], [0, -1], [1, 0], r, K), 'Z',
       ].join(' ');
-      setClip(`path("${d}")`);
+      el.style.clipPath = `path("${d}")`;
     };
     measure();
-    const ro = new ResizeObserver(measure); ro.observe(w); ro.observe(c); ro.observe(l); if (tag.current) ro.observe(tag.current); return () => ro.disconnect();
+    const ro = new ResizeObserver(measure); ro.observe(w); ro.observe(c); ro.observe(l); if (tag.current) ro.observe(tag.current); return () => { ro.disconnect(); const el = tile(); if (el) el.style.clipPath = ''; };
   }, [wrap, cut, links, tag, key]);
-  return clip;
+}
+
+/* the showcase's tag holds both its words (4 Nov): each is measured — its length along the tab and the line's width —
+   and the tab's inner box takes the shown word's length (profile.css transitions it, and the two cut-outs follow the
+   tab's box as it changes, by their observers) */
+function useTagSize(tag: React.RefObject<HTMLButtonElement | null>, key: string) {
+  useLayoutEffect(() => {
+    const t = tag.current; if (!t) return;
+    const ws = Array.from(t.querySelectorAll<HTMLElement>('.w'));
+    const set = () => { t.style.setProperty('--tag-w', `${Math.max(...ws.map(s => s.offsetWidth))}px`); ws.forEach((s, i) => t.style.setProperty(`--tag-l${i}`, `${s.offsetHeight}px`)); };
+    set(); const ro = new ResizeObserver(set); ws.forEach(s => ro.observe(s)); return () => ro.disconnect();
+  }, [tag, key]);
 }
 
 /* sCorner and sysCurve: the system's corner curve as a path (curve.ts — the case page's head uses them too, 24 Oct) */
@@ -330,7 +342,8 @@ export default function Iteration04() {
   usePhoneRims(frameRef, parseFloat(tweaks['--edge-angle'] ?? '24') || 0); /* the phone's rims, at the Light angle (24 Oct); the phone keeps 24° unless it's set (the desktop's default is 20°, 28 Oct) */
   useEffect(() => { setTweaks(readTweaks(isDark)); const on = (e: StorageEvent) => { if (e.key === tweakKey(isDark)) setTweaks(readTweaks(isDark)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, [isDark]);
   const wrapRef = useRef<HTMLDivElement>(null), cutRef = useRef<HTMLDivElement>(null), linksRef = useRef<HTMLDivElement>(null), tagRef = useRef<HTMLButtonElement>(null);
-  const clip = useNotchClip(wrapRef, cutRef, linksRef, tagRef, tab);
+  useTagSize(tagRef, tab); /* before the cut-outs measure the tag: they read its box */
+  useNotchClip(wrapRef, cutRef, linksRef, tagRef, tab);
   usePhoneNotch(wrapRef, `${tab}${ios}`);
   /* the Lottie showcase (Showcase04, 4 Nov): open, the floating cards zoom past and the picture steps back, blurred and
      still — the tilt holds, the lean stops, the cards' Lotties rest. Closed again on its tag, on Escape, or on leaving Home */
@@ -410,7 +423,7 @@ export default function Iteration04() {
             coming back to Home "the white background… just appears just like that… adding a little fade in can work") */}
         <motion.div className="picwrap4" ref={wrapRef} onPointerMove={lean} onPointerLeave={unlean} {...PAGE_IN}>
           <section className={`pic4${picV === 'illo-bw' ? ' bw' : ''}`}> {/* the picture's version (22 Oct): the drawing, the drawing in black and white, or the photo — a control */}
-            <div className="pic4-in" style={clip ? { clipPath: clip } : undefined}>
+            <div className="pic4-in">
               {depthOn
                 ? <DepthImg className="pic4-img" src={picV === 'photo' ? desk : illustration} depth={`${dd}${dn}.png`} plate={`${dd}${dn}-plate.webp`} layers={`${dd}${dn}-layers.png`} fg={`${dd}${dn}-fg.webp`} fgn={`${dd}${dn}-fgn.webp`} {...dfs} tilt={tilt} k={depthK} alt={picV === 'photo' ? 'Nitish at his desk' : 'Nitish at his desk, drawn'} />
                 : <img className="pic4-img" src={picV === 'photo' ? desk : illustration} alt={picV === 'photo' ? 'Nitish at his desk' : 'Nitish at his desk, drawn'} />}
@@ -450,7 +463,12 @@ export default function Iteration04() {
               of their own); the assistant lives behind the nav's button and opens here */}
           {/* the showcase's tag (4 Nov): on the picture's right edge, as the notch at the top — a cut-out of the tile the
               frame shows through (useNotchClip; the phone's mask, usePhoneNotch), its words up it in the links' ink */}
-          <button type="button" className="sc4-tag" ref={tagRef} aria-expanded={show} onClick={() => setShow(s => !s)}><span>{show ? 'Close' : 'Promotional motion'}</span></button>
+          <button type="button" className="sc4-tag" ref={tagRef} aria-expanded={show} onClick={() => setShow(s => !s)}>
+            {/* both words in the tab, one shown: the tab's height runs from one's length to the other's and the words
+                scroll through it, fading (4 Nov, Nitish: "the resizing of that nudge… should be smoother… sliding from
+                the left or towards the right… with fade") — useTagSize measures them, profile.css moves them */}
+            <span className="sc4-tag-in"><span className="w w0" aria-hidden={show}>Promotional motion</span><span className="w w1" aria-hidden={!show}>Close</span></span>
+          </button>
           <div className="notch4">
             <div className="links4" ref={linksRef}>
               {SOCIAL.map(l => <a key={l.label} href={l.href} aria-label={l.label} title={l.label} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener"><svg viewBox={l.box} aria-hidden="true"><path d={l.path} fill="currentColor" /></svg></a>)}
