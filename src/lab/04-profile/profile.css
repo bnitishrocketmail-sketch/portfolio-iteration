@@ -33,7 +33,15 @@
      on the drawing); the persuasion card, whose desktop spot (right of his head) is the links' notch here, takes the
      coin's at the top right — the coin is hidden here — beside the success card */
   --c-ai-px: 17%; --c-ai-py: 64%; --c-loader-px: 71%; --c-loader-py: 77%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
-  --sc-camp-x: 67%; --sc-camp-y: 47%; --sc-camp-v: block; --sc-camp-px: 44%; --sc-camp-py: 48%; --sc-camp-pv: block; /* the showcase's containers (4 Nov): each one's centre, % of the picture; the desktop's beside the name's cut-out, the phone's on the room left of the links' pocket */
+  --sc-camp-x: 67%; --sc-camp-y: 47%; --sc-camp-v: block; --sc-camp-px: 44%; --sc-camp-py: 45%; --sc-camp-pv: block;
+  --sc-splash-x: 9.7%; --sc-splash-y: 14.4%; --sc-splash-v: block; --sc-splash-px: 20%; --sc-splash-py: 12%; --sc-splash-pv: none;
+  --sc-t20-x: 12.3%; --sc-t20-y: 37.9%; --sc-t20-v: block; --sc-t20-px: 20%; --sc-t20-py: 12%; --sc-t20-pv: none;
+  --sc-avatars-x: 86.4%; --sc-avatars-y: 59.4%; --sc-avatars-v: block; --sc-avatars-px: 30%; --sc-avatars-py: 86%; --sc-avatars-pv: none;
+  --sc-insta-x: 86.1%; --sc-insta-y: 79.5%; --sc-insta-v: block; --sc-insta-px: 64%; --sc-insta-py: 84%; --sc-insta-pv: block;
+  --sc-view360-x: 88.5%; --sc-view360-y: 38.3%; --sc-view360-v: block; --sc-view360-px: 64%; --sc-view360-py: 86%; --sc-view360-pv: none;
+  --sc-sale1-x: 49.3%; --sc-sale1-y: 80.8%; --sc-sale1-v: block; --sc-sale1-px: 24%; --sc-sale1-py: 84%; --sc-sale1-pv: block;
+  --sc-sale2-x: 66.1%; --sc-sale2-y: 80.8%; --sc-sale2-v: block; --sc-sale2-px: 24%; --sc-sale2-py: 86%; --sc-sale2-pv: none;
+  --sc-tryon-x: 90.3%; --sc-tryon-y: 14.9%; --sc-tryon-v: block; --sc-tryon-px: 80%; --sc-tryon-py: 12%; --sc-tryon-pv: none; /* the eight floating cards round it (4 Nov) */ /* the showcase's containers (4 Nov): each one's centre, % of the picture; the desktop's beside the name's cut-out, the phone's on the room left of the links' pocket */
   --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: none; /* three on the phone (28 Oct, Nitish: the persuasion card removed there) */ --c-coin-pv: none; --c-micro-pv: none;
   --name-box-v: none; /* the name box with the one-liner, shown or hidden (the design system page); hidden by default (28 Oct, his desktop settings) */
   --pcard-open: var(--nav-bg); --pcard-open-ink: var(--frame); --pcard-fold: var(--nav-hl); --pcard-fold-ink: var(--nav-bg); /* the project page's cards: the theme's two greys, the open one light with dark text, the folded dark with light text (Nitish, 14 Oct) */
@@ -317,7 +325,16 @@
    by then), and the caption sits under that point. The card's glass (the floating cards' recipe, at their radius and padding) with a
    few words, as theirs; the screen stands out of its top with its lower fifth inside */
 .sc4-cardwrap { --sw: clamp(100px, 9.8cqw, 126px); --sh: calc(var(--sw) * 19.5 / 9); --cw: calc(var(--sw) * 1.25); --hp-r: clamp(11px, 1.3cqw, 18px); --in: .28; --gone: .84; position: absolute; width: var(--cw); translate: -50% calc(-50% + (1 - var(--in)) * var(--sh) / 2); pointer-events: auto; } /* its box is the card's; the translate puts the centre of the card and the phone standing out of it on its x, y */
-.sc4-cardwrap.camp { left: var(--sc-camp-x); top: var(--sc-camp-y); display: var(--sc-camp-v); } /* the card and its two stages share these; the faint stage sits behind the card (4 Nov, Nitish: "let's keep them behind the container"), the window and the edge in it */
+.sc4-cardwrap.camp { left: var(--sc-camp-x); top: var(--sc-camp-y); display: var(--sc-camp-v); }
+/* the eight floating cards (Showcase04 CARDS): the intro cards' glass (.fl4-in) and caption, each placed by its centre; the
+   Lottie's box by its shape — the wide banners 12cqw, the 360 view 9, the squares 7.5, the tall screens 6.5 — with the
+   micro card's corners, half the standard radius, which rounds the square-cornered ones and leaves the others' own */
+.sc4-flo { position: absolute; z-index: 1; translate: -50% -50%; pointer-events: auto; }
+.sc4-flo .fl4-in { align-items: flex-start; gap: .8cqw; }
+.sc4-flo .lot { position: relative; border-radius: calc(calc(var(--r) / 2) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; } .sc4-flo .lot svg { display: block; }
+.sc4-flo .lot.wide { width: 12cqw; } .sc4-flo .lot.mid { width: 9cqw; } .sc4-flo .lot.sq { width: 7.5cqw; } .sc4-flo .lot.tall { width: 6.5cqw; }
+.sc4-flo .cap { display: block; font: 600 clamp(10.5px, .95cqw, 13px)/1.25 var(--f-copy); white-space: nowrap; }
+.sc4-flo.splash { left: var(--sc-splash-x); top: var(--sc-splash-y); display: var(--sc-splash-v); } .sc4-flo.t20 { left: var(--sc-t20-x); top: var(--sc-t20-y); display: var(--sc-t20-v); } .sc4-flo.avatars { left: var(--sc-avatars-x); top: var(--sc-avatars-y); display: var(--sc-avatars-v); } .sc4-flo.insta { left: var(--sc-insta-x); top: var(--sc-insta-y); display: var(--sc-insta-v); } .sc4-flo.view360 { left: var(--sc-view360-x); top: var(--sc-view360-y); display: var(--sc-view360-v); } .sc4-flo.sale1 { left: var(--sc-sale1-x); top: var(--sc-sale1-y); display: var(--sc-sale1-v); } .sc4-flo.sale2 { left: var(--sc-sale2-x); top: var(--sc-sale2-y); display: var(--sc-sale2-v); } .sc4-flo.tryon { left: var(--sc-tryon-x); top: var(--sc-tryon-y); display: var(--sc-tryon-v); } /* the card and its two stages share these; the faint stage sits behind the card (4 Nov, Nitish: "let's keep them behind the container"), the window and the edge in it */
 .sc4-camp { position: relative; width: 100%; padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 1cqw) 1.3cqw 1.1cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) 80%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); /* the glass at 80% here (4 Nov, Nitish: the card "too transparent… at least 80%"), where the floating cards sit at 20 */
   border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el); }
@@ -822,6 +839,9 @@
   .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; }
   .sc4-cardwrap { --sw: 96px; --hp-r: 11px; }
   .sc4-cardwrap.camp { left: var(--sc-camp-px); top: var(--sc-camp-py); display: var(--sc-camp-pv); }
+  .sc4-flo .fl4-in { gap: 6px; } .sc4-flo .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
+  .sc4-flo .lot.wide { width: 96px; } .sc4-flo .lot.mid { width: 72px; } .sc4-flo .lot.sq { width: 48px; } .sc4-flo .lot.tall { width: 48px; } /* under the intro cards' phone sizes: two sit in the band under the phone */
+  .sc4-flo.splash { left: var(--sc-splash-px); top: var(--sc-splash-py); display: var(--sc-splash-pv); } .sc4-flo.t20 { left: var(--sc-t20-px); top: var(--sc-t20-py); display: var(--sc-t20-pv); } .sc4-flo.avatars { left: var(--sc-avatars-px); top: var(--sc-avatars-py); display: var(--sc-avatars-pv); } .sc4-flo.insta { left: var(--sc-insta-px); top: var(--sc-insta-py); display: var(--sc-insta-pv); } .sc4-flo.view360 { left: var(--sc-view360-px); top: var(--sc-view360-py); display: var(--sc-view360-pv); } .sc4-flo.sale1 { left: var(--sc-sale1-px); top: var(--sc-sale1-py); display: var(--sc-sale1-pv); } .sc4-flo.sale2 { left: var(--sc-sale2-px); top: var(--sc-sale2-py); display: var(--sc-sale2-pv); } .sc4-flo.tryon { left: var(--sc-tryon-px); top: var(--sc-tryon-py); display: var(--sc-tryon-pv); }
   .sc4-camp { padding: calc(var(--sh) * (var(--gone) - 1 + var(--in)) + 8px) 8px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; } /* no blur, as the floating cards' here */
   .sc4-camp .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); white-space: nowrap; } /* one line in the narrower card */
   .fl4:not(.sig-bg) > .fl4-in { transition: translate .35s cubic-bezier(.2, .8, .2, 1), scale .35s; } /* the glass moves here (the layer round it stays put, transform: none above) */

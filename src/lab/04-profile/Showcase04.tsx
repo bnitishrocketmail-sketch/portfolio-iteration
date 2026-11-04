@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { AnimatePresence, animate, motion, useReducedMotion } from 'motion/react';
 import { Lottie } from '../../components/micro/Lottie';
 import { useInView } from './inview';
@@ -26,6 +26,36 @@ const BANNERS = [
   { id: 'valentine', src: 'https://lottie.host/a5549d2a-18ee-4921-b47e-b2e38c2df968/XYAwi7pLFJ.lottie', still: 307, label: 'Valentine’s Day' },
   { id: 'mother', src: 'https://lottie.host/ac24a6ad-8d75-4134-8c40-e115eeac12ae/nWXZCNoEkA.lottie', still: 399, label: 'Mother’s Day' },
 ];
+/* the eight floating cards round the phone (4 Nov, Nitish: his hosted Lotties, "create them similarly as there are the rest
+   of the floating containers on the first… side of the home page… the padding from the corners and everything… the same
+   way like we did for the intro cards… the names… what kind of a Lottie visual it is… corner radiuses, if any of these
+   doesn't have"): the intro cards' glass and caption, each Lottie in a box of its own shape with the micro card's corners
+   (half the standard radius — the sale banners and the T20 page had square ones); their places are tokens (--sc-<id>-x/y,
+   the centre, % of the picture; the phone's own, where three show by default). `shape` picks the box's width */
+const CARDS: { id: string; label: string; src: string; still: number; w: number; h: number; shape: 'tall' | 'wide' | 'mid' | 'sq' }[] = [
+  { id: 'splash', label: 'Splash screen', src: 'https://lottie.host/eefce00b-b527-45d7-91c4-d9e9ff3b2bae/RLHZEVAu99.lottie', still: 266, w: 400, h: 500, shape: 'tall' },
+  { id: 't20', label: 'Campaign landing page', src: 'https://lottie.host/bcf5542a-77a0-48aa-a743-ed79fb84d80a/1P6ByfieyT.lottie', still: 497, w: 360, h: 360, shape: 'sq' },
+  { id: 'avatars', label: '3D avatars', src: 'https://lottie.host/66b797f3-eccf-4de5-99dd-d2d166fe5f8b/ymFeJeiMZA.lottie', still: 270, w: 656, h: 328, shape: 'wide' },
+  { id: 'insta', label: 'Instagram store', src: 'https://lottie.host/d8e6ae3a-09f6-4405-8d24-cffb5a303bf7/p5EAoC17eD.lottie', still: 358, w: 328, h: 164, shape: 'wide' },
+  { id: 'view360', label: '360° view feature', src: 'https://lottie.host/124c7e10-cb74-4302-b5c5-730a7f0103d2/PZADq44JAU.lottie', still: 225, w: 324, h: 248, shape: 'mid' },
+  { id: 'sale1', label: 'Sale banner', src: 'https://lottie.host/fd58bb53-7af6-44f1-84ee-3792ca7d898a/ZjKjPHjBUB.lottie', still: 179, w: 1126, h: 1126, shape: 'sq' },
+  { id: 'sale2', label: 'Offer banner', src: 'https://lottie.host/1a9e93eb-f035-46cc-8c62-2e29358fb86b/vtZFgfU7J2.lottie', still: 194, w: 600, h: 600, shape: 'sq' },
+  { id: 'tryon', label: 'Try-on feature', src: 'https://lottie.host/f1d3fb66-d613-478d-9e6b-ef1f51fbde37/pF3zSKEDC8.lottie', still: 359, w: 328, h: 437, shape: 'tall' },
+];
+function Card({ c, i }: { c: typeof CARDS[number]; i: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const on = useInView(ref, 0);
+  const reduce = useReducedMotion();
+  return (
+    <motion.div ref={ref} className={`sc4-flo ${c.id}`} initial={reduce ? false : { opacity: 0, y: 22, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: 0 } : { duration: .58, delay: .42 + i * .06, ease: EASE_IN } }} exit={{ opacity: 0, y: 10, scale: .95, transition: { duration: reduce ? 0 : .22, ease: [.4, 0, 1, 1] } }}>
+      <div className="fl4-in" style={{ '--dur': `${5.4 + (i % 4) * .5}s`, '--dl': `${-(i * .7)}s` } as CSSProperties}>
+        <div className={`lot ${c.shape}`} style={{ aspectRatio: `${c.w} / ${c.h}` }}><Lottie src={c.src} still={c.still} playing={on} label={c.label} /></div>
+        <span className="cap">{c.label}</span>
+      </div>
+    </motion.div>
+  );
+}
+
 /* the belt's rule, the B hero's (Case04 CAR): the hold, the step's length and ease, the sides' size and tilt */
 const CAR = { hold: 3800, slide: 1, side: .92, sideA: .2, tilt: 16, ease: [.3, .1, .25, 1] as [number, number, number, number] };
 
@@ -126,6 +156,7 @@ export default function Showcase04({ open }: { open: boolean }) {
               <Belt><span className="cap">Campaign banners</span></Belt>
             </motion.div>
           )}
+          {open && CARDS.map((c, i) => <Card key={c.id} c={c} i={i} />)}
         </AnimatePresence>
       </div>
     </div>
