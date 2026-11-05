@@ -660,7 +660,9 @@
 /* the row: every card the row's height; the half card at the end fades out under the mask there; the cards before the
    open one are clipped at the left edge (a fade there would dim the open card's own edge) (Nitish, 14 Oct). The clip box
    runs 40px below the cards so their shadows are not cut (the shadows fall downward; sideways they reach 4px at most). */
-.pp4-row { position: relative; flex: 1; min-height: 0; column-gap: 1.4cqw; overflow: hidden; padding-bottom: 40px; margin-bottom: -40px; } /* no fade at the right end (Nitish, 23 Oct): the half card there is cut by the frame as it is */
+.pp4-row { position: relative; flex: 1; min-height: 0; column-gap: 1.4cqw; overflow: auto hidden; scrollbar-width: none; padding-bottom: 40px; margin-bottom: -40px; } /* a sideways scroller (5 Nov), no bar: its reach is the `.pp4-end` spacer's width */
+.pp4-row::-webkit-scrollbar { display: none; }
+.pp4-end { height: 0; } /* no fade at the right end (Nitish, 23 Oct): the half card there is cut by the frame as it is */
 .pp4-card { position: absolute; top: 0; bottom: 40px; left: 0; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); overflow: hidden; background: var(--pcard-fold); color: var(--pcard-fold-ink); box-shadow: var(--shadow-el); transition: background-color .45s, color .45s; }
 .pp4-card.open { background: var(--pcard-open); color: var(--pcard-open-ink); }
 @media (min-width: 701px) { .pp4-card.open:has(.pp4-vc) { background-color: transparent; transition: background-color 0s .5s, color .45s; } } /* a scene (the phones) covers the open card: once it has faded in (.16 + .28 s) the card's ground goes, which showed through the scene's anti-aliased corners in a pale fringe on the curves (Nitish, 26 Oct). Until then the card keeps its folded ground, dark under a dark scene */

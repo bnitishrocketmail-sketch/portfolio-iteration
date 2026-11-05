@@ -96,12 +96,25 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
   const E = geo ? Math.round(geo.w * OPEN) : 0, C = geo ? Math.round((geo.w - E - 3 * geo.gap) / 2.5) : 0;
   let x = 0; const k = PROJECTS.findIndex(p => p.id === sel);
   const laid = PROJECTS.map((p, i) => { const open = i === k; const w = open ? E : C; const at = x; x += w + (geo?.gap ?? 0); return { p, open, x: at, w }; });
-  /* where the row sits (Nitish, 14 Oct, second rule): with the first or second card open the row stays at its start;
-     from the third on, the card two before the open one goes half into the left edge — so the one before it shows whole,
-     then the open one, then what follows — and never further than the row's end (the last cards back-fill from the left) */
+  /* the row scrolls sideways (Nitish, 5 Nov: "this whole page should be horizontally scrollable… it scrolls till the limit
+     of the last unexpanded project with the same gap on the right side of it as it has in between these cards"): the cards
+     sit at their places in the row and the row is a scroller, its reach the last card plus one gap (`.pp4-end`). The open
+     one stays open wherever the row is scrolled. (Until now the row itself moved — the card two before the open one going
+     half into the left edge — and nothing past its end could be reached.) A mouse's wheel scrolls it too: the page has no
+     vertical scroll to give the wheel to. */
   const total = x - (geo?.gap ?? 0);
-  const shift = geo ? Math.max(0, Math.min(k < 2 ? 0 : laid[k - 2].x + C / 2, total - geo.w)) : 0;
-  const place = laid.map(c => ({ ...c, x: c.x - shift }));
+  const wheel = (e: React.WheelEvent<HTMLDivElement>) => { if (phone || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; e.currentTarget.scrollLeft += e.deltaY; };
+  /* a card picked while part of it is past an edge comes into view as it opens: the row scrolls just as far as shows it whole,
+     with its gap after it (a card picked after the open one grows leftward — its right edge keeps — so this is for one
+     picked before it, or one that was half out at the right) */
+  useEffect(() => {
+    const row = rowRef.current; if (!row || !geo || phone) return;
+    const c = laid[k]; if (!c) return;
+    const s = row.scrollLeft, vw = row.clientWidth, max = Math.max(0, total + geo.gap - vw);
+    const to = c.x < s ? c.x : c.x + c.w + geo.gap > s + vw ? c.x + c.w + geo.gap - vw : s;
+    const left = Math.max(0, Math.min(max, to));
+    if (Math.abs(left - s) > 1) row.scrollTo({ left, behavior: reduce ? 'auto' : 'smooth' });
+  }, [sel, geo, phone]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <section className="pp4 navpage4" aria-label={title}> {/* navpage4: a nav tab's page (24 Oct), for the tabs' own spacing */}
       <header className="pp4-head">
@@ -110,8 +123,9 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
           <p className="pp4-note">{note}</p>
         </div>
       </header>
-      <div className="pp4-row" ref={rowRef}>
-        {geo && place.map(({ p, open, x, w }) => (
+      <div className="pp4-row" ref={rowRef} onWheel={wheel}>
+        {geo && !phone && <div className="pp4-end" aria-hidden="true" style={{ width: total + geo.gap }} />} {/* the row's reach: the last card and one gap */}
+        {geo && laid.map(({ p, open, x, w }) => (
           <Card key={p.id} p={p} open={open} flat={phone} initial={false} animate={{ x, width: w }} transition={tr}>
             <div className="pp4-cover" aria-hidden="true">
               <motion.div className="pp4-vis" initial={false} animate={{ opacity: open || phone ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }}>{(open || phone) && <Visual p={p} on={phone ? live === p.id : open} mid={phone} />}</motion.div>
