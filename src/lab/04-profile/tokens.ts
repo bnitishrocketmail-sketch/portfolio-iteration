@@ -1,6 +1,8 @@
 /* 04's design tokens under control (Nitish, 13–14 Oct): every value here is a custom property the screen reads. Two value
    sets — dark (`def`) and light (`light`; the dark one when none is given) — each kept apart in the browser as well, so
    edits on the design-system page carry to the profile and back. Grouped as the system page lays them out. */
+import published from './published.json';
+
 export type Control = { key: string; label: string; def: string; light?: string; group: string; sub: string } &
   ({ kind: 'color' } | { kind: 'range'; min: number; max: number; step: number; unit?: string } | { kind: 'select'; options: [string, string][] });
 
@@ -152,4 +154,28 @@ export const CONTROLS: Control[] = [
 export const tweakKey = (dark: boolean) => `it04-colours-${dark ? 'dark' : 'light'}`;
 export function readTweaks(dark: boolean): Record<string, string> { try { return JSON.parse(localStorage.getItem(tweakKey(dark)) || '{}'); } catch { return {}; } }
 export function writeTweaks(dark: boolean, v: Record<string, string>) { try { if (Object.keys(v).length) localStorage.setItem(tweakKey(dark), JSON.stringify(v)); else localStorage.removeItem(tweakKey(dark)); } catch { /* fine */ } }
-export const defOf = (c: Control, dark: boolean) => (dark ? c.def : (c.light ?? c.def));
+
+/* The published values (5 Nov, Nitish: "a publish feature and a button in the controls tab… rather than asking you to make
+   them default, I can just publish those changes from there and they become default for anyone who goes to that link"):
+   published.json holds, for each mode, the controls he set differently from the code's defaults above, written by the
+   Publish button through /api/publish (a commit on main; Vercel builds it in). They sit under a browser's own tweaks, so
+   his edits-in-progress stay on top and everyone else sees the published set; a control absent from the file keeps the
+   code's default — so the phone's own fallbacks hold where he hasn't set a value. */
+type Published = { at: string | null; dark: Record<string, string>; light: Record<string, string> };
+export const PUBLISHED = published as Published;
+export const pubOf = (dark: boolean) => (dark ? PUBLISHED.dark : PUBLISHED.light);
+/* the code's own default, before anything published */
+export const rawDef = (c: Control, dark: boolean) => (dark ? c.def : (c.light ?? c.def));
+/* the default as the controls show it: the published value, else the code's */
+export const defOf = (c: Control, dark: boolean) => pubOf(dark)[c.key] ?? rawDef(c, dark);
+/* what the page wears: the published set under the browser's own tweaks */
+export const withPublished = (dark: boolean, tweaks: Record<string, string>): Record<string, string> => ({ ...pubOf(dark), ...tweaks });
+/* the same value? sliders compare as numbers (the stored '0.94' is the default '.94'), the rest as text */
+const same = (c: Control, a: string, b: string) => c.kind === 'range' ? parseFloat(a) === parseFloat(b) && a.replace(/[\d.-]/g, '') === b.replace(/[\d.-]/g, '') : a === b;
+/* what Publish sends for a mode: every control as this browser shows it (its tweak, else the published value, else the
+   code's), kept only where it differs from the code's default */
+export function publishable(dark: boolean): Record<string, string> {
+  const tweaks = readTweaks(dark), pub = pubOf(dark), out: Record<string, string> = {};
+  for (const c of CONTROLS) { const v = tweaks[c.key] ?? pub[c.key] ?? rawDef(c, dark); if (!same(c, v, rawDef(c, dark))) out[c.key] = v; }
+  return out;
+}

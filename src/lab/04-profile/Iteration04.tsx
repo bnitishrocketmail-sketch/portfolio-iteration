@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { COPY, LAB04, LINKS, NAV04 as NAV, PROJECTS04 as PROJECTS, type ViewName } from '../../lib/data';
@@ -29,7 +29,7 @@ import PhoneNav04 from './PhoneNav04';
 import Showcase04 from './Showcase04';
 import { SigWall } from './Sig4';
 import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
-import { readTweaks, tweakKey } from './tokens';
+import { readTweaks, tweakKey, withPublished } from './tokens';
 import { SOCIAL } from './social';
 import './profile.css';
 
@@ -327,7 +327,8 @@ export default function Iteration04() {
   const go = (v: ViewName, id?: string) => { if (v === 'project' && id) { navigate(`/lab/04-profile/projects/${id}`); return; } if (v === 'lab' && id) { navigate(`/lab/04-profile/lab/${id}`); return; } navigate(v === 'home' ? '/lab/04-profile' : `/lab/04-profile/${v}`); };
   /* the design system's values for this mode (tokens.ts; edited on /lab/04-system, kept in the browser) — read on mount, on a
      mode change, and when the system page writes them from another tab */
-  const [tweaks, setTweaks] = useState<Record<string, string>>(() => readTweaks(isDark));
+  const [stored, setTweaks] = useState<Record<string, string>>(() => readTweaks(isDark));
+  const tweaks = useMemo(() => withPublished(isDark, stored), [isDark, stored]); /* the published set under this browser's own (tokens.ts, 5 Nov) */
   const picV = tweaks['--pic-v'] ?? 'illo-bw'; /* the drawing in black and white by default (28 Oct, his desktop settings, then his phone's) */
   const depthOn = (tweaks['--pic-depth'] ?? 'warp') === 'warp' && !(typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches); /* the spatial picture (Spatial04, 23 Oct; a control) */
   const ios = (tweaks['--corners'] ?? 'ios') === 'ios'; /* iOS corners (a control, 22 Oct) */
@@ -504,7 +505,7 @@ export default function Iteration04() {
       </div>
       {/* the design system — the type, the colours, the cards' places, in both modes, with their controls — is its own page */}
       {/* the control centre (22 Oct, back from the first cut): a panel at the side of the page, with the way to the whole design-system page at its top */}
-      <Controls04 values={tweaks} onChange={setTweaks} dark={isDark} toggle={toggle} secret /> {/* hidden in place until tapped five times — first on Workflow (28 Oct), then on every page, phone and desktop (29 Oct, Nitish: "visible and interactive after tapping five times on the area where they are located") */}
+      <Controls04 values={stored} onChange={setTweaks} dark={isDark} toggle={toggle} secret /> {/* hidden in place until tapped five times — first on Workflow (28 Oct), then on every page, phone and desktop (29 Oct, Nitish: "visible and interactive after tapping five times on the area where they are located") */}
       <Link className="labtag" to="/lab">Lab · 04 Profile</Link>
     </div>
   );

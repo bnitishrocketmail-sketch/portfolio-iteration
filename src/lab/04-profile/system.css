@@ -59,4 +59,14 @@
 .sys-controls select { max-width: 132px; padding: 3px 4px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, .12); background: #222226; color: #f0f0f3; font: 500 11px var(--body); }
 .sys-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .sys-actions button { border: 0; border-radius: 999px; padding: 6px 12px; background: #2a2a2f; color: #f0f0f3; font: 500 11.5px var(--body); cursor: pointer; }
+/* publish (5 Nov): the password, the one filled button in the panel — it's the action that reaches everyone — and a line on the state */
+.sys-publish { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 6px; align-items: center; }
+.sys-publish input { min-width: 0; box-sizing: border-box; height: 28px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .12); background: #222226; color: #f0f0f3; font: 500 11.5px var(--body); }
+.sys-publish input::placeholder { color: #8e8e96; }
+.sys-publish input:focus-visible { outline: 1px solid #d6d6db; outline-offset: 1px; }
+.sys-publish button { height: 28px; border: 0; border-radius: 999px; padding: 0 14px; background: #d6d6db; color: #121212; font: 600 11.5px var(--body); cursor: pointer; }
+.sys-publish button:hover:not(:disabled) { background: #f0f0f3; }
+.sys-publish button:disabled { opacity: .4; cursor: default; }
+.sys-publish p { grid-column: 1 / -1; margin: 0; font: 500 10.5px/1.45 var(--body); color: #8e8e96; }
+.sys-publish p.err { color: #e6a3a3; }
 @media (max-width: 1100px) { .sys-body { grid-template-columns: 1fr; } .sys-controls { position: static; max-height: none; } }

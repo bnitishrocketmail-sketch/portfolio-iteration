@@ -5,7 +5,7 @@ import { siLottiefiles } from 'simple-icons';
 import { COPY, LINKS, NAV04 as NAV, PROJECTS } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import { Arrow04 } from './Arrow04';
-import { readTweaks, tweakKey, writeTweaks } from './tokens';
+import { readTweaks, tweakKey, withPublished, writeTweaks } from './tokens';
 import Controls04 from './Controls04';
 import './profile.css';
 import './system.css';
@@ -116,6 +116,7 @@ export default function System04() {
   const [light, setLightV] = useState<Record<string, string>>(() => readTweaks(false));
   useEffect(() => { const on = (e: StorageEvent) => { if (e.key === tweakKey(true)) setDarkV(readTweaks(true)); if (e.key === tweakKey(false)) setLightV(readTweaks(false)); }; addEventListener('storage', on); return () => removeEventListener('storage', on); }, []);
   const values = mode ? dark : light;
+  const darkAll = withPublished(true, dark), lightAll = withPublished(false, light); /* the sheets wear the published set under the browser's own (5 Nov) */
   const setValues = (v: Record<string, string>) => { (mode ? setDarkV : setLightV)(v); writeTweaks(mode, v); };
   return (
     <div className="sys">
@@ -126,8 +127,8 @@ export default function System04() {
       <Controls04 values={values} onChange={setValues} dark={mode} toggle={toggle} onSystem />
       <div className="sys-body">
         <div className="sys-sheets" ref={sheetsRef}>
-          <div className="sys-page" style={{ '--bg': dark['--bg'] ?? '#141416', '--z': z } as React.CSSProperties}><Sheet dark values={dark} /></div>
-          <div className="sys-page" style={{ '--bg': light['--bg'] ?? '#d4d4d7', '--z': z } as React.CSSProperties}><Sheet dark={false} values={light} /></div>
+          <div className="sys-page" style={{ '--bg': darkAll['--bg'] ?? '#141416', '--z': z } as React.CSSProperties}><Sheet dark values={darkAll} /></div>
+          <div className="sys-page" style={{ '--bg': lightAll['--bg'] ?? '#d4d4d7', '--z': z } as React.CSSProperties}><Sheet dark={false} values={lightAll} /></div>
         </div>
         {/* the controls live in the control centre (Controls04.tsx) now, the panel at the side of this page as of the profile (22 Oct); the sheets have the page */}
       </div>
