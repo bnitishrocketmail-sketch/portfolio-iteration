@@ -88,14 +88,17 @@
      light ink here whatever the theme (the light theme's name ink is dark, for its grey frame) */
   .cm4.v2 { --map-ink: #dfdfdf; }
   .cm4.v2 .ow4 { color: var(--map-ink); }
-  .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { color: var(--map-ink); border-color: color-mix(in srgb, var(--map-ink) 45%, transparent); background: rgba(20, 20, 22, .35); } .cm4.v2 .tl4 { background: color-mix(in srgb, var(--map-ink) 14%, transparent); } .cm4.v2 .tl4.full { background: #fff; } .cm4.v2 .tl4.ae { background: #00005b; }
+  /* the fill opaque (5 Nov, Nitish: "the nodes are visible behind the containers… as if they have some sort of zero opacity
+     in the background"): the wires ran on under these pills and showed through their veil, which the desktop's never do
+     (theirs is the frame's own grey). The same tone, solid: the page's dark; in light, the veil's colour over the frame's grey */
+  .cm4.v2 .cn4.tool, .cm4.v2 .cn4.ai { color: var(--map-ink); border-color: color-mix(in srgb, var(--map-ink) 45%, transparent); background: var(--bg); } .cm4.v2 .tl4 { background: color-mix(in srgb, var(--map-ink) 14%, transparent); } .cm4.v2 .tl4.full { background: #fff; } .cm4.v2 .tl4.ae { background: #00005b; }
   /* light (24 Oct, Nitish: "in the light version … the orb, AI written in the center, the nodes, they are all white …
      they should have been inverted"): the light theme's page is light now, not the dark picture, so the map's ink
      inverts to that theme's dark (its name ink, #2f2e30) — the orb, its "AI", the lines and the wires (the canvas
      reads it each frame) and the outline pills' text and edge — and those pills' fill to a light veil (the nav's light
      grey at 45%) for the dark one. The filled pills already follow the theme */
   .it04.light .cm4.v2 { --map-ink: var(--name-ink); }
-  .it04.light .cm4.v2 .cn4.tool, .it04.light .cm4.v2 .cn4.ai { background: color-mix(in srgb, var(--nav-bg) 45%, transparent); }
+  .it04.light .cm4.v2 .cn4.tool, .it04.light .cm4.v2 .cn4.ai { background: color-mix(in srgb, var(--nav-bg) 45%, var(--frame)); }
 }
 
 /* the variant switch, above the note */
