@@ -704,7 +704,8 @@
    had been winning over this one. */
 .pp4-card.open .pp4-cover .pletter { left: auto; right: calc(1.4cqw + clamp(40px, 4cqw, 56px) + 1cqw); opacity: .05; } /* past the arrow; half as strong as the folded cards' (.1) — Nitish, 23 Oct, open cards only */
 /* the open layout */
-.pp4-open { position: absolute; inset: 0; }
+.pp4-open { position: absolute; inset: 0; z-index: 1; pointer-events: none; } /* over the card's hit (5 Nov), letting clicks through to it — only the arrow takes its own */
+.pp4-card.open .pp4-arrow { pointer-events: auto; }
 .pp4-top { position: absolute; left: 2cqw; top: 1.8cqw; right: 34%; display: flex; flex-direction: column; gap: .7cqw; }
 .pp4-title { margin: 0; font: var(--h2-w) var(--t-display)/1.15 var(--f-head); letter-spacing: -.01em; color: var(--pcard-open-ink); } /* a display title, the name's face */
 .pp4-blurb { margin: 0; font: var(--copy-w) var(--t-body)/1.45 var(--f-copy); color: var(--pcard-open-ink); opacity: .82; max-width: 36ch; }
@@ -726,6 +727,7 @@
 .pp4-vm.dim { opacity: .55; }
 .pp4-hit { position: absolute; inset: 0; border: 0; background: none; cursor: pointer; border-radius: inherit; corner-shape: inherit; }
 .pp4-hit:focus-visible { outline: 2px solid var(--g6); outline-offset: -4px; }
+.pp4-card:has(.pp4-hit.go:hover) .pp4-arrow { transform: translateY(-1px); } /* the open card under the pointer (5 Nov): its arrow lifts, as it does on its own hover — the card is going where the arrow goes */
 
 /* the temporary colour controls: a pill at the page's bottom-left; open, a small panel of pickers */
 .tweaks4 { position: fixed; left: 18px; bottom: 10px; z-index: 60; }
@@ -951,8 +953,8 @@
      (title, blurb, meta, chips, the arrow), the letter faint behind; the pieces were absolutely placed for the fan */
   .pp4-row { overflow: visible; -webkit-mask-image: none; mask-image: none; display: flex; flex-direction: column; gap: 12px; padding-bottom: 0; margin-bottom: 0; }
   .pp4-card { position: relative !important; transform: none !important; width: 100% !important; height: auto; min-height: 0; background: var(--pcard-open); color: var(--pcard-open-ink); }
-  .pp4-fold, .pp4-hit { display: none; }
-  .pp4-open { position: relative; inset: auto; opacity: 1 !important; pointer-events: auto !important; display: flex; flex-direction: column; gap: 12px; padding: 18px 18px 18px; } /* (spaced below, 24 Oct) */
+  .pp4-fold { display: none; } .pp4-arrow { pointer-events: auto; } /* every card is open here, so every card is a tap to its project (5 Nov); the arrow too */
+  .pp4-open { position: relative; inset: auto; opacity: 1 !important; display: flex; flex-direction: column; gap: 12px; padding: 18px 18px 18px; } /* (spaced below, 24 Oct) */
   .pp4-top { position: static; right: auto; gap: 8px; } .pp4-title { padding-right: 52px; } /* room for the arrow beside the title; the line under it takes the card's width */ .pp4-blurb { max-width: none; }
   .pp4-foot { display: contents; } .pp4-meta { position: static; order: 1; }
   .pp4-chips { position: static; order: 2; max-width: none; padding: 0; gap: 6px; background: none; border: 0; }

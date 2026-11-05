@@ -118,7 +118,7 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
               <span className="pletter">{p.letter}</span>
             </div>
             {/* the open layout: ref 7's wide card */}
-            <motion.div className="pp4-open" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }} style={{ pointerEvents: open ? 'auto' : 'none' }}>
+            <motion.div className="pp4-open" initial={false} animate={{ opacity: open ? 1 : 0 }} transition={open ? { ...fade, delay: reduce ? 0 : .16 } : { ...fade, duration: .14 }}>
               {/* the project's parts in the text's flow, under the title and its line (28 Oct, Nitish: they were centred on the
                   card's height — "top align them… maintaining the spacing hierarchy"; RideQuest's first, 23 Oct) */}
               <div className="pp4-top"><h3 className="pp4-title">{p.title}</h3><p className="pp4-blurb">{p.blurb}</p>
@@ -140,7 +140,12 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
               <span className="pp4-vm">{p.client} · {p.year}</span>
               <span className="pp4-vm dim">{p.tags.join(' · ')}</span>
             </motion.div>
-            {!open && <button type="button" className="pp4-hit" aria-label={`Show ${p.title}`} onClick={() => setSel(p.id)} />}
+            {/* the whole card is the control (Nitish, 5 Nov): folded, a click shows it; open (or any card on the phone, where all are),
+                a click does what the arrow does — opens the project, or a project that lives elsewhere in its tab. The arrow keeps
+                its place on top as the control with a name; this one is the mouse's, out of the tab order */}
+            {!(open || phone) ? <button type="button" className="pp4-hit" aria-label={`Show ${p.title}`} onClick={() => setSel(p.id)} />
+              : p.href ? <a className="pp4-hit go" href={p.href} target="_blank" rel="noopener" tabIndex={-1} aria-hidden="true" />
+              : <button type="button" className="pp4-hit go" tabIndex={-1} aria-hidden="true" onClick={() => onOpen(p.id)} />}
           </Card>
         ))}
       </div>
