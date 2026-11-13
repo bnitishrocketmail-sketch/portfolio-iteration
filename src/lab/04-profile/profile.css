@@ -33,14 +33,14 @@
      on the drawing); the persuasion card, whose desktop spot (right of his head) is the links' notch here, takes the
      coin's at the top right — the coin is hidden here — beside the success card */
   --c-ai-px: 17%; --c-ai-py: 64%; --c-loader-px: 71%; --c-loader-py: 77%; --c-gold-px: 27%; --c-gold-py: 30%; --c-pers-px: 67%; --c-pers-py: 23%; --c-coin-px: 66%; --c-coin-py: 33%; --c-micro-px: 40%; --c-micro-py: 85%;
-  --sc-tag-y: 10%; --sc-tag-py: 86%; /* the tag on the picture's right edge (5 Nov, Nitish: "shifted… more upward… the top edge of it could be aligned at the 10% from the top"): its top at --sc-tag-y of the picture's height; on the phone on the white desk at the foot, under the links' pocket and the loader card (the camera fills the edge above) */
-  --sc-camp-x: 50%; --sc-camp-y: 36%; --sc-camp-v: block; --sc-camp-px: 54%; --sc-camp-py: 45%; --sc-camp-pv: block; /* the showcase's containers (4 Nov): each one's centre, % of the picture — his places (his copied values, made the defaults) */
+  --sc-tag-y: 10%; /* the tag on the picture's right edge (5 Nov, Nitish: "shifted… more upward… the top edge of it could be aligned at the 10% from the top"): its top at --sc-tag-y of the picture's height; on the phone on the white desk at the foot, under the links' pocket and the loader card (the camera fills the edge above) */
+  --sc-camp-x: 50%; --sc-camp-y: 36%; --sc-camp-v: block; --sc-camp-px: 56%; --sc-camp-py: 40%; --sc-camp-pv: block; /* the showcase's containers (4 Nov): each one's centre, % of the picture — his places (his copied values, made the defaults) */
   --sc-splash-x: 56%; --sc-splash-y: 80%; --sc-splash-v: block; --sc-splash-px: 13%; --sc-splash-py: 12%; --sc-splash-pv: none;
   --sc-t20-x: 21%; --sc-t20-y: 46%; --sc-t20-v: block; --sc-t20-px: 20%; --sc-t20-py: 12%; --sc-t20-pv: none;
   --sc-avatars-x: 83%; --sc-avatars-y: 59%; --sc-avatars-v: block; --sc-avatars-px: 30%; --sc-avatars-py: 86%; --sc-avatars-pv: none;
-  --sc-insta-x: 83%; --sc-insta-y: 83.3%; --sc-insta-v: block; --sc-insta-px: 64%; --sc-insta-py: 84%; --sc-insta-pv: block;
+  --sc-insta-x: 83%; --sc-insta-y: 83.3%; --sc-insta-v: block; --sc-insta-px: 20%; --sc-insta-py: 58%; --sc-insta-pv: block;
   --sc-view360-x: 12%; --sc-view360-y: 18%; --sc-view360-v: block; --sc-view360-px: 64%; --sc-view360-py: 86%; --sc-view360-pv: none;
-  --sc-sale1-x: 31%; --sc-sale1-y: 30%; --sc-sale1-v: none; --sc-sale1-px: 24%; --sc-sale1-py: 84%; --sc-sale1-pv: block;
+  --sc-sale1-x: 31%; --sc-sale1-y: 30%; --sc-sale1-v: none; --sc-sale1-px: 82%; --sc-sale1-py: 82%; --sc-sale1-pv: block;
   --sc-note-x: 80%; --sc-note-y: 34%; --sc-note-v: block; --sc-note-px: 50%; --sc-note-py: 20%; --sc-note-pv: none; /* the note on the work (4 Nov); his fifth set of places (5 Nov): the sale banner off on the desktop, the note by the picture's middle right */
   --c-ai-pv: block; --c-loader-pv: block; --c-gold-pv: block; --c-pers-pv: none; /* three on the phone (28 Oct, Nitish: the persuasion card removed there) */ --c-coin-pv: none; --c-micro-pv: none;
   --name-box-v: none; /* the name box with the one-liner, shown or hidden (the design system page); hidden by default (28 Oct, his desktop settings) */
@@ -316,8 +316,8 @@
    cut-outs follow the tab's box frame by frame (their observers). The words run up the tab, bottom to top (as the
    first nav's names ran up its bar): each span turns, not the tab */
 .sc4-tag { overflow: hidden; }
-.sc4-tag-in { position: relative; display: block; width: var(--tag-w, auto); height: var(--tag-l0, auto); transition: height .55s cubic-bezier(.4, 0, .2, 1); } /* an even curve for the size, not the house fast-out one: the change should read as a steady resize (4 Nov: "smoother, like increasing or decreasing in size") */
-.sc4-tag[aria-expanded="true"] .sc4-tag-in { height: var(--tag-l1, auto); }
+.sc4-tag-in { position: relative; display: block; width: var(--tag-w, auto); height: var(--tag-h0, auto); transition: height .55s cubic-bezier(.4, 0, .2, 1); } /* an even curve for the size, not the house fast-out one: the change should read as a steady resize (4 Nov: "smoother, like increasing or decreasing in size") */
+.sc4-tag[aria-expanded="true"] .sc4-tag-in { height: var(--tag-h1, auto); }
 .sc4-tag .w { position: absolute; left: 50%; top: 50%; display: block; writing-mode: vertical-rl; white-space: nowrap; transform: translate(-50%, -50%) translateY(0) rotate(180deg); transition: opacity .32s ease, transform .55s cubic-bezier(.4, 0, .2, 1); } /* centred by the transform itself, not the translate property: the build's minifier (Lightning CSS, Vite 8) drops a translate that shares a block with a transform (4 Nov — the words hung off the tab's foot); the same three functions in every state, so the transition runs each on its own (the scroll's translateY sits before the turn: it moves in the tab's frame, down for a plus) */
 .sc4-tag .w1 { opacity: 0; transform: translate(-50%, -50%) translateY(12px) rotate(180deg); } /* "Close" waits below */
 .sc4-tag[aria-expanded="true"] .w1 { opacity: 1; transform: translate(-50%, -50%) translateY(0) rotate(180deg); }
@@ -836,7 +836,7 @@
   .picwrap4 { --nm-fs: min(var(--t-h1), 8.2vw); display: grid; grid-template-columns: 24px minmax(0, 1fr) auto 24px; grid-template-areas: "pic pic pic pic" ". name me ." ". role me ." ". lede lede ." ". sub sub ." ". cv cv ."; padding-bottom: 28px; border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); overflow: hidden; }
   .pic4, .pic4-in, .cut4 { display: contents; } .corner4 { display: none; }
   .pic4-img { grid-area: pic; position: relative; aspect-ratio: 1; height: auto; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round); }
-  .pic4-img { -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, var(--pic-tag, none) right var(--pic-tag-top, 0px) / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, var(--pic-tag, none) right var(--pic-tag-top, 0px) / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat exclude, linear-gradient(#000 0 0); } /* the notch on the right edge: the pocket's shape (usePhoneNotch) taken out of the picture; and the tag's pocket under it (4 Nov) */
+  .pic4-img { -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, var(--pic-tag, none) center bottom / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, var(--pic-tag, none) center bottom / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat exclude, linear-gradient(#000 0 0); } /* the notch on the right edge: the pocket's shape (usePhoneNotch) taken out of the picture; and the tag's pocket under it (4 Nov) */
   .notch4 { pointer-events: none; } .notch4 .links4, .notch4 .island-wrap { pointer-events: auto; }
   .notch4 { aspect-ratio: 1; } /* the picture's square, so the links centre on it */
   .notch4 .links4 { position: absolute; right: 0; top: 50%; transform: translateY(-50%); flex-direction: column; gap: 2px; padding: 8px 6px; border-radius: 0; } /* the links stacked, centred on the picture's height */
@@ -865,9 +865,19 @@
   /* the showcase on the phone (4 Nov): the tag in the picture's top-right corner; the layer fills the picture's cell, and
      should its containers ever stand taller than the square, the cell grows to them and the picture and his cutout
      stretch with it, so the blurred drawing stays behind; the cards' headings a little shorter for the square */
-  .sc4-tag { position: relative; grid-area: pic; align-self: start; justify-self: end; inset: auto; margin: var(--sc-tag-py) 0 0; translate: 0 -50%; padding: 12px 6px 12px 7px; z-index: 6; font-size: 12px; } /* from the right edge here too, at the foot under the links' pocket, in its own pocket of the picture (the square cell: a % margin is of its width) */
+    /* (13 Nov, Nitish: "in the phone layout you don't have to put it on the side… it can go on the bottom center") a horizontal
+     tab lying along the picture's bottom edge, centred, in its own pocket of the picture (usePhoneNotch draws it); the words
+     upright, the tab's width running from one word's length to the other's, the words scrolling up and in from below as on
+     the desktop's tab */
+  .sc4-tag { position: relative; grid-area: pic; align-self: end; justify-self: center; inset: auto; margin: 0; translate: none; padding: 7px 14px 8px; z-index: 6; font-size: 12px; border-radius: calc(16px * var(--ios-k, 1)) calc(16px * var(--ios-k, 1)) 0 0; }
+  .sc4-tag-in { width: var(--tag-w0, auto); height: var(--tag-h, auto); transition: width .55s cubic-bezier(.4, 0, .2, 1); }
+  .sc4-tag[aria-expanded="true"] .sc4-tag-in { width: var(--tag-w1, auto); height: var(--tag-h, auto); }
+  .sc4-tag .w { writing-mode: horizontal-tb; transform: translate(-50%, -50%); }
+  .sc4-tag .w1 { transform: translate(-50%, -50%) translateY(10px); }
+  .sc4-tag[aria-expanded="true"] .w1 { transform: translate(-50%, -50%); }
+  .sc4-tag[aria-expanded="true"] .w0 { transform: translate(-50%, -50%) translateY(-10px); }
   .sc4 { position: relative; grid-area: pic; inset: auto; align-self: stretch; width: 100%; }
-  .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; }
+  .sc-open .pic4-img { aspect-ratio: auto; align-self: stretch; height: 100%; transform: none; } /* no stepping back here (13 Nov): the picture is the whole backdrop on the phone, and the tag's pocket is cut into its bottom edge — the blur alone sets it back */
   .sc4-cardwrap { --sw: 115px; --hp-r: 13px; }
   .sc4-cardwrap.camp { left: var(--sc-camp-px); top: var(--sc-camp-py); display: var(--sc-camp-pv); }
   .sc4-flo .fl4-in { gap: 6px; padding: 5px 6px 8px; } .sc4-flo .cap { font: 500 var(--t-meta)/1.25 var(--f-copy); }
@@ -889,7 +899,7 @@
      there"): its layer takes the picture's cell, clipped to it, and his cutout comes back over it (it went with the
      floating cards, which needed it to sit behind him), masked with the picture's notch as the picture is */
   .fl4.sig-bg { grid-area: pic; position: relative; inset: auto; aspect-ratio: 1; overflow: hidden; transform: none; border-radius: calc(var(--r) * var(--ios-k, 1)) calc(var(--r) * var(--ios-k, 1)) 0 0; corner-shape: var(--ios-shape, round);
-    -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, var(--pic-tag, none) right var(--pic-tag-top, 0px) / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, var(--pic-tag, none) right var(--pic-tag-top, 0px) / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat exclude, linear-gradient(#000 0 0); } /* the picture's notch out of it too */
+    -webkit-mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat, var(--pic-tag, none) center bottom / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: var(--pic-notch) right center / 48px var(--pic-notch-h) no-repeat exclude, var(--pic-tag, none) center bottom / var(--pic-tag-w, 0px) var(--pic-tag-h, 0px) no-repeat exclude, linear-gradient(#000 0 0); } /* the picture's notch out of it too */
   .sig-bg svg { left: var(--sig-x, 50%); top: calc(var(--sig-y, 39%) + 10%); width: var(--sig-w, 100%); } /* the phone’s own defaults: the word’s (5 Nov) — 50 / 39% as the desktop’s, the picture’s full width where the desktop has 90 (the square crop is narrower: at 90 the letters read small, at the signature’s 115 they ran off both sides); the signature had sat at 48 / 47%, 115% (his phone settings, 28 Oct) */ /* the square crop shows the wall lower than the desktop's wide one: at the desktop's height it ran across the ring light; the same control, a tenth lower */
   .it04 .island-wrap { position: absolute; top: 0; justify-content: center; padding-left: 0; }
   .it04 .island { border-radius: 0 0 calc(20px * var(--ios-k, 1)) calc(20px * var(--ios-k, 1))!important; corner-shape: var(--ios-shape, round); max-width: calc(100vw - 100px); }

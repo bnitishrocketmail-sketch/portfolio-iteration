@@ -273,7 +273,9 @@ function useTagSize(tag: React.RefObject<HTMLButtonElement | null>, key: string)
   useLayoutEffect(() => {
     const t = tag.current; if (!t) return;
     const ws = Array.from(t.querySelectorAll<HTMLElement>('.w'));
-    const set = () => { t.style.setProperty('--tag-w', `${Math.max(...ws.map(s => s.offsetWidth))}px`); ws.forEach((s, i) => t.style.setProperty(`--tag-l${i}`, `${s.offsetHeight}px`)); };
+    /* each word's width and height, and the larger of each: the desktop's tab (vertical words) runs its height between the
+       words' lengths; the phone's (horizontal, 13 Nov) runs its width */
+    const set = () => { t.style.setProperty('--tag-w', `${Math.max(...ws.map(s => s.offsetWidth))}px`); t.style.setProperty('--tag-h', `${Math.max(...ws.map(s => s.offsetHeight))}px`); ws.forEach((s, i) => { t.style.setProperty(`--tag-w${i}`, `${s.offsetWidth}px`); t.style.setProperty(`--tag-h${i}`, `${s.offsetHeight}px`); }); };
     set(); const ro = new ResizeObserver(set); ws.forEach(s => ro.observe(s)); return () => ro.disconnect();
   }, [tag, key]);
 }
@@ -294,22 +296,22 @@ function usePhoneNotch(wrap: React.RefObject<HTMLDivElement | null>, key: string
     const d = `M ${D} 0 ${sCorner([D, R], [0, 1], [-1, 0], R, K)} ${sCorner([0, R], [-1, 0], [0, 1], R, K)} ${sCorner([0, R + NH], [0, 1], [1, 0], R, K)} ${sCorner([D, R + NH], [1, 0], [0, 1], R, K)} Z`;
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${D}' height='${HH.toFixed(2)}' viewBox='0 0 ${D} ${HH.toFixed(2)}'><path d='${d}'/></svg>`;
     w.style.setProperty('--pic-notch', `url("data:image/svg+xml,${encodeURIComponent(svg)}")`); w.style.setProperty('--pic-notch-h', `${HH.toFixed(2)}px`);
-    /* the showcase's tag's pocket (4 Nov), the same shape at the tag's size, on the right edge at the tag's height: the
-       tag is measured (it stands in the picture's cell, its centre at --sc-tag-py of the cell's height), the pocket drawn
-       to its box with its radius, and placed by a pixel offset so its centre is the tag's (a mask's % position would land
-       elsewhere) — re-measured as the picture resizes */
+    /* the showcase's tag's pocket (4 Nov; on the right edge until 13 Nov): the same shape at the tag's size, drawn to the
+       tag's measured box with its radius — re-measured as the picture resizes */
     const tag = w.querySelector<HTMLElement>('.sc4-tag');
     const place = () => {
       if (!tag || getComputedStyle(tag).position === 'absolute') return;
       const tr = tag.getBoundingClientRect(), cell = w.querySelector<HTMLElement>('.pic4-img')?.getBoundingClientRect(); if (!cell || !tr.height) return;
-      const Rt = parseFloat(getComputedStyle(tag).borderTopLeftRadius) || R, TW = tr.width, TH = tr.height, H2 = TH + 2 * Rt;
-      const d2 = `M ${TW} 0 ${sCorner([TW, Rt], [0, 1], [-1, 0], Rt, K)} ${sCorner([0, Rt], [-1, 0], [0, 1], Rt, K)} ${sCorner([0, Rt + TH], [0, 1], [1, 0], Rt, K)} ${sCorner([TW, Rt + TH], [1, 0], [0, 1], Rt, K)} Z`;
-      const svg2 = `<svg xmlns='http://www.w3.org/2000/svg' width='${TW.toFixed(2)}' height='${H2.toFixed(2)}' viewBox='0 0 ${TW.toFixed(2)} ${H2.toFixed(2)}'><path d='${d2}'/></svg>`;
-      w.style.setProperty('--pic-tag', `url("data:image/svg+xml,${encodeURIComponent(svg2)}")`); w.style.setProperty('--pic-tag-w', `${TW.toFixed(2)}px`); w.style.setProperty('--pic-tag-h', `${H2.toFixed(2)}px`);
-      w.style.setProperty('--pic-tag-top', `${(tr.top - cell.top - Rt).toFixed(2)}px`);
+      /* (13 Nov, Nitish: "in the phone layout you don't have to put it on the side… it can go on the bottom center") the tab
+         lies along the picture's bottom edge, centred, so the pocket is the right-edge one turned: the tab's width along the
+         edge with a join curving out at each end, the tab's height deep. Centred by the grid, so the mask sits at bottom centre */
+      const Rt = parseFloat(getComputedStyle(tag).borderTopLeftRadius) || R, TW = tr.width, TH = tr.height, W2 = TW + 2 * Rt;
+      const d2 = `M 0 ${TH} ${sCorner([Rt, TH], [1, 0], [0, -1], Rt, K)} ${sCorner([Rt, 0], [0, -1], [1, 0], Rt, K)} ${sCorner([Rt + TW, 0], [1, 0], [0, 1], Rt, K)} ${sCorner([Rt + TW, TH], [0, 1], [1, 0], Rt, K)} Z`;
+      const svg2 = `<svg xmlns='http://www.w3.org/2000/svg' width='${W2.toFixed(2)}' height='${TH.toFixed(2)}' viewBox='0 0 ${W2.toFixed(2)} ${TH.toFixed(2)}'><path d='${d2}'/></svg>`;
+      w.style.setProperty('--pic-tag', `url("data:image/svg+xml,${encodeURIComponent(svg2)}")`); w.style.setProperty('--pic-tag-w', `${W2.toFixed(2)}px`); w.style.setProperty('--pic-tag-h', `${TH.toFixed(2)}px`);
     };
     place(); const ro = new ResizeObserver(place); ro.observe(w); if (tag) ro.observe(tag);
-    return () => { ro.disconnect(); for (const k of ['--pic-notch', '--pic-notch-h', '--pic-tag', '--pic-tag-w', '--pic-tag-h', '--pic-tag-top']) w.style.removeProperty(k); };
+    return () => { ro.disconnect(); for (const k of ['--pic-notch', '--pic-notch-h', '--pic-tag', '--pic-tag-w', '--pic-tag-h']) w.style.removeProperty(k); };
   }, [wrap, key]);
 }
 
