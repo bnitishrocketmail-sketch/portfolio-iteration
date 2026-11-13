@@ -869,7 +869,7 @@
      tab lying along the picture's bottom edge, centred, in its own pocket of the picture (usePhoneNotch draws it); the words
      upright, the tab's width running from one word's length to the other's, the words scrolling up and in from below as on
      the desktop's tab */
-  .sc4-tag { position: relative; grid-area: pic; align-self: end; justify-self: center; inset: auto; margin: 0; translate: none; padding: 7px 14px 8px; z-index: 6; font-size: 12px; border-radius: calc(16px * var(--ios-k, 1)) calc(16px * var(--ios-k, 1)) 0 0; }
+  .sc4-tag { position: relative; grid-area: pic; align-self: end; justify-self: center; inset: auto; margin: 0; translate: none; padding: 10px 20px 11px; z-index: 6; font-size: 12px; border-radius: calc(16px * var(--ios-k, 1)) calc(16px * var(--ios-k, 1)) 0 0; } /* the word's room (13 Nov, Nitish: "too cramped up in that cavity"): 20px to the pocket's curves at the sides, 10 above and 11 below */
   .sc4-tag-in { width: var(--tag-w0, auto); height: var(--tag-h, auto); transition: width .55s cubic-bezier(.4, 0, .2, 1); }
   .sc4-tag[aria-expanded="true"] .sc4-tag-in { width: var(--tag-w1, auto); height: var(--tag-h, auto); }
   .sc4-tag .w { writing-mode: horizontal-tb; transform: translate(-50%, -50%); }
