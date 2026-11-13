@@ -44,14 +44,27 @@ export function useTilt(area: RefObject<HTMLElement | null>, on: boolean, hold?:
       t.current.tx = Math.max(-1, Math.min(1, x)); t.current.ty = Math.max(-1, Math.min(1, y));
     };
     const DOE = (window as unknown as { DeviceOrientationEvent?: { requestPermission?: () => Promise<string> } }).DeviceOrientationEvent;
-    const ask = () => { el.removeEventListener('touchend', ask); el.removeEventListener('click', ask); DOE?.requestPermission?.().then(s => { if (s === 'granted') addEventListener('deviceorientation', orient); }).catch(() => {}); };
+    /* (13 Nov) the ask had been a one-shot — the first touchend on the picture, which on a phone is as often the end of
+       a scroll as a tap; iOS only grants inside a gesture, a scroll's end is not one, and the ask had already removed
+       itself, so the gyro stayed off until a reload. Now it asks on taps only (a touch that neither moved nor lingered),
+       and keeps asking until it is answered: granted wires the sensor; denied is final; a refusal to prompt (no gesture,
+       or a prompt already up) just waits for the next tap. One wire, however many taps answer */
+    let t0: { x: number; y: number; at: number } | null = null, asking = false, done = false;
+    const down = (e: TouchEvent) => { const t = e.touches[0]; t0 = t ? { x: t.clientX, y: t.clientY, at: performance.now() } : null; };
+    const stop = () => { el.removeEventListener('touchstart', down); el.removeEventListener('touchend', ask); el.removeEventListener('click', ask); };
+    const ask = (e: Event) => {
+      if (done || asking) return;
+      if (e.type === 'touchend') { const t = (e as TouchEvent).changedTouches[0]; if (!t0 || !t || Math.hypot(t.clientX - t0.x, t.clientY - t0.y) > 12 || performance.now() - t0.at > 600) return; }
+      asking = true;
+      DOE?.requestPermission?.().then(s => { if (s === 'granted') { done = true; stop(); addEventListener('deviceorientation', orient); } else if (s === 'denied') { done = true; stop(); } }).catch(() => { /* not in a gesture: the next tap */ }).finally(() => { asking = false; });
+    };
     el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave);
-    if (DOE?.requestPermission) { el.addEventListener('touchend', ask); el.addEventListener('click', ask); } else addEventListener('deviceorientation', orient);
+    if (DOE?.requestPermission) { el.addEventListener('touchstart', down, { passive: true }); el.addEventListener('touchend', ask); el.addEventListener('click', ask); } else addEventListener('deviceorientation', orient);
     let raf = 0;
     let prev = performance.now();
     const tick = (now: number) => { const s = t.current, k = 1 - Math.exp(-(now - prev) / 190); prev = now; s.x += (s.tx - s.x) * k; s.y += (s.ty - s.y) * k; s.frame++; raf = requestAnimationFrame(tick); }; /* eased by time (~.08 a frame at 60fps), so a slow frame rate settles as soon */
     raf = requestAnimationFrame(tick);
-    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); el.removeEventListener('touchend', ask); el.removeEventListener('click', ask); removeEventListener('deviceorientation', orient); cancelAnimationFrame(raf); t.current = { x: 0, y: 0, tx: 0, ty: 0, frame: 0 }; };
+    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); stop(); removeEventListener('deviceorientation', orient); cancelAnimationFrame(raf); t.current = { x: 0, y: 0, tx: 0, ty: 0, frame: 0 }; };
   }, [area, on, hold]);
   return t;
 }
@@ -132,16 +145,28 @@ export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, 
      which on a return to the tab is a few frames of nothing; the plain picture, which the browser has, shows at once in
      its place and goes when the canvas draws (the cut-out of him too — its warped copy would double it otherwise) */
   const [ready, setReady] = useState(false);
+  /* the context lives as long as the canvas (13 Nov): the setup below re-runs when a picture, the strength or the build
+     changes, on the same canvas — and a canvas gives out one context, so losing it on the way out (as until now) left the
+     next run drawing on a dead one: the picture went blank until a reload (a Controls change, or the light/dark switch
+     where the modes' pictures differ). The run now frees what it made and keeps the context; the context goes with the
+     canvas. A context the browser takes away (iOS, under memory pressure) is let come back, and the setup runs again. */
+  const [gen, setGen] = useState(0);
+  useEffect(() => () => { const c = cv.current; if (!c) return; const gl = c.getContext('webgl'); gl?.getExtension('WEBGL_lose_context')?.loseContext(); }, []);
   useEffect(() => {
     const c = cv.current; if (!c) return;
     setReady(false);
     const gl = c.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false }); if (!gl) return;
+    const lost = (e: Event) => { e.preventDefault(); setReady(false); }; /* preventDefault: the browser may restore it */
+    const back = () => setGen(g => g + 1);
+    c.addEventListener('webglcontextlost', lost); c.addEventListener('webglcontextrestored', back);
+    if (gl.isContextLost()) return () => { c.removeEventListener('webglcontextlost', lost); c.removeEventListener('webglcontextrestored', back); };
+    const made: WebGLTexture[] = []; let dead = false;
     const sh = (type: number, s: string) => { const o = gl.createShader(type)!; gl.shaderSource(o, s); gl.compileShader(o); return o; };
     const pr = gl.createProgram()!; gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
     const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-    const tex = (unit: number, im: HTMLImageElement) => /* layer masks must not be premultiplied (alpha is 1 there anyway) */ { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im); [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(w => gl.texParameteri(gl.TEXTURE_2D, w, gl.CLAMP_TO_EDGE)); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); };
+    const tex = (unit: number, im: HTMLImageElement) => /* layer masks must not be premultiplied (alpha is 1 there anyway) */ { const t = gl.createTexture()!; made.push(t); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im); [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(w => gl.texParameteri(gl.TEXTURE_2D, w, gl.CLAMP_TO_EDGE)); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); };
     const load = loadImage; /* the pictures kept for the session (27 Oct): a return to the home tab decoded them all again */
     let raf = 0, ready = false, iw = 1, ih = 1, last = '';
     const uBox = gl.getUniformLocation(pr, 'box'), uOff = gl.getUniformLocation(pr, 'off');
@@ -157,10 +182,10 @@ export function DepthImg({ src, depth, plate, layers, fg, fgn, tilt, className, 
       gl.uniform2f(uOff, t.x * k, t.y * k * (iw / ih) * .6); /* up and down a little less than side to side */
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
-    Promise.all([load(src), load(depth), layers && fg ? load(layers) : null, layers && fg ? load(fg) : null, plate && layers && fg && fgn ? load(plate) : null, plate && layers && fg && fgn ? load(fgn) : null]).then(([a, b, e, f, c, n]) => { iw = a.naturalWidth; ih = a.naturalHeight; tex(0, a); tex(1, b); if (e && f) { tex(3, e); tex(4, f); } if (c && n) { tex(2, c); tex(5, n); } ready = true; setReady(true); }).catch(() => {});
+    Promise.all([load(src), load(depth), layers && fg ? load(layers) : null, layers && fg ? load(fg) : null, plate && layers && fg && fgn ? load(plate) : null, plate && layers && fg && fgn ? load(fgn) : null]).then(([a, b, e, f, c, n]) => { if (dead) return; /* this run was replaced while its pictures loaded */ iw = a.naturalWidth; ih = a.naturalHeight; tex(0, a); tex(1, b); if (e && f) { tex(3, e); tex(4, f); } if (c && n) { tex(2, c); tex(5, n); } ready = true; setReady(true); }).catch(() => {});
     size(); const ro = new ResizeObserver(size); ro.observe(c); raf = requestAnimationFrame(draw);
-    return () => { cancelAnimationFrame(raf); ro.disconnect(); gl.getExtension('WEBGL_lose_context')?.loseContext(); };
-  }, [src, depth, plate, layers, fg, fgn, tilt, k, fs, focus]);
+    return () => { dead = true; cancelAnimationFrame(raf); ro.disconnect(); c.removeEventListener('webglcontextlost', lost); c.removeEventListener('webglcontextrestored', back); made.forEach(t => gl.deleteTexture(t)); gl.deleteBuffer(buf); gl.deleteProgram(pr); };
+  }, [src, depth, plate, layers, fg, fgn, tilt, k, fs, focus, gen]);
   return <>
     {!ready && <img className={className} src={src} alt="" aria-hidden="true" draggable={false} />}
     <canvas ref={cv} className={className} role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true} />
