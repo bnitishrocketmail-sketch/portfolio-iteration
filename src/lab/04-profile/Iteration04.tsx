@@ -299,21 +299,32 @@ function usePhoneNotch(wrap: React.RefObject<HTMLDivElement | null>, key: string
     /* the showcase's tag's pocket (4 Nov; on the right edge until 13 Nov): the same shape at the tag's size, drawn to the
        tag's measured box with its radius — re-measured as the picture resizes */
     const tag = w.querySelector<HTMLElement>('.sc4-tag');
+    /* (13 Nov, Nitish: the tab's change "is a bit glitchy. The tab appears a little later") the pocket had been one SVG
+       redrawn on every frame of the tab's width change — each a new image to decode, so the pocket lagged the tab. Now it
+       is three pieces: the two ends (the join's curve and the inner corner, drawn once for the tab's height) and a plain
+       rectangle between them, each placed and sized by numbers that follow the tab frame by frame. The pieces overlap a
+       pixel and are added, then taken out of the picture together; they run 2px past the bottom edge, so no sliver of
+       the picture shows under the tab (13 Nov: "a very thin white line at the bottom of this cavity") */
+    let drawn = '';
     const place = () => {
       if (!tag || getComputedStyle(tag).position === 'absolute') return;
       const img = w.querySelector<HTMLElement>('.pic4-img'), tr = tag.getBoundingClientRect(), cell = img?.getBoundingClientRect(); if (!img || !cell || !tr.height) return;
       const z = cell.width / (img.offsetWidth || cell.width); /* the phone's page is zoomed (--ph-zoom): rects are screen px, the mask is drawn in the picture's own */
-      /* (13 Nov, Nitish: "in the phone layout you don't have to put it on the side… it can go on the bottom center"; then
-         "at 25% from the left") the tab lies along the picture's bottom edge, its centre at --sc-tag-px of the width, so the
-         pocket is the right-edge one turned: the tab's width along the edge with a join curving out at each end, the tab's
-         height deep; placed by a pixel offset from the picture's left, measured off the tab (a mask's % would land elsewhere) */
-      const Rt = parseFloat(getComputedStyle(tag).borderTopLeftRadius) || R, TW = tr.width / z, TH = tr.height / z, W2 = TW + 2 * Rt;
-      const d2 = `M 0 ${TH} ${sCorner([Rt, TH], [1, 0], [0, -1], Rt, K)} ${sCorner([Rt, 0], [0, -1], [1, 0], Rt, K)} ${sCorner([Rt + TW, 0], [1, 0], [0, 1], Rt, K)} ${sCorner([Rt + TW, TH], [0, 1], [1, 0], Rt, K)} Z`;
-      const svg2 = `<svg xmlns='http://www.w3.org/2000/svg' width='${W2.toFixed(2)}' height='${TH.toFixed(2)}' viewBox='0 0 ${W2.toFixed(2)} ${TH.toFixed(2)}'><path d='${d2}'/></svg>`;
-      w.style.setProperty('--pic-tag', `url("data:image/svg+xml,${encodeURIComponent(svg2)}")`); w.style.setProperty('--pic-tag-w', `${W2.toFixed(2)}px`); w.style.setProperty('--pic-tag-h', `${TH.toFixed(2)}px`); w.style.setProperty('--pic-tag-left', `${((tr.left - cell.left) / z - Rt).toFixed(2)}px`);
+      const Rt = parseFloat(getComputedStyle(tag).borderTopLeftRadius) || R, TW = tr.width / z, TH = tr.height / z, W2 = TW + 2 * Rt, E = 2 * Rt, H = TH + 2;
+      const key = `${Rt}:${TH.toFixed(2)}:${K}`;
+      if (key !== drawn) {
+        drawn = key;
+        const left = `M 0 ${TH.toFixed(2)} ${sCorner([Rt, TH], [1, 0], [0, -1], Rt, K)} ${sCorner([Rt, 0], [0, -1], [1, 0], Rt, K)} L ${E} 0 L ${E} ${H.toFixed(2)} L 0 ${H.toFixed(2)} Z`;
+        const right = `M 0 0 ${sCorner([Rt, 0], [1, 0], [0, 1], Rt, K)} ${sCorner([Rt, TH], [0, 1], [1, 0], Rt, K)} L ${E} ${TH.toFixed(2)} L ${E} ${H.toFixed(2)} L 0 ${H.toFixed(2)} Z`;
+        const svg = (d: string) => `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${E}' height='${H.toFixed(2)}' viewBox='0 0 ${E} ${H.toFixed(2)}'><path d='${d}'/></svg>`)}")`;
+        w.style.setProperty('--pic-tag-l', svg(left)); w.style.setProperty('--pic-tag-r', svg(right));
+        w.style.setProperty('--pic-tag-e', `${E}px`); w.style.setProperty('--pic-tag-h', `${H.toFixed(2)}px`);
+      }
+      w.style.setProperty('--pic-tag-w', `${W2.toFixed(2)}px`); w.style.setProperty('--pic-tag-m', `${Math.max(0, W2 - 2 * E + 2).toFixed(2)}px`);
+      w.style.setProperty('--pic-tag-left', `${((tr.left - cell.left) / z - Rt).toFixed(2)}px`);
     };
     place(); const ro = new ResizeObserver(place); ro.observe(w); if (tag) ro.observe(tag);
-    return () => { ro.disconnect(); for (const k of ['--pic-notch', '--pic-notch-h', '--pic-tag', '--pic-tag-w', '--pic-tag-h', '--pic-tag-left']) w.style.removeProperty(k); };
+    return () => { ro.disconnect(); for (const k of ['--pic-notch', '--pic-notch-h', '--pic-tag-l', '--pic-tag-r', '--pic-tag-e', '--pic-tag-m', '--pic-tag-w', '--pic-tag-h', '--pic-tag-left']) w.style.removeProperty(k); };
   }, [wrap, key]);
 }
 
