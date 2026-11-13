@@ -86,6 +86,7 @@ export const CONTROLS: Control[] = [
   /* the intro's floating cards */
   /* the tag that opens the showcase: its height on the picture's right edge (4 Nov) */
   { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-y', label: 'top (on the right edge)', def: '10%', light: '10%', min: 0, max: 100, step: 1, unit: '%' },
+  { group: 'Showcase cards', sub: 'Tag', kind: 'range', key: '--sc-tag-px', label: 'centre on the phone (from the left)', def: '25%', light: '25%', min: 0, max: 100, step: 1, unit: '%' }, /* the tab on the picture's bottom edge (13 Nov, Nitish: "at 25% from the left") */
   ...show('camp', 'Campaign banners', '50%', '36%', '56%', '40%'),
   /* the six round it, at his places (4 Nov, his copied values made the defaults); the phone shows two, under the phone */
   ...show('splash', 'Splash screen', '56%', '80%', '13%', '12%', 'block', 'none'),

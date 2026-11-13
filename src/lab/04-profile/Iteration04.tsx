@@ -301,17 +301,19 @@ function usePhoneNotch(wrap: React.RefObject<HTMLDivElement | null>, key: string
     const tag = w.querySelector<HTMLElement>('.sc4-tag');
     const place = () => {
       if (!tag || getComputedStyle(tag).position === 'absolute') return;
-      const tr = tag.getBoundingClientRect(), cell = w.querySelector<HTMLElement>('.pic4-img')?.getBoundingClientRect(); if (!cell || !tr.height) return;
-      /* (13 Nov, Nitish: "in the phone layout you don't have to put it on the side… it can go on the bottom center") the tab
-         lies along the picture's bottom edge, centred, so the pocket is the right-edge one turned: the tab's width along the
-         edge with a join curving out at each end, the tab's height deep. Centred by the grid, so the mask sits at bottom centre */
-      const Rt = parseFloat(getComputedStyle(tag).borderTopLeftRadius) || R, TW = tr.width, TH = tr.height, W2 = TW + 2 * Rt;
+      const img = w.querySelector<HTMLElement>('.pic4-img'), tr = tag.getBoundingClientRect(), cell = img?.getBoundingClientRect(); if (!img || !cell || !tr.height) return;
+      const z = cell.width / (img.offsetWidth || cell.width); /* the phone's page is zoomed (--ph-zoom): rects are screen px, the mask is drawn in the picture's own */
+      /* (13 Nov, Nitish: "in the phone layout you don't have to put it on the side… it can go on the bottom center"; then
+         "at 25% from the left") the tab lies along the picture's bottom edge, its centre at --sc-tag-px of the width, so the
+         pocket is the right-edge one turned: the tab's width along the edge with a join curving out at each end, the tab's
+         height deep; placed by a pixel offset from the picture's left, measured off the tab (a mask's % would land elsewhere) */
+      const Rt = parseFloat(getComputedStyle(tag).borderTopLeftRadius) || R, TW = tr.width / z, TH = tr.height / z, W2 = TW + 2 * Rt;
       const d2 = `M 0 ${TH} ${sCorner([Rt, TH], [1, 0], [0, -1], Rt, K)} ${sCorner([Rt, 0], [0, -1], [1, 0], Rt, K)} ${sCorner([Rt + TW, 0], [1, 0], [0, 1], Rt, K)} ${sCorner([Rt + TW, TH], [0, 1], [1, 0], Rt, K)} Z`;
       const svg2 = `<svg xmlns='http://www.w3.org/2000/svg' width='${W2.toFixed(2)}' height='${TH.toFixed(2)}' viewBox='0 0 ${W2.toFixed(2)} ${TH.toFixed(2)}'><path d='${d2}'/></svg>`;
-      w.style.setProperty('--pic-tag', `url("data:image/svg+xml,${encodeURIComponent(svg2)}")`); w.style.setProperty('--pic-tag-w', `${W2.toFixed(2)}px`); w.style.setProperty('--pic-tag-h', `${TH.toFixed(2)}px`);
+      w.style.setProperty('--pic-tag', `url("data:image/svg+xml,${encodeURIComponent(svg2)}")`); w.style.setProperty('--pic-tag-w', `${W2.toFixed(2)}px`); w.style.setProperty('--pic-tag-h', `${TH.toFixed(2)}px`); w.style.setProperty('--pic-tag-left', `${((tr.left - cell.left) / z - Rt).toFixed(2)}px`);
     };
     place(); const ro = new ResizeObserver(place); ro.observe(w); if (tag) ro.observe(tag);
-    return () => { ro.disconnect(); for (const k of ['--pic-notch', '--pic-notch-h', '--pic-tag', '--pic-tag-w', '--pic-tag-h']) w.style.removeProperty(k); };
+    return () => { ro.disconnect(); for (const k of ['--pic-notch', '--pic-notch-h', '--pic-tag', '--pic-tag-w', '--pic-tag-h', '--pic-tag-left']) w.style.removeProperty(k); };
   }, [wrap, key]);
 }
 
