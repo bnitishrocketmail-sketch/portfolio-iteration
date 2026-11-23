@@ -306,7 +306,8 @@
    of the picture's height (a control; 5 Nov — it was centred there, at 42%, and sat "a lot towards the middle"). "Monetisation motion"
    (5 Nov, Nitish: "something about monetization" — it was "Promotional motion", 4 Nov: the cards round his drawing are the functional
    animations — feedback, loaders, states; these are the ones that sell); "Close" while open */
-.sc4-tag { position: absolute; right: 0; top: var(--sc-tag-y); z-index: 6; display: inline-flex; align-items: center; padding: 14px 7px 14px 8px; border: 0; border-radius: calc(16px * var(--ios-k, 1)) 0 0 calc(16px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: none; color: var(--social-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); line-height: 1.1; cursor: pointer; }
+.sc4-tag { position: absolute; right: 0; top: var(--sc-tag-y); z-index: 6; display: inline-flex; align-items: center; padding: 14px 7px 14px 8px; border: 0; border-radius: calc(16px * var(--ios-k, 1)) 0 0 calc(16px * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: none; color: var(--social-ink); font: 600 clamp(11.5px, 1.15cqw, 13.5px) var(--body); line-height: 1.1; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color .15s; }
+.sc4-tag:active { color: color-mix(in srgb, var(--social-ink) 55%, transparent); } /* the press (23 Nov, Nitish: the phone's tap flash "is a rectangle, not exactly the shape"): iOS's own highlight paints the button's box, and this button has no ground — so no OS highlight; the word's ink dims for the press instead, as the nav's icons change ink */
 /* the swap (4 Nov, Nitish: "the resizing of that nudge… should be smoother… the word fading in and fading out should also
    be smooth… sliding from the left or towards the right… with fade"): both words sit in the tab, centred on it, each
    measured (useTagSize: --tag-l0/--tag-l1 their lengths up the tab, --tag-w the line's width); the inner box takes the
