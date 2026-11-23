@@ -44,10 +44,19 @@ function Card({ c, i }: { c: typeof CARDS[number]; i: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref, 0);
   const reduce = useReducedMotion();
+  /* built only if its layout shows it (23 Nov): a card hidden by its token (display: none — four of the six on the phone,
+     the sale banner on the desktop) never fetches, unzips or builds its Lottie. Until now every card built its SVG at each
+     open, seen or not: 735 of the showcase's ~6,000 nodes on the phone. The question is asked as the card mounts, before
+     its first paint, so a shown card's Lottie starts exactly when it did — a first version waited for the in-view observer
+     instead, and its callback queued behind the belt's builds: the cards faded in empty and their Lotties came .8s later
+     (measured, a warm open: 468ms → 1243ms). The observer is kept only for a card shown later from Controls. */
+  const [seen, setSeen] = useState(false);
+  useLayoutEffect(() => { const el = ref.current; if (el && getComputedStyle(el).display !== 'none') setSeen(true); }, []);
+  useEffect(() => { if (on) setSeen(true); }, [on]);
   return (
     <motion.div ref={ref} className={`sc4-flo ${c.id}`} initial={reduce ? false : { opacity: 0, y: 22, scale: .92 }} animate={{ opacity: 1, y: 0, scale: 1, transition: reduce ? { duration: 0 } : { duration: .58, delay: .42 + i * .06, ease: EASE_IN } }} exit={{ opacity: 0, y: 10, scale: .95, transition: { duration: reduce ? 0 : .22, ease: [.4, 0, 1, 1] } }}>
       <div className="fl4-in" style={{ '--dur': `${5.4 + (i % 4) * .5}s`, '--dl': `${-(i * .7)}s` } as CSSProperties}>
-        <div className={`lot${c.round ? ' round' : ''}`} style={{ aspectRatio: `${c.w} / ${c.h}`, '--lw': c.lw, '--plw': `${c.plw}px` } as CSSProperties}><Lottie src={c.src} still={c.still} playing={on} viewBox={c.crop} label={c.label.replace('|', ' ')} /></div>
+        <div className={`lot${c.round ? ' round' : ''}`} style={{ aspectRatio: `${c.w} / ${c.h}`, '--lw': c.lw, '--plw': `${c.plw}px` } as CSSProperties}>{seen && <Lottie src={c.src} still={c.still} playing={on} viewBox={c.crop} label={c.label.replace('|', ' ')} />}</div>
         <span className="cap">{c.label.split('|').map((t, k) => k ? <><br />{t}</> : t)}</span>
       </div>
     </motion.div>
