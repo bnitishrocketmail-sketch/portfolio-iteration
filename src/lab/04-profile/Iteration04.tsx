@@ -453,7 +453,7 @@ export default function Iteration04() {
                   dark at a low opacity so it reads as the wall a shade darker; behind him and the cards, leaning least */}
               {sigBg && <div className="fl4 sig-bg" data-depth=".2" aria-hidden="true">{sigWord ? <svg className="sig-word" viewBox="0 0 1000 200" aria-hidden="true"><text x="500" y="188" textAnchor="middle" textLength="1000" lengthAdjust="spacing" fill="currentColor">PORTFOLIO</text></svg> : <SigWall />}</div>}
               <FloatCard cls="coin-card" hold={show} depth=".5" dur="7s" dl="-3.3s">{on => <><Lottie className="coin" src={LOTTIES.coin} still={STILL.coin} playing={on} label="A rupee coin turning, made with the Vector 3D plugin" /><span className="cap">Vector 3D plugin</span></>}</FloatCard>
-              <FloatCard cls="loader-card" hold={show} depth=".6" dur="5.8s" dl="-1.7s">{on => <><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} playing={on} label="Lenskart's infinity-glasses loader" /><span className="cap">Loader animation</span></>}</FloatCard>
+              <FloatCard cls="loader-card" hold={show} depth=".6" dur="5.8s" dl="-1.7s">{on => <><Lottie className="lk" src={LOTTIES.loader} drop={dropLoaderText} viewBox={LOADER_VIEWBOX} still={STILL.loader} playing={on} label="Lenskart's infinity-glasses loader" /><span className="cap">Brand loader</span></>}</FloatCard>
               {depthOn
                 ? <DepthImg className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} depth={`${dd}${dn}.png`} layers={`${dd}${dn}-layers.png`} fg={`${dd}${dn}-fg.webp`} {...dfs} tilt={tilt} k={depthK} alt="" />
                 : <img className="pic4-img pic4-me" src={picV === 'photo' ? deskCutout : illustrationCutout} alt="" aria-hidden="true" />}
@@ -461,7 +461,7 @@ export default function Iteration04() {
               {/* the fifth card (Nitish, 13 Oct): the Gold membership reveal — the glass is padded to the rounded card inside the
                   Lottie (its canvas is laid with negative margins so that rectangle is the content box), and the confetti flies
                   past the glass; the Lottie's corners are its own */}
-              <FloatCard cls="gold-card" hold={show} depth="1.15" dur="6.1s" dl="-3.8s">{on => <><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} playing={on} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Feedback animation</span></>}</FloatCard>
+              <FloatCard cls="gold-card" hold={show} depth="1.15" dur="6.1s" dl="-3.8s">{on => <><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} playing={on} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state</span></>}</FloatCard>
               {/* the sixth card (Nitish, 13 Oct): the persuasion animation, the whole canvas in the glass with the standard padding and
                   no rounding of its own */}
               <FloatCard cls="pers-card" hold={show} depth="1.2" dur="6.6s" dl="-.9s">{on => <><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects playing={on} label="The persuasion animation" /><span className="cap">Persuasion animation</span></>}</FloatCard>
