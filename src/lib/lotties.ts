@@ -20,10 +20,18 @@ export const LOTTIES = {
   /* the persuasion animation (04, 13–14 Oct): 360 × 80, 8 s, text in a packaged font (Cal Sans), a glow of Gaussian-blurred
      shapes behind the pill (so it plays with `effects`); its card takes the whole canvas with the standard padding, no rounding */
   persuasion: 'https://lottie.host/971688e7-4357-4b5e-9391-0e67f4580d49/zTwfKgZDXS.lottie',
+  /* the Loan closed notification from the fintech study (04, 26 Nov, Nitish: "the notifications one, and the variant is loan
+     closed… a floating card with that animation… on the home page… just the lottie of that state"): the study's own file,
+     served from this site — 340 × 160, 8 s. The notification is the full-width pill at y 40–120 (measured on a render); a
+     coin rises from under it, flips over its top edge (as high as y 21) and drops into the slot that becomes the progress
+     bar, then "Download NOC". Cropped to the pill and the room over it (NOTIF_VIEWBOX): the 40px under the pill, where the
+     coin first shows cut by the canvas's foot, stay out of the card, so the coin comes up from behind the pill's lower edge */
+  notif: '/cases/fintech/loan-closed.lottie',
 };
 /* the Gold card's rectangle, as fractions of its canvas: left, top, width, height */
 export const GOLD_RECT = { x: 26 / 720, y: 280 / 720, w: 672 / 720, h: 153 / 720 };
 export const dropLoaderText = (l: { nm?: string; ty?: number }) => (l.nm ?? '').startsWith('TEXT') || l.ty === 2;
 export const LOADER_VIEWBOX = '113 34 72 34';
-/* the frames held under reduced motion: B mid-state, the coin face-on, the loader at its widest */
-export const STILL = { b: 150, coin: 84, loader: 60, micro: 240, gold: 400, persuasion: 240 };
+export const NOTIF_VIEWBOX = '0 0 340 120';
+/* the frames held under reduced motion: B mid-state, the coin face-on, the loader at its widest, the notification at "Download NOC" */
+export const STILL = { b: 150, coin: 84, loader: 60, micro: 240, gold: 400, persuasion: 240, notif: 300 };

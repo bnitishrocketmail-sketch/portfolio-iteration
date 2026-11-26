@@ -28,7 +28,7 @@ import Motion04 from './Motion04';
 import PhoneNav04 from './PhoneNav04';
 import Showcase04 from './Showcase04';
 import { SigWall } from './Sig4';
-import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, STILL, dropLoaderText } from '../../lib/lotties';
+import { GOLD_RECT, LOADER_VIEWBOX, LOTTIES, NOTIF_VIEWBOX, STILL, dropLoaderText } from '../../lib/lotties';
 import { readTweaks, tweakKey, withPublished } from './tokens';
 import { SOCIAL } from './social';
 import './profile.css';
@@ -465,6 +465,11 @@ export default function Iteration04() {
               {/* the sixth card (Nitish, 13 Oct): the persuasion animation, the whole canvas in the glass with the standard padding and
                   no rounding of its own */}
               <FloatCard cls="pers-card" hold={show} depth="1.2" dur="6.6s" dl="-.9s">{on => <><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects playing={on} label="The persuasion animation" /><span className="cap">Persuasion animation</span></>}</FloatCard>
+              {/* the seventh card (Nitish, 26 Nov): the fintech study's Loan closed notification — the Lottie alone, without the
+                  study's rise from behind the bottom bar or its turn-taking; the glass is padded to the pill (as the Gold card's is
+                  to its card) and the coin flips over the glass's top edge. His name for it was "delightful notification system",
+                  shortened at his asking */}
+              <FloatCard cls="notif-card" hold={show} depth="1.05" dur="6.3s" dl="-2.9s">{on => <><Lottie className="ln" src={LOTTIES.notif} viewBox={NOTIF_VIEWBOX} still={STILL.notif} playing={on} label="A loan-closed notification: a coin flips into a progress bar that fills and becomes a Download NOC button" /><span className="cap">Delightful notifications</span></>}</FloatCard>
               {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
               <FloatCard cls="micro-card" hold={show} depth="1.1" dur="6.4s" dl="-2.4s">{on => <><Lottie className="mli" src={LOTTIES.micro} still={STILL.micro} playing={on} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></>}</FloatCard>
               {/* the showcase itself, over everything in the picture; its tag sits outside the tile, in its cut-out (below) */}
