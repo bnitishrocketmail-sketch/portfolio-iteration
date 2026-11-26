@@ -267,7 +267,7 @@
 .fl4.pers-card { left: var(--c-pers-x); top: var(--c-pers-y); z-index: var(--c-pers-z); display: var(--c-pers-v); }
 .fl4-in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1cqw; padding: 1.1cqw 1.3cqw; border-radius: calc(calc(var(--r) * .7) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); color: var(--glass-ink);
   background: color-mix(in srgb, var(--glass-bg) calc(var(--glass-a) * 100%), transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
-  border: 1px solid rgba(255, 255, 255, .14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), var(--shadow-el);
+  border: 1px solid rgba(255, 255, 255, .14); box-shadow: var(--shadow-el); /* one line round the glass (26 Nov, Nitish: "fix the double stroke problem of the container that we have fixed earlier on the monetization motion page" — the home's floating cards now): the 1px highlight that sat just inside the top edge is gone, as on the showcase's cards (23 Nov); the border stays, the same on all four sides */
   animation: float4 var(--dur, 5s) ease-in-out infinite; animation-delay: var(--dl, 0s); }
 .fl4 .cap { display: block; font: 600 clamp(10.5px, .95cqw, 13px)/1.25 var(--f-copy); } /* title, a size down for the cards */
 .fl4 .bl { width: 6.8cqw; aspect-ratio: 1; margin: -.4cqw 0 -.2cqw -.5cqw; } .fl4 .bl svg { display: block; }
