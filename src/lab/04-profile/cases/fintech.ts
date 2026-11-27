@@ -9,11 +9,11 @@ const A = '/cases/fintech';
 
 export const fintech: Case = {
   id: 'fintech-motion',
-  title: 'Designing motion for a fintech product',
+  title: 'Loan & payment journeys', /* the project's name (27 Nov, Nitish: the site's words moving from motion designer to a product designer whose skill includes motion), as Magic Scale's and Interactive experiences' headlines are theirs; was "Designing motion for a fintech product" */
   sub: 'Adaptive loan-journey notifications for MobiKwik — contextual motion for every stage of a loan.',
   chips: ['App feature', 'UX/UI', 'Interaction/Motion'],
   facts: [
-    { k: 'Role', v: 'Product designer — motion' },
+    { k: 'Role', v: 'Product designer' },
     { k: 'Project type', v: 'Feature design' },
     { k: 'Team', v: 'Product design' },
     { k: 'Focus', v: 'UI/UX design collaboration, interaction & motion design ownership' },
