@@ -488,8 +488,8 @@ export default function Iteration04() {
             {/* both words in the tab, one shown: the tab's height runs from one's length to the other's and the words
                 scroll along it, fading (4 Nov, Nitish: "the resizing of that nudge… should be smoother"; 5 Nov: "the word
                 can scroll towards up… and the close can scroll in from below") — useTagSize measures them, profile.css
-                moves them. "Monetisation motion" (5 Nov: "something about monetization"; was "Promotional motion") */}
-            <span className="sc4-tag-in"><span className="w w0" aria-hidden={show}>Monetisation motion</span><span className="w w1" aria-hidden={!show}>Close</span></span>
+                moves them. "Monetisation creatives" (28 Nov, Nitish: "for now change monetization motion to monetization creatives" — the name to be settled later; it was "Monetisation motion" from 5 Nov, "Promotional motion" before) */}
+            <span className="sc4-tag-in"><span className="w w0" aria-hidden={show}>Monetisation creatives</span><span className="w w1" aria-hidden={!show}>Close</span></span>
           </button>
           <div className="notch4">
             <div className="links4" ref={linksRef}>
