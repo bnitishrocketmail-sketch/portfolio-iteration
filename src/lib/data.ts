@@ -117,7 +117,7 @@ export const LINKS = {
   lottiefiles: '#', // PLACEHOLDER
   instagram: '#',   // PLACEHOLDER
   email: 'email · placeholder', // PLACEHOLDER
-  cv: '#',          // PLACEHOLDER
+  cv: '/Nitish-Bhardwaj-CV.pdf', /* his CV (27 Nov, "Resume 3.0"), in public/: it opens in the browser's own PDF view, which has the download */
 };
 
 export const COPY = {
