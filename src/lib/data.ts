@@ -22,7 +22,7 @@ export const PROJECTS: Project[] = [
   { id: 'lenskart-b', title: "B — Lenskart's AI assistant", client: 'Lenskart', role: 'Motion & interaction', year: '2026', letter: 'B', m1: '#7B7EE4', m2: '#DFB3F3', wide: true,
     blurb: 'State Lotties for an AI-assisted eyeglass-buying journey, with the transitions recorded end to end.', tags: ['Lottie', 'State machine', 'Product'],
     cover: { lottie: 'https://lottie.host/9e427624-628c-46d0-a92d-fc7ca43e2836/VMVaaAYm3M.lottie', still: 300, bg: '#fff' } }, /* B's states back to back (LOTTIES.b), on white, held listening (Nitish, 22 Oct) */
-  { id: 'fintech-motion', title: 'Fintech motion', client: 'MobiKwik', role: 'Product designer — motion', year: '2025', letter: 'M', m1: '#2F55E6', m2: '#7A4DF0', wide: true,
+  { id: 'fintech-motion', title: 'Loan & payment journeys', client: 'MobiKwik', role: 'Product designer — motion', year: '2025', letter: 'M', m1: '#2F55E6', m2: '#7A4DF0', wide: true,
     blurb: 'Adaptive loan-journey notifications: contextual motion for every stage of a loan.', tags: ['App feature', 'UX/UI', 'Interaction/Motion'],
     cover: { comp: 'fintech' } }, /* the two phones of its hero, in small (22 Oct) */
   { id: 'launches', title: 'Launches & campaigns', client: 'Lenskart', role: 'Product designer — motion', year: '2025', letter: 'L', m1: '#0B2A15', m2: '#0A1230', wide: true,
