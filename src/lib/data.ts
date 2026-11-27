@@ -64,7 +64,7 @@ const pick = (ids: string[]) => ids.map(id => PROJECTS.find(p => p.id === id)!);
 /* the order (27 Nov, Nitish: "put interactive experiences after BAI assistant project"): Interactive experiences third,
    where it was last. The home's stack no longer reads the first three of this list: it has its own (HOME04) */
 export const PROJECTS04: Project[] = pick(['magic-scale', 'lenskart-b', 'ar-try-on', 'fintech-motion', 'launches']);
-export const HOME04: Project[] = pick(['magic-scale', 'lenskart-b', 'ar-try-on']); /* the home's three cards, front to back; Interactive experiences where Fintech motion was (27 Nov, Nitish: "replace the fintech motion card from the home page with interactive experiences card") */
+export const HOME04: Project[] = pick(['magic-scale', 'lenskart-b', 'fintech-motion']); /* the home's three cards, front to back. Third: Loan & payment journeys again (27 Nov, Nitish: "let's swap back", once Fintech motion had its new name); Interactive experiences held the place for an afternoon and its phone cover (.pc-ph) stays in the code for a card that wants it */
 export const MOTION_SYSTEM: Project = { id: 'motion-system', title: 'Motion design system', client: 'Motion & interaction system', role: 'Design & build', year: '2026', letter: 'M', m1: '#2f2e30', m2: '#e0e0e0',
   blurb: 'One set of motion decisions, defined once and inherited by every screen.', tags: ['Motion tokens', 'Interaction', 'System'],
   cover: { comp: 'motion' } }; /* its open card plays the system's journey phone beside the three levels (MotionThumb) */

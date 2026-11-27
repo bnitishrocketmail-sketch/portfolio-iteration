@@ -88,7 +88,7 @@ const FLAT = HS.map(flatFit);
 
 /* the scene: the phones' picture on a ground, the two screens' content (drawn flat, SW × SH) carried onto the glass, the
    islands over them. `on` plays the clips and Lotties (in view, or the card's hover); `mini` is the stack card's version */
-/* `fit` scales the phones' height against the card's (the default is 1.15, the mini 1.35); `at` is where their middle sits, as a percentage of the card's width (the Projects page's open card puts them right of its text) */
+/* `fit` scales the phones' height against the card's (the default is 1.15, the mini 1.08); `at` is where their middle sits, as a percentage of the card's width (the Projects page's open card puts them right of its text) */
 export function Phones3D({ on: onProp, mini, fit, at, cls, bg, logo, label, left, right }: { on?: boolean; mini?: boolean; fit?: number; at?: number; cls: string; bg: string; logo?: string; label: string; left: (on: boolean) => ReactNode; right: (on: boolean) => ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, .2);
@@ -97,7 +97,7 @@ export function Phones3D({ on: onProp, mini, fit, at, cls, bg, logo, label, left
   /* the picture scaled so the phones stand 115% of the card's height (his page cut the top and the foot the same way) */
   useLayoutEffect(() => {
     const el = ref.current; if (!el) return;
-    const set = () => setK((el.clientHeight * (fit ?? (mini ? 1.35 : 1.15))) / Q.H / Q.k);
+    const set = () => setK((el.clientHeight * (fit ?? (mini ? 1.08 : 1.15))) / Q.H / Q.k); /* the mini: 1.08 (27 Nov, was 1.35) — smaller, lower and further right, so a longer name ("Loan & payment journeys") clears the left phone on the desktop's card and the phone's */
     set(); const ro = new ResizeObserver(set); ro.observe(el); return () => ro.disconnect();
   }, [mini, fit]);
   const W = Q.W * Q.k, H = Q.H * Q.k; /* the picture's pixels */
