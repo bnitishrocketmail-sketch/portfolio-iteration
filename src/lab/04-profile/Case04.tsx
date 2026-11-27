@@ -1060,7 +1060,7 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04, card = 'c
               <span className="cs4-pair" aria-hidden="true"><span className="me4 cs4-me"><img src={desk} alt="" /></span><span className="cs4-me cs4-pal"><img src={c.collab.photo} alt="" /></span></span>
               <div className="cs4-talk-who"><span className="cs4-talk-role">In collaboration with</span><b className="cs4-talk-name">{c.collab.name}</b></div>
             </div>
-            <p className="cs4-talk-line">Designed together with {c.collab.name.split(' ')[0]}, {c.collab.role.toLowerCase()}. I owned the interaction design. His case study has the project in full.</p>{/* 28 Nov, Nitish: it read as if he did the motion ("I worked on the interaction and motion with…"); a joint design, his ownership the interaction design, motion not named — part of a product designer's work */}
+            <p className="cs4-talk-line">This project was done in collaboration with {c.collab.name.split(' ')[0]}, {c.collab.role.toLowerCase()}. Do check out his case study.</p>{/* 28 Nov, Nitish, after three options: "this project was done in collaboration with Ashish, and please check out his case study… this straightforward communication is enough" — no split of who owned what, no motion. Before: p379's "Designed together with… I owned the interaction design…", and first "I worked on the interaction and motion with…" */}
             <div className="cs4-talk-row acts">
               <a className="cv4 cs4-talk-btn" href={c.collab.project} target="_blank" rel="noopener" aria-label={`${c.collab.name}’s case study of this project (opens his portfolio)`}>Case study <Arrow04 out /></a>
             </div>
