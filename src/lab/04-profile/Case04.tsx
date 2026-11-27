@@ -502,47 +502,76 @@ function Synced({ b }: { b: SyncedB }) {
    the same place: the SIM picked, the fetch rings (the words become "Fetching your bank details"), the verified tick
    (then "Redirecting you in a few seconds", as his success reference); after a hold, back to the idle. Its frames,
    measured: the pick to 30, the fetch to ~495, verified from ~510 of 720 at 60 fps. It runs on its own (27 Oct: "it
-   should be auto played") — the idle a few loops, then the flow — and a tap on the sheet or a chip starts it at once.
-   Both Lotties stay mounted, the one not playing hidden, so the hand-over has no blank frame (the flow used to load on
-   the tap). The Lotties are his exports with their grey ground hidden, so they draw on the sheet. The words and the chips
+   should be auto played") and a tap on the sheet or a chip starts it at once; the timing and the hand-over are the note
+   under the states' list below. The Lotties are his exports with their grey ground hidden, so they draw on the sheet. The words and the chips
    sit at the left, the phone at the right */
 const SIM_STATES = ['Idle', 'Pick', 'Fetching', 'Verified'] as const;
 type SimState = typeof SIM_STATES[number];
-const SIM_IDLE_LOOPS = 2; /* idle loops (3.6 s each) before the flow runs on its own */
+/* the timing and the hand-over (27 Nov, Nitish: "there is very less time to register that there are two SIM cards… the
+   pick should be triggered after 2.5 seconds… from the idle to pick, there is a small glitch"). Three causes, measured:
+   the pick ran 0.4 s after the phone was scrolled to (the idle's loops were counted from its frame events, and the holds
+   on frame 0 while it was off screen counted too); the flow's file was only fetched at the pick, so the idle ran on
+   ~160 ms and was then cut mid-loop; and the two files did not match — the idle's "SIM 1" label sat 5 px lower and 1 px
+   left of the flow's (moved in sim-idle.lottie to the flow's place: the cards are now the same pixels), and the idle's
+   two glows circle the cards where the flow's sit under them.
+   Now: the idle shows for SIM_IDLE_MS once the phone itself (not the block's words) is half in view, and again each time
+   the flow has come back to it. The flow is mounted from the block's first sight, held on frame 0 and hidden. At the pick
+   it comes in over the idle (the same cards, so nothing moves), the idle and its glows fade out under it, and only then
+   does the flow play. A tap on the sheet or a chip starts the same hand-over at once. */
+const SIM_IDLE_MS = 2500; /* from the phone coming into view to the pick's first movement: the hand-over below is inside it (the cards do not change in it, only the glows fade) */
+const SIM_IN_MS = 100, SIM_OUT_MS = 160, SIM_GAP_MS = 40; /* the hand-over: the flow's first frame in, then the idle out, a beat, then it plays */
+const SIM_HAND_MS = SIM_IN_MS + SIM_OUT_MS + SIM_GAP_MS;
 function SimPick() {
   const box = useRef<HTMLDivElement>(null);
+  const phone = useRef<HTMLDivElement>(null);
   const inView = useInView(box, .25);
+  const phoneIn = useInView(phone, .5);
   const reduce = typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [run, setRun] = useState(0); /* 0: idle; >0: the flow playing (a new number restarts it) */
+  const [seen, setSeen] = useState(false); /* the flow's file is fetched from the block's first sight, not at the pick */
+  useEffect(() => { if (inView) setSeen(true); }, [inView]);
+  const [phase, setPhase] = useState<'idle' | 'in' | 'out' | 'flow' | 'back'>('idle'); /* in: the flow's frame 0 over the idle; out: the idle fading under it; flow: playing; back: the flow, held on its last frame, fading out over the idle */
   const [state, setState] = useState<SimState>('Idle');
   const [flowReady, setFlowReady] = useState(false);
-  const hold = useRef(0); const idleLoops = useRef(0);
-  const start = useCallback(() => { if (reduce) return; clearTimeout(hold.current); idleLoops.current = 0; setRun(r => r + 1); setState('Pick'); }, [reduce]);
-  const onFrame = useCallback((f: number) => { setState(f < 30 ? 'Pick' : f < 500 ? 'Fetching' : 'Verified'); }, []);
-  const onDone = useCallback(() => { hold.current = window.setTimeout(() => { setRun(0); setState('Idle'); }, 2600); }, []);
-  const onIdleFrame = useCallback((f: number) => { if (f < 2) { idleLoops.current += 1; if (idleLoops.current > SIM_IDLE_LOOPS && inView) start(); } }, [inView, start]);
+  const timers = useRef<number[]>([]);
+  const clear = useCallback(() => { timers.current.forEach(t => clearTimeout(t)); timers.current = []; }, []);
+  const later = useCallback((fn: () => void, ms: number) => { timers.current.push(window.setTimeout(fn, ms)); }, []);
+  const toIdle = useCallback(() => { clear(); setPhase('idle'); setState('Idle'); }, [clear]);
+  const start = useCallback(() => {
+    if (reduce || !flowReady) return;
+    clear(); setState('Idle'); setPhase('in'); /* from a run in progress too: the flow goes back to frame 0 (not playing) and starts over */
+    later(() => setPhase('out'), SIM_IN_MS);
+    later(() => { setPhase('flow'); setState('Pick'); }, SIM_HAND_MS);
+  }, [reduce, flowReady, clear, later]);
+  const playing = phase === 'flow';
+  const playingRef = useRef(playing); playingRef.current = playing;
+  const onFrame = useCallback((f: number) => { if (playingRef.current) setState(f < 30 ? 'Pick' : f < 500 ? 'Fetching' : 'Verified'); }, []); /* the hold on frame 0 fires it too: only a playing flow names the state */
+  const onDone = useCallback(() => { later(() => { setPhase('back'); setState('Idle'); later(() => setPhase('idle'), 300); }, 2600); }, [later]); /* the tick held, then a cross-fade to the idle; the flow goes back to frame 0 once it is hidden */
   const onFlowLoaded = useCallback(() => setFlowReady(true), []);
-  useEffect(() => () => clearTimeout(hold.current), []);
+  /* the idle on its own for SIM_IDLE_MS, then the pick — while the phone is in view; leaving it starts the wait over */
+  const since = useRef(0); /* when the idle came on screen: the wait runs from then, not from the flow's file arriving (it is fetched in the meantime) */
+  useEffect(() => { since.current = phase === 'idle' && phoneIn ? performance.now() : 0; }, [phase, phoneIn]);
+  useEffect(() => { if (phase !== 'idle' || !phoneIn || !flowReady || reduce) return; const t = window.setTimeout(start, Math.max(0, SIM_IDLE_MS - SIM_HAND_MS - (performance.now() - (since.current || performance.now())))); return () => clearTimeout(t); }, [phase, phoneIn, flowReady, reduce, start]);
+  useEffect(() => clear, [clear]);
   const A = '/cases/fintech';
   const idle = state === 'Idle' || state === 'Pick';
   const words = idle ? null : state === 'Fetching' ? 'Fetching your bank details' : 'Redirecting you in a few seconds';
-  const showFlow = run > 0 && flowReady;
+  const idleOn = phase === 'idle' || phase === 'in' || phase === 'back', flowOn = phase === 'in' || phase === 'out' || phase === 'flow';
   return (
     <div ref={box} className="cs4-sim">
       <div className="cs4-sim-text">
         <h4 className="cs4-sub">Which SIM? A pick, a fetch, a tick</h4>
         <p className="cs4-p">On a dual-SIM Android phone, setting up UPI means choosing the SIM whose number the bank knows. The two SIMs float in the sheet until one is tapped; then it is picked, the banks are fetched and the number is verified — one Lottie, three states, the sheet’s words following.</p>
         <div className="cs4-sim-chips" role="group" aria-label="The state">
-          {SIM_STATES.map(st => <button key={st} type="button" className={`cs4-faq-label cs4-sim-chip${state === st ? ' on' : ''}`} onClick={() => { if (st === 'Idle') { clearTimeout(hold.current); setRun(0); setState('Idle'); } else start(); }}>{st}</button>)}
+          {SIM_STATES.map(st => <button key={st} type="button" className={`cs4-faq-label cs4-sim-chip${state === st ? ' on' : ''}`} onClick={() => { if (st === 'Idle') toIdle(); else start(); }}>{st}</button>)}
         </div>
       </div>
-      <div className="cs4-media phone filled cs4-sim-phone" role="img" aria-label="Choosing which SIM to verify the bank account from: the two SIMs floating; then the pick, the fetch and the verified tick">
+      <div ref={phone} className="cs4-media phone filled cs4-sim-phone" role="img" aria-label="Choosing which SIM to verify the bank account from: the two SIMs floating; then the pick, the fetch and the verified tick">
         <img src={`${A}/sim-bg.webp`} alt="" draggable={false} />
         <button type="button" className="cs4-sim-sheet" onClick={start} aria-label="Pick a SIM">
           <i className="cs4-sim-handle" aria-hidden="true" />
           <div className="cs4-sim-head" style={{ opacity: idle ? 1 : 0 }}><span>Select SIM Card Linked to</span><b>8960793480</b></div>
-          <div className="cs4-sim-lot" style={{ opacity: showFlow ? 0 : 1 }}><Lottie src={`${A}/sim-idle.lottie`} playing={inView && !showFlow} onFrame={onIdleFrame} /></div>
-          <div className="cs4-sim-lot" style={{ opacity: showFlow ? 1 : 0 }}>{run > 0 && <Lottie key={run} src={`${A}/sim-flow.lottie`} loop={false} playing={inView} onFrame={onFrame} onComplete={onDone} onLoaded={onFlowLoaded} />}</div>
+          <div className="cs4-sim-lot" style={{ opacity: idleOn ? 1 : 0, transitionDuration: `${phase === 'out' ? SIM_OUT_MS : 250}ms` }}><Lottie src={`${A}/sim-idle.lottie`} playing={inView && phase !== 'flow'} /></div>
+          <div className="cs4-sim-lot" style={{ opacity: flowOn ? 1 : 0, transitionDuration: `${phase === 'in' ? SIM_IN_MS : 250}ms` }}>{seen && <Lottie src={`${A}/sim-flow.lottie`} loop={false} playing={playing && inView} holdFrame={playing || phase === 'back'} onFrame={onFrame} onComplete={onDone} onLoaded={onFlowLoaded} />}</div>
           <div className="cs4-sim-foot">
             <p className="note" style={{ opacity: idle ? 1 : 0 }}>An SMS will be sent from your number to verify your bank account; standard charges may apply.</p>
             <p className="line" style={{ opacity: words ? 1 : 0 }}>{words}</p>
