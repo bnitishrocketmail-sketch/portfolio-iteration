@@ -970,6 +970,13 @@
   .pp4-head .h2-4 { color: var(--name-ink); } .pp4-head .pp4-note { color: var(--glass-ink); } /* on the picture: the name's and the lede's inks, which already sit on it */
   .it04.light .pp4-head .pp4-note, .it04.light .cs4-head .pp4-note { color: var(--line-ink); } /* light: the page is light here, so the line's dark ink (the glass's light ink was for over the dark picture) */
   .pp4 > :not(.pp4-head) { border-radius: calc(var(--r) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: var(--frame); box-shadow: var(--shadow-frame); padding: 12px; } /* the container's inset the cards' gap, all round (24 Oct: was 16 / 14 / 18) */
+  /* the phone's pages in the light theme: a phone UI's shadow under their cards (28 Nov, Nitish: "in phone layout, the
+     shadow of the cards should be subtle, more subtle, as in how on a UI, a phone UI, shadows should be" — the light
+     version; the home's and the desktop's stay). The cards here carried the frame's shadow, made to lift a whole window
+     off a dark desk (to 40px down, 80px of blur, half black): on a light page a few px apart they greyed the ground
+     between them. Both shadow tokens are re-pointed inside the pages (.pp4: Projects, Lab, Workflow, a case study), so
+     every card there follows; the home is not a .pp4 and keeps its own, as do the bar and the phones inside the cards */
+  .it04.light .pp4 { --shadow-ui: 0 1px 2px rgba(0, 0, 0, .06), 0 4px 12px -4px rgba(0, 0, 0, .1); --shadow-frame: var(--shadow-ui); --shadow-el: var(--shadow-ui); }
   /* the tabs (24 Oct, Nitish: "the main container containing these project containers will not have a background or
      the rim … should not be visible … shouldn't have a shadow. There are just these floating project cards"): on
      Projects, Lab and Notes the container stays as the list's holder but shows nothing — no ground, no shadow, no
