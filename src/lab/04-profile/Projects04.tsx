@@ -112,7 +112,12 @@ export default function Projects04({ onOpen, items = PROJECTS04, title = 'Projec
     const c = laid[k]; if (!c) return;
     const s = row.scrollLeft, vw = row.clientWidth, max = Math.max(0, total + geo.gap - vw);
     const to = c.x < s ? c.x : c.x + c.w + geo.gap > s + vw ? c.x + c.w + geo.gap - vw : s;
-    const left = Math.max(0, Math.min(max, to));
+    /* the last card is never left hidden with no sign of it (Nitish, 27 Nov: "the fifth project doesn't show… the fifth
+       project should show on the extreme right end, as it should be if it was scrolled all the way"): opening the fourth
+       put its gap on the right edge, so the fifth began exactly where the row was cut. When no more than one folded card
+       is left past the right edge, and the picked card still shows whole from the row's end, the row goes to its end */
+    const end = max - to <= C + geo.gap + 1 && c.x >= max - 1;
+    const left = Math.max(0, Math.min(max, end ? max : to));
     if (Math.abs(left - s) > 1) row.scrollTo({ left, behavior: reduce ? 'auto' : 'smooth' });
   }, [sel, geo, phone]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
