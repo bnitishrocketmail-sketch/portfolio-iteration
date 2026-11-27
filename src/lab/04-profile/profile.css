@@ -602,6 +602,13 @@
 .pcard4 { background: none; } /* the button's own ground gone (22 Oct): the pill's hole shows the card behind, not a button's grey */
 .pc-lot { display: block; } .pc-lot-in { position: absolute; left: 0; right: 0; top: var(--name-b, 30%); bottom: 0; display: grid; place-items: center; } /* B on the middle card: the band from the name's foot to the card's foot (22 Oct, second pass: as big as the band holds, the same room above and below) */
 .pc-lot-in svg { display: block; width: auto !important; height: 86% !important; }
+/* a screen recording's phone on a home card (27 Nov, the try-on's on Interactive experiences): the Projects card's phone
+   (.pp4-ph) adapted — whole, at the right, the same margin above, below and beside it, and narrow enough to clear the
+   name (a wider one, running off the foot, met "Interactive experiences"); its top half — the face and the with / without
+   line — is what the back card's strip shows at rest. A dark body with a hairline, so it reads on the back card's grey
+   in both themes */
+.pc-ph { position: absolute; right: 5%; top: 50%; translate: 0 -50%; width: 27%; aspect-ratio: 9 / 19.5; overflow: hidden; border-radius: calc(clamp(10px, 1.1cqw, 16px) * var(--ios-k, 1)); corner-shape: var(--ios-shape, round); background: #000; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 10px 22px -12px rgba(0, 0, 0, .5); }
+.pc-ph::after { content: ''; position: absolute; inset: 0; border-radius: inherit; corner-shape: inherit; box-shadow: inset 0 0 0 2px #101012; pointer-events: none; }
 .pcard4.lit { color: var(--card-front-ink); } /* a card with a light ground of its own takes the front card's dark ink */
 .tab4 { position: absolute; left: 3.6%; top: 50%; transform: translateY(-50%); width: 9.7%; height: 25.2%; border-radius: 999px; background: var(--card-tab); z-index: 1; } /* 22 Oct: a fifth narrower; drawn only when the pill is not a hole */
 .pcard4.back .tab4 { top: 28%; transform: none; }
