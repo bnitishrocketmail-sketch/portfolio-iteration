@@ -469,7 +469,7 @@ export default function Iteration04() {
                   study's rise from behind the bottom bar or its turn-taking; the glass is padded to the pill (as the Gold card's is
                   to its card) and the coin flips over the glass's top edge. His name for it was "delightful notification system",
                   shortened at his asking */}
-              <FloatCard cls="notif-card" hold={show} depth="1.05" dur="6.3s" dl="-2.9s">{on => <><Lottie className="ln" src={LOTTIES.notif} viewBox={NOTIF_VIEWBOX} still={STILL.notif} playing={on} label="A loan-closed notification: a coin flips into a progress bar that fills and becomes a Download NOC button" /><span className="cap">Delightful notifications</span></>}</FloatCard>
+              <FloatCard cls="notif-card" hold={show} depth="1.05" dur="6.3s" dl="-2.9s">{on => <><Lottie className="ln" src={LOTTIES.notif} viewBox={NOTIF_VIEWBOX} still={STILL.notif} playing={on} label="A loan-closed notification: a coin flips into a progress bar that fills and becomes a Download NOC button" /><span className="cap">Notification states</span></>}</FloatCard>
               {/* the fourth card (Nitish, 13 Oct): a wide Lottie with its own background, its corners rounded like the card's, the name below it */}
               <FloatCard cls="micro-card" hold={show} depth="1.1" dur="6.4s" dl="-2.4s">{on => <><Lottie className="mli" src={LOTTIES.micro} still={STILL.micro} playing={on} label="A bottom navigation bar's tabs animating in turn" /><span className="cap">Micro interactions</span></>}</FloatCard>
               {/* the showcase itself, over everything in the picture; its tag sits outside the tile, in its cut-out (below) */}
