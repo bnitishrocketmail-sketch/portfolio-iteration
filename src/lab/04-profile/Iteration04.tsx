@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { COPY, LAB04, LINKS, NAV04 as NAV, PROJECTS04 as PROJECTS, type ViewName } from '../../lib/data';
+import { COPY, HOME04, LAB04, LINKS, NAV04 as NAV, type ViewName } from '../../lib/data';
 import { useTheme } from '../../lib/theme';
 import Island from '../../components/island/Island';
 import { PhotoStack } from '../../components/tiles/Tiles';
@@ -98,7 +98,7 @@ function ProjectStack({ onOpen }: { onOpen: (id: string) => void }) {
   return (
     <div className="stack4">
       <div className={`deck4${rail ? ' rail' : ''}`} ref={deck} onPointerLeave={() => { if (!rail) setHov(null); }}>
-        {PROJECTS.slice(0, SHOWN).map((p, k) => {
+        {HOME04.slice(0, SHOWN).map((p, k) => {
           const r = k; /* 0 = front (bottom), 2 = back (top): the list's first is the front card, as it is the row's first (22 Oct) */
           const y = rail ? '0%' : r === 1 ? (hov === 1 ? `${RISE}%` : hov === 2 ? `${SINK}%` : '0%') : '0%';
           return (

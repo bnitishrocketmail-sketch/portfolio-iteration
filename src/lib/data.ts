@@ -61,7 +61,10 @@ export const PROJECTS: Project[] = [
    the Lab, which takes the Projects page's layout and interaction as they are, in this order. The rupee coin is gone (no
    such project); the Motion system joins the Lab as a project (its page is the Motion system tab) */
 const pick = (ids: string[]) => ids.map(id => PROJECTS.find(p => p.id === id)!);
-export const PROJECTS04: Project[] = pick(['magic-scale', 'lenskart-b', 'fintech-motion', 'launches', 'ar-try-on']);
+/* the order (27 Nov, Nitish: "put interactive experiences after BAI assistant project"): Interactive experiences third,
+   where it was last. The home's stack no longer reads the first three of this list: it has its own (HOME04) */
+export const PROJECTS04: Project[] = pick(['magic-scale', 'lenskart-b', 'ar-try-on', 'fintech-motion', 'launches']);
+export const HOME04: Project[] = pick(['magic-scale', 'lenskart-b', 'fintech-motion']); /* the home's three cards, front to back */
 export const MOTION_SYSTEM: Project = { id: 'motion-system', title: 'Motion design system', client: 'Motion & interaction system', role: 'Design & build', year: '2026', letter: 'M', m1: '#2f2e30', m2: '#e0e0e0',
   blurb: 'One set of motion decisions, defined once and inherited by every screen.', tags: ['Motion tokens', 'Interaction', 'System'],
   cover: { comp: 'motion' } }; /* its open card plays the system's journey phone beside the three levels (MotionThumb) */
