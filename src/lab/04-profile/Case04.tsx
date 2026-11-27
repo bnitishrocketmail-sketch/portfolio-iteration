@@ -1052,8 +1052,9 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04, card = 'c
         {c?.collab && card !== 'contact' ? (
           /* a collaboration (26 Oct, Nitish: "I have worked with this product designer on this project… I have worked on the
              interaction part… a user gets directed on that project on his portfolio… it gives him a credit… and a space for his
-             portfolio"): the contact card's place, as a credit — both faces, his name and role, the line, his case study as
-             the card's button and his portfolio beside it */
+             portfolio"): the contact card's place, as a credit — both faces, his name and role, the line, and his case study
+             as the card's button. The "His portfolio" link beside it is gone (28 Nov, Nitish: "remove the link of his
+             portfolio… Case study button is enough"); `site` stays in the data, unused */
           <article className="cs4-talk collab" aria-label={`In collaboration with ${c.collab.name}`}>
             <div className="cs4-talk-head">
               <span className="cs4-pair" aria-hidden="true"><span className="me4 cs4-me"><img src={desk} alt="" /></span><span className="cs4-me cs4-pal"><img src={c.collab.photo} alt="" /></span></span>
@@ -1062,7 +1063,6 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04, card = 'c
             <p className="cs4-talk-line">Designed together with {c.collab.name.split(' ')[0]}, {c.collab.role.toLowerCase()}. I owned the interaction design. His case study has the project in full.</p>{/* 28 Nov, Nitish: it read as if he did the motion ("I worked on the interaction and motion with…"); a joint design, his ownership the interaction design, motion not named — part of a product designer's work */}
             <div className="cs4-talk-row acts">
               <a className="cv4 cs4-talk-btn" href={c.collab.project} target="_blank" rel="noopener" aria-label={`${c.collab.name}’s case study of this project (opens his portfolio)`}>Case study <Arrow04 out /></a>
-              <a className="cs4-talk-link" href={c.collab.site} target="_blank" rel="noopener"><span>His portfolio</span><Arrow04 out /></a>
             </div>
           </article>
         ) : (
