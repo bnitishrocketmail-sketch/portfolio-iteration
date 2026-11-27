@@ -464,7 +464,7 @@ export default function Iteration04() {
               <FloatCard cls="gold-card" hold={show} depth="1.15" dur="6.1s" dl="-3.8s">{on => <><Lottie className="gm" src={LOTTIES.gold} still={STILL.gold} playing={on} label="A Gold membership card arriving in a burst of gold confetti" /><span className="cap">Success state</span></>}</FloatCard>
               {/* the sixth card (Nitish, 13 Oct): the persuasion animation, the whole canvas in the glass with the standard padding and
                   no rounding of its own */}
-              <FloatCard cls="pers-card" hold={show} depth="1.2" dur="6.6s" dl="-.9s">{on => <><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects playing={on} label="The persuasion animation" /><span className="cap">Persuasion animation</span></>}</FloatCard>
+              <FloatCard cls="pers-card" hold={show} depth="1.2" dur="6.6s" dl="-.9s">{on => <><Lottie className="pa" src={LOTTIES.persuasion} still={STILL.persuasion} effects playing={on} label="The persuasion animation" /><span className="cap">Persuasion nudges</span></>}</FloatCard>
               {/* the seventh card (Nitish, 26 Nov): the fintech study's Loan closed notification — the Lottie alone, without the
                   study's rise from behind the bottom bar or its turn-taking; the glass is padded to the pill (as the Gold card's is
                   to its card) and the coin flips over the glass's top edge. His name for it was "delightful notification system",
