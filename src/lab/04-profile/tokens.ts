@@ -98,7 +98,7 @@ export const CONTROLS: Control[] = [
   /* the note on the work (4 Nov): the one-liner box's glass with a few lines on these pieces, their making and their weight; top right, where he made room */
   ...show('note', 'About the work', '80%', '34%', '50%', '20%', 'block', 'none'),
   ...card('ai', 'Assistant', '11%', '38%', '3', 'block'), ...card('coin', 'Coin', '59%', '10%', '1', 'none'), ...card('micro', 'Micro', '3%', '51%', '3', 'none'),
-  ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'), ...card('notif', 'Notification', '66%', '22%', '1', 'block'),
+  ...card('gold', 'Success', '18%', '12%', '3', 'block'), ...card('pers', 'Persuasion', '68%', '40%', '1', 'block'), ...card('loader', 'Loader', '64%', '63%', '1', 'block'), ...card('notif', 'Notification', '66%', '22%', '1', 'none'),
   /* the name box — the one-liner on the picture (Nitish, 21 Oct: "a control to hide that tile") */
   { group: 'Intro cards', sub: 'Name box (the one-liner)', kind: 'select', key: '--name-box-v', label: 'Shown', def: 'none', light: 'none', options: [['Shown', 'flex'], ['Hidden', 'none']] },
   /* the intro's picture (Nitish, 22 Oct): the drawing as it is, the drawing in black and white, or his photo — the cutout

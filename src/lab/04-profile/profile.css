@@ -26,7 +26,7 @@
   --ph-t-h1: 32px; --ph-t-h2: 28px; --ph-t-display: 24px; --ph-t-title: 17px; --ph-t-body: 17px; --ph-t-meta: 13px; --ph-copy-w: 400;
   --f-head: var(--name-font), 'Outfit', sans-serif; --f-copy: var(--copy-font), 'Outfit', sans-serif;
   --c-ai-x: 11%; --c-ai-y: 38%; --c-ai-z: 3; --c-coin-x: 59%; --c-coin-y: 10%; --c-coin-z: 1; --c-loader-x: 64%; --c-loader-y: 63%; --c-loader-z: 1; --c-micro-x: 3%; --c-micro-y: 51%; --c-micro-z: 3; --c-gold-x: 18%; --c-gold-y: 12%; --c-gold-z: 3;
-  --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 1; --c-notif-x: 66%; --c-notif-y: 22%; --c-notif-z: 1; --c-notif-v: block; --c-notif-px: 33%; --c-notif-py: 12%; --c-notif-pv: none; /* the notification card (26 Nov) */
+  --c-pers-x: 68%; --c-pers-y: 40%; --c-pers-z: 1; --c-notif-x: 66%; --c-notif-y: 22%; --c-notif-z: 1; --c-notif-v: none; --c-notif-px: 33%; --c-notif-py: 12%; --c-notif-pv: none; /* the notification card (26 Nov) */
   --c-ai-v: block; --c-coin-v: none; --c-loader-v: block; --c-micro-v: none; --c-gold-v: block; --c-pers-v: block; /* each card shown or hidden */
   /* the phone's (28 Oct): each card's centre in % of the square picture, and whether it shows there — the four he asked
      for shown, the coin and the micro-interactions hidden; their places carried over from the desktop's (the same spot
