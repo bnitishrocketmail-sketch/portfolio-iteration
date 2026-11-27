@@ -503,7 +503,7 @@ export default function Iteration04() {
             <span className="nm4">Nitish<br /><b>Bhardwaj</b></span>
             {/* his photo in a disc beside the name (Nitish, 13 Oct); the desk photo stands in until he sends the one he means */}
             <span className="me4"><img src={desk} alt="" /></span>
-            <Signature04 className="sig4" label="Product, motion designer" /> {/* his written title (22 Oct), in the rolling word's place — the word's first letter on the name's edge, as on the case study's card */}
+            <Signature04 className="sig4" label="Product, interaction and motion designer" /> {/* his written title (22 Oct), in the rolling word's place — the word's first letter on the name's edge, as on the case study's card */}
             <p className="sub4">I design feedback{'\u00a0'}rich interfaces powered by motion.</p>
             <a className="cv4" href={LINKS.cv} target="_blank" rel="noopener" aria-label="View CV (a PDF, opens in a new tab)">View CV <Arrow04 out /></a> {/* the PDF in a new tab, the page kept behind it (27 Nov) */}
             <ThemeSwitch04 dark={isDark} toggle={toggle} /> {/* light / dark, on the CV's row: on the text's left edge, level with the CV's foot (28 Oct) */}

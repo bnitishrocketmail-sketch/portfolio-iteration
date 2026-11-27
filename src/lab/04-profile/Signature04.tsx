@@ -1,16 +1,19 @@
 import { useEffect, useRef } from 'react';
 import type { AnimationItem } from 'lottie-web';
 
-/* His written title, the Lottie from his old site's contact card (22 Oct): "Product" wipes to "Motion" and back, over
-   the script "Designer". Nitish: the first letter of the word should sit on the name's left edge above it — and the P
-   of PRODUCT and the M of MOTION are at different places in the file (33.5 and 64 of its 593 width, read off its
-   layers), so the drawing shifts left as the wipe runs, by the difference, and back. The wipe's play head travels over
-   frames 0–90 and returns over 210–300 (60 fps, 421 frames); the shift follows it with a smooth step. Under reduced
-   motion it holds the first frame, PRODUCT, at that word's offset. */
-const SRC = '/signature.json'; /* public/signature.json — his, not a project's */
-const W = 593, P = 33.5, M = 64;
-const ease = (t: number) => t * t * (3 - 2 * t);
-const shiftAt = (f: number) => P + (M - P) * (f < 90 ? ease(f / 90) : f < 210 ? 1 : f < 300 ? 1 - ease((f - 210) / 90) : 0);
+/* His written title, the Lottie from his old site's contact card (22 Oct): a word wipes to the next under a travelling
+   line, over the script "Designer". Since 28 Nov the words are three — Product, Interaction, Motion (Nitish: "the third
+   word that you're adding is interaction. That will come after product and before motion") — in public/title.json,
+   built from his file (public/signature.json, kept) by the session's gen.py: his letters, line, flag and Designer as
+   they were, "Interaction" set in the same face (Inter SemiBold: his outlines match it to 0.01), size and tracking,
+   his easing on every key, 90 frames a wipe and 120 held, six wipes to the loop (the line turns round each time).
+   The word's first letter sits on the name's left edge above it. That used to be done here — the two words began at
+   different places in the file (33.5 and 64 of 593) and this component slid the drawing as the wipe ran. The new file
+   holds it itself: every word's first letter is at X0 and Designer moves to make room, so the box is only set back by
+   X0 once. Under reduced motion it holds the first frame, PRODUCT. */
+const SRC = '/title.json';
+const SIG_W = 665; /* the file's width, of 141 high (it was 593: Interaction and Designer need the room) — the CSS boxes carry the same ratio */
+const X0 = 33.5; /* where every word's first letter stands in the file */
 
 export default function Signature04({ className, label }: { className?: string; label: string }) {
   const box = useRef<HTMLDivElement>(null), stage = useRef<HTMLDivElement>(null);
@@ -18,17 +21,16 @@ export default function Signature04({ className, label }: { className?: string; 
     const b = box.current, el = stage.current; if (!b || !el) return;
     let anim: AnimationItem | undefined, dead = false;
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const place = (f: number) => { b.style.transform = `translateX(${(-shiftAt(f) * b.clientWidth / W).toFixed(2)}px)`; };
+    const place = () => { b.style.transform = `translateX(${(-X0 * b.clientWidth / SIG_W).toFixed(2)}px)`; };
     (async () => {
       const [lottie, res] = await Promise.all([import('lottie-web/build/player/lottie_light').then(m => m.default), fetch(SRC)]);
       if (dead || !res.ok) return;
       lottie.setIDPrefix('ll');
       anim = lottie.loadAnimation({ container: el, renderer: 'svg', loop: true, autoplay: !still, animationData: await res.json() });
-      anim.addEventListener('enterFrame', () => anim && place(anim.currentFrame));
-      if (still) anim.addEventListener('DOMLoaded', () => { anim?.goToAndStop(0, true); place(0); });
+      anim.addEventListener('DOMLoaded', () => { if (still) anim?.goToAndStop(0, true); place(); });
     })();
-    place(0);
-    return () => { dead = true; anim?.destroy(); };
+    place(); const ro = new ResizeObserver(place); ro.observe(b); /* the set-back follows the box's width */
+    return () => { dead = true; ro.disconnect(); anim?.destroy(); };
   }, []);
   return <div ref={box} className={className} role="img" aria-label={label}><div ref={stage} className="sig-in" /></div>;
 }

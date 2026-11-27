@@ -1069,7 +1069,7 @@ export default function Case04({ id, back, onOpen, items = PROJECTS04, card = 'c
         <article className="cs4-talk" aria-label="Contact">
           <div className="cs4-talk-head">
             <span className="me4 cs4-me"><img src={desk} alt="" /></span> {/* the portfolio's own photo (22 Oct), as the intro has it */}
-            <div className="cs4-talk-who"><b className="cs4-talk-name">Nitish Bhardwaj</b><Signature04 className="cs4-sign" label="Product, motion designer" /></div> {/* his written title, aligned to the name (Signature04.tsx) */}
+            <div className="cs4-talk-who"><b className="cs4-talk-name">Nitish Bhardwaj</b><Signature04 className="cs4-sign" label="Product, interaction and motion designer" /></div> {/* his written title, aligned to the name (Signature04.tsx) */}
           </div>
           <p className="cs4-talk-line">If you like what you see or have any questions, feel free to connect anytime.</p> {/* his line, reworded for the handles beside it (22 Oct) */}
           <div className="cs4-talk-row">
